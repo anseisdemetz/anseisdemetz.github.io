@@ -1,4 +1,4 @@
-id;objet;content
+﻿id;objet;content
 template;"Carrefour seconde vie {% include ""email_subject"" %}";"<!doctype html>
 <html xmlns=""http://www.w3.org/1999/xhtml"" xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:o=""urn:schemas-microsoft-com:office:office"">
   <head>
@@ -20,7 +20,7 @@ template;"Carrefour seconde vie {% include ""email_subject"" %}";"<!doctype html
             {% include ""email_content"" %}
             <br><br>
             Merci de votre confiance,
-            <br><br>
+            <br>
             L’équipe Carrefour seconde vie
           </div>
           <div style=""height:30px"">&nbsp;</div>
@@ -81,14 +81,12 @@ Vous trouverez ci-joint :
   <ol>
     <li>Prenez soin de protéger votre appareil sans accessoire en l’emballant avec du papier bulle pour le protéger des chocs et calez-le dans un colis adapté pour éviter tout dommage lors du transport.</li>
     <li>Pensez à imprimer et à ajouter le bon de cession dans le colis.</li>
-    <li>Prenez <span class=""evidence"">des photos du colis ouvert et fermé</span> puis une autre qui mette bien en visibilité <span class=""evidence"">les 3 éléments suivants ensemble</span> :</li>
-    <li>
-      <ul>
+    <li>Prenez <span class=""evidence-gras"">des photos du colis ouvert et fermé</span> puis une autre qui mette bien en visibilité <span class=""evidence-gras"">les 3 éléments suivants ensemble</span> :</li>
+    <ul>
         <li>L'appareil que vous allez envoyer, allumé avec l’IMEI affiché sur l’écran (composer *#06# sur votre clavier pour l’afficher).</li>
         <li>L'étiquette de transport.</li>
         <li>Votre pièce d’identité.<br/>Et conservez-les jusqu’à la confirmation de conformité de la réception de votre appareil.<br/>Ces photos vous seront demandées obligatoirement en cas de litige (perte ou dégradation de l’état de votre appareil).</li>
       </ul>
-    </li>
     <li>Collez l’étiquette de transport (avec les codes-barres) à l’extérieur du colis et gardez précieusement l’autre moitié qui sera tamponnée au point de dépôt.</li>
     <li>Déposez votre colis dans <span class=""evidence"">le point de dépôt de votre choix</span>, gardez la preuve de dépôt.</li>
   </ol>
