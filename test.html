@@ -33,43 +33,42 @@
     </div>
 
     <script>
-    function parseCSV(text) {
-      const lines = text.split('\n');
-      const headers = lines[0].split(',');
-      const rows = lines.slice(1).map(line => {
-        const values = line.split(',');
-        const row = {};
-        headers.forEach((header, i) => row[header] = values[i]);
-        return row;
-      });
-      return { headers, rows };
-    }
+// Fonction pour lire le CSV et extraire id, objet, content
+async function readCSV(fileName) {
+  // On récupère le fichier CSV via fetch
+  const response = await fetch(fileName);
+  const text = await response.text();
 
-      
-  function renderSidebar(data) {
-    const sidebar = document.getElementById('data-types');
-    sidebar.innerHTML = '';
-  
-    // Exemple : utiliser les headers comme types
-    data.headers.forEach(header => {
-      const li = document.createElement('li');
-      li.textContent = header;
-      li.style.cursor = 'pointer';
-      li.addEventListener('click', () => renderContent(header, data.rows));
-      sidebar.appendChild(li);
-    });
+  const lines = text.trim().split('\n'); // découpe chaque ligne
+  const headers = lines[0].split(',');   // première ligne = headers
+
+  // Vérifier que les colonnes existent
+  const idIndex = headers.indexOf('id');
+  const objetIndex = headers.indexOf('objet');
+  const contentIndex = headers.indexOf('content');
+
+  if (idIndex === -1 || objetIndex === -1 || contentIndex === -1) {
+    throw new Error('Le CSV doit contenir les colonnes : id, objet, content');
+  }
+
+  // On construit le tableau
+  const data = lines.slice(1).map(line => {
+    const values = line.split(',');
+    return {
+      id: values[idIndex],
+      objet: values[objetIndex],
+      content: values[contentIndex]
+    };
+  });
+
+  return data;
 }
 
-      function renderContent(header, rows) {
-        const content = document.getElementById('content');
-        content.innerHTML = '';
-      
-        rows.forEach(row => {
-          const div = document.createElement('div');
-          div.innerHTML = `<h3>${row[header]}</h3><p>Détails...</p>`;
-          content.appendChild(div);
-        });
-      }
+// Exemple d'utilisation
+readCSV('emailing.csv')
+  .then(data => console.log(data))
+  .catch(err => console.error(err));
+
 
       
     </script>
