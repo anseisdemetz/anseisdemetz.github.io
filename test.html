@@ -2,16 +2,78 @@
   <head>
     <meta charset="UTF-8">
     <title>Site de teste</title>
-    
+    <style>
+      #app {
+        display: flex;
+        height: 100vh;
+      }
+      
+      #sidebar {
+        width: 25%;
+        border-right: 1px solid #ccc;
+        overflow-y: auto;
+        padding: 10px;
+      }
+      
+      #content {
+        width: 75%;
+        padding: 20px;
+        overflow-y: auto;
+      }
+    </style>
   </head>
   <body>
-    <h1>Quelques petites choses personnelles 🎉</h1>
-    <p>Je m'appelle <span id="nom"></span></p>
-  </body>
-  <script>
+    <div id="app">
+      <div id="sidebar">
+        <ul id="data-types"></ul>
+      </div>
+      <div id="content">
+        <!-- Contenu détaillé s'affichera ici -->
+      </div>
+    </div>
 
-     var a = document.getElementById('nom');
-     a.innerHTML = "Jérôme";
+    <script>
+    function parseCSV(text) {
+      const lines = text.split('\n');
+      const headers = lines[0].split(',');
+      const rows = lines.slice(1).map(line => {
+        const values = line.split(',');
+        const row = {};
+        headers.forEach((header, i) => row[header] = values[i]);
+        return row;
+      });
+      return { headers, rows };
+    }
 
+      
+  function renderSidebar(data) {
+    const sidebar = document.getElementById('data-types');
+    sidebar.innerHTML = '';
+  
+    // Exemple : utiliser les headers comme types
+    data.headers.forEach(header => {
+      const li = document.createElement('li');
+      li.textContent = header;
+      li.style.cursor = 'pointer';
+      li.addEventListener('click', () => renderContent(header, data.rows));
+      sidebar.appendChild(li);
+    });
+}
+
+      function renderContent(header, rows) {
+        const content = document.getElementById('content');
+        content.innerHTML = '';
+      
+        rows.forEach(row => {
+          const div = document.createElement('div');
+          div.innerHTML = `<h3>${row[header]}</h3><p>Détails...</p>`;
+          content.appendChild(div);
+        });
+      }
+
+      
     </script>
+
+  </body>
+
 </html>
