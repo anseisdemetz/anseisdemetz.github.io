@@ -51,10 +51,12 @@ function renderContent(row, templateRow) {
   const contentDiv = document.getElementById('content');
   contentDiv.innerHTML = '';
 
-  // Ligne affichant l'objet cliqué
+  // Ligne affichant l'objet selon le template
   const objetLine = document.createElement('div');
-  objetLine.innerHTML = `<b>objet</b> : ${row.objet}`;
-  objetLine.style.marginBottom = '10px'; // un petit espace
+  objetLine.innerHTML = templateRow.content
+    .split('\n')[0] // optionnel si tu veux juste la première ligne du template, sinon enlever
+    .replace('{% include "email_subject" %}', row.objet);
+  objetLine.style.marginBottom = '10px';
   contentDiv.appendChild(objetLine);
 
   // Remplacer {% include "email_content" %} par le content de la ligne cliquée
@@ -64,6 +66,7 @@ function renderContent(row, templateRow) {
   content.innerHTML = finalHTML;
   contentDiv.appendChild(content);
 }
+
 
 
 // Exemple d'utilisation
