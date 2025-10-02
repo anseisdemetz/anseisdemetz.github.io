@@ -51,11 +51,20 @@ function renderContent(row, templateRow) {
   const contentDiv = document.getElementById('content');
   contentDiv.innerHTML = '';
 
+  // Ligne affichant l'objet cliqué
+  const objetLine = document.createElement('div');
+  objetLine.innerHTML = `<b>objet</b> : ${row.objet}`;
+  objetLine.style.marginBottom = '10px'; // un petit espace
+  contentDiv.appendChild(objetLine);
+
   // Remplacer {% include "email_content" %} par le content de la ligne cliquée
   const finalHTML = templateRow.content.replace('{% include "email_content" %}', row.content);
 
-  contentDiv.innerHTML = finalHTML;
+  const content = document.createElement('div');
+  content.innerHTML = finalHTML;
+  contentDiv.appendChild(content);
 }
+
 
 // Exemple d'utilisation
 readCSV('emailing.csv')
