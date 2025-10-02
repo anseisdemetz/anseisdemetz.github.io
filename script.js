@@ -49,21 +49,23 @@ function renderSidebar(data) {
 // Afficher le contenu dans #content en utilisant le template
 function renderContent(row, templateRow) {
   const contentDiv = document.getElementById('content');
-  contentDiv.innerHTML = '';
+  contentDiv.innerHTML = ''; // vide la div
 
-  // Ligne affichant l'objet cliqué
+  // Ligne affichant l'objet selon le template
   const objetLine = document.createElement('div');
-  objetLine.innerHTML = `<b>objet</b> : ${row.objet}`;
-  objetLine.style.marginBottom = '10px'; // un petit espace
+  // On prend le template et on remplace uniquement {% include "email_subject" %} par row.objet
+  objetLine.innerHTML = templateRow.content.replace('{% include "email_subject" %}', row.objet)
+                                           .replace('{% include "email_content" %}', ''); // on vide email_content ici
+  objetLine.style.marginBottom = '10px';
   contentDiv.appendChild(objetLine);
 
-  // Remplacer {% include "email_content" %} par le content de la ligne cliquée
+  // Corps principal : remplacer {% include "email_content" %} par le content de la ligne cliquée
   const finalHTML = templateRow.content.replace('{% include "email_content" %}', row.content);
-
   const content = document.createElement('div');
   content.innerHTML = finalHTML;
   contentDiv.appendChild(content);
 }
+
 
 
 
