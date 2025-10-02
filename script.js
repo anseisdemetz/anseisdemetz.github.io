@@ -37,7 +37,7 @@ function renderSidebar(data) {
 
   items.forEach(row => {
     const li = document.createElement('li');
-    li.textContent = "["+row.id+"] | "+row.objet;
+    li.innerHTML = `<strong>${row.id}</strong> - ${row.objet}`;
     li.style.cursor = 'pointer';
     li.style.marginBottom = '5px';
 
