@@ -6,7 +6,6 @@ function readCSV(fileName) {
       header: true,
       skipEmptyLines: true,
       complete: function(results) {
-        // Tableau filtré
         const data = results.data.map(row => ({
           id: row.id,
           objet: row.objet,
@@ -24,29 +23,38 @@ function readCSV(fileName) {
 // Afficher les éléments dans la sidebar
 function renderSidebar(data) {
   const sidebar = document.getElementById('data-types');
-  sidebar.innerHTML = ''; // nettoyer avant
+  sidebar.innerHTML = '';
 
-  data.forEach((row, index) => {
+  // Récupérer le template
+  const templateRow = data.find(row => row.id === 'template');
+  if (!templateRow) {
+    console.error('Template non trouvé dans le CSV (id = "template")');
+    return;
+  }
+
+  // Liste des éléments à afficher (exclut le template)
+  const items = data.filter(row => row.id !== 'template');
+
+  items.forEach(row => {
     const li = document.createElement('li');
     li.textContent = row.objet;
     li.style.cursor = 'pointer';
     li.style.marginBottom = '5px';
 
-    // Au clic, afficher le contenu correspondant
-    li.addEventListener('click', () => renderContent(row));
+    li.addEventListener('click', () => renderContent(row, templateRow));
     sidebar.appendChild(li);
   });
 }
 
-// Afficher le contenu dans #content
-function renderContent(row) {
-  const content = document.getElementById('content');
-  content.innerHTML = ''; // vider avant
+// Afficher le contenu dans #content en utilisant le template
+function renderContent(row, templateRow) {
+  const contentDiv = document.getElementById('content');
+  contentDiv.innerHTML = '';
 
-  // Ici on peut utiliser innerHTML si le contenu est en HTML
-  const div = document.createElement('div');
-  div.innerHTML = row.content;
-  content.appendChild(div);
+  // Remplacer {% include "email_content" %} par le content de la ligne cliquée
+  const finalHTML = templateRow.content.replace('{% include "email_content" %}', row.content);
+
+  contentDiv.innerHTML = finalHTML;
 }
 
 // Exemple d'utilisation
