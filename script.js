@@ -54,8 +54,8 @@ function renderContent(row, templateRow) {
   // Ligne affichant l'objet selon le template
   const objetLine = document.createElement('div');
   // On prend le template et on remplace uniquement {% include "email_subject" %} par row.objet
-  objetLine.innerHTML = templateRow.content.replace('{% include "email_subject" %}', row.objet)
-                                           .replace('{% include "email_content" %}', ''); // on vide email_content ici
+  objetLine.innerHTML = templateRow.content.replace('{% include "email_subject" %}', row.objet);
+                                           
   objetLine.style.marginBottom = '10px';
   contentDiv.appendChild(objetLine);
 
@@ -65,11 +65,6 @@ function renderContent(row, templateRow) {
   content.innerHTML = finalHTML;
   contentDiv.appendChild(content);
 }
-
-
-
-
-
 
 // Exemple d'utilisation
 readCSV('emailing.csv')
