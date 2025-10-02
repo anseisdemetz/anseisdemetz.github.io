@@ -54,7 +54,7 @@ function renderContent(row, templateRow) {
   // Ligne affichant l'objet selon le template
   const objetLine = document.createElement('div');
   // On prend le template et on remplace uniquement {% include "email_subject" %} par row.objet
-  objetLine.innerHTML = `Objet : ${templateRow.content.replace('{% include "email_subject" %}', row.objet)}`;
+  objetLine.innerHTML = `Objet : ${templateRow.objet.replace('{% include "email_subject" %}', row.objet)}`;
                                            
   objetLine.style.marginBottom = '10px';
   contentDiv.appendChild(objetLine);
