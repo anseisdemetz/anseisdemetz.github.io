@@ -25,14 +25,12 @@ function renderSidebar(data) {
   const sidebar = document.getElementById('data-types');
   sidebar.innerHTML = '';
 
-  // Récupérer le template
   const templateRow = data.find(row => row.id === 'template');
   if (!templateRow) {
     console.error('Template non trouvé dans le CSV (id = "template")');
     return;
   }
 
-  // Liste des éléments à afficher (exclut le template)
   const items = data.filter(row => row.id !== 'template');
 
   items.forEach(row => {
@@ -41,10 +39,21 @@ function renderSidebar(data) {
     li.style.cursor = 'pointer';
     li.style.marginBottom = '5px';
 
-    li.addEventListener('click', () => renderContent(row, templateRow));
+    li.addEventListener('click', () => {
+      // Retirer la classe active de tous les éléments
+      document.querySelectorAll('#data-types li').forEach(el => el.classList.remove('active'));
+
+      // Ajouter la classe active à l’élément cliqué
+      li.classList.add('active');
+
+      // Afficher le contenu
+      renderContent(row, templateRow);
+    });
+
     sidebar.appendChild(li);
   });
 }
+
 
 // Afficher le contenu dans #content en utilisant le template
 function renderContent(row, templateRow) {
