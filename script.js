@@ -25,9 +25,9 @@ function renderSidebar(data) {
   const sidebar = document.getElementById('data-types');
   sidebar.innerHTML = '';
 
-  const templateRow = data.find(row => row.id === 'template');
+  const templateRow = data.find(row => row.code === 'template');
   if (!templateRow) {
-    console.error('Template non trouvé dans le CSV (id = "template")');
+    console.error('Template non trouvé dans le CSV (code = "template")');
     return;
   }
 
@@ -35,7 +35,7 @@ function renderSidebar(data) {
 
   items.forEach(row => {
     const li = document.createElement('li');
-    li.innerHTML = `<strong>${row.id}</strong> - ${row.objet}`;
+    li.innerHTML = `<strong>${row.code}</strong> - ${row.subject}`;
     li.style.cursor = 'pointer';
     li.style.marginBottom = '5px';
 
