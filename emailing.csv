@@ -129,7 +129,7 @@ Si vous n’avez pas encore déposé votre colis :
 <p>Si vous avez envoyé votre colis récemment, merci de ne pas tenir compte de ce mail.</p>"
 unsent_transaction_reminder_3;{{ label_product }} – Reprise annulée, non expédiée dans les délais;"<p>Bonjour {{ firstname }},</p>
 <p>Votre appareil ne nous est pas parvenu au centre de traitement dans le délai maximum prévu.</p>
-<p>Votre reprise - {{ label_product }} - est désormais annulée.</p>
+<p>Votre reprise - <span class=""evidence_gras"">{{ label_product }}</span> - est désormais annulée.</p>
 <p>Nous regrettons que vous ayez renoncé à nous renvoyer votre appareil.</p>
 <p>Comme le prévoient les conditions générales de Reprises, la valeur du bon d’achat va être prélevée dans les <span class=""evidence_gras"">2 (deux) jours</span> sur votre carte bancaire.</p>"
 ;{{ label_product }} – Votre Reprise est conforme – Bon d’achat complémentaire;"<p>Bonjour {{ firstname }},</p>
