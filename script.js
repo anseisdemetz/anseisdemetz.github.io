@@ -64,7 +64,7 @@ function renderContent(row, templateRow) {
 
   // Afficher le subject en haut
   const subjectLine = document.createElement('div');
-  subjectLine.innerHTML = `<b>subject</b> : ${row.subject}`;
+  subjectLine.innerHTML = `<b>Objet du mail</b> : ${row.subject}`;
   subjectLine.style.marginBottom = '10px';
   contentDiv.appendChild(subjectLine);
 
