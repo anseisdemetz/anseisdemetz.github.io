@@ -7,8 +7,8 @@ function readCSV(fileName) {
       skipEmptyLines: true,
       complete: function(results) {
         const data = results.data.map(row => ({
-          id: row.id,
-          objet: row.objet,
+          id: row.code,
+          objet: row.subject,
           content: row.content
         }));
         resolve(data);
@@ -25,17 +25,17 @@ function renderSidebar(data) {
   const sidebar = document.getElementById('data-types');
   sidebar.innerHTML = '';
 
-  const templateRow = data.find(row => row.id === 'template');
+  const templateRow = data.find(row => row.code === 'template');
   if (!templateRow) {
-    console.error('Template non trouvé dans le CSV (id = "template")');
+    console.error('Template non trouvé dans le CSV (code = "template")');
     return;
   }
 
-  const items = data.filter(row => row.id !== 'template');
+  const items = data.filter(row => row.code !== 'template');
 
   items.forEach(row => {
     const li = document.createElement('li');
-    li.innerHTML = `<strong>${row.id}</strong> - ${row.objet}`;
+    li.innerHTML = `<strong>${row.code}</strong> - ${row.subject}`;
     li.style.cursor = 'pointer';
     li.style.marginBottom = '5px';
 
@@ -62,8 +62,8 @@ function renderContent(row, templateRow) {
 
   // Ligne affichant l'objet selon le template
   const objetLine = document.createElement('div');
-  // On prend le template et on remplace uniquement {% include "email_subject" %} par row.objet
-  objetLine.innerHTML = `<strong>Objet</strong> : ${templateRow.objet.replace('{% include "email_subject" %}', row.objet)}`;
+  // On prend le template et on remplace uniquement {% include "email_subject" %} par row.subject
+  objetLine.innerHTML = `<strong>Objet</strong> : ${templateRow.subject.replace('{% include "email_subject" %}', row.subject)}`;
                                            
   objetLine.style.marginBottom = '10px';
   contentDiv.appendChild(objetLine);
