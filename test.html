@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Emailings 2.3</title>
+    <title>Emailings 2.4</title>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <style>
       #app {
@@ -23,6 +23,19 @@
         padding: 20px;
         overflow-y: auto;
       }
+
+      #data-types li {
+        color: black;
+        cursor: pointer;
+      }
+      
+      #data-types li.active {
+        color: white;
+        background-color: #007BFF; /* bleu bootstrap, mais tu peux changer */
+        border-radius: 4px;
+        padding: 3px 6px;
+      }
+
     </style>
   </head>
   <body>
