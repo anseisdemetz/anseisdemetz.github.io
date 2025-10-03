@@ -1,18 +1,16 @@
 // Lire le CSV et récupérer les colonnes id, objet, content
-function readCSV(fileName) {
+function readCSV(file) {
   return new Promise((resolve, reject) => {
-    Papa.parse(fileName, {
+    Papa.parse(file, {
       download: true,
       header: true,
-      delimiter: ";",
+      delimiter: ";",      // séparateur point-virgule
       skipEmptyLines: true,
+      quoteChar: '"',      // les champs sont entre guillemets
+      escapeChar: '"',     // les "" représentent un "
+      newline: "\n",       // force la gestion multi-ligne
       complete: function(results) {
-        const data = results.data.map(row => ({
-          id: row.code,
-          objet: row.subject,
-          content: row.content
-        }));
-        resolve(data);
+        resolve(results.data);
       },
       error: function(err) {
         reject(err);
@@ -20,6 +18,7 @@ function readCSV(fileName) {
     });
   });
 }
+
 
 // Afficher les éléments dans la sidebar
 function renderSidebar(data) {
