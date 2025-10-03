@@ -55,8 +55,6 @@ function renderSidebar(data) {
 }
 
 
-
-
 // Afficher le contenu dans #content en utilisant le template
 function renderContent(row, templateRow) {
   const contentDiv = document.getElementById('content');
@@ -76,7 +74,70 @@ function renderContent(row, templateRow) {
   const content = document.createElement('div');
   content.innerHTML = finalHTML;
   contentDiv.appendChild(content);
+
+  // Mettre à jour le bouton commentaire pour ce code
+  document.getElementById('comment-btn').onclick = () => openCommentModal(row.code);
 }
+
+
+// POUR GERER LECTURE ECRITURE DU COMMENTAIRE DAS BIN
+
+
+const BIN_ID = "<TON_BIN_ID>"; 
+const MASTER_KEY = "<TA_CLE_API>"; 
+let currentCode = null; // le code de la ligne affichée
+
+// Initialisation Materialize modal
+document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.modal');
+  M.Modal.init(elems);
+});
+
+// Lire les commentaires
+async function fetchComments() {
+  const resp = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+    headers: { "X-Master-Key": MASTER_KEY }
+  });
+  const data = await resp.json();
+  return data.record; // structure { code: "", comment: "" }
+}
+
+// Sauver un commentaire
+async function saveComment(code, comment) {
+  const newData = { code, comment };
+  await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Master-Key": MASTER_KEY,
+      "X-Bin-Versioning": "false"
+    },
+    body: JSON.stringify(newData)
+  });
+}
+
+// Remplir la modal avec le commentaire existant
+async function openCommentModal(code) {
+  currentCode = code;
+  const data = await fetchComments();
+
+  const input = document.getElementById('comment-input');
+  if (data.code === code) {
+    input.value = data.comment || "";
+  } else {
+    input.value = "";
+  }
+  M.textareaAutoResize(input);
+}
+
+// Gestion du clic sur le bouton "Sauvegarder"
+document.getElementById('save-comment').addEventListener('click', async () => {
+  const comment = document.getElementById('comment-input').value;
+  if (currentCode) {
+    await saveComment(currentCode, comment);
+    console.log("Commentaire sauvegardé !");
+  }
+});
 
 
 // Exemple d'utilisation
