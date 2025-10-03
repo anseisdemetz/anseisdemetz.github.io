@@ -22,41 +22,38 @@ function readCSV(file) {
 
 // Afficher les éléments dans la sidebar
 function renderSidebar(data) {
-  const sidebar = document.getElementById('sidebar');
+  const sidebar = document.getElementById('data-types');
   sidebar.innerHTML = '';
 
-  // Chercher la ligne template (dans la colonne "code")
-  const templateRow = data.find(row => row.code === 'template');
-
+  const templateRow = data.find(row => row.id === 'template');
   if (!templateRow) {
-    console.error('Template non trouvé dans le CSV (code = "template")');
-    console.log('Codes disponibles dans CSV :', data.map(r => r.code)); // debug
+    console.error('Template non trouvé dans le CSV (id = "template")');
     return;
   }
 
-  const ol = document.createElement('ol');
+  const items = data.filter(row => row.id !== 'template');
 
-  data.forEach(row => {
-    if (row.code === 'template') return; // ignorer la ligne template
-
+  items.forEach(row => {
     const li = document.createElement('li');
-    li.textContent = `${row.code} - ${row.subject}`;
+    li.innerHTML = `<strong>${row.id}</strong> - ${row.objet}`;
     li.style.cursor = 'pointer';
+    li.style.marginBottom = '5px';
 
     li.addEventListener('click', () => {
-      // retirer la classe active des autres
-      sidebar.querySelectorAll('li').forEach(el => el.style.color = 'black');
-      // mettre en évidence l’élément cliqué
-      li.style.color = 'blue';
+      // Retirer la classe active de tous les éléments
+      document.querySelectorAll('#data-types li').forEach(el => el.classList.remove('active'));
 
+      // Ajouter la classe active à l’élément cliqué
+      li.classList.add('active');
+
+      // Afficher le contenu
       renderContent(row, templateRow);
     });
 
-    ol.appendChild(li);
+    sidebar.appendChild(li);
   });
-
-  sidebar.appendChild(ol);
 }
+
 
 
 
