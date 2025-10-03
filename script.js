@@ -4,6 +4,7 @@ function readCSV(fileName) {
     Papa.parse(fileName, {
       download: true,
       header: true,
+      delimiter: ";",
       skipEmptyLines: true,
       complete: function(results) {
         const data = results.data.map(row => ({
