@@ -31,7 +31,7 @@ function renderSidebar(data) {
     return;
   }
 
-  const items = data.filter(row => row.id !== 'template');
+  const items = data.filter(row => row.code !== 'template');
 
   items.forEach(row => {
     const li = document.createElement('li');
