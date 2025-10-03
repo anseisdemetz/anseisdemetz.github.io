@@ -22,58 +22,65 @@ function readCSV(fileName) {
 
 // Afficher les éléments dans la sidebar
 function renderSidebar(data) {
-  const sidebar = document.getElementById('data-types');
+  const sidebar = document.getElementById('sidebar');
   sidebar.innerHTML = '';
 
+  // Chercher la ligne template (dans la colonne "code")
   const templateRow = data.find(row => row.code === 'template');
+
   if (!templateRow) {
     console.error('Template non trouvé dans le CSV (code = "template")');
+    console.log('Codes disponibles dans CSV :', data.map(r => r.code)); // debug
     return;
   }
 
-  const items = data.filter(row => row.code !== 'template');
+  const ol = document.createElement('ol');
 
-  items.forEach(row => {
+  data.forEach(row => {
+    if (row.code === 'template') return; // ignorer la ligne template
+
     const li = document.createElement('li');
-    li.innerHTML = `<strong>${row.code}</strong> - ${row.subject}`;
+    li.textContent = `${row.code} - ${row.subject}`;
     li.style.cursor = 'pointer';
-    li.style.marginBottom = '5px';
 
     li.addEventListener('click', () => {
-      // Retirer la classe active de tous les éléments
-      document.querySelectorAll('#data-types li').forEach(el => el.classList.remove('active'));
+      // retirer la classe active des autres
+      sidebar.querySelectorAll('li').forEach(el => el.style.color = 'black');
+      // mettre en évidence l’élément cliqué
+      li.style.color = 'blue';
 
-      // Ajouter la classe active à l’élément cliqué
-      li.classList.add('active');
-
-      // Afficher le contenu
       renderContent(row, templateRow);
     });
 
-    sidebar.appendChild(li);
+    ol.appendChild(li);
   });
+
+  sidebar.appendChild(ol);
 }
+
 
 
 // Afficher le contenu dans #content en utilisant le template
 function renderContent(row, templateRow) {
   const contentDiv = document.getElementById('content');
-  contentDiv.innerHTML = ''; // vide la div
+  contentDiv.innerHTML = '';
 
-  // Ligne affichant l'objet selon le template
-  const objetLine = document.createElement('div');
-  // On prend le template et on remplace uniquement {% include "email_subject" %} par row.subject
-  objetLine.innerHTML = `<strong>Objet</strong> : ${templateRow.subject.replace('{% include "email_subject" %}', row.subject)}`;
-                                           
-  objetLine.style.marginBottom = '10px';
-  contentDiv.appendChild(objetLine);
+  // Afficher le subject en haut
+  const subjectLine = document.createElement('div');
+  subjectLine.innerHTML = `<b>subject</b> : ${row.subject}`;
+  subjectLine.style.marginBottom = '10px';
+  contentDiv.appendChild(subjectLine);
 
-  // Corps principal : remplacer {% include "email_content" %} par le content de la ligne cliquée
-  const finalHTML = templateRow.content.replace('{% include "email_content" %}', row.content);
+  // Remplacer dans le template
+  let finalHTML = templateRow.content;
+  finalHTML = finalHTML.replace('{% include "email_subject" %}', row.subject);
+  finalHTML = finalHTML.replace('{% include "email_content" %}', row.content);
+
   const content = document.createElement('div');
   content.innerHTML = finalHTML;
   contentDiv.appendChild(content);
 }
+
 
 // Exemple d'utilisation
 readCSV('emailing.csv')
