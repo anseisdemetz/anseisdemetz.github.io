@@ -374,7 +374,29 @@ old_transaction_grading_canceled;{{ label_product }} – Reprise annulée automa
 offer_refused_product_returned;{{ label_product }} – Notification de retour et de prélèvement;"<p>Bonjour {{ firstname }},</p>
 <p>Nous avons bien reçu votre confirmation pour la récupération de votre appareil ainsi que le bon de transport retour nécessaire au renvoi de votre appareil.</p>
 <p>Nous procéderons à l’expédition de de votre appareil dans les <span class=""evidence_gras"">2 (deux) jours ouvrés</span> (hors délai d’acheminement) ainsi qu’au prélèvement de la totalité du montant du bon d’achat dont vous avez bénéficié sur votre carte bancaire.</p>"
-quotation_confirmation;{{ quotation_barcode }} – Validation de votre devis;"<b>Il n'y a pas de devis donc ce message n'existe pas dans le parcours</b><br/><br/>Bonjour {{ firstname }},<br><br>Vous y êtes presque… &#128522;<br><br>Voici les dernières étapes pour finaliser la reprise de votre produit.<br><br>Préparer son appareil :<br><br>Avant de vous rendre en boutique, assurez-vous de :<br><ul><li><b>Réinitialiser :</b> <a href=""{{ url_faq }}#faq-12"">iOS</a> / <a href=""{{ url_faq }}#faq-11"">Android</a></li><li><b>Débloquer :</b> Désactiver le code d'accès</li><li><b>Désactiver la localisation :</b> <a href=""{{ url_faq }}#faq-21"">Voir le tutoriel</a></li></ul>Rendez-vous en boutique avec :<br><ul><li>Votre produit</li><li>Votre pièce d'identité</li><li>Le code barre de votre devis</li></ul>Ne tardez pas votre devis est valable maximum <b>5 jours</b> soit jusqu’au {{ expired_date|date(""d/m/Y"") }} !<br><br>Pour toute question sur votre devis ou pour nous contacter, rendez-vous sur votre espace <a href=""{{ url_quotation }}"">« Mes devis »</a>."
+quotation_confirmation;{{ quotation_barcode }} – Validation de votre devis;"<p>Bonjour {{ firstname }},</p>
+<p>Vous y êtes presque… &#128522;</p>
+<p>Voici les dernières étapes pour finaliser la reprise de votre produit.</p>
+<p>Préparer son appareil :
+<br>
+<br>
+Avant de vous rendre en boutique, assurez-vous de :
+<br>
+<ul>
+  <li><b>Réinitialiser :</b> <a href=""{{ url_faq }}#faq-12"">iOS</a> / <a href=""{{ url_faq }}#faq-11"">Android</a></li>
+  <li><b>Débloquer :</b> Désactiver le code d'accès</li>
+  <li><b>Désactiver la localisation :</b> <a href=""{{ url_faq }}#faq-21"">Voir le tutoriel</a></li>
+</ul>Rendez-vous en boutique avec :
+<br>
+<ul>
+  <li>Votre produit</li>
+  <li>Votre pièce d'identité</li>
+  <li>Le code barre de votre devis</li>
+</ul>
+Ne tardez pas votre devis est valable maximum <span class="evidence_gras">5 jours</span> soit jusqu’au {{ expired_date|date(""d/m/Y"") }} !
+<br>
+<br>
+Pour toute question sur votre devis ou pour nous contacter, rendez-vous sur votre espace <a href=""{{ url_quotation }}"">« Mes devis »</a>."
 account_confirmation;– Création de votre compte – Bienvenue;"<p>Bonjour {{ firstname }},</p>
 <p>Bienvenue chez Carrefour Reprise, nous sommes ravis de vous accueillir.</p>
 <p>Pour accéder à votre compte, veuillez cliquer sur le lien ci-dessous et saisir vos identifiants de connexion.</p>
