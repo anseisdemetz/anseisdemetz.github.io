@@ -150,12 +150,12 @@ product_diagnostic_difference;{{ label_product }} – Votre Reprise est non conf
 <p>
   <ol>
     <li>
-      1. Accepter cette nouvelle offre dans un délai maximum de 3 (trois) jours.
+      Accepter cette nouvelle offre dans un délai maximum de <span class=""evidence_gras"">3 (trois) jours</span>.
       <br/>
       La différence avec le montant du bon d’achat dont vous avez déjà bénéficié sera prélevée sur votre carte bancaire.
     </li>
     <li>
-      2. Refuser cette nouvelle offre et récupérer votre appareil à vos frais en nous faisant parvenir un bon de transport en vous rendant sur <a href=""{{ url_summary_detail }}"">votre page de suivi</a>.
+      Refuser cette nouvelle offre et récupérer votre appareil à vos frais en nous faisant parvenir un bon de transport en vous rendant sur <a href=""{{ url_summary_detail }}"">votre page de suivi</a>.
       <br/>
       La totalité du montant du bon d’achat dont vous avez bénéficié sera prélevée sur votre carte bancaire.   
     </li>
