@@ -110,8 +110,7 @@ transit_mail;{{ label_product }} – Votre produit est en transit;"<p>Bonjour {{
 <p>Une fois reçu, nous procèderons au diagnostic de votre produit.</p>"
 delivered_mail;{{ label_product }} – Réception de votre reprise;"<p>Bonjour {{ firstname }},</p>
 <p>Votre colis est arrivé dans notre centre de traitement, nous allons procéder à la vérification de votre appareil.</p>
-<p>Vous serez informé par e-mail des résultats dans un délai de <span class=""evidence_gras"">3 (trois)</span> jours ouvrés.</p>
-<p>Notre service clients reste à votre disposition pour toute information complémentaire.</p>"
+<p>Vous serez informé par e-mail des résultats dans un délai de <span class=""evidence_gras"">3 (trois)</span> jours ouvrés.</p>"
 unsent_transaction_reminder_1;{{ label_product }} – Votre Reprise n’a pas encore été remise au transporteur;"<p>Bonjour {{ firstname }},</p>
 <p>Il semblerait que vous n’ayez pas encore déposé votre colis.</p>
 <p>Ne tardez plus. En l’absence de réception dans <span class=""evidence_gras"">5 (cinq) jours</span>, la valeur du bon d’achat sera prélevée sur votre carte bancaire.</p>
