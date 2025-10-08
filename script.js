@@ -33,7 +33,11 @@ function renderSidebar(data) {
 
   // const items = data.filter(row => row.code !== 'template');
 
-  const excludedCodes = ['template'];
+  const excludedCodes = [
+    'template',
+    'alert_abandon',
+    'unsent_transaction_reminder_2',
+  ];
   const items = data.filter(row => !excludedCodes.includes(row.code));
 
 
