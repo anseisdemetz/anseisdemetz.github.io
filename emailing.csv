@@ -19,7 +19,9 @@ template;"Carrefour seconde vie {% include ""email_subject"" %}";"<!doctype html
           <div style=""font-family:'Arial'; font-size:13px;"">
             {% include ""email_content"" %}
             <p>
-            Merci de votre confiance,
+Notre service clients reste à votre disposition pour toute information complémentaire.
+<br/>
+Merci de votre confiance,
             <br>
             L’équipe Carrefour seconde vie
             </p>
