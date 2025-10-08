@@ -1,4 +1,4 @@
-document.title = document.title + ' - 4.0';
+document.title = document.title + ' - 4.1';
 
 // Lire le CSV et récupérer les colonnes id, objet, content
 function readCSV(file) {
@@ -39,7 +39,19 @@ function renderSidebar(data) {
    'transaction_confirmed',
     'delivered_mail',
     'unsent_transaction_reminder_1',
-    'unsent_transaction_reminder_3'
+    'unsent_transaction_reminder_3',
+    'validation_payment_conform_boapart2',
+    'validation_payment_conform',
+    'product_diagnostic_difference',
+    'product_diagnostic_difference_zero',
+    'product_blocked',
+    'proposal_validation_payment',
+    'proposal_validation_zero',
+    'offer_refused_product_returned'
+    'account_confirmation',
+    'missing_password',
+    'reset_password_confirmation',
+    'user_welcome'
   ];
   const items = data.filter(row => includedCodes.includes(row.code));
 
