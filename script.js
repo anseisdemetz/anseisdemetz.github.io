@@ -1,3 +1,5 @@
+document.title = document.title + ' - 3.0';
+
 // Lire le CSV et récupérer les colonnes id, objet, content
 function readCSV(file) {
   return new Promise((resolve, reject) => {
