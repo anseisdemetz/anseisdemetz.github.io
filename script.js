@@ -33,7 +33,7 @@ function renderSidebar(data) {
 
   // const items = data.filter(row => row.code !== 'template');
 
-  const excludedCodes = ['template','alert_abandon'];
+  const excludedCodes = ['template'];
   const items = data.filter(row => !excludedCodes.includes(row.code));
 
 
