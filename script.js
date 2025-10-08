@@ -47,7 +47,7 @@ function renderSidebar(data) {
     'product_blocked',
     'proposal_validation_payment',
     'proposal_validation_zero',
-    'offer_refused_product_returned'
+    'offer_refused_product_returned',
     'account_confirmation',
     'missing_password',
     'reset_password_confirmation',
