@@ -1,4 +1,4 @@
-document.title = document.title + ' - 3.0';
+document.title = document.title + ' - 4.0';
 
 // Lire le CSV et récupérer les colonnes id, objet, content
 function readCSV(file) {
