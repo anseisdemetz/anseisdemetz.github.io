@@ -31,7 +31,11 @@ function renderSidebar(data) {
     return;
   }
 
-  const items = data.filter(row => row.code !== 'template');
+  // const items = data.filter(row => row.code !== 'template');
+
+  const excludedCodes = ['template'];
+  const items = data.filter(row => !excludedCodes.includes(row.code));
+
 
   items.forEach(row => {
     const li = document.createElement('li');
