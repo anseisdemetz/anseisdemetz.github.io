@@ -190,7 +190,7 @@ product_blocked;{{ label_product }} – Votre Reprise est non conforme – Appar
 <p>
   La totalité du montant du bon d’achat dont vous avez bénéficié sera prélevée sur votre carte bancaire.
 </p>"
-product_blocked;{{ label_product }} – Votre Reprise est non conforme – Appareil bloqué – Dernier Rappel;"<p>Bonjour {{ firstname }},</p>
+product_blocked_reminder;{{ label_product }} – Votre Reprise est non conforme – Appareil bloqué – Dernier Rappel;"<p>Bonjour {{ firstname }},</p>
 <p>Nous n’avons toujours pas reçu les éléments permettant le déblocage afin de poursuivre la vérification de votre appareil.</p>
 <p>Rappel du Motif de blocage : 
 <br/>
