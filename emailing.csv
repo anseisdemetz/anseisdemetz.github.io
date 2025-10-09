@@ -319,7 +319,7 @@ proposal_validation_payment_admin;{{ label_product }} – Validation et paiement
 <p>Nous vous remercions pour votre confiance, et espérons vous retrouver prochainement dans nos magasins.</p>"
 proposal_validation_zero;{{ label_product }} – Notification d’abandon et de prélèvement;"<p>Bonjour {{ firstname }},</p>
 <p>Nous avons bien reçu votre confirmation pour l’abandon de votre appareil qui sera orienté vers la filière de recyclage afin d’être démantelé.</p>
-<p>Nous procéderons dans les <span class="evidence_gras">2 (deux)</span> au prélèvement de la totalité du montant du bon d’achat dont vous avez bénéficié sur votre carte bancaire.</p>"
+<p>Nous procéderons dans les <span class="evidence_gras">2 (deux) jours</span> au prélèvement de la totalité du montant du bon d’achat dont vous avez bénéficié sur votre carte bancaire.</p>"
 proposal_validation_zero_admin;{{ label_product }} – Validation de la contreproposition;"<p>Bonjour {{ firstname }},</p>
 <p>Nous vous avons récemment informés que votre produit ne pouvait pas être valorisé suite au diagnostic effectué par notre centre de traitement.</p>
 <p>Vous avez donc décidé d’abandonner votre produit pour qu’il puisse être recyclé dans les filières agréées de recyclage et démantelé pour revalorisation des matériaux.</p>
