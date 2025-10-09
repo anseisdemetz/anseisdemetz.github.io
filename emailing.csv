@@ -386,7 +386,7 @@ old_transaction_grading_canceled;{{ label_product }} – Reprise annulée automa
 <p>Vous pouvez toutefois encore estimer votre bien et choisir la meilleure offre de reprise en cliquant ici.</p>"
 offer_refused_product_returned;{{ label_product }} – Notification de retour et de prélèvement;"<p>Bonjour {{ firstname }},</p>
 <p>Nous avons bien reçu votre confirmation pour la récupération de votre appareil ainsi que le bon de transport retour nécessaire au renvoi de votre appareil.</p>
-<p>Nous procéderons à l’expédition de de votre appareil dans les <span class="evidence_gras">2 (deux) jours ouvrés</span> (hors délai d’acheminement) ainsi qu’au prélèvement de la totalité du montant du bon d’achat dont vous avez bénéficié sur votre carte bancaire.</p>"
+<p>Nous procéderons à l’expédition de votre appareil dans les <span class="evidence_gras">2 (deux) jours ouvrés</span> (hors délai d’acheminement) ainsi qu’au prélèvement de la totalité du montant du bon d’achat dont vous avez bénéficié sur votre carte bancaire.</p>"
 quotation_confirmation;{{ quotation_barcode }} – Validation de votre devis;"<p>Bonjour {{ firstname }},</p>
 <p>Vous y êtes presque… &#128522;</p>
 <p>Voici les dernières étapes pour finaliser la reprise de votre produit.</p>
@@ -419,7 +419,6 @@ account_confirmation;– Création de votre compte – Bienvenue;"<p>Bonjour {{ 
   <li>Suivre le traitement de vos reprises</li>
   <li>Récupérer vos e-cartes cadeaux Carrefour</li>
   <li>Mettre à jour vos données personnelles</li>
-  <li></li>
 </ul>
 </p>
 <p>
