@@ -190,6 +190,29 @@ product_blocked;{{ label_product }} – Votre Reprise est non conforme – Appar
 <p>
   La totalité du montant du bon d’achat dont vous avez bénéficié sera prélevée sur votre carte bancaire.
 </p>"
+product_blocked;{{ label_product }} – Votre Reprise est non conforme – Appareil bloqué – Dernier Rappel;"<p>Bonjour {{ firstname }},</p>
+<p>Nous n’avons toujours pas reçu les éléments permettant le déblocage afin de poursuivre la vérification de votre appareil.</p>
+<p>Rappel du Motif de blocage : 
+<br/>
+{% for diagnostic in diagnostics %}{% if diagnostic.quarantine %}
+{{ diagnostic.label }}
+{% endif %}{% endfor %}
+</p>
+<p>Comme le prévoient les conditions générales de Reprises, il vous reste <span class="evidence_gras">2 (deux) jours</span> ouvrés pour </p>
+<ol>
+  <li>
+    Nous transmettre les éléments permettant le déblocage de votre appareil.
+    <br/>
+    Au-delà de ce délai, votre appareil ne pouvant être valorisé, sera considéré comme abandonné et orienté vers la filière de recyclage afin d’être démantelé.
+    <br/>
+    La totalité du montant du bon d’achat dont vous avez bénéficié sera prélevée sur votre carte bancaire.
+  </li>
+  <li>
+   Récupérer votre appareil à vos frais en nous faisant parvenir un bon de transport en vous rendant sur <a href="{{ url_summary_detail }}">votre Page de suivi</a>. 
+   <br/>
+   La totalité du montant du bon d’achat dont vous avez bénéficié sera prélevée sur votre carte bancaire.
+  </li>
+</ol>"
 product_diagnostic_difference_deee;{{ label_product }} – Diagnostic de votre produit, non valorisé;"<p>Bonjour {{ firstname }},</p>
 <p>La vérification de votre produit lors de l’homologation a révélé que votre produit est considéré comme un « déchet d'équipement électrique et électronique » soumis à réglementation.</p>
 <p>Ce produit présente des risques lors de sa manipulation et/ou son transport (risque d’explosion lié à l’état de la batterie…) et n’aurait jamais dû nous être envoyé.</p>
