@@ -1,4 +1,4 @@
-document.title = '(4.4) - ' + document.title;
+document.title = '(4.5) - ' + document.title;
 
 // Lire le CSV et récupérer les colonnes id, objet, content
 function readCSV(file) {
@@ -45,6 +45,7 @@ function renderSidebar(data) {
     'product_diagnostic_difference',
     'product_diagnostic_difference_zero',
     'product_blocked',
+    'product_blocked_reminder',
     'proposal_validation_payment',
     'proposal_validation_zero',
     'offer_refused_product_returned',
