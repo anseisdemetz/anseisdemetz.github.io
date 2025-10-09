@@ -4,8 +4,21 @@ template;"Carrefour seconde vie {% include ""email_subject"" %}";"<!doctype html
   <head>
     <meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"" />
     <title>Carrefour seconde vie</title>
-    <style type=""text/css""> li::marker{color:#16B389} .sub-title{font-weight:bold;text-decoration:underline} .evidence_gras{color:#16B389;font-weight:bold} .evidence_gras_italique{color:#16B389;font-style:italic;font-weight:bold;} .alerte{color:#E35765} table {border-collapse:collapse; border-spacing: 0;} a, a:link, a:visited {text-decoration: underline; color: #335FAC;} h2,h2 a,h2 a:visited,h3,h3 a,h3 a:visited,h4,h5,h6,.t_cht {color:#000 !important;} .ExternalClass, .ExternalClass div, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td {line-height: 100%;} .ExternalClass {width: 100%;}</style>
-  </head>
+<style type="text/css">
+      li::marker{color:#16B389} 
+      .sub-title{font-weight:bold;text-decoration:underline} 
+      .evidence_gras{color:#16B389;font-weight:bold} 
+      .evidence_gras_italique{color:#16B389;font-style:italic;font-weight:bold;} 
+      .alerte{color:#E35765} 
+      table {border-collapse:collapse; border-spacing: 0;} 
+      a, a:link, a:visited {text-decoration: underline; color: #335FAC;font-weight:bold;} 
+      h2,h2 a,h2 a:visited,h3,h3 a,h3 a:visited,h4,h5,h6,.t_cht {color:#000 !important;} 
+      .ExternalClass, 
+      .ExternalClass div, 
+      .ExternalClass p, 
+      .ExternalClass span, .ExternalClass font, .ExternalClass td {line-height: 100%;} .ExternalClass {width: 100%;}
+      </style>
+</head>
   <body>
     <table cellspacing=""0"" cellpadding=""0"">
       <tr>
@@ -38,72 +51,45 @@ alert_abandon;– Finalisez la reprise de votre produit;"<p>Bonjour {{ firstname
 <p>Vous n’êtes pas allé(e) jusqu’au bout de votre reprise pour votre <span class=""evidence_gras"">{{ product }}</span> estimé à <span class=""evidence_gras"">{{ amount }}€</span>.</p>
 <p>Ne manquez pas cette offre qui est valable <span class=""evidence_gras"">15 jours</span> soit jusqu’au <span class=""evidence_gras"">{{ expired_date_15d|date(""d/m/Y"") }}</span> inclus.</p>"
 transaction_confirmed;{{ label_product }} – Validation de votre reprise;"<p>Bonjour {{ firstname }},</p>
-<p>Bravo, vous venez de finaliser votre Reprise. &#128522;
-</p>
-<p>
-Vous trouverez ci-joint :
-</p>
-<p>
+<p>Bravo, vous venez de finaliser votre Reprise. &#128522;</p>
+
+<p class="sub-title">Vous trouverez ci-joint :</p>
 <ol>
   <li>Votre Bon d’Achat Carrefour utilisable immédiatement.</li>
   <li>Votre bon de cession et les Conditions Générales d’achat de votre appareil.</li>
   <li>Votre étiquette de transport.</li>
 </ol>
-</p>
-<p>
-  <p>
-        <span class=""evidence_gras_italique"">
-    N'oubliez pas de nous envoyer votre appareil dans les 7 jours.
-    <br/>
-    En l’absence de réception la valeur du bon d’achat sera prélevée sur votre carte bancaire. 
-        </span>
-  </p>  
-  </b>
-
-
-<p class=""sub-title"">Avant d’envoyer votre colis :</p>
-<p>
-  <ol>
-    <li>Vérifiez que vous avez bien déconnecté votre compte iCloud / Google et qu’aucun code de verrouillage n’est encore actif.</li>
-    <li>La localisation doit impérativement être désactivée.</li>
-    <li>Réinitialiser votre appareil en prenant soin d’effacer vos données personnelles.</li>
-  </ol>
-</p>
-<p>
-  Si vous avez besoin d’aide consultez le <a href=""{{ url_faq }}"">guide</a>.
-</p>
-<p>
-  <span class=""evidence_gras_italique"">
-    Tout appareil bloqué/géolocalisé entrainera le prélèvement de la valeur du bon d’achat sur votre carte bancaire.
- </span>
-</p>
-<p class=""sub-title"">
-  Préparez votre colis :
-</p>
-<p>
-  <ol>
-    <li>Prenez soin de protéger votre appareil sans accessoire en l’emballant avec du papier bulle pour le protéger des chocs et calez-le dans un colis adapté pour éviter tout dommage lors du transport.</li>
-    <li>Pensez à imprimer et à ajouter le bon de cession dans le colis.</li>
-    <li>Prenez <span class=""evidence_gras"">des photos du colis ouvert et fermé</span> puis une autre qui mette bien en visibilité <span class=""evidence_gras"">les 3 éléments suivants ensemble</span> :</li>
+<p class="evidence_gras_italique">N’oubliez pas de nous envoyer votre appareil dans les 7 jours.
+<br/>
+En l’absence de réception la valeur du bon d’achat sera prélevée sur votre carte bancaire.</p>
+<p class="sub-title">Avant d’envoyer votre colis :</p>
+<ol>
+  <li>Vérifiez que vous avez bien déconnecté votre compte iCloud / Google et qu’aucun code de verrouillage n’est encore actif.</li>
+  <li>La localisation doit impérativement être désactivée.</li>
+  <li>Réinitialiser votre appareil en prenant soin d’effacer vos données personnelles.</li>
+</ol>
+<p>Si vous avez besoin d’aide consultez <a href="{{ url_faq }}">le guide</a>.</p> 
+<p class="evidence_gras_italique">Tout appareil bloqué/géolocalisé entrainera le prélèvement de la valeur du bon d’achat sur votre carte bancaire.</p>
+<p class="sub-title">Préparez votre colis :</p>
+<ol>
+  <li>Prenez soin de <span class="evidence_gras">protéger votre appareil</span> sans accessoire en l’emballant avec du papier bulle pour le protéger des chocs et calez-le dans un colis adapté pour éviter tout dommage lors du transport.</li>
+  <li>Pensez à imprimer et à ajouter le <span class="evidence_gras">bon de cession dans le colis</span>.</li>
+  <li>Prenez des <span class="evidence_gras">photos du colis ouvert et fermé</span> puis une autre qui mette bien en visibilité <span class="evidence_gras">les 3 éléments suivants ensemble</span> :
     <ul>
-        <li>L'appareil que vous allez envoyer, allumé avec l’IMEI affiché sur l’écran (composer *#06# sur votre clavier pour l’afficher).</li>
-        <li>L'étiquette de transport.</li>
-        <li>Votre pièce d’identité.<br/>Et conservez-les jusqu’à la confirmation de conformité de la réception de votre appareil.<br/>Ces photos vous seront demandées obligatoirement en cas de litige (perte ou dégradation de l’état de votre appareil).</li>
-      </ul>
-    <li>Collez l’étiquette de transport (avec les codes-barres) à l’extérieur du colis et gardez précieusement l’autre moitié qui sera tamponnée au point de dépôt.</li>
-    <li>Déposez votre colis dans <span class=""evidence"">le point de dépôt de votre choix</span>, gardez la preuve de dépôt.</li>
-  </ol>
-</p>
-<p class=""sub-title"">
-  Suivez votre colis et votre reprise :
-</p>
-<p>
-  Vous serez informé par e-mail à chaque étape et vous pouvez également vous rendre sur votre page de suivi.
-  <ul>
-    <li><a href=""{{ url_tracking }}"">Suivez votre colis</a></li>
-    <li><a href=""{{ url_summary_detail }}"">Suivez votre reprise</a></li>
-  </ul>
-</p>"
+      <li>L'appareil que vous allez envoyer, allumé avec l’IMEI affiché sur l’écran (composer *#06# sur votre clavier pour l’afficher).</li>
+      <li>L’étiquette de transport.</li>
+      <li>Votre pièce d’identité.</li>
+    </ul>
+    Et conservez-les jusqu’à la confirmation de conformité de la réception de votre appareil.
+    <br/>
+    Ces photos vous seront demandées obligatoirement en cas de litige (perte ou dégradation de l’état de votre appareil).
+  </li>
+  <li><span class="evidence_gras">Collez l’étiquette de transport</span> (avec les codes-barres) à l’extérieur du colis et gardez précieusement l’autre moitié qui sera tamponnée au point de dépôt.</li>
+  <li><span class="evidence_gras">Déposez votre colis</span> dans <a href="{{ url_tracking }}">le point de dépôt</a> de votre choix, gardez la preuve de dépôt.</li>
+</ol>
+<p class="sub-title">Suivez votre Reprise :</p>
+<p>Vous serez informé par e-mail à chaque étape et vous pouvez également vous rendre sur <a href="{{ url_summary_detail }}">votre page de suivi</a>.</p>
+"
 transit_mail;{{ label_product }} – Votre produit est en transit;"<p>Bonjour {{ firstname }},</p>
 <p>Vous avez envoyé votre colis, il est en transit vers notre centre de traitement.</p>
 <p>Vous pouvez suivre votre colis en cliquant sur <a href=""{{ url_tracking }}"">ce lien</a>.</p>
