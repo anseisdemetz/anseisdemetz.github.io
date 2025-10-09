@@ -5,7 +5,8 @@ template;"Carrefour seconde vie {% include "email_subject" %}";"<!doctype html>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Carrefour seconde vie</title>
 <style type="text/css">
-      li::marker{color:#16B389} 
+      li::marker{color:#16B389}
+      li{margin-bottom:8px}
       .sub-title{font-weight:bold;text-decoration:underline} 
       .evidence_gras{color:#16B389;font-weight:bold} 
       .evidence_gras_italique{color:#16B389;font-style:italic;font-weight:bold;} 
@@ -118,10 +119,10 @@ Si vous n’avez pas encore déposé votre colis :
 <p>Si vous avez envoyé votre colis récemment, merci de ne pas tenir compte de ce mail.</p>"
 unsent_transaction_reminder_3;{{ label_product }} – Reprise annulée, non expédiée dans les délais;"<p>Bonjour {{ firstname }},</p>
 <p>Votre appareil ne nous est pas parvenu au centre de traitement dans le délai maximum prévu.</p>
-<p>Votre reprise - <span class="evidence_gras">{{ label_product }}</span> - est désormais annulée.</p>
+<p>Votre Reprise - <span class="evidence_gras">{{ label_product }}</span> - est désormais annulée.</p>
 <p>Nous regrettons que vous ayez renoncé à nous renvoyer votre appareil.</p>
 <p>Comme le prévoient les conditions générales de Reprises, la valeur du bon d’achat va être prélevée dans les <span class="evidence_gras">2 (deux) jours</span> sur votre carte bancaire.</p>"
-validation_payment_conform_boapart2;{{ label_product }} – Votre Reprise est conforme – e-Carte cadeau complémentaire;"<p>Bonjour {{ firstname }},</p>
+validation_payment_conform_boapart2;{{ label_product }} – Votre Reprise est conforme – Bon d’achat complémentaire;"<p>Bonjour {{ firstname }},</p>
 <p>Votre appareil a été déclaré conforme à l’issue de la vérification réalisée par le centre de traitement.</p>
 <p>Nous avons le plaisir de vous confirmer l’envoi de votre bon d’achat complémentaire ci-joint utilisable immédiatement.</p>"
 validation_payment_conform;{{ label_product }} – Votre Reprise est conforme;"<p>Bonjour {{ firstname }},</p>
