@@ -1,4 +1,4 @@
-document.title = '(4.5) - ' + document.title;
+document.title = '(4.6) - ' + document.title;
 
 // Lire le CSV et récupérer les colonnes id, objet, content
 function readCSV(file) {
@@ -102,6 +102,7 @@ function renderContent(row, templateRow) {
 
 
 // Exemple d'utilisation
-readCSV('emailing.csv')
+// 'emailing.csv'
+readCSV('emailing-09-10-2025.csv')
   .then(data => renderSidebar(data))
   .catch(err => console.error(err));
