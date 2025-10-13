@@ -1,1 +1,60 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Emailing Orig</title>
+    <link rel="icon" href="https://static.comparecycle.com/images/6/c12cc711db8d3f84d11f4a6b018554a3392c2291.png"/>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <style>
+      #app {
+        display: flex;
+        height: 100vh;
+      }
+      
+      #sidebar {
+        width: 70%;
+        border-right: 1px solid #ccc;
+        overflow-y: auto;
+        padding: 10px 10px 30px 10px;
+        font-family:Verdana;
+        font-size:14px;
+      }
+      
+      #content {
+        width: 75%;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      #data-types li {
+        color: black;
+        cursor: pointer;
+        padding:8px 0px 8px 0px;
+      }
+      
+      #data-types li.active {
+        color: white;
+        background-color: #007BFF; /* bleu bootstrap, mais tu peux changer */
+        border-radius: 4px;
+        padding: 3px 6px;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <div id="app">
+      <div id="sidebar">
+        <ol id="data-types"></ol>
+      </div>
+      <div id="content">
+        <!-- Contenu détaillé s'affichera ici -->
+      </div>
+    </div>
+        
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="script.js"></script>
+
+  </body>
+
+</html>
 
