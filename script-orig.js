@@ -33,8 +33,8 @@ function renderSidebar(data) {
     return;
   }
 
-  // const items = data.filter(row => row.code !== 'template');
-
+  const items = data.filter(row => row.code !== 'template');
+/*
   const includedCodes = [
    'transaction_confirmed',
     'delivered_mail',
@@ -54,7 +54,8 @@ function renderSidebar(data) {
     'user_welcome'
   ];
   const items = data.filter(row => includedCodes.includes(row.code));
-
+*/
+  
   items.forEach(row => {
     const li = document.createElement('li');
     li.innerHTML = `<strong>${row.code}</strong> - ${row.subject}`;
