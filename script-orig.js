@@ -104,7 +104,7 @@ function renderContent(row, templateRow) {
 
 // Exemple d'utilisation
 // 'emailing.csv'
-readCSV('emailing-orig.csv')
+readCSV('emailing.csv')
   .then(data => renderSidebar(data))
   .catch(err => console.error(err));
 
