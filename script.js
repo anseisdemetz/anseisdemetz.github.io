@@ -1,4 +1,4 @@
-document.title = '(4.6) - ' + document.title;
+document.title = '(4.8) - ' + document.title;
 
 // Lire le CSV et récupérer les colonnes id, objet, content
 function readCSV(file) {
@@ -8,8 +8,8 @@ function readCSV(file) {
       header: true,
       delimiter: ";",      // séparateur point-virgule
       skipEmptyLines: true,
-      quoteChar: '"',      // les champs sont entre guillemets
-      escapeChar: '"',     // les "" représentent un "
+      quoteChar: '""',      // les champs sont entre guillemets
+      escapeChar: '""',     // les "" représentent un "
       newline: "\n",       // force la gestion multi-ligne
       complete: function(results) {
         resolve(results.data);
