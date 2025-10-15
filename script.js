@@ -1,16 +1,18 @@
-document.title = '(4.8) - ' + document.title;
+document.title = '(4.9) - ' + document.title;
 
-// Lire le CSV et récupérer les colonnes id, objet, content
+// Lire le CSV et récupérer les colonnes code, subject, content
 function readCSV(file) {
   return new Promise((resolve, reject) => {
     Papa.parse(file, {
       download: true,
       header: true,
-      delimiter: ";",      // séparateur point-virgule
+      delimiter: ",",          // séparateur virgule
       skipEmptyLines: true,
-      quoteChar: '""',      // les champs sont entre guillemets
-      escapeChar: '""',     // les "" représentent un "
-      newline: "\n",       // force la gestion multi-ligne
+      quoteChar: '"',          // les champs sont entourés de guillemets doubles
+      escapeChar: '"',         // les "" représentent un seul "
+      newline: "",             // PapaParse détecte automatiquement \r, \n ou \r\n
+      dynamicTyping: false,    // on garde tout en texte
+      transformHeader: header => header.trim().toLowerCase(),
       complete: function(results) {
         resolve(results.data);
       },
@@ -20,6 +22,7 @@ function readCSV(file) {
     });
   });
 }
+
 
 
 // Afficher les éléments dans la sidebar
