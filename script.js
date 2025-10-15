@@ -41,6 +41,7 @@ function renderSidebar(data) {
   const includedCodes = [
    'transaction_confirmed',
     'delivered_mail',
+    'product_diagnostic_difference_deee',
     'unsent_transaction_reminder_1',
     'unsent_transaction_reminder_3',
     'validation_payment_conform_boapart2',
