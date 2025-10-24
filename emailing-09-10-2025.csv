@@ -18,7 +18,7 @@ En l’absence de réception la valeur du bon d’achat sera prélevée sur votr
 </div>
 <div class="bon_cession">
   <p class="bon_cession_titre">Le code barre de votre carte cadeau</p>
-  <p class="bon_cession_code"><img width="100%" src="https://anseisdemetz.github.io/exemple-barre.png" /></p>
+  <p class="bon_cession_code"><img width="100%" src="https://anseisdemetz.github.io/code-barre-bon-cession.jpg" /></p>
 </div>
 <p class="sub-title">Avant d’envoyer votre colis :</p>
 <ol>
