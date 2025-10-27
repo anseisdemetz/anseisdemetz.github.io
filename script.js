@@ -1,4 +1,4 @@
-document.title = '(5.5) - ' + document.title;
+document.title = '(5.6) - ' + document.title;
 document.getElementById("message").innerHTML = document.title;
 
 // Lire le CSV et récupérer les colonnes code, subject, content
@@ -107,7 +107,7 @@ function renderContent(row, templateRow) {
 
   // afficher le code dans le bloc code
   const contentCode = document.getElementById('code');
-  contentCode.innerHTML = row;
+  contentCode.innerHTML = row.content;
 }
 
 
