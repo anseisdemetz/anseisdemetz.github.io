@@ -107,7 +107,7 @@ function renderContent(row, templateRow) {
 
   // afficher le code dans le bloc code
   const contentCode = document.getElementById('code');
-  contentCode.innerHTML = row.content;
+  contentCode.value = row.content;
 }
 
 
