@@ -1,4 +1,4 @@
-document.title = '(5.3) - ' + document.title;
+document.title = '(5.4) - ' + document.title;
 document.getElementById("message").innerHTML = document.title;
 
 // Lire le CSV et récupérer les colonnes code, subject, content
@@ -56,7 +56,8 @@ function renderSidebar(data) {
     'offer_refused_product_returned',
     'missing_password',
     'reset_password_confirmation',
-    'user_welcome'
+    'user_welcome',
+    'account_confirmation'
   ];
   const items = data.filter(row => includedCodes.includes(row.code));
 
