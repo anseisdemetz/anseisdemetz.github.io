@@ -1,4 +1,4 @@
-document.title = '(5.6) - ' + document.title;
+document.title = '(5.9) - ' + document.title;
 document.getElementById("message").innerHTML = document.title;
 
 // Lire le CSV et récupérer les colonnes code, subject, content
