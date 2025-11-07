@@ -113,6 +113,6 @@ function renderContent(row, templateRow) {
 
 // Exemple d'utilisation
 // 'emailing.csv'
-readCSV('emailing-09-10-2025.csv')
+readCSV('csv/emailing-09-10-2025.csv')
   .then(data => renderSidebar(data))
   .catch(err => console.error(err));
