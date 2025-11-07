@@ -1,4 +1,4 @@
-document.title = '(5.9) - ' + document.title;
+document.title = '(6.0) - ' + document.title;
 document.getElementById("message").innerHTML = document.title;
 
 // Lire le CSV et récupérer les colonnes code, subject, content
@@ -116,18 +116,6 @@ function renderContent(row, templateRow) {
 
 }
 
-
-// Exemple d'utilisation
-/* ancienne version
-readCSV('csv/emailing-09-10-2025.csv')
-  .then(data => renderSidebar(data))
-  .catch(err => console.error(err));
-*/
-
-
-/*
-  ce qu'il y a de nouveau
-*/
 // fonction pour charger un CSV
 function loadSelectedFile(fileName) {
   readCSV('csv/' + fileName)
