@@ -112,7 +112,41 @@ function renderContent(row, templateRow) {
 
 
 // Exemple d'utilisation
-// 'emailing.csv'
+/* ancienne version
 readCSV('csv/emailing-09-10-2025.csv')
   .then(data => renderSidebar(data))
   .catch(err => console.error(err));
+*/
+
+
+/*
+  ce qu'il y a de nouveau
+*/
+// fonction pour charger un CSV
+function loadSelectedFile(fileName) {
+  readCSV('csv/' + fileName)
+    .then(data => renderSidebar(data))
+    .catch(err => console.error(err));
+}
+
+// charger la liste des CSV et remplir le <select>
+fetch('allowed-csv.json')
+  .then(r => r.json())
+  .then(json => {
+    const select = document.getElementById('fileSelector');
+    json.files.forEach(file => {
+      const opt = document.createElement('option')
+      opt.value = file
+      opt.textContent = file
+      select.appendChild(opt)
+    })
+
+    // charger le premier fichier par défaut
+    loadSelectedFile(json.files[0])
+  })
+
+// quand on change le select → charger le CSV
+document.getElementById('fileSelector')
+  .addEventListener('change', function() {
+    loadSelectedFile(this.value)
+  })
