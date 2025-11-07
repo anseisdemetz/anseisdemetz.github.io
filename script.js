@@ -108,6 +108,12 @@ function renderContent(row, templateRow) {
   // afficher le code dans le bloc code
   const contentCode = document.getElementById('code');
   contentCode.value = row.content;
+
+  // new
+  // remplir le textarea template
+  const templateTextarea = document.getElementById('code-template');
+  templateTextarea.value = templateRow.content;
+
 }
 
 
@@ -150,3 +156,26 @@ document.getElementById('fileSelector')
   .addEventListener('change', function() {
     loadSelectedFile(this.value)
   })
+
+// gestion du bouton "Voir ce que ça donne"
+document.getElementById('btn-preview').addEventListener('click', () => {
+  
+  const subject = document.querySelector('#content div:first-child b')
+    ? document.querySelector('#content div:first-child b').parentNode.textContent.replace('Objet du mail : ', '')
+    : '';
+
+  const rowContent = document.getElementById('code').value;
+  const templateContent = document.getElementById('code-template').value;
+
+  // reconstruire finalHTML
+  let finalHTML = templateContent;
+  finalHTML = finalHTML.replace('{% include "email_subject" %}', subject);
+  finalHTML = finalHTML.replace('{% include "email_content" %}', rowContent);
+
+  // afficher dans la div content
+  const contentDiv = document.getElementById('content');
+  contentDiv.innerHTML = `
+    <div><b>Objet du mail</b> : ${subject}</div>
+    <div style="margin-top:10px;">${finalHTML}</div>
+  `;
+});

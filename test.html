@@ -62,7 +62,23 @@
         <div id="content">
           <!-- Contenu détaillé s'affichera ici -->
         </div>        
-        <div id="code_csv"><textarea rows="20" cols="80" id="code">// le code html du mail ici</textarea></div>
+        <!-- ancien <div id="code_csv"><textarea rows="20" cols="80" id="code">// le code html du mail ici</textarea></div> -->
+
+        <!-- nouveau -->
+        <div style="display:flex; gap:20px;">
+          <div style="flex:1;">
+            <h4>Contenu du mail (row.content)</h4>
+            <textarea id="code" style="width:100%;height:300px;"></textarea>
+          </div>
+          <div style="flex:1;">
+            <h4>Template (templateRow.content)</h4>
+            <textarea id="code-template" style="width:100%;height:300px;"></textarea>
+          </div>
+        </div>
+
+        <button id="btn-preview" style="margin-top:15px;">Voir ce que ça donne</button>
+
+
       </div>
     </div>
         
