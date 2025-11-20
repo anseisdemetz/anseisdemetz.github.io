@@ -1,4 +1,4 @@
-document.title = '(6.0) - ' + document.title;
+document.title = '(6.1) - ' + document.title;
 document.getElementById("message").innerHTML = document.title;
 
 // Lire le CSV et récupérer les colonnes code, subject, content
@@ -40,7 +40,7 @@ function renderSidebar(data) {
   // const items = data.filter(row => row.code !== 'template');
 
   const includedCodes = [
-   'transaction_confirmed',
+   /*'transaction_confirmed',
     'delivered_mail',
     'product_diagnostic_difference_deee',
     'unsent_transaction_reminder_1',
@@ -57,7 +57,7 @@ function renderSidebar(data) {
     'missing_password',
     'reset_password_confirmation',
     'user_welcome',
-    'account_confirmation'
+    'account_confirmation'*/
   ];
   const items = data.filter(row => includedCodes.includes(row.code));
 
