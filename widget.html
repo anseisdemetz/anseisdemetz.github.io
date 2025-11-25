@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test - Popin latérale (sidebar) avec iframe</title>
+  <style>
+    :root{
+      --sidebar-width: 420px;
+      --transition: 300ms cubic-bezier(.2,.8,.2,1);
+      --backdrop-bg: rgba(0,0,0,0.45);
+      --accent: #0b74ff;
+    }
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    .container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+
+    /* Bouton principal */
+    .open-btn{appearance:none;border:0;background:linear-gradient(90deg,var(--accent),#0066ff);color:white;padding:12px 18px;border-radius:8px;font-size:16px;cursor:pointer;box-shadow:0 6px 18px rgba(11,116,255,0.2)}
+    .open-btn:focus{outline:3px solid rgba(11,116,255,0.25);outline-offset:2px}
+
+    /* Backdrop */
+    .backdrop{position:fixed;inset:0;background:transparent;visibility:hidden;opacity:0;transition:opacity var(--transition),visibility 0s linear var(--transition)}
+    .backdrop.show{visibility:visible;opacity:1;background:var(--backdrop-bg);transition:opacity var(--transition)}
+
+    /* Sidebar */
+    .sidebar{position:fixed;top:0;right:0;height:100%;width:var(--sidebar-width);max-width:100%;background:#fff;box-shadow:-12px 0 30px rgba(10,10,10,0.12);transform:translateX(110%);transition:transform var(--transition);display:flex;flex-direction:column}
+    .sidebar.show{transform:translateX(0)}
+
+    .sidebar header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #f0f0f0}
+    .sidebar header h2{margin:0;font-size:16px}
+    .close-btn{background:transparent;border:0;padding:8px;border-radius:6px;cursor:pointer}
+    .close-btn:focus{outline:3px solid rgba(0,0,0,0.12)}
+
+    /* Iframe area */
+    .frame-wrap{flex:1;min-height:0 /* allow iframe to size correctly in flex */}
+    .frame-wrap iframe{border:0;width:100%;height:100%}
+
+    /* Small screens: full width */
+    @media (max-width:600px){
+      :root{--sidebar-width:100vw}
+    }
+
+    /* A11y: visually hidden helper */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+  <main class="container">
+    <div>
+      <h1>Test popin latérale</h1>
+      <p>Cliquer sur le bouton ouvre une fenêtre latérale (popin) à droite contenant l’URL en iframe.</p>
+      <div style="margin-top:16px">
+        <button id="openSidebar" class="open-btn" aria-controls="sidebar" aria-expanded="false">Ouvrir le widget</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Backdrop -->
+  <div id="backdrop" class="backdrop" tabindex="-1" data-hidden="true"></div>
+
+  <!-- Sidebar / popin -->
+  <aside id="sidebar" class="sidebar" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Widget CompareCycle">
+    <header>
+      <h2>CompareCycle — Préproduction</h2>
+      <div>
+        <button id="openNew" class="close-btn" title="Ouvrir dans un nouvel onglet">↗︎</button>
+        <button id="closeSidebar" class="close-btn" aria-label="Fermer la fenêtre">✕</button>
+      </div>
+    </header>
+
+    <div class="frame-wrap">
+      <!-- L'iframe charge l'URL demandée -->
+      <iframe id="widgetFrame" src="about:blank" title="Widget préproduction"></iframe>
+    </div>
+  </aside>
+
+  <script>
+    (function(){
+      const SIDEBAR_ID = 'sidebar';
+      const FRAME = document.getElementById('widgetFrame');
+      const SIDEBAR = document.getElementById(SIDEBAR_ID);
+      const OPEN = document.getElementById('openSidebar');
+      const CLOSE = document.getElementById('closeSidebar');
+      const BACKDROP = document.getElementById('backdrop');
+      const OPEN_NEW = document.getElementById('openNew');
+      const WIDGET_URL = 'https://preprod-widget-v2.comparecycle.com/';
+
+      // Keep track of element that had focus before opening
+      let previousFocus = null;
+
+      function openSidebar(){
+        previousFocus = document.activeElement;
+        // set iframe src only when opening (lazy load)
+        if(FRAME.getAttribute('src') === 'about:blank'){
+          FRAME.setAttribute('src', WIDGET_URL);
+        }
+        SIDEBAR.classList.add('show');
+        BACKDROP.classList.add('show');
+        SIDEBAR.setAttribute('aria-hidden','false');
+        OPEN.setAttribute('aria-expanded','true');
+        BACKDROP.dataset.hidden = 'false';
+
+        // focus management
+        CLOSE.focus();
+        // simple trap: keep focus inside sidebar when tabbing
+        document.addEventListener('focus', enforceFocus, true);
+        document.addEventListener('keydown', onKeyDown);
+      }
+
+      function closeSidebar(){
+        SIDEBAR.classList.remove('show');
+        BACKDROP.classList.remove('show');
+        SIDEBAR.setAttribute('aria-hidden','true');
+        OPEN.setAttribute('aria-expanded','false');
+        BACKDROP.dataset.hidden = 'true';
+
+        // remove listeners
+        document.removeEventListener('focus', enforceFocus, true);
+        document.removeEventListener('keydown', onKeyDown);
+
+        // restore focus
+        if(previousFocus) previousFocus.focus();
+      }
+
+      function enforceFocus(e){
+        if(!SIDEBAR.contains(e.target)){
+          e.stopPropagation();
+          SIDEBAR.focus();
+        }
+      }
+
+      function onKeyDown(e){
+        if(e.key === 'Escape'){
+          closeSidebar();
+        }
+      }
+
+      OPEN.addEventListener('click', openSidebar);
+      CLOSE.addEventListener('click', closeSidebar);
+      BACKDROP.addEventListener('click', closeSidebar);
+
+      OPEN_NEW.addEventListener('click', function(){
+        // open widget in a new tab
+        window.open(WIDGET_URL, '_blank', 'noopener');
+      });
+
+      // Small defensive measure: if the iframe cannot be embedded due to X-Frame-Options/CSP,
+      // inform the user.
+      FRAME.addEventListener('load', function(){
+        try{
+          const frameLocation = FRAME.contentWindow.location.href;
+          // If access to contentWindow.location throws, we're probably cross-origin — that's okay.
+        }catch(e){
+          // Cross-origin access; ignore. We can't reliably detect X-Frame-Options client-side.
+        }
+      });
+
+      // Optional: expose open/close on window for automated tests
+      window.__sidebarWidget = {open: openSidebar, close: closeSidebar};
+    })();
+  </script>
+</body>
+</html>
