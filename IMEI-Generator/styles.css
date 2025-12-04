@@ -1,0 +1,273 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #eaeaea;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+	margin: 20px auto;
+	border-radius: 8px;
+	max-width: 1000px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+main {
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+}
+
+div {
+    text-align: center;
+    margin: 10px auto;
+    justify-content: center;
+}
+
+footer {
+	max-width: 1000px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+select {
+    width: 600px;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input {
+    width: 600px;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #f2f2f2;
+    box-sizing: border-box;
+}
+
+.button-blue {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.button-orange {
+    background-color: #ffa07a;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.button-blue:hover {
+    background-color: #2980b9;
+}
+
+.button-orange:hover {
+    background-color: #e68a4b;
+}
+
+#result {
+    display: none;
+    border: 1px solid #ccc;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #333;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.product-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-options label,
+.product-options select,
+.product-options button {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+p {
+    font-weight: bold;
+    margin-bottom: 15px;
+    /* display: flex; */
+    display: none;
+    text-align: center;
+    border: 1px solid #000;
+    padding: 10px;
+    height: 40px;
+}
+
+.magicimei {
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    border: 0px;
+    font-size: 18px;
+}
+
+optgroup {
+    font-size: 16px;
+}
+
+option {
+    font-size: 16px;
+}
+
+option:disabled {
+    font-style: italic;
+}
+
+/* .dash {
+    border-top: 2px dashed #ccc;
+    display: none;
+} */
+
+hr {
+    border-top: 1px solid #ccc;
+    width: 650px;
+}
+
+.table-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px auto;
+    text-align: center; 
+}
+
+.imei-block {
+    display: inline-block; 
+    vertical-align: top; 
+    margin: 0 10px; 
+    width: 40%; 
+    flex-grow: 1;
+    position: relative;
+}
+
+.imei-block2 {
+    display: inline-block; 
+    vertical-align: top; 
+    margin: 0 10px; 
+    width: 40%; 
+    flex-grow: 1;
+    position: relative;
+}
+
+.imei-block::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px; 
+    background-color: #ccc; 
+    right: -11px; 
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 15px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+    font-size: 18px;
+}
+
+th {
+    background-color: #3498db;
+    color: #fff;
+    text-align: center;
+    padding: 15px 10px;
+    border-bottom: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 18px;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+td:nth-child(odd) {
+    font-weight: bold;
+}
+
+td button {
+    display: block; 
+    margin: 0 auto; 
+    position: absolute; 
+    right: 5px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+}
+
+tr:last-child td {
+    border-bottom: none; 
+}
+
+.tdbold {
+    font-size: 18px;
+    color: #333;
+}
+
+.tdimei {
+    font-weight: bold;
+    font-size: 18px;
+    color: green;
+}
+
+.tdimei2 {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: green;
+}
+
+h3 {
+    text-align: center;
+    font-size: 20px;
+}

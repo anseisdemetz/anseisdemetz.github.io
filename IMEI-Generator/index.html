@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr"> 
+    <head> 
+        <meta charset="UTF-8" />
+        <title>Génération IMEI</title>
+        <link rel="icon" type="image/png" href="imei.png">
+        <link rel="stylesheet" href="styles.css">
+        <script type="text/javascript" src="script.js"></script>
+    </head>
+    <body>
+        <header>
+            <a href=index.html><img src=imei.png></div></a>
+		</header>
+		<main>
+            <div>
+                <label for="product-select">Choisissez votre produit</label>
+                <select name="product" id="product">
+                    <option value="" selected></option>
+                    
+                    <optgroup label="---------- Produits les plus utilisés ----------">
+                        <option value="Samsung;35892921;35850658;35717422;35689925;35533225">Galaxy S25 Ultra</option>
+                        <option value="Samsung;35937737;35876799;35841297;35832068;35584718">Galaxy A04 (non valorisé en grade D)</option>
+                        <option value="Apple;35804021;35565196;35512783;35232682;35056114">iPhone 16 Pro Max</option>
+                        <option value="Samsung;35266307;35445208;35445308;35310308;35445407">Galaxy J1 Ace J110 (#42119) (Référencé non valorisé)</option>
+                        <option value="Samsung;35363205">Galaxy Ace S5830 (#42039) (Non référencé)</option>
+                        <option value="Samsung;35863655;35530281;35245923;35241673;35859660">Galaxy Tab S10 Ultra Wi-Fi + 5G (Tablette)</option>
+                        <option value="Samsung;35962749;35943470;35910227;35414942;35957136">Galaxy Watch7 4G (Smartwatch)</option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+                
+                    <optgroup label="---------- Apple iPhone ----------">
+                        <option value="Apple;35804021;35565196;35512783;35232682;35056114">iPhone 16 Pro Max</option>
+                        <option value="Apple;35664215;35947364;35879733;35818135;35730054">iPhone 15 Pro Max</option>
+                        <option value="Apple;35106366;35850664;35418591;35285282;35111503">iPhone 14 Pro Max</option>
+                        <option value="Apple;35698572;35942064;35843964;35616298;35599844">iPhone 13 Pro Max</option>
+                        <option value="Apple;35865660;35832865;35816393;35750344;35726987">iPhone 16 Pro</option>
+                        <option value="Apple;35773440;35996714;35988934;35976028;35964339">iPhone 15 Pro</option>
+                        <option value="Apple;35296873;35942458;35935124;35867584;35701621">iPhone 14 Pro</option>
+                        <option value="Apple;35692463;35855747;35696819;35648778;35481254">iPhone 13 Pro</option>
+                        <option value="Apple;35986224;35906214;35871929;35747386;35704323">iPhone 16</option>
+                        <option value="Apple;35572818;35975742;35962645;35941823;35925538">iPhone 15</option>
+                        <option value="Apple;35555441;35959420;35760594;35309222;35272573">iPhone 14</option>
+                        <option value="Apple;35613138;35997780;35937996;35888930;35829380">iPhone 13</option>
+                    </optgroup>
+                    
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Samsung ----------">
+                        <option value="Samsung;35892921;35850658;35717422;35689925;35533225">Galaxy S25 Ultra</option>
+                        <option value="Samsung;35744742;35051595;35795847;35095390;35998281">Galaxy S24 Ultra</option>
+                        <option value="Samsung;35398138;35055290;35019655;35285037;35124757">Galaxy S23 Ultra</option>
+                        <option value="Samsung;35744512;35725617;35722449;35133007;35246730">Galaxy S25+</option>
+                        <option value="Samsung;35989841;35431125;35711815;35455214;35239412">Galaxy S24+</option>
+                        <option value="Samsung;35956118;35639994;35222371;35990818;35988788">Galaxy S23+</option>
+                        <option value="Samsung;35811077;35811048;35731889;35722024;35664984">Galaxy Z Fold6</option>
+                        <option value="Samsung;35422861;35774455;35700641;35988516;35928276">Galaxy Z Fold5</option>
+                        <option value="Samsung;35869230;35996560;35968029;35958191;35924343">Galaxy Z Fold4</option>
+                        <option value="Samsung;35796864;35711662;35637566;35490388;35542129">Galaxy Z Flip6</option>
+                        <option value="Samsung;35883723;35807017;35321294;35672538;35552347">Galaxy Z Flip5</option>
+                        <option value="Samsung;35164433;35879437;35683650;35614532;35460757">Galaxy Z Flip4</option>                       
+                    </optgroup>
+                    
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Xiaomi ----------">
+                        <option value="Xiaomi;86242408;86192608;86861708;86841607;86360507">Redmi Note 14 Pro</option>
+                        <option value="Xiaomi;86016107;86160907;86468407;86768007;86415107">Redmi Note 13 5G</option>
+                        <option value="Xiaomi;86421707;86459507;86781507;86971006;86733106">Redmi Note 12 5G</option>
+                    </optgroup>
+                    
+                    <optgroup></optgroup>
+
+                    <optgroup label="--------- Mobile - Huawei ----------">
+                        <option value="Huawei;86855607;86654607;86969307;86931407;86077607">Pura 70 Pro+</option>
+                        <option value="Huawei;86329707;86631807;86227807;86278807;86952807">Mate 70</option>
+                        <option value="Huawei;86908804;86893904;86764604;86683204;86500404">P30 Lite</option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - OnePlus ----------">
+                        <option value="OnePlus;86779507;86747807;86618907;86277907">13R</option>
+                        <option value="OnePlus;86601906;86167905;86598105;86836805;86962305">10 Pro 5G</option>
+                        <option value="OnePlus;86693905;86344405;86016105;99001741;99001672">9 5G</option>
+                    </optgroup>
+                    
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Google ----------">
+                        <option value="Google;35742779;35847073;35420226;35228226;35503079">Pixel 9A</option>
+                        <option value="Google;35372517;35655232;35252577;35126484;35578016">Pixel 8A</option>
+                        <option value="Google;35249342;35655082;35448720;35330181;35529153">Pixel 7A</option>
+                    </optgroup> 
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Oppo ----------">
+                        <option value="Oppo;86778408;86728608;86775307">A5 Pro</option>
+                        <option value="Oppo;86739707;86605407;86441507">Find X8 Pro</option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Sony ----------">
+                        <option value="Sony;35908127;35777435">Xperia 5 IV</option>
+                        <option value="Sony;35669414;35403570">Xperia 1 V</option>
+                    </optgroup>
+                    
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Realme ----------">
+                        <option value="Realme;86965805;86955505;86927105">GT2 Pro</option>
+                        <option value="Realme;86615107;86498907;86433307">14 Pro</option>
+                    </optgroup>
+                    
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Honor ----------">
+                        <option value="Honor;86300707;86896807;86698107">X8c</option>
+                        <option value="Honor;86851607;86591307;86596507">Magic7 Pro</option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Motorola ----------">
+                        <option value="Motorola;35053403;35699016">Moto G24</option>
+                        <option value="Motorola;35400389;35687360">Edge 40 Neo</option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Asus ----------">
+                        <option value="Asus;35530511;35530411">Rog Phone 3</option>
+                        <option value="Asus;35910008;35845308">Zenfone 4 Pro </option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Fairphone ----------">
+                        <option value="Fairphone;35521450">5</option>
+                        <option value="Fairphone;35587009">4 5G</option>
+                        </option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - HTC ----------">
+                        <option value="HTC;35322209;35322109">U12 Plus</option>
+                        <option value="HTC;35999908;35849208">U11</option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Produits référencés, non valorisés, non désactivés ----------">
+                        <option value=";35266307;35445208;35445308;35310308;35445407">Samsung Galaxy J1 Ace J110 (#42119)</option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Mobile - Produits non référencés ----------">
+                        <option value=";35363205">Samsung Galaxy Ace S5830 (#42039)</option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Tablette ----------">
+                        <option value=";35977816;35946570;35874985;35945837;35860273">Apple iPad (2025) Wifi+5G</option>                    
+                        <option value=";35863655;35530281;35245923;35241673;35859660">Samsung Galaxy Tab S10 Ultra Wi-Fi + 5G</option>
+                    </optgroup>
+
+                    <optgroup></optgroup>
+
+                    <optgroup label="---------- Montre connectée ----------">
+                        <option value=";35795157;35737440;35340443;35187488;35997262">Apple Watch Ultra 2 49mm GPS+Cellular</option>
+                        <option value=";35962749;35943470;35910227;35414942;35957136">Samsung Galaxy Watch7 4G</option>
+                    </optgroup>
+                </select>
+                <button class="button-blue" alt="Générer un IMEI" title="Générer un IMEI" onclick="generateAndDisplayIMEI()"><img src="courroie.png" width="13"></button>
+            </div>
+            <div><hr></div>
+            <div>
+                <label for="product-select">Renseigner le TAC</label>
+                <input type="text" id="tac" name="tac" placeholder="Renseigner le TAC">
+                <button class="button-blue" alt="Générer un IMEI" title="Générer un IMEI" onclick="generateAndDisplayIMEI2()"><img src="courroie.png" width="13"></button>
+            </div>
+            <div><p id="result"></p></div>
+        </main>
+		<main>
+            <div class="table-container">
+                <div class="imei-block">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="3">GSMA actif</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="tdblod">iPhone 13</td>
+                                <td class="tdimei">351467535237180</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(351467535237180)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                            <tr>
+                                <td class="tdblod">iPhone 12</td>
+                                <td class="tdimei">357140401815801</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(357140401815801)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                            <tr>
+                                <td class="tdblod">iPhone XR</td>
+                                <td class="tdimei">357351091799664</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(357351091799664)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                            <tr>
+                                <td class="tdblod">iPhone 7</td>
+                                <td class="tdimei">358683093480649</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(358683093480649)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="imei-block2">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="3">FMIP actif</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="tdblod">iPhone 14 Pro</td>
+                                <td class="tdimei">358675842623073</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(358675842623073)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                            <tr>
+                                <td class="tdblod">iPhone 12</td>
+                                <td class="tdimei">356375233124052</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(356375233124052)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                            <tr>
+                                <td class="tdblod">iPhone 11</td>
+                                <td class="tdimei">358669140000019</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(358669140000019)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                            <tr>
+                                <td class="tdblod">iPhone XS (de Jo)</td>
+                                <td class="tdimei">356166096167407</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(356166096167407)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="table-container">
+                <div class="imei-block">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="3">Blocage ESN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr>
+                                <td class="tdblod"><s>Samsung S10e</s></td>
+                                <td class="tdimei"><s>354889100770096</s></td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(354889100770096)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                            <tr>
+                                <td class="tdblod"><s>Samsung Z Flip3 5G</s></td>
+                                <td class="tdimei"><s>355001767892721</s></td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(355001767892721)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                            <tr>
+                                <td class="tdblod"><s>Apple iPhone X</s></td>
+                                <td class="tdimei"><s>354854092437286</s></td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(354854092437286)><img src="copy.png" width="13"></button></td>
+                            </tr> -->
+                            <tr>
+                                <td class="tdblod">Apple iPhone 12</td>
+                                <td class="tdimei">358209592262864</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(358209592262864)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                            <tr>
+                                <td class="tdblod">Apple iPhone 8 Plus</td>
+                                <td class="tdimei">354834092155179</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(354834092155179)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="imei-block2">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="3">Autres</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="tdblod">IMEI magique</td>
+                                <td class="tdimei">270920092612211</td>
+                                <td><button class="button-orange" alt="Copier" title="Copier" onclick=copyToClipboard(270920092612211)><img src="copy.png" width="13"></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+		</main>
+    </body>
+</html>
