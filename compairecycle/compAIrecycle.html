@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Estimateur de Rachat IA</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        #chat-container { width: 400px; height: 500px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+        #messages { flex: 1; padding: 20px; overflow-y: auto; border-bottom: 1px solid #eee; }
+        #input-area { display: flex; padding: 10px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
+        button { background: #007bff; color: white; border: none; padding: 10px 15px; margin-left: 5px; border-radius: 5px; cursor: pointer; }
+        .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 15px; max-width: 80%; }
+        .user { background: #007bff; color: white; align-self: flex-end; margin-left: auto; }
+        .bot { background: #eee; color: #333; }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <div id="messages">
+        <div class="msg bot">Bonjour ! Quel matériel souhaitez-vous revendre ? (ex: Canon RF 1200, MacBook Pro...)</div>
+    </div>
+    <div id="input-area">
+        <input type="text" id="userInput" placeholder="Écrivez ici...">
+        <button onclick="sendMessage()">Envoyer</button>
+    </div>
+</div>
+
+<script>
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const text = input.value;
+        if (!text) return;
+
+        // Afficher le message utilisateur
+        appendMessage(text, 'user');
+        input.value = '';
+
+        // Ici, vous remplacerez par l'appel API Voiceflow réel plus tard
+        appendMessage("Je recherche le prix pour votre " + text + " dans mon argus...", 'bot');
+    }
+
+    function appendMessage(text, side) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + side;
+        div.innerText = text;
+        document.getElementById('messages').appendChild(div);
+        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    }
+</script>
+
+</body>
+</html>
