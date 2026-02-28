@@ -29,17 +29,35 @@
 
 <script>
     async function sendMessage() {
-        const input = document.getElementById('userInput');
-        const text = input.value;
-        if (!text) return;
+    const input = document.getElementById('userInput');
+    const text = input.value;
+    if (!text) return;
 
-        // Afficher le message utilisateur
-        appendMessage(text, 'user');
-        input.value = '';
+    appendMessage(text, 'user');
+    input.value = '';
 
-        // Ici, vous remplacerez par l'appel API Voiceflow réel plus tard
-        appendMessage("Je recherche le prix pour votre " + text + " dans mon argus...", 'bot');
-    }
+    // APPEL À VOICEFLOW
+    const response = await fetch('https://general-runtime.voiceflow.com/state/user/USER_ID/interact', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'VF.DM.69a2e4f08371dc9bcfb1d5e8.EU1wvwsDyUDlykEJ', // Collez votre clé ici
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            request: { type: 'text', payload: text }
+        })
+    });
+
+    const data = await response.json();
+    
+    // Affichage de la réponse du cerveau
+    data.forEach(trace => {
+        if (trace.type === 'text') {
+            appendMessage(trace.payload.message, 'bot');
+        }
+    });
+}
+
 
     function appendMessage(text, side) {
         const div = document.createElement('div');
