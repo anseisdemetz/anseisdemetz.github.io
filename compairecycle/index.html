@@ -17,17 +17,53 @@
     </div>
 
     </body>
-<script type="text/javascript">
-  (function(d, t) {
-      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
-      v.onload = function() {
-        window.voiceflow.chat.load({
-          verify: { projectID: '69a2e0b7f82e8955ed9a3e80' },
-          url: 'https://general-runtime.voiceflow.com',
-          versionID: 'production'
-        });
-      }
-      v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
-  })(document, 'script');
-</script>
+import { Card, BarChart, Title, Subtitle, Text } from "@tremor/react";
+
+const data = [
+  {
+    name: "iPhone 17 Pro",
+    "Prix Grade A": 950,
+  },
+  {
+    name: "iPhone 17",
+    "Prix Grade A": 820,
+  },
+  {
+    name: "Samsung S24 Ultra",
+    "Prix Grade A": 780,
+  },
+  {
+    name: "Google Pixel 9",
+    "Prix Grade A": 650,
+  },
+];
+
+const dataFormatter = (number) => {
+  return "€ " + Intl.NumberFormat("fr").format(number).toString();
+};
+
+export default function PricingDashboard() {
+  return (
+    <Card className="max-w-xl mx-auto bg-white border-none shadow-lg rounded-2xl">
+      <Title className="text-emerald-900 font-bold">Analyse des Valeurs Max</Title>
+      <Subtitle className="text-gray-500 italic mb-6">
+        Prix de reprise maximum (Grade A) par modèle identifié.
+      </Subtitle>
+      <BarChart
+        className="mt-6 h-72"
+        data={data}
+        index="name"
+        categories={["Prix Grade A"]}
+        colors={["emerald"]}
+        valueFormatter={dataFormatter}
+        yAxisWidth={48}
+        showAnimation={true}
+      />
+      <Text className="mt-4 text-xs text-center text-gray-400 uppercase tracking-widest">
+        Données synchronisées en temps réel via Voiceflow API
+      </Text>
+    </Card>
+  );
+}
+
 </html>
