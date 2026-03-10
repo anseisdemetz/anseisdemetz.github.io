@@ -29,8 +29,7 @@ gap:20px;
 
 .phone-container img{
 width:220px;
-height:auto;
-transition:opacity 0.4s;
+transition:opacity 0.3s;
 }
 
 .arrow{
@@ -62,6 +61,7 @@ border-radius:8px;
 background:white;
 border:1px solid #ddd;
 overflow:hidden;
+cursor:pointer;
 }
 
 .block h3{
@@ -111,7 +111,7 @@ z-index:1;
 
 <button class="arrow" onclick="prevSlide()">&lt;</button>
 
-<img id="phoneImage" src="images/phone1.png">
+<img id="phoneImage" src="images/phone1.jpg">
 
 <button class="arrow" onclick="nextSlide()">&gt;</button>
 
@@ -119,22 +119,22 @@ z-index:1;
 
 <div class="blocks">
 
-<div class="block active">
+<div class="block active" onclick="selectSlide(0)">
 <h3>Très abîmé ou cassé</h3>
 <p>Fissuré, cassé, éclat, décollement.</p>
 </div>
 
-<div class="block">
+<div class="block" onclick="selectSlide(1)">
 <h3>Rayure(s) ou impact(s)</h3>
 <p>Rayures marquées visibles à 20 cm.</p>
 </div>
 
-<div class="block">
+<div class="block" onclick="selectSlide(2)">
 <h3>Micro rayure(s) / Micro impact(s)</h3>
 <p>Légère trace d'utilisation quotidienne.</p>
 </div>
 
-<div class="block">
+<div class="block" onclick="selectSlide(3)">
 <h3>Comme neuf ou intact</h3>
 <p>Aucune rayure ni impact.</p>
 </div>
@@ -146,10 +146,10 @@ z-index:1;
 <script>
 
 const images = [
-"images/phone1.png",
-"images/phone2.png",
-"images/phone3.png",
-"images/phone4.png"
+"images/phone1.jpg",
+"images/phone2.jpg",
+"images/phone3.jpg",
+"images/phone4.jpg"
 ]
 
 let current = 0
@@ -161,29 +161,50 @@ function updateSlide(){
 
 img.src = images[current]
 
-blocks.forEach((b,i)=>{
-b.classList.remove("active")
+blocks.forEach((block,i)=>{
+
+block.classList.remove("active")
+
 if(i === current){
-b.classList.add("active")
+
+void block.offsetWidth
+block.classList.add("active")
+
 }
+
 })
 
 }
 
 function nextSlide(){
+
 current++
+
 if(current >= images.length){
 current = 0
 }
+
 updateSlide()
+
 }
 
 function prevSlide(){
+
 current--
+
 if(current < 0){
 current = images.length-1
 }
+
 updateSlide()
+
+}
+
+function selectSlide(index){
+
+current = index
+updateSlide()
+
 }
 
 </script>
