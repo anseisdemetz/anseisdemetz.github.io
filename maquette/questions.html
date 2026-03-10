@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Diagnostic écran mobile</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+background:#f4f6f8;
+margin:0;
+padding:40px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+display:flex;
+gap:60px;
+align-items:center;
+}
+
+.phone-container{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+.phone-container img{
+width:220px;
+height:auto;
+transition:opacity 0.4s;
+}
+
+.arrow{
+width:45px;
+height:45px;
+border-radius:50%;
+border:none;
+background:#1f3b44;
+color:white;
+font-size:20px;
+cursor:pointer;
+}
+
+.arrow:hover{
+background:#2c5562;
+}
+
+.blocks{
+width:420px;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.block{
+position:relative;
+padding:18px;
+border-radius:8px;
+background:white;
+border:1px solid #ddd;
+overflow:hidden;
+}
+
+.block h3{
+margin:0 0 6px 0;
+font-size:16px;
+}
+
+.block p{
+margin:0;
+font-size:14px;
+color:#555;
+}
+
+.block::before{
+content:"";
+position:absolute;
+bottom:0;
+left:0;
+width:100%;
+height:100%;
+background:#687386;
+transform:scaleY(0);
+transform-origin:bottom;
+transition:transform 0.45s ease;
+z-index:0;
+}
+
+.block.active::before{
+transform:scaleY(1);
+}
+
+.block.active h3,
+.block.active p{
+position:relative;
+color:white;
+z-index:1;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="phone-container">
+
+<button class="arrow" onclick="prevSlide()">&lt;</button>
+
+<img id="phoneImage" src="images/phone1.png">
+
+<button class="arrow" onclick="nextSlide()">&gt;</button>
+
+</div>
+
+<div class="blocks">
+
+<div class="block active">
+<h3>Très abîmé ou cassé</h3>
+<p>Fissuré, cassé, éclat, décollement.</p>
+</div>
+
+<div class="block">
+<h3>Rayure(s) ou impact(s)</h3>
+<p>Rayures marquées visibles à 20 cm.</p>
+</div>
+
+<div class="block">
+<h3>Micro rayure(s) / Micro impact(s)</h3>
+<p>Légère trace d'utilisation quotidienne.</p>
+</div>
+
+<div class="block">
+<h3>Comme neuf ou intact</h3>
+<p>Aucune rayure ni impact.</p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const images = [
+"images/phone1.png",
+"images/phone2.png",
+"images/phone3.png",
+"images/phone4.png"
+]
+
+let current = 0
+
+const img = document.getElementById("phoneImage")
+const blocks = document.querySelectorAll(".block")
+
+function updateSlide(){
+
+img.src = images[current]
+
+blocks.forEach((b,i)=>{
+b.classList.remove("active")
+if(i === current){
+b.classList.add("active")
+}
+})
+
+}
+
+function nextSlide(){
+current++
+if(current >= images.length){
+current = 0
+}
+updateSlide()
+}
+
+function prevSlide(){
+current--
+if(current < 0){
+current = images.length-1
+}
+updateSlide()
+}
+
+</script>
+
+</body>
+</html>
