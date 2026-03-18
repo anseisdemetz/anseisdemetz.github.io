@@ -49,10 +49,7 @@
     const WEBHOOK_SAVE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/5d77fa87-f210-43a5-9ac8-ca079b7ea16c';
 
     async function generateProducts() {
-        const promptElement = document.getElementById('userPrompt');
-        if (!promptElement) return alert("Erreur: Champ userPrompt introuvable");
-        
-        const prompt = promptElement.value;
+        const prompt = document.getElementById('userPrompt').value;
         
         try {
             const response = await fetch(WEBHOOK_GENERATE, {
@@ -61,22 +58,16 @@
                 body: JSON.stringify({ chatInput: prompt })
             });
 
-            if (!response.ok) throw new Error('Erreur réseau ou timeout n8n');
+            if (!response.ok) throw new Error('Erreur réseau');
 
-            // On récupère le texte pour être plus flexible face au streaming
-            const responseText = await response.text();
+            const responseData = await response.json();
             
-            // On extrait le JSON (ton n8n renvoie un tableau stringifié)
-            const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-            if (!jsonMatch) throw new Error("Le format de réponse n8n est invalide");
+            // On s'assure que data est bien un tableau, peu importe la structure de sortie n8n
+            let data = Array.isArray(responseData) ? responseData : [responseData];
 
-            const rawData = JSON.parse(jsonMatch[0]);
+            // Nettoyage : si n8n envoie un tableau d'objets avec une clé 'json'
+            currentProducts = data.map(item => item.json ? item.json : item).flat();
 
-            // n8n renvoie [ {json: {...}}, {json: {...}} ]
-            // On nettoie pour n'avoir que les objets produits
-            currentProducts = rawData.map(item => item.json || item).flat();
-
-            // On affiche enfin le tableau
             renderTable();
 
         } catch (error) {
