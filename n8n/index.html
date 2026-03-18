@@ -11,6 +11,7 @@
     <div class="max-w-6xl mx-auto">
         <div id="input-section" class="bg-white p-6 rounded-xl shadow-sm mb-8">
             <h1 class="text-2xl font-bold mb-4 text-gray-800">Générateur de Produits</h1>
+            <p>peux-tu me créer les Pixel 6 avec les couleurs Vert, Bleu, Rouge et les capacités 65Go et 1To. </p>
             <textarea id="userPrompt" class="w-full p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" rows="3" placeholder="Décrivez les produits à créer (modèles, couleurs, capacités...)"></textarea>
             <button onclick="generateProducts()" id="btn-generate" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
                 Générer la prévisualisation
@@ -60,10 +61,16 @@
 
             if (!response.ok) throw new Error('Erreur réseau');
 
+            console.log(response);
+
             const responseData = await response.json();
+
+            console.log(responseData);
             
             // On s'assure que data est bien un tableau, peu importe la structure de sortie n8n
             let data = Array.isArray(responseData) ? responseData : [responseData];
+
+            console.log(data);
 
             // Nettoyage : si n8n envoie un tableau d'objets avec une clé 'json'
             currentProducts = data.map(item => item.json ? item.json : item).flat();
