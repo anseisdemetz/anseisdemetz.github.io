@@ -43,73 +43,103 @@
         </div>
     </div>
 
-    <script>
-        let currentProducts = [];
-        const WEBHOOK_GENERATE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/f902908a-0183-43b7-a310-3cdd95802150';
-        const WEBHOOK_SAVE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/5d77fa87-f210-43a5-9ac8-ca079b7ea16c';
+<script>
+    let currentProducts = [];
+    const WEBHOOK_GENERATE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/f902908a-0183-43b7-a310-3cdd95802150';
+    const WEBHOOK_SAVE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/5d77fa87-f210-43a5-9ac8-ca079b7ea16c';
 
-        async function generateProducts() {
-            const prompt = document.getElementById('userPrompt').value;
+    async function generateProducts() {
+        const promptElement = document.getElementById('userPrompt');
+        if (!promptElement) return alert("Erreur: Champ userPrompt introuvable");
+        
+        const prompt = promptElement.value;
+        
+        try {
+            const response = await fetch(WEBHOOK_GENERATE, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chatInput: prompt })
+            });
+
+            if (!response.ok) throw new Error('Erreur réseau ou timeout n8n');
+
+            // On récupère le texte pour être plus flexible face au streaming
+            const responseText = await response.text();
             
-            try {
-                const response = await fetch(WEBHOOK_GENERATE, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chatInput: prompt })
-                });
+            // On extrait le JSON (ton n8n renvoie un tableau stringifié)
+            const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+            if (!jsonMatch) throw new Error("Le format de réponse n8n est invalide");
 
-                if (!response.ok) throw new Error('Erreur réseau');
+            const rawData = JSON.parse(jsonMatch[0]);
 
-                // IMPORTANT : On attend que le stream soit terminé pour parser le JSON
-                const data = await response.json(); 
-                
-                // C'est ici que tu appelles ta fonction pour afficher le tableau
-                renderTable(data); 
+            // n8n renvoie [ {json: {...}}, {json: {...}} ]
+            // On nettoie pour n'avoir que les objets produits
+            currentProducts = rawData.map(item => item.json || item).flat();
 
-            } catch (error) {
-                console.error('Détail de l\'erreur:', error);
-                alert('Erreur lors de la génération : ' + error.message);
-            }
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('product-table-body');
-            tbody.innerHTML = currentProducts.map((p, index) => `
-                <tr class="hover:bg-gray-50">
-                    <td class="p-2 border"><input class="w-full p-1" value="${p.modele}" onchange="updateData(${index}, 'modele', this.value)"></td>
-                    <td class="p-2 border"><input class="w-full p-1" value="${p.couleur}" onchange="updateData(${index}, 'couleur', this.value)"></td>
-                    <td class="p-2 border"><input class="w-full p-1" value="${p.capacite}" onchange="updateData(${index}, 'capacite', this.value)"></td>
-                    <td class="p-2 border"><input type="number" class="w-full p-1" value="${p.prix}" onchange="updateData(${index}, 'prix', this.value)"></td>
-                    <td class="p-2 border text-center">
-                        <button onclick="deleteRow(${index})" class="text-red-500 hover:text-red-700">🗑️</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function updateData(index, field, value) {
-            currentProducts[index][field] = value;
-        }
-
-        function deleteRow(index) {
-            currentProducts.splice(index, 1);
+            // On affiche enfin le tableau
             renderTable();
+
+        } catch (error) {
+            console.error('Détail de l\'erreur:', error);
+            alert('Erreur lors de la génération : ' + error.message);
+        }
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('product-table-body');
+        if (!tbody) return;
+
+        if (currentProducts.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">Aucun produit généré.</td></tr>';
+            return;
         }
 
-        async function saveToSupabase() {
-            if (!confirm(`Voulez-vous vraiment enregistrer ${currentProducts.length} produits ?`)) return;
-            
+        tbody.innerHTML = currentProducts.map((p, index) => `
+            <tr class="hover:bg-gray-50">
+                <td class="p-2 border"><input class="w-full p-1" value="${p.modele || ''}" onchange="updateData(${index}, 'modele', this.value)"></td>
+                <td class="p-2 border"><input class="w-full p-1" value="${p.couleur || ''}" onchange="updateData(${index}, 'couleur', this.value)"></td>
+                <td class="p-2 border"><input class="w-full p-1" value="${p.capacite || ''}" onchange="updateData(${index}, 'capacite', this.value)"></td>
+                <td class="p-2 border"><input type="number" class="w-full p-1" value="${p.prix || 100}" onchange="updateData(${index}, 'prix', this.value)"></td>
+                <td class="p-2 border text-center">
+                    <button onclick="deleteRow(${index})" class="text-red-500 hover:text-red-700">🗑️</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function updateData(index, field, value) {
+        currentProducts[index][field] = value;
+    }
+
+    function deleteRow(index) {
+        currentProducts.splice(index, 1);
+        renderTable();
+    }
+
+    async function saveToSupabase() {
+        if (currentProducts.length === 0) return alert("Rien à enregistrer !");
+        if (!confirm(`Voulez-vous vraiment enregistrer ${currentProducts.length} produits ?`)) return;
+        
+        try {
             const response = await fetch(WEBHOOK_SAVE, {
                 method: 'POST',
-                body: JSON.stringify(currentProducts),
+                body: JSON.stringify({ products: currentProducts }), // On l'envoie dans un objet pour n8n
                 headers: { 'Content-Type': 'application/json' }
             });
             
             if (response.ok) {
                 alert("Enregistré avec succès !");
+                currentProducts = [];
+                renderTable();
                 location.reload();
+            } else {
+                alert("Erreur lors de l'enregistrement.");
             }
+        } catch (e) {
+            alert("Erreur de connexion : " + e.message);
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
