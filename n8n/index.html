@@ -61,15 +61,18 @@
 
             if (!response.ok) throw new Error('Erreur réseau');
 
+            console.log("#1");
             console.log(response);
 
             const responseData = await response.json();
 
+            console.log("#2");
             console.log(responseData);
             
             // On s'assure que data est bien un tableau, peu importe la structure de sortie n8n
             let data = Array.isArray(responseData) ? responseData : [responseData];
 
+            console.log("#3");
             console.log(data);
 
             // Nettoyage : si n8n envoie un tableau d'objets avec une clé 'json'
