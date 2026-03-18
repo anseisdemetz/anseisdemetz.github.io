@@ -49,25 +49,26 @@
         const WEBHOOK_SAVE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/5d77fa87-f210-43a5-9ac8-ca079b7ea16c';
 
         async function generateProducts() {
-            const prompt = document.getElementById('prompt').value;
-            const btn = document.getElementById('btn-generate');
-            btn.innerText = "Calcul en cours...";
+            const prompt = document.getElementById('userPrompt').value;
             
             try {
                 const response = await fetch(WEBHOOK_GENERATE, {
                     method: 'POST',
-                    body: JSON.stringify({ chatInput: prompt }),
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chatInput: prompt })
                 });
+
+                if (!response.ok) throw new Error('Erreur réseau');
+
+                // IMPORTANT : On attend que le stream soit terminé pour parser le JSON
+                const data = await response.json(); 
                 
-                // On attend que n8n renvoie le tableau de combinaisons
-                currentProducts = await response.json();
-                renderTable();
-                document.getElementById('preview-section').classList.remove('hidden');
+                // C'est ici que tu appelles ta fonction pour afficher le tableau
+                renderTable(data); 
+
             } catch (error) {
-                alert("Erreur lors de la génération");
-            } finally {
-                btn.innerText = "Générer la prévisualisation";
+                console.error('Détail de l\'erreur:', error);
+                alert('Erreur lors de la génération : ' + error.message);
             }
         }
 
