@@ -2,33 +2,112 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Comparecycle Admin AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Catalogue AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white p-8">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6 text-blue-400">Comparecycle AI Command</h1>
-        
-        <div class="bg-gray-800 p-4 rounded-lg shadow-xl mb-6">
-            <textarea id="commandInput" class="w-full bg-gray-700 p-4 rounded border border-gray-600 focus:outline-none focus:border-blue-500" placeholder="Ex: Crée 12 variantes de l'iPhone 13..."></textarea>
-            <button onclick="sendToN8N()" class="mt-4 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded font-bold transition">Lancer l'action</button>
+<body class="bg-gray-50 min-h-screen p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <div id="input-section" class="bg-white p-6 rounded-xl shadow-sm mb-8">
+            <h1 class="text-2xl font-bold mb-4 text-gray-800">Générateur de Produits</h1>
+            <textarea id="prompt" class="w-full p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" rows="3" placeholder="Décrivez les produits à créer (modèles, couleurs, capacités...)"></textarea>
+            <button onclick="generateProducts()" id="btn-generate" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                Générer la prévisualisation
+            </button>
         </div>
 
-        <div id="outputArea" class="hidden bg-gray-800 p-6 rounded-lg border border-gray-700">
-            <h2 class="text-xl mb-4">Résultat de l'opération</h2>
-            <div id="dataTable" class="overflow-x-auto">
-                </div>
+        <div id="preview-section" class="hidden bg-white p-6 rounded-xl shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Vérification des données</h2>
+                <button onclick="saveToSupabase()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                    Valider et Enregistrer dans Supabase
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-3 border">Modèle</th>
+                            <th class="p-3 border">Couleur</th>
+                            <th class="p-3 border">Capacité</th>
+                            <th class="p-3 border">Prix</th>
+                            <th class="p-3 border w-20">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-table-body">
+                        </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        async function sendToN8N() {
-            const msg = document.getElementById('commandInput').value;
-            // C'est ici qu'on mettra ton URL de Webhook n8n
-            const webhookUrl = 'https://anseisdemetz.app.n8n.cloud/webhook/a648345f-16cf-4eb0-9752-100e767b19cd'; 
+        let currentProducts = [];
+        const WEBHOOK_GENERATE = 'TON_URL_WEBHOOK_N8N_GENERATION';
+        const WEBHOOK_SAVE = 'TON_URL_WEBHOOK_N8N_SAVE';
+
+        async function generateProducts() {
+            const prompt = document.getElementById('prompt').value;
+            const btn = document.getElementById('btn-generate');
+            btn.innerText = "Calcul en cours...";
             
-            // Logique de fetch ici...
-            alert("Envoi à l'IA : " + msg);
+            try {
+                const response = await fetch(WEBHOOK_GENERATE, {
+                    method: 'POST',
+                    body: JSON.stringify({ chatInput: prompt }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                // On attend que n8n renvoie le tableau de combinaisons
+                currentProducts = await response.json();
+                renderTable();
+                document.getElementById('preview-section').classList.remove('hidden');
+            } catch (error) {
+                alert("Erreur lors de la génération");
+            } finally {
+                btn.innerText = "Générer la prévisualisation";
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('product-table-body');
+            tbody.innerHTML = currentProducts.map((p, index) => `
+                <tr class="hover:bg-gray-50">
+                    <td class="p-2 border"><input class="w-full p-1" value="${p.modele}" onchange="updateData(${index}, 'modele', this.value)"></td>
+                    <td class="p-2 border"><input class="w-full p-1" value="${p.couleur}" onchange="updateData(${index}, 'couleur', this.value)"></td>
+                    <td class="p-2 border"><input class="w-full p-1" value="${p.capacite}" onchange="updateData(${index}, 'capacite', this.value)"></td>
+                    <td class="p-2 border"><input type="number" class="w-full p-1" value="${p.prix}" onchange="updateData(${index}, 'prix', this.value)"></td>
+                    <td class="p-2 border text-center">
+                        <button onclick="deleteRow(${index})" class="text-red-500 hover:text-red-700">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateData(index, field, value) {
+            currentProducts[index][field] = value;
+        }
+
+        function deleteRow(index) {
+            currentProducts.splice(index, 1);
+            renderTable();
+        }
+
+        async function saveToSupabase() {
+            if (!confirm(`Voulez-vous vraiment enregistrer ${currentProducts.length} produits ?`)) return;
+            
+            const response = await fetch(WEBHOOK_SAVE, {
+                method: 'POST',
+                body: JSON.stringify(currentProducts),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            if (response.ok) {
+                alert("Enregistré avec succès !");
+                location.reload();
+            }
         }
     </script>
 </body>
