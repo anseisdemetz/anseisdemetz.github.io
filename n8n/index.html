@@ -62,19 +62,14 @@
             if (!response.ok) throw new Error('Erreur réseau');
 
             const responseData = await response.json(); 
-            // ----------------------------
 
-            console.log("#2 - Données brutes reçues :", responseData);
-            
-            // On s'assure que data est bien un tableau, peu importe la structure de sortie n8n
-            let data = Array.isArray(responseData) ? responseData : [responseData];
+            // On s'assure d'avoir un tableau propre
+            let items = Array.isArray(responseData) ? responseData : [responseData];
 
-            console.log("#3");
-            console.log(data);
+            // On extrait la donnée réelle (on enlève l'enveloppe 'json' si elle existe)
+            currentProducts = items.map(item => item.json || item).flat();
 
-            // Nettoyage : si n8n envoie un tableau d'objets avec une clé 'json'
-            currentProducts = data.map(item => item.json ? item.json : item).flat();
-
+            console.log("Produits finaux:", currentProducts);
             renderTable();
 
         } catch (error) {
