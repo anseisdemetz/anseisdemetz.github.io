@@ -59,6 +59,8 @@
                 body: JSON.stringify({ chatInput: prompt })
             });
 
+            console.log(JSON.stringify({ chatInput: prompt }));
+
             if (!response.ok) throw new Error('Erreur réseau');
 
             const responseData = await response.json(); 
