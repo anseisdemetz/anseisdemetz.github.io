@@ -79,13 +79,17 @@
     }
 
     function renderTable() {
+        console.log("#1");
         const tbody = document.getElementById('product-table-body');
+        console.log("#2");
         if (!tbody) return;
+        console.log("#3");
 
         if (currentProducts.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">Aucun produit généré.</td></tr>';
             return;
         }
+        console.log("#4");
 
         tbody.innerHTML = currentProducts.map((p, index) => `
             <tr class="hover:bg-gray-50">
@@ -98,6 +102,8 @@
                 </td>
             </tr>
         `).join('');
+
+        console.log("#5");
     }
 
     function updateData(index, field, value) {
