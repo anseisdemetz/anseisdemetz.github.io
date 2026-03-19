@@ -60,50 +60,37 @@ async function generateProducts() {
             body: JSON.stringify({ chatInput: prompt })
         });
 
-        const rawText = await response.text();
-        console.log("Flux brut reçu :", rawText);
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Erreur n8n: ${errorText}`);
+        }
 
-        // --- NETTOYAGE ULTIME ---
-        // On cherche le premier "[" et le dernier "]" pour isoler le tableau, 
-        // ce qui ignore les messages techniques de n8n s'il y en a.
-        const start = rawText.indexOf('[');
-        const end = rawText.lastIndexOf(']') + 1;
+        const data = await response.json();
+        console.log("Données reçues :", data);
+
+        // n8n renvoie souvent un tableau d'objets. On extrait la data.
+        // Si c'est [ { json: [...] } ] ou [ { modele: ... } ]
+        let rawItems = Array.isArray(data) ? data : [data];
         
-        if (start === -1 || end === 0) {
-            throw new Error("L'IA n'a pas renvoyé un format de tableau valide.");
-        }
+        // On nettoie pour n'avoir que les objets produits
+        currentProducts = rawItems.map(item => {
+            // Si n8n a emballé dans 'json' ou dans 'data'
+            const content = item.json || item;
+            return content.data || content;
+        }).flat();
 
-        const jsonString = rawText.substring(start, end);
-        let data = JSON.parse(jsonString);
-
-        // Si n8n a emballé ça dans un objet technique (type: item), on descend d'un niveau
-        if (data[0] && data[0].content) {
-             data = JSON.parse(data[0].content);
-        }
-
-        // On extrait les produits (cas : [{data: [...]}] ou directement [...])
-        let finalProducts = [];
-        const firstElement = Array.isArray(data) ? data[0] : data;
-        
-        if (firstElement && firstElement.data) {
-            finalProducts = firstElement.data;
-        } else {
-            finalProducts = Array.isArray(data) ? data : [data];
-        }
-
-        // Nettoyage final pour n8n (item.json || item)
-        currentProducts = finalProducts.map(p => p.json || p).flat();
-
-        console.log("Tableau final prêt :", currentProducts);
+        console.log("Produits nettoyés :", currentProducts);
 
         if (currentProducts.length > 0) {
             renderTable();
             document.getElementById('preview-section').classList.remove('hidden');
+        } else {
+            alert("Aucun produit n'a été généré.");
         }
 
     } catch (error) {
-        console.error('Erreur de parsing :', error);
-        alert('Erreur : Impossible de lire les produits. Vérifiez la console.');
+        console.error('Erreur :', error);
+        alert('Erreur : ' + error.message);
     }
 }
 
