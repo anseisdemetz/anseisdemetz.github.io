@@ -61,10 +61,10 @@
 
             if (!response.ok) throw new Error('Erreur réseau');
 
-            const responseData = await response;
+            const responseData = await response.json(); 
+            // ----------------------------
 
-            console.log("#2");
-            console.log(responseData);
+            console.log("#2 - Données brutes reçues :", responseData);
             
             // On s'assure que data est bien un tableau, peu importe la structure de sortie n8n
             let data = Array.isArray(responseData) ? responseData : [responseData];
