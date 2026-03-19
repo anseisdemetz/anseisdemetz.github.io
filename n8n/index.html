@@ -51,7 +51,6 @@
 
     async function generateProducts() {
         const prompt = document.getElementById('userPrompt').value;
-        // On cache la section au début
         document.getElementById('preview-section').classList.add('hidden');
         
         try {
@@ -61,41 +60,40 @@
                 body: JSON.stringify({ chatInput: prompt })
             });
 
-            if (!response.ok) throw new Error('Le serveur n8n a répondu avec une erreur ' + response.status);
+            const responseData = await response.json(); 
+            console.log("1. Réponse n8n reçue :", responseData);
 
-            // 1. On récupère d'abord la réponse en texte BRUT
-            const rawText = await response.text();
-            console.log("Flux brut reçu :", rawText);
+            // On cherche l'élément de type "item" dans le flux streaming
+            const itemNode = responseData.find(obj => obj.type === 'item');
 
-            // 2. On nettoie le flux : n8n envoie parfois des objets collés {"a":1}{"b":2}
-            // Cette regex transforme {"a":1}{"b":2} en [{"a":1},{"b":2}]
-            let cleanedText = rawText.trim();
-            if (cleanedText.startsWith('{') && !cleanedText.startsWith('[')) {
-                // On entoure de crochets et on ajoute des virgules entre les objets
-                cleanedText = '[' + cleanedText.replace(/\}\s*\{/g, '},{') + ']';
+            if (!itemNode || !itemNode.content) {
+                throw new Error("Aucun contenu trouvé dans la réponse de l'IA.");
             }
 
-            // 3. On tente de parser le texte nettoyé
-            const responseData = JSON.parse(cleanedText);
-            console.log('JSON parsé avec succès :', responseData);
+            // Le contenu est une chaîne de caractères JSON, on le décode
+            // Il ressemble à : "[{\"data\":[...]}]"
+            const innerContent = JSON.parse(itemNode.content);
+            console.log("2. Contenu interne décodé :", innerContent);
 
-            // 4. On extrait les données (gestion du format n8n [ {json:{...}} ])
-            const items = Array.isArray(responseData) ? responseData : [responseData];
-            currentProducts = items.map(item => item.json || item).flat();
+            // On extrait le tableau final (qui est dans la clé 'data' du premier objet)
+            let finalProducts = [];
+            if (Array.isArray(innerContent) && innerContent[0].data) {
+                finalProducts = innerContent[0].data;
+            } else {
+                // Sécurité si la structure varie légèrement
+                finalProducts = innerContent.data || innerContent;
+            }
 
-            console.log("Produits finaux à afficher :", currentProducts);
+            currentProducts = finalProducts;
+            console.log("3. Produits prêts pour le tableau :", currentProducts);
 
-            // 5. Rendu final
             if (currentProducts.length > 0) {
                 renderTable();
-                // On affiche enfin la section
                 document.getElementById('preview-section').classList.remove('hidden');
-            } else {
-                alert("L'IA n'a pas trouvé de produits dans votre demande.");
             }
 
         } catch (error) {
-            console.error('Détail de l\'erreur capturée :', error);
+            console.error('Erreur :', error);
             alert('Erreur lors de la génération : ' + error.message);
         }
     }
