@@ -51,6 +51,8 @@
 
     async function generateProducts() {
         const prompt = document.getElementById('userPrompt').value;
+        // On cache la section au début
+        document.getElementById('preview-section').classList.add('hidden');
         
         try {
             const response = await fetch(WEBHOOK_GENERATE, {
@@ -59,23 +61,41 @@
                 body: JSON.stringify({ chatInput: prompt })
             });
 
-            if (!response.ok) throw new Error('Erreur réseau');
+            if (!response.ok) throw new Error('Le serveur n8n a répondu avec une erreur ' + response.status);
 
-            const responseData = await response.json(); 
+            // 1. On récupère d'abord la réponse en texte BRUT
+            const rawText = await response.text();
+            console.log("Flux brut reçu :", rawText);
 
-            // On s'assure d'avoir un tableau propre
-            let items = Array.isArray(responseData) ? responseData : [responseData];
+            // 2. On nettoie le flux : n8n envoie parfois des objets collés {"a":1}{"b":2}
+            // Cette regex transforme {"a":1}{"b":2} en [{"a":1},{"b":2}]
+            let cleanedText = rawText.trim();
+            if (cleanedText.startsWith('{') && !cleanedText.startsWith('[')) {
+                // On entoure de crochets et on ajoute des virgules entre les objets
+                cleanedText = '[' + cleanedText.replace(/\}\s*\{/g, '},{') + ']';
+            }
 
-            console.log('responseData , ', responseData);
+            // 3. On tente de parser le texte nettoyé
+            const responseData = JSON.parse(cleanedText);
+            console.log('JSON parsé avec succès :', responseData);
 
-            // On extrait la donnée réelle (on enlève l'enveloppe 'json' si elle existe)
+            // 4. On extrait les données (gestion du format n8n [ {json:{...}} ])
+            const items = Array.isArray(responseData) ? responseData : [responseData];
             currentProducts = items.map(item => item.json || item).flat();
 
-            console.log("Produits finaux:", currentProducts);
-            renderTable();
+            console.log("Produits finaux à afficher :", currentProducts);
+
+            // 5. Rendu final
+            if (currentProducts.length > 0) {
+                renderTable();
+                // On affiche enfin la section
+                document.getElementById('preview-section').classList.remove('hidden');
+            } else {
+                alert("L'IA n'a pas trouvé de produits dans votre demande.");
+            }
 
         } catch (error) {
-            console.error('Détail de l\'erreur:', error);
+            console.error('Détail de l\'erreur capturée :', error);
             alert('Erreur lors de la génération : ' + error.message);
         }
     }
