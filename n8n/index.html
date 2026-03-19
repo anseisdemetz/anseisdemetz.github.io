@@ -64,7 +64,9 @@
             const responseData = await response.json(); 
 
             // On s'assure d'avoir un tableau propre
-            let items = Array.isArray(responseData.body) ? responseData.body : [responseData.body];
+            let items = Array.isArray(responseData) ? responseData : [responseData];
+
+            console.log('responseData , ', responseData);
 
             // On extrait la donnée réelle (on enlève l'enveloppe 'json' si elle existe)
             currentProducts = items.map(item => item.json || item).flat();
