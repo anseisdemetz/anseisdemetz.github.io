@@ -59,11 +59,10 @@
                 body: JSON.stringify({ chatInput: prompt })
             });
 
-            console.log(JSON.stringify({ chatInput: prompt }));
-
             if (!response.ok) throw new Error('Erreur réseau');
 
             const responseData = await response.json(); 
+            console.log("responseData , ", responseData);
 
             // On s'assure d'avoir un tableau propre
             let items = Array.isArray(responseData) ? responseData : [responseData];
