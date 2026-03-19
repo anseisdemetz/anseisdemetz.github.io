@@ -49,54 +49,63 @@
     const WEBHOOK_GENERATE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/f902908a-0183-43b7-a310-3cdd95802150';
     const WEBHOOK_SAVE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/5d77fa87-f210-43a5-9ac8-ca079b7ea16c';
 
-    async function generateProducts() {
-        const prompt = document.getElementById('userPrompt').value;
-        document.getElementById('preview-section').classList.add('hidden');
+async function generateProducts() {
+    const prompt = document.getElementById('userPrompt').value;
+    document.getElementById('preview-section').classList.add('hidden');
+    
+    try {
+        const response = await fetch(WEBHOOK_GENERATE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chatInput: prompt })
+        });
+
+        const rawText = await response.text();
+        console.log("Flux brut reçu :", rawText);
+
+        // --- NETTOYAGE ULTIME ---
+        // On cherche le premier "[" et le dernier "]" pour isoler le tableau, 
+        // ce qui ignore les messages techniques de n8n s'il y en a.
+        const start = rawText.indexOf('[');
+        const end = rawText.lastIndexOf(']') + 1;
         
-        try {
-            const response = await fetch(WEBHOOK_GENERATE, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chatInput: prompt })
-            });
-
-            const responseData = await response.json(); 
-            console.log("1. Réponse n8n reçue :", responseData);
-
-            // On cherche l'élément de type "item" dans le flux streaming
-            const itemNode = responseData.find(obj => obj.type === 'item');
-
-            if (!itemNode || !itemNode.content) {
-                throw new Error("Aucun contenu trouvé dans la réponse de l'IA.");
-            }
-
-            // Le contenu est une chaîne de caractères JSON, on le décode
-            // Il ressemble à : "[{\"data\":[...]}]"
-            const innerContent = JSON.parse(itemNode.content);
-            console.log("2. Contenu interne décodé :", innerContent);
-
-            // On extrait le tableau final (qui est dans la clé 'data' du premier objet)
-            let finalProducts = [];
-            if (Array.isArray(innerContent) && innerContent[0].data) {
-                finalProducts = innerContent[0].data;
-            } else {
-                // Sécurité si la structure varie légèrement
-                finalProducts = innerContent.data || innerContent;
-            }
-
-            currentProducts = finalProducts;
-            console.log("3. Produits prêts pour le tableau :", currentProducts);
-
-            if (currentProducts.length > 0) {
-                renderTable();
-                document.getElementById('preview-section').classList.remove('hidden');
-            }
-
-        } catch (error) {
-            console.error('Erreur :', error);
-            alert('Erreur lors de la génération : ' + error.message);
+        if (start === -1 || end === 0) {
+            throw new Error("L'IA n'a pas renvoyé un format de tableau valide.");
         }
+
+        const jsonString = rawText.substring(start, end);
+        let data = JSON.parse(jsonString);
+
+        // Si n8n a emballé ça dans un objet technique (type: item), on descend d'un niveau
+        if (data[0] && data[0].content) {
+             data = JSON.parse(data[0].content);
+        }
+
+        // On extrait les produits (cas : [{data: [...]}] ou directement [...])
+        let finalProducts = [];
+        const firstElement = Array.isArray(data) ? data[0] : data;
+        
+        if (firstElement && firstElement.data) {
+            finalProducts = firstElement.data;
+        } else {
+            finalProducts = Array.isArray(data) ? data : [data];
+        }
+
+        // Nettoyage final pour n8n (item.json || item)
+        currentProducts = finalProducts.map(p => p.json || p).flat();
+
+        console.log("Tableau final prêt :", currentProducts);
+
+        if (currentProducts.length > 0) {
+            renderTable();
+            document.getElementById('preview-section').classList.remove('hidden');
+        }
+
+    } catch (error) {
+        console.error('Erreur de parsing :', error);
+        alert('Erreur : Impossible de lire les produits. Vérifiez la console.');
     }
+}
 
     function renderTable() {
         const tbody = document.getElementById('product-table-body');
