@@ -62,10 +62,11 @@
             if (!response.ok) throw new Error('Erreur réseau');
 
             const responseData = await response.json(); 
-            console.log("responseData , ", responseData);
 
             // On s'assure d'avoir un tableau propre
             let items = Array.isArray(responseData) ? responseData : [responseData];
+
+            console.log('items , ', items);
 
             // On extrait la donnée réelle (on enlève l'enveloppe 'json' si elle existe)
             currentProducts = items.map(item => item.json || item).flat();
