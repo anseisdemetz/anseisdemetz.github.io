@@ -46,8 +46,10 @@
 
 <script>
     let currentProducts = [];
-    const WEBHOOK_GENERATE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/f902908a-0183-43b7-a310-3cdd95802150';
-    const WEBHOOK_SAVE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/5d77fa87-f210-43a5-9ac8-ca079b7ea16c';
+    // const WEBHOOK_GENERATE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/f902908a-0183-43b7-a310-3cdd95802150';
+    // const WEBHOOK_SAVE = 'https://anseisdemetz.app.n8n.cloud/webhook-test/5d77fa87-f210-43a5-9ac8-ca079b7ea16c';
+    const WEBHOOK_GENERATE = 'https://anseisdemetz.app.n8n.cloud/webhook/f902908a-0183-43b7-a310-3cdd95802150';
+    const WEBHOOK_SAVE = 'https://anseisdemetz.app.n8n.cloud/webhook/5d77fa87-f210-43a5-9ac8-ca079b7ea16c';
 
 async function generateProducts() {
     const prompt = document.getElementById('userPrompt').value;
