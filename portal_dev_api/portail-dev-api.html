@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparecycle - Portail Développeurs & API</title>
-    <!-- Inclusion des icônes Material Design -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Comparecycle - Portail Multi-API Développeurs</title>
     <style>
-        /* --- VARIABLES DE DESIGN (Marque Blanche / Comparecycle) --- */
+        /* --- VARIABLES DE DESIGN (Comparecycle) --- */
         :root {
-            --primary-color: #1a4358;       /* Bleu Comparecycle */
+            --primary-color: #1a4358;       
             --primary-light: #e3f2fd;
-            --accent-color: #00e676;        /* Vert pour la Prod / Succès */
-            --warning-color: #ff9100;       /* Orange pour la Preprod */
+            --accent-color: #00e676;        
+            --warning-color: #ff9100;       
             --bg-main: #f8f9fa;
             --bg-sidebar: #ffffff;
             --text-main: #2c3e50;
             --text-muted: #78909c;
             --border-color: #cfd8dc;
             
-            /* Couleurs des méthodes HTTP */
             --color-get: #61afea;
             --color-post: #49cc90;
             --color-put: #fca130;
@@ -31,7 +28,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
@@ -41,7 +38,7 @@
             overflow: hidden;
         }
 
-        /* --- ÉCRAN DE CONNEXION (LOGIN) --- */
+        /* --- ÉCRAN DE CONNEXION --- */
         .login-wrapper {
             display: flex;
             justify-content: center;
@@ -53,7 +50,6 @@
             left: 0;
             width: 100%;
             z-index: 100;
-            transition: opacity 0.3s ease;
         }
 
         .login-card {
@@ -70,18 +66,6 @@
             height: 45px;
             margin-bottom: 24px;
             object-fit: contain;
-        }
-
-        .login-card h2 {
-            color: var(--primary-color);
-            margin-bottom: 8px;
-            font-size: 1.4rem;
-        }
-
-        .login-card p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 24px;
         }
 
         .form-group {
@@ -104,11 +88,6 @@
             border-radius: 6px;
             font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus {
-            border-color: var(--primary-color);
         }
 
         .login-btn {
@@ -121,12 +100,7 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
             margin-top: 10px;
-        }
-
-        .login-btn:hover {
-            background-color: #112d3c;
         }
 
         /* --- INTERFACE PRINCIPALE --- */
@@ -157,7 +131,6 @@
 
         .logo-comparecycle {
             height: 32px;
-            display: block;
             object-fit: contain;
         }
 
@@ -169,7 +142,6 @@
 
         .tool-title {
             font-size: 1rem;
-            font-weight: 400;
             color: #b0bec5;
         }
 
@@ -179,8 +151,7 @@
             gap: 20px;
         }
 
-        /* Sélecteur d'environnement */
-        .env-selector {
+        .env-selector, .lang-selector {
             display: flex;
             background-color: rgba(255, 255, 255, 0.1);
             padding: 4px;
@@ -188,63 +159,27 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .env-btn {
-            padding: 6px 14px;
+        .env-btn, .lang-btn {
+            padding: 6px 12px;
             border-radius: 4px;
             border: none;
             background: none;
             color: #b0bec5;
             font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .env-btn.active.preprod {
-            background-color: var(--warning-color);
-            color: white;
-        }
-
-        .env-btn.active.prod {
-            background-color: var(--accent-color);
-            color: var(--primary-color);
-        }
-
-        /* Sélecteur de Langue */
-        .lang-selector {
-            display: flex;
-            gap: 4px;
-            background-color: rgba(0, 0, 0, 0.15);
-            padding: 4px;
-            border-radius: 6px;
-        }
-
-        .lang-btn {
-            background: none;
-            border: none;
-            color: #b0bec5;
             font-size: 0.8rem;
-            font-weight: 700;
-            padding: 4px 8px;
             cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s;
         }
 
-        .lang-btn.active {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
+        .env-btn.active.preprod { background-color: var(--warning-color); color: white; }
+        .env-btn.active.prod { background-color: var(--accent-color); color: var(--primary-color); }
+        .lang-btn.active { background-color: rgba(255, 255, 255, 0.2); color: white; }
 
-        /* --- COMPTE PROFIL UTILISATEUR --- */
-        .profile-menu-container {
-            position: relative;
-        }
-
+        /* --- MENU PROFIL --- */
+        .profile-menu-container { position: relative; }
         .profile-trigger {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             background: none;
             border: none;
             color: white;
@@ -253,27 +188,11 @@
             border-radius: 6px;
             transition: background-color 0.2s;
         }
+        .profile-trigger:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .profile-icon-emoji { font-size: 22px; }
+        .username { font-size: 0.9rem; font-weight: 500; }
+        .arrow-down { font-size: 0.7rem; color: #b0bec5; }
 
-        .profile-trigger:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .profile-trigger .material-icons {
-            font-size: 26px;
-            color: var(--accent-color);
-        }
-
-        .username {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .arrow-down {
-            font-size: 0.7rem;
-            color: #b0bec5;
-        }
-
-        /* Dropdown Menu Profil */
         .profile-dropdown {
             display: none;
             position: absolute;
@@ -282,68 +201,29 @@
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            width: 200px;
+            width: 220px;
             border: 1px solid var(--border-color);
             overflow: hidden;
             z-index: 50;
         }
-
-        .profile-dropdown.show {
-            display: block;
+        .profile-dropdown.show { display: block; }
+        .dropdown-header { padding: 16px; background-color: #fafafa; border-bottom: 1px solid #f0f0f0; }
+        .user-full-name { font-size: 0.9rem; font-weight: 700; color: var(--primary-color); }
+        .user-role { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        
+        .dropdown-item { 
+            display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 16px; 
+            background: none; border: none; text-align: left; font-size: 0.85rem; color: var(--text-main);
+            cursor: pointer; transition: background-color 0.2s;
         }
+        .dropdown-item:hover { background-color: #f5f7f8; }
+        .dropdown-item.logout-btn { color: #d32f2f; font-weight: 600; }
 
-        .dropdown-header {
-            padding: 12px 16px;
-            background-color: #fafafa;
-            border-bottom: 1px solid #f0f0f0;
-        }
+        /* --- APPLICATIF PRINCIPAL & SIDEBAR --- */
+        .main-container { display: flex; flex: 1; overflow: hidden; }
 
-        .user-full-name {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .user-role {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            padding: 12px 16px;
-            background: none;
-            border: none;
-            text-align: left;
-            font-size: 0.85rem;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f5f7f8;
-        }
-
-        .dropdown-item.logout-btn {
-            color: #d32f2f;
-            font-weight: 600;
-        }
-
-        /* --- APPLICATIF PRINCIPAL (SIDEBAR + CONTENU) --- */
-        .main-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* SIDEBAR */
         sidebar {
-            width: 320px;
+            width: 350px;
             background-color: var(--bg-sidebar);
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -351,235 +231,126 @@
             overflow-y: auto;
         }
 
-        .sidebar-header {
-            padding: 16px;
-            border-bottom: 1px solid #f0f0f0;
+        .sidebar-title {
+            padding: 16px; font-size: 0.9rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; color: var(--primary-color); border-bottom: 1px solid #f0f0f0; background-color: #fafafa;
         }
 
-        .collection-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 4px;
+        /* Accordéon */
+        .accordion-item { border-bottom: 1px solid #edf2f7; }
+        
+        .accordion-header {
+            display: flex; justify-content: space-between; align-items: center; width: 100%;
+            padding: 14px 16px; background-color: #ffffff; border: none; text-align: left;
+            font-size: 0.95rem; font-weight: 700; color: var(--primary-color); cursor: pointer;
         }
+        .accordion-header:hover { background-color: #f7fafc; }
+        .accordion-header .arrow { font-size: 0.75rem; transition: transform 0.2s; color: var(--text-muted); }
+        .accordion-item.open .accordion-header { background-color: #f0f4f8; }
+        .accordion-item.open .accordion-header .arrow { transform: rotate(180deg); }
+        
+        .accordion-content { display: none; padding: 8px 0; background-color: #fdfdfd; }
+        .accordion-item.open .accordion-content { display: block; }
 
-        .collection-subtitle {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-
-        /* Bouton Téléchargement Postman */
+        /* Éléments de menu internes */
+        .download-btn-wrapper { padding: 4px 16px 12px 16px; }
+        
         .download-postman-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 10px;
-            background-color: #ff6c37; /* Couleur Orange Officielle Postman */
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+            padding: 8px; background-color: #ff6c37; color: white; border: none; border-radius: 4px;
+            font-size: 0.75rem; font-weight: 700; cursor: pointer; text-decoration: none;
         }
+        .download-postman-btn:hover { background-color: #e05a2b; }
 
-        .download-postman-btn:hover {
-            background-color: #e05a2b;
+        .sub-folder-title {
+            padding: 8px 16px 4px 24px; font-size: 0.75rem; font-weight: 700; color: #718096;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-top: 6px; display: flex; align-items: center; gap: 6px;
         }
-
-        .download-postman-btn:active {
-            transform: scale(0.98);
-        }
-
-        .download-postman-btn .material-icons {
-            font-size: 16px;
-        }
-
-        /* Dossiers et requêtes */
-        .folder {
-            margin-top: 8px;
-        }
-
-        .folder-title {
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #546e7a;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #fafafa;
-        }
-
-        .folder-title.guide-folder::before { content: "📖"; font-size: 0.9rem; }
-        .folder-title.api-folder::before { content: "📁"; font-size: 0.9rem; }
 
         .api-item {
-            padding: 8px 16px 8px 32px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border-left: 3px solid transparent;
-            transition: all 0.2s;
-            color: var(--text-main);
+            padding: 8px 16px 8px 36px; display: flex; align-items: center; gap: 10px;
+            font-size: 0.85rem; cursor: pointer; border-left: 3px solid transparent; color: var(--text-main);
         }
-
         .api-item:hover { background-color: #f5f7f8; }
-
-        .api-item.active {
-            background-color: var(--primary-light);
-            border-left-color: var(--primary-color);
-            font-weight: 600;
-        }
+        .api-item.active { background-color: var(--primary-light); border-left-color: var(--primary-color); font-weight: 600; }
 
         .badge {
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: white;
-            width: 48px;
-            text-align: center;
+            font-size: 0.65rem; font-weight: 700; padding: 2px 4px; border-radius: 3px;
+            color: white; width: 44px; text-align: center; display: inline-block;
         }
         .badge.get { background-color: var(--color-get); }
         .badge.post { background-color: var(--color-post); }
+        .badge.put { background-color: var(--color-put); }
+        .badge.delete { background-color: var(--color-delete); }
 
-        /* ZONE DE CONTENU (SWAGGER STYLE) */
-        .content-area {
-            flex: 1;
-            padding: 32px;
-            overflow-y: auto;
-            background-color: #ffffff;
-        }
-
+        /* ZONE DE CONTENU CENTRAL */
+        .content-area { flex: 1; padding: 32px; overflow-y: auto; background-color: #ffffff; }
         .doc-page { display: none; }
         .doc-page.active-page { display: block; }
 
         .endpoint-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background-color: #f0f4f8;
-            padding: 12px 16px;
-            border-radius: 6px;
-            border: 1px solid #d9e2ec;
-            margin-bottom: 24px;
+            display: flex; align-items: center; gap: 12px; background-color: #f0f4f8;
+            padding: 12px 16px; border-radius: 6px; border: 1px solid #d9e2ec; margin-bottom: 24px;
         }
-
-        .endpoint-url {
-            font-family: "Courier New", Courier, monospace;
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1rem;
-        }
-
+        .endpoint-url { font-family: monospace; font-weight: 600; color: var(--primary-color); font-size: 1rem; }
         .env-base-url { color: var(--text-muted); font-weight: 400; }
-
-        h1 { font-size: 1.8rem; color: var(--primary-color); margin-bottom: 12px; }
-
-        .doc-description { color: #486581; font-size: 0.95rem; margin-bottom: 32px; line-height: 1.6; }
-
-        .section-title {
-            font-size: 1.1rem;
-            color: var(--primary-color);
-            margin-bottom: 16px;
-            border-bottom: 2px solid #f0f4f8;
-            padding-bottom: 6px;
-            margin-top: 24px;
-        }
-
-        .swagger-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; font-size: 0.9rem; }
-        .swagger-table th { background-color: #f8fafc; text-align: left; padding: 12px; color: #627d98; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
-        .swagger-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
-
-        .param-name { font-family: monospace; font-weight: 700; color: #102a43; }
-        .param-type { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-top: 2px; }
-        .param-required { color: #d32f2f; font-size: 0.75rem; font-weight: 700; margin-left: 4px; }
-
-        /* CONSOLE DE RÉPONSE */
-        .response-section { background-color: #1e1e1e; border-radius: 6px; padding: 20px; color: #d4d4d4; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.85rem; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3); }
-        .response-header-bar { display: flex; justify-content: space-between; color: #757575; margin-bottom: 12px; border-bottom: 1px solid #333333; padding-bottom: 8px; font-family: sans-serif; }
-        .status-code { color: #4ec9b0; font-weight: bold; }
-
-        pre { white-space: pre-wrap; word-wrap: break-word; }
-        .json-key { color: #9cdcfe; }
-        .json-string { color: #ce9178; }
-        .json-number { color: #b5cea8; }
+        
+        h1 { font-size: 1.6rem; color: var(--primary-color); margin-bottom: 12px; }
+        h2 { font-size: 1.2rem; color: var(--primary-color); margin-top: 24px; margin-bottom: 12px; }
+        .doc-description { color: #486581; font-size: 0.95rem; margin-bottom: 24px; line-height: 1.6; }
+        .section-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 16px; border-bottom: 2px solid #f0f4f8; padding-bottom: 6px; margin-top: 24px; }
 
         .key-card { background-color: #fafafa; border: 1px solid var(--border-color); padding: 16px; border-radius: 6px; margin-bottom: 16px; }
         .key-info input { padding: 8px; width: 350px; font-family: monospace; background-color: #eee; border: 1px solid #ccc; border-radius: 4px; margin-top: 6px; }
-        ol { margin-left: 20px; margin-bottom: 20px; color: #486581; }
-        li { margin-bottom: 8px; }
+        ol, ul { margin-left: 20px; margin-bottom: 20px; color: #486581; font-size: 0.9rem; }
+        li { margin-bottom: 6px; }
 
+        /* TABLEAUX STYLES SWAGGER */
+        .swagger-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.85rem; }
+        .swagger-table th { background-color: #f8fafc; text-align: left; padding: 10px; color: #627d98; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
+        .swagger-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+        .param-name { font-family: monospace; font-weight: 700; color: #102a43; }
+        .param-required { color: #d32f2f; font-size: 0.75rem; font-weight: 700; margin-left: 4px; }
     </style>
 </head>
 <body>
 
-    <!-- 1. ÉCRAN DE CONNEXION (LOGIN) -->
     <div class="login-wrapper" id="login-screen">
         <div class="login-card">
             <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F3%2Fba8f5633caaec3bcce74d2c9b3151035928e9a62.png&w=640&q=75" alt="Logo Comparecycle" class="login-logo">
             <h2>Portail Développeur</h2>
-            <p>Connectez-vous pour accéder à l'API Tradin</p>
-            
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Accédez à l'écosystème complet des API Comparecycle</p>
             <form onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label for="email">Identifiant ou Email</label>
-                    <input type="text" id="email" value="dev@comparecycle.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Mot de passe</label>
-                    <input type="password" id="password" value="••••••••••••" required>
-                </div>
+                <div class="form-group"><label>Identifiant ou Email</label><input type="text" value="dev@comparecycle.com" required></div>
+                <div class="form-group"><label>Mot de passe</label><input type="password" value="••••••••••••" required></div>
                 <button type="submit" class="login-btn">Se connecter</button>
             </form>
         </div>
     </div>
 
-    <!-- 2. INTERFACE APPLICATION -->
     <div class="app-wrapper" id="app-screen">
         
-        <!-- HEADER -->
         <header>
             <div class="logo-area">
                 <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F3%2Fba8f5633caaec3bcce74d2c9b3151035928e9a62.png&w=640&q=75" alt="Logo Comparecycle" class="logo-comparecycle">
-                <div class="divider"></div>
-                <div class="tool-title">Developer API Hub (Tradin)</div>
+                <div class="divider"></div><div class="tool-title">Developer Hub Ecosystem</div>
             </div>
-
             <div class="header-controls">
-                <!-- Sélecteur d'environnement -->
                 <div class="env-selector">
                     <button class="env-btn active preprod" id="btn-preprod" onclick="switchEnv('preprod')">PREPROD</button>
                     <button class="env-btn prod" id="btn-prod" onclick="switchEnv('prod')">PRODUCTION</button>
                 </div>
-
-                <!-- NOUVEAU : Sélecteur de Langue -->
                 <div class="lang-selector">
                     <button class="lang-btn active" id="lang-fr" onclick="switchLang('fr')">FR</button>
                     <button class="lang-btn" id="lang-en" onclick="switchLang('en')">EN</button>
                 </div>
-
-                <!-- Menu Profil Utilisateur avec Material Icon -->
                 <div class="profile-menu-container">
                     <button class="profile-trigger" onclick="toggleDropdown(event)">
-                        <span class="material-icons">sentiment_satisfied</span>
-                        <span class="username">Alexandre Dev</span>
-                        <span class="arrow-down">▼</span>
+                        <span class="profile-icon-emoji">😊</span><span class="username">Alexandre Dev</span><span class="arrow-down">▼</span>
                     </button>
-                    
-                    <!-- Dropdown -->
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="dropdown-header">
-                            <div class="user-full-name">Alexandre Dev</div>
-                            <div class="user-role">Administrateur API</div>
+                            <div class="user-full-name">Alexandre Dev</div><div class="user-role">Administrateur Écosystème</div>
                         </div>
                         <button class="dropdown-item logout-btn" onclick="handleLogout()">🚪 Se déconnecter</button>
                     </div>
@@ -587,103 +358,246 @@
             </div>
         </header>
 
-        <!-- ZONE PRINCIPALE -->
         <div class="main-container">
             
-            <!-- SIDEBAR -->
             <sidebar>
-                <div class="sidebar-header">
-                    <div class="collection-title">Api - Tradin</div>
-                    <div class="collection-subtitle">v1.0.0 • Postman Collection</div>
-                    
-                    <!-- NOUVEAU : Bouton de téléchargement Postman -->
-                    <a href="#" class="download-postman-btn" onclick="alert('Téléchargement de la collection Postman (Api - Tradin.postman_collection.json)...')">
-                        <span class="material-icons">download</span>
-                        <span>Télécharger la collection Postman</span>
-                    </a>
+                <div class="sidebar-title">Catalogues des API</div>
+
+                <div class="accordion-item open" id="acc-tradein">
+                    <button class="accordion-header" onclick="toggleAccordion('acc-tradein')">
+                        <span>🔄 API Trade In</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="download-btn-wrapper">
+                            <a href="#" class="download-postman-btn" onclick="alert('Téléchargement : Api_Tradin.postman_collection.json')">📥 Postman Collection</a>
+                        </div>
+                        <div class="api-item active" onclick="switchPage('page-tradein-explication', this)">📖 Explication générale</div>
+                        <div class="api-item" onclick="switchPage('page-tradein-keys', this)">🔑 Clés d'authentification</div>
+                        
+                        <div class="sub-folder-title">📁 Catalog & Argus</div>
+                        <div class="api-item" onclick="switchPage('page-tradein-argus', this)"><span class="badge get">GET</span> Catalog/argus</div>
+                        <div class="api-item" onclick="switchPage('page-coming-soon', this)"><span class="badge get">GET</span> Catalog/brands</div>
+                        
+                        <div class="sub-folder-title">📁 Criteria & Simulation</div>
+                        <div class="api-item" onclick="switchPage('page-tradein-criteria', this)"><span class="badge get">GET</span> Criteria/questions</div>
+                        <div class="api-item" onclick="switchPage('page-coming-soon', this)"><span class="badge post">POST</span> Simulation/calculate</div>
+                    </div>
                 </div>
 
-                <!-- GUIDE & CONFIG -->
-                <div class="folder">
-                    <div class="folder-title guide-folder">Guide</div>
-                    <div class="api-item active" id="menu-explication" onclick="switchPage('page-explication', this)">Explication générale</div>
-                    <div class="api-item" id="menu-keys" onclick="switchPage('page-keys', this)">Paramètres clés API</div>
+                <div class="accordion-item" id="acc-partenaire">
+                    <button class="accordion-header" onclick="toggleAccordion('acc-partenaire')">
+                        <span>🤝 API Partenaire</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="download-btn-wrapper">
+                            <a href="#" class="download-postman-btn" onclick="alert('Téléchargement : Api_Partenaire.postman_collection.json')">📥 Postman Collection</a>
+                        </div>
+                        <div class="api-item" onclick="switchPage('page-partenaire-explication', this)">📖 Explication générale</div>
+                        <div class="api-item" onclick="switchPage('page-partenaire-keys', this)">🔑 Clés d'authentification</div>
+                        
+                        <div class="sub-folder-title">📁 Configuration Stores</div>
+                        <div class="api-item" onclick="switchPage('page-partenaire-stores', this)"><span class="badge get">GET</span> Stores/list</div>
+                        <div class="api-item" onclick="switchPage('page-coming-soon', this)"><span class="badge post">POST</span> Stores/register</div>
+                    </div>
                 </div>
 
-                <!-- ENDPOINTS API -->
-                <div class="folder">
-                    <div class="folder-title api-folder">Auth</div>
-                    <div class="api-item" onclick="switchPage('page-brands', this)"><span class="badge post">POST</span> Login</div>
-                    <div class="api-item" onclick="switchPage('page-brands', this)"><span class="badge post">POST</span> Refresh Token</div>
+                <div class="accordion-item" id="acc-logistique">
+                    <button class="accordion-header" onclick="toggleAccordion('acc-logistique')">
+                        <span>📦 API Logistique</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="download-btn-wrapper">
+                            <a href="#" class="download-postman-btn" onclick="alert('Téléchargement : Api_Logistique.postman_collection.json')">📥 Postman Collection</a>
+                        </div>
+                        <div class="api-item" onclick="switchPage('page-logistique-explication', this)">📖 Explication générale</div>
+                        <div class="api-item" onclick="switchPage('page-logistique-keys', this)">🔑 Clés d'authentification</div>
+                        
+                        <div class="sub-folder-title">📁 Shipments & Labels</div>
+                        <div class="api-item" onclick="switchPage('page-logistique-shipments', this)"><span class="badge post">POST</span> Shipments/label</div>
+                        <div class="api-item" onclick="switchPage('page-coming-soon', this)"><span class="badge get">GET</span> Shipments/track</div>
+                    </div>
                 </div>
 
-                <div class="folder">
-                    <div class="folder-title api-folder">Brand</div>
-                    <div class="api-item" id="menu-brands" onclick="switchPage('page-brands', this)"><span class="badge get">GET</span> List Brands</div>
-                    <div class="api-item" onclick="switchPage('page-brands', this)"><span class="badge get">GET</span> Get Brand By ID</div>
+                <div class="accordion-item" id="acc-pandas">
+                    <button class="accordion-header" onclick="toggleAccordion('acc-pandas')">
+                        <span>🐼 API Pandas</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="download-btn-wrapper">
+                            <a href="#" class="download-postman-btn" onclick="alert('Téléchargement : Api_Pandas.postman_collection.json')">📥 Postman Collection</a>
+                        </div>
+                        <div class="api-item" onclick="switchPage('page-pandas-explication', this)">📖 Explication générale</div>
+                        <div class="api-item" onclick="switchPage('page-pandas-keys', this)">🔑 Clés d'authentification</div>
+                        
+                        <div class="sub-folder-title">📁 Data Analytics</div>
+                        <div class="api-item" onclick="switchPage('page-pandas-metrics', this)"><span class="badge get">GET</span> Metrics/sustainability</div>
+                    </div>
                 </div>
 
-                <div class="folder">
-                    <div class="folder-title api-folder">Category</div>
-                    <div class="api-item" onclick="switchPage('page-brands', this)"><span class="badge get">GET</span> List Categories</div>
+                <div class="accordion-item" id="acc-b2b">
+                    <button class="accordion-header" onclick="toggleAccordion('acc-b2b')">
+                        <span>🏢 API B2B</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="download-btn-wrapper">
+                            <a href="#" class="download-postman-btn" onclick="alert('Téléchargement : Api_B2B.postman_collection.json')">📥 Postman Collection</a>
+                        </div>
+                        <div class="api-item" onclick="switchPage('page-b2b-explication', this)">📖 Explication générale</div>
+                        <div class="api-item" onclick="switchPage('page-b2b-keys', this)">🔑 Clés d'authentification</div>
+                        
+                        <div class="sub-folder-title">📁 Bulk Orders</div>
+                        <div class="api-item" onclick="switchPage('page-b2b-bulk', this)"><span class="badge post">POST</span> Bulk/quote</div>
+                    </div>
                 </div>
             </sidebar>
 
-            <!-- CONTENU CENTRAL -->
             <div class="content-area">
                 
-                <!-- PAGE 1 : EXPLICATION GÉNÉRALE -->
-                <div class="doc-page active-page" id="page-explication">
-                    <h1 class="translatable" data-fr="Explication générale" data-en="General Overview">Explication générale</h1>
+                <div class="doc-page active-page" id="page-tradein-explication">
+                    <h1 class="translatable" data-fr="API Trade In - Explication générale" data-en="Trade In API - General Overview">API Trade In - Explication générale</h1>
                     <p class="doc-description translatable" 
-                       data-fr="Bienvenue sur l'API de Trade-in (reprise) de Comparecycle. Cette API en marque blanche vous permet d'intégrer notre tunnel d'estimation et de rachat directement sur vos plateformes ou applications partenaires."
-                       data-en="Welcome to the Comparecycle Trade-in API. This white-label API allows you to seamlessly integrate our evaluation and buyback funnel directly into your partner platforms or applications.">
-                       Bienvenue sur l'API de Trade-in (reprise) de Comparecycle. Cette API en marque blanche vous permet d'intégrer notre tunnel d'estimation et de rachat directement sur vos plateformes ou applications partenaires.
+                       data-fr="Cette API gère l'ensemble du tunnel d'estimation, de cotation (Argus) et de diagnostic dynamique propre à chaque appareil pour Comparecycle."
+                       data-en="This API manages the complete evaluation, argus lookup, and conditional diagnostic flow for devices on Comparecycle.">
+                       Cette API gère l'ensemble du tunnel d'estimation, de cotation (Argus) et de diagnostic dynamique propre à chaque appareil pour Comparecycle.
                     </p>
-                    
-                    <div class="section-title translatable" data-fr="Fonctionnement du flux" data-en="Workflow Pipeline">Fonctionnement du flux</div>
-                    <p class="doc-description translatable" data-fr="Le parcours standard se déroule selon les étapes suivantes :" data-en="The standard integration flows through these key steps:">Le parcours standard se déroule selon les étapes suivantes :</p>
-                    <ol>
-                        <li class="translatable" data-fr="Authentification : Récupération de votre token via le endpoint /auth/login." data-en="Authentication: Retrieve your bearer token using the /auth/login endpoint.">Authentification : Récupération de votre token via le endpoint <code>/auth/login</code>.</li>
-                        <li class="translatable" data-fr="Catalogue : Exploration des marques (Brand) et des catégories (Category)." data-en="Catalog Exploration: Browse available brands (Brand) and device categories (Category).">Catalogue : Exploration des marques (<code>Brand</code>) et des catégories (<code>Category</code>).</li>
-                        <li class="translatable" data-fr="Évaluation : Récupération des questions de diagnostic dynamiques propres à l'appareil." data-en="Evaluation: Fetch dynamic conditional criteria questions matching the specific device.">Évaluation : Récupération des questions de diagnostic dynamiques propres à l'appareil.</li>
-                    </ol>
+                    <div class="section-title">Structure globale du flux</div>
+                    <ul>
+                        <li><b>Catalog/argus :</b> Récupération de l'ID Argus de référence.</li>
+                        <li><b>Criteria/questions :</b> Questions dynamiques conditionnelles basées sur l'appareil.</li>
+                        <li><b>Simulation/calculate :</b> Calcul instantané de la valeur de rachat théorique.</li>
+                    </ul>
                 </div>
 
-                <!-- PAGE 2 : PARAMÈTRES CLÉS API -->
-                <div class="doc-page" id="page-keys">
-                    <h1 class="translatable" data-fr="Paramètres clés API" data-en="API Key Settings">Paramètres clés API</h1>
-                    <p class="doc-description translatable" data-fr="Gérez vos identifiants de sécurité pour authentifier vos requêtes." data-en="Manage your security credentials to authenticate your API requests.">Gérez vos identifiants de sécurité pour authentifier vos requêtes.</p>
-                    
-                    <div class="section-title">Credentials</div>
+                <div class="doc-page" id="page-tradein-keys">
+                    <h1>API Trade In - Credentials</h1>
+                    <p class="doc-description">Entête HTTP requis : <code>X-AUTH-CR</code></p>
                     <div class="key-card">
-                        <div class="key-info">
-                            <strong>Client ID (Preproduction)</strong><br>
-                            <input type="text" value="cc_tradin_client_preprod_882x1z" readonly>
-                        </div>
+                        <strong>Client ID (TradeIn Preprod)</strong><br>
+                        <input type="text" value="cc_tradein_preprod_99182x" readonly>
                     </div>
                 </div>
 
-                <!-- PAGE 3 : ROUTE LIST BRANDS -->
-                <div class="doc-page" id="page-brands">
-                    <h1>List Brands</h1>
-                    <p class="doc-description translatable" data-fr="Récupère la liste complète des marques partenaires." data-en="Retrieves the full list of available partner brands.">Récupère la liste complète des marques partenaires.</p>
-
+                <div class="doc-page" id="page-tradein-argus">
+                    <h1>GET /Catalog/argus</h1>
+                    <p class="doc-description">Récupère l'identifiant ou la valeur de référence argus en cours de validité.</p>
                     <div class="endpoint-header">
-                        <span class="badge get" style="font-size: 0.85rem; padding: 4px 10px; width: auto;">GET</span>
-                        <div class="endpoint-url">
-                            <span class="env-base-url" id="base-url">https://api-preprod.comparecycle.com/v1</span>/brands
-                        </div>
+                        <span class="badge get">GET</span>
+                        <div class="endpoint-url"><span class="env-base-url" id="base-url-1">https://api-preprod.comparecycle.com/v1</span>/Catalog/argus</div>
                     </div>
+                    <h2>Query Parameters</h2>
+                    <table class="swagger-table">
+                        <thead><tr><th>Paramètre</th><th>Type</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td><span class="param-name">idargus</span></td><td>int (optional)</td><td>Filtre sur un identifiant précis.</td></tr>
+                            <tr><td><span class="param-name">argus_by_timestamp</span></td><td>string (optional)</td><td>Filtre l'argus à une date passée précise.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="doc-page" id="page-tradein-criteria">
+                    <h1>GET /Criteria/questions</h1>
+                    <p class="doc-description">Récupère le questionnaire de diagnostic dynamique et conditionnel lié à l'appareil sélectionné.</p>
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <div class="endpoint-url"><span class="env-base-url" id="base-url-2">https://api-preprod.comparecycle.com/v1</span>/Criteria/questions</div>
+                    </div>
+                </div>
+
+
+                <div class="doc-page" id="page-partenaire-explication">
+                    <h1>API Partenaire - Explication générale</h1>
+                    <p class="doc-description">Cette API vous permet de configurer, lister et lier vos boutiques physiques ou vos comptes d'apport d'affaires tiers.</p>
+                </div>
+                <div class="doc-page" id="page-partenaire-keys">
+                    <h1>API Partenaire - Credentials</h1>
+                    <div class="key-card">
+                        <strong>Partner Secret Token</strong><br>
+                        <input type="text" value="cc_partner_secret_772xaa01" readonly>
+                    </div>
+                </div>
+                <div class="doc-page" id="page-partenaire-stores">
+                    <h1>GET /Stores/list</h1>
+                    <p class="doc-description">Retourne la liste complète de vos magasins physiques enregistrés pour la collecte en point de vente.</p>
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <div class="endpoint-url"><span class="env-base-url" id="base-url-3">https://api-preprod.comparecycle.com/v1</span>/Stores/list</div>
+                    </div>
+                </div>
+
+
+                <div class="doc-page" id="page-logistique-explication">
+                    <h1>API Logistique - Explication générale</h1>
+                    <p class="doc-description">Permet d'automatiser l'envoi d'appareils rachetés en générant des étiquettes de transport (Mondial Relay, Chronopost, Colissimo) et en suivant les statuts logistiques.</p>
+                </div>
+                <div class="doc-page" id="page-logistique-keys">
+                    <h1>API Logistique - Credentials</h1>
+                    <div class="key-card">
+                        <strong>Logistics Public Key</strong><br>
+                        <input type="text" value="cc_logistics_token_abc8812" readonly>
+                    </div>
+                </div>
+                <div class="doc-page" id="page-logistique-shipments">
+                    <h1>POST /Shipments/label</h1>
+                    <p class="doc-description">Génère un fichier de transport au format PDF ou ZPL pour l'expédition de l'appareil par le client final.</p>
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <div class="endpoint-url"><span class="env-base-url" id="base-url-4">https://api-preprod.comparecycle.com/v1</span>/Shipments/label</div>
+                    </div>
+                </div>
+
+
+                <div class="doc-page" id="page-pandas-explication">
+                    <h1>API Pandas - Explication générale</h1>
+                    <p class="doc-description">Fournit des agrégats de données massives (Big Data) pour l'édition de bilans RSE et l'analyse de l'empreinte carbone évitée grâce aux reprises d'appareils.</p>
+                </div>
+                <div class="doc-page" id="page-pandas-keys">
+                    <h1>API Pandas - Credentials</h1>
+                    <div class="key-card">
+                        <strong>Pandas Analytics Key</strong><br>
+                        <input type="text" value="cc_pandas_data_882910xx" readonly>
+                    </div>
+                </div>
+                <div class="doc-page" id="page-pandas-metrics">
+                    <h1>GET /Metrics/sustainability</h1>
+                    <p class="doc-description">Récupère le volume total de CO2 économisé, le poids de DEEE évité sur une période donnée.</p>
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <div class="endpoint-url"><span class="env-base-url" id="base-url-5">https://api-preprod.comparecycle.com/v1</span>/Metrics/sustainability</div>
+                    </div>
+                </div>
+
+
+                <div class="doc-page" id="page-b2b-explication">
+                    <h1>API B2B - Explication générale</h1>
+                    <p class="doc-description">Destinée aux entreprises souhaitant faire estimer et revendre une flotte complète de parcs informatiques ou de téléphones d'entreprise (Rachats en masse).</p>
+                </div>
+                <div class="doc-page" id="page-b2b-keys">
+                    <h1>API B2B - Credentials</h1>
+                    <div class="key-card">
+                        <strong>B2B Enterprise Token</strong><br>
+                        <input type="text" value="cc_b2b_ent_993012bb" readonly>
+                    </div>
+                </div>
+                <div class="doc-page" id="page-b2b-bulk">
+                    <h1>POST /Bulk/quote</h1>
+                    <p class="doc-description">Soumet une liste d'appareils (via un tableau JSON de structures) pour obtenir une cotation globale B2B.</p>
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <div class="endpoint-url"><span class="env-base-url" id="base-url-6">https://api-preprod.comparecycle.com/v1</span>/Bulk/quote</div>
+                    </div>
+                </div>
+
+
+                <div class="doc-page" id="page-coming-soon">
+                    <h1>Route en cours de documentation</h1>
+                    <p class="doc-description">La description détaillée des paramètres et des réponses JSON pour cette route est en cours de finalisation.</p>
                 </div>
 
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT LOGIQUE INTERACTIVE -->
     <script>
-        // Gestion de l'authentification
         function handleLogin(event) {
             event.preventDefault();
             document.getElementById('login-screen').style.display = 'none';
@@ -696,7 +610,6 @@
             document.getElementById('profileDropdown').classList.remove('show');
         }
 
-        // Dropdown Profil Menu
         function toggleDropdown(event) {
             event.stopPropagation();
             document.getElementById('profileDropdown').classList.toggle('show');
@@ -708,7 +621,19 @@
             }
         }
 
-        // Commutateur de pages (Sidebar)
+        // ACCORDÉON
+        function toggleAccordion(id) {
+            const items = document.querySelectorAll('.accordion-item');
+            items.forEach(item => {
+                if (item.id === id) {
+                    item.classList.toggle('open');
+                } else {
+                    item.classList.remove('open');
+                }
+            });
+        }
+
+        // NAVIGATION ENTRE PAGES
         function switchPage(pageId, element) {
             const items = document.querySelectorAll('.api-item');
             items.forEach(item => item.classList.remove('active'));
@@ -717,40 +642,46 @@
             pages.forEach(page => page.classList.remove('active-page'));
 
             element.classList.add('active');
-            document.getElementById(pageId).classList.add('active-page');
-        }
-
-        // Commutateur d'environnement
-        function switchEnv(env) {
-            const btnPreprod = document.getElementById('btn-preprod');
-            const btnProd = document.getElementById('btn-prod');
-            const baseUrlText = document.getElementById('base-url');
-
-            btnPreprod.classList.remove('active');
-            btnProd.classList.remove('active');
-
-            if (env === 'preprod') {
-                btnPreprod.classList.add('active');
-                if(baseUrlText) baseUrlText.innerText = 'https://api-preprod.comparecycle.com/v1';
-            } else if (env === 'prod') {
-                btnProd.classList.add('active');
-                if(baseUrlText) baseUrlText.innerText = 'https://api.comparecycle.com/v1';
+            const targetPage = document.getElementById(pageId);
+            if(targetPage) {
+                targetPage.classList.add('active-page');
             }
         }
 
-        // NOUVEAU : Commutateur dynamique de Langue (FR / EN)
+        // SWITCH ENVIRONNEMENT
+        function switchEnv(env) {
+            const btnPreprod = document.getElementById('btn-preprod');
+            const btnProd = document.getElementById('btn-prod');
+            
+            btnPreprod.classList.remove('active');
+            btnProd.classList.remove('active');
+
+            let urlText = '';
+            if (env === 'preprod') {
+                btnPreprod.classList.add('active');
+                urlText = 'https://api-preprod.comparecycle.com/v1';
+            } else {
+                btnProd.classList.add('active');
+                urlText = 'https://api.comparecycle.com/v1';
+            }
+
+            // Mise à jour de tous les headers d'URLs de la page
+            for (let i = 1; i <= 6; i++) {
+                const el = document.getElementById('base-url-' + i);
+                if (el) el.innerText = urlText;
+            }
+        }
+
+        // SWITCH LANGUE
         function switchLang(lang) {
             document.getElementById('lang-fr').classList.remove('active');
             document.getElementById('lang-en').classList.remove('active');
             document.getElementById('lang-' + lang).classList.add('active');
 
-            // Traduction des éléments avec la classe 'translatable'
             const elements = document.querySelectorAll('.translatable');
             elements.forEach(el => {
                 const text = el.getAttribute('data-' + lang);
-                if (text) {
-                    el.innerText = text;
-                }
+                if (text) el.innerText = text;
             });
         }
     </script>
