@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comparecycle - Portail Multi-API Développeurs</title>
+    <!-- Inclusion de Material Icons pour l'icône de profil -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         /* --- VARIABLES DE DESIGN (Comparecycle) --- */
         :root {
@@ -189,7 +191,7 @@
             transition: background-color 0.2s;
         }
         .profile-trigger:hover { background-color: rgba(255, 255, 255, 0.1); }
-        .profile-icon-emoji { font-size: 22px; }
+        .profile-icon { font-size: 24px; color: white; }
         .username { font-size: 0.9rem; font-weight: 500; }
         .arrow-down { font-size: 0.7rem; color: #b0bec5; }
 
@@ -315,6 +317,7 @@
 </head>
 <body>
 
+    <!-- ÉCRAN DE CONNEXION -->
     <div class="login-wrapper" id="login-screen">
         <div class="login-card">
             <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F3%2Fba8f5633caaec3bcce74d2c9b3151035928e9a62.png&w=640&q=75" alt="Logo Comparecycle" class="login-logo">
@@ -328,8 +331,10 @@
         </div>
     </div>
 
+    <!-- INTERFACE APPLICATION -->
     <div class="app-wrapper" id="app-screen">
         
+        <!-- HEADER -->
         <header>
             <div class="logo-area">
                 <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F3%2Fba8f5633caaec3bcce74d2c9b3151035928e9a62.png&w=640&q=75" alt="Logo Comparecycle" class="logo-comparecycle">
@@ -346,7 +351,7 @@
                 </div>
                 <div class="profile-menu-container">
                     <button class="profile-trigger" onclick="toggleDropdown(event)">
-                        <span class="profile-icon-emoji">😊</span><span class="username">Alexandre Dev</span><span class="arrow-down">▼</span>
+                        <span class="material-icons profile-icon">sentiment_satisfied</span><span class="username">Alexandre Dev</span><span class="arrow-down">▼</span>
                     </button>
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="dropdown-header">
@@ -358,14 +363,17 @@
             </div>
         </header>
 
+        <!-- ZONE PRINCIPALE -->
         <div class="main-container">
             
+            <!-- SIDEBAR EN ACCORDÉON -->
             <sidebar>
                 <div class="sidebar-title">Catalogues des API</div>
 
+                <!-- ACCORDÉON 1 : API TRADE IN -->
                 <div class="accordion-item open" id="acc-tradein">
                     <button class="accordion-header" onclick="toggleAccordion('acc-tradein')">
-                        <span>🔄 API Trade In</span><span class="arrow">▼</span>
+                        <span>API Trade In</span><span class="arrow">▼</span>
                     </button>
                     <div class="accordion-content">
                         <div class="download-btn-wrapper">
@@ -384,9 +392,10 @@
                     </div>
                 </div>
 
+                <!-- ACCORDÉON 2 : API PARTENAIRE -->
                 <div class="accordion-item" id="acc-partenaire">
                     <button class="accordion-header" onclick="toggleAccordion('acc-partenaire')">
-                        <span>🤝 API Partenaire</span><span class="arrow">▼</span>
+                        <span>API Partenaire</span><span class="arrow">▼</span>
                     </button>
                     <div class="accordion-content">
                         <div class="download-btn-wrapper">
@@ -401,9 +410,10 @@
                     </div>
                 </div>
 
+                <!-- ACCORDÉON 3 : API LOGISTIQUE -->
                 <div class="accordion-item" id="acc-logistique">
                     <button class="accordion-header" onclick="toggleAccordion('acc-logistique')">
-                        <span>📦 API Logistique</span><span class="arrow">▼</span>
+                        <span>API Logistique</span><span class="arrow">▼</span>
                     </button>
                     <div class="accordion-content">
                         <div class="download-btn-wrapper">
@@ -418,9 +428,10 @@
                     </div>
                 </div>
 
+                <!-- ACCORDÉON 4 : API PANDAS -->
                 <div class="accordion-item" id="acc-pandas">
                     <button class="accordion-header" onclick="toggleAccordion('acc-pandas')">
-                        <span>🐼 API Pandas</span><span class="arrow">▼</span>
+                        <span>API Pandas</span><span class="arrow">▼</span>
                     </button>
                     <div class="accordion-content">
                         <div class="download-btn-wrapper">
@@ -434,9 +445,10 @@
                     </div>
                 </div>
 
+                <!-- ACCORDÉON 5 : API B2B -->
                 <div class="accordion-item" id="acc-b2b">
                     <button class="accordion-header" onclick="toggleAccordion('acc-b2b')">
-                        <span>🏢 API B2B</span><span class="arrow">▼</span>
+                        <span>API B2B</span><span class="arrow">▼</span>
                     </button>
                     <div class="accordion-content">
                         <div class="download-btn-wrapper">
@@ -451,8 +463,10 @@
                 </div>
             </sidebar>
 
+            <!-- CONTENU CENTRAL DYNAMIQUE -->
             <div class="content-area">
                 
+                <!-- ================= PAGES API TRADE IN ================= -->
                 <div class="doc-page active-page" id="page-tradein-explication">
                     <h1 class="translatable" data-fr="API Trade In - Explication générale" data-en="Trade In API - General Overview">API Trade In - Explication générale</h1>
                     <p class="doc-description translatable" 
@@ -504,6 +518,7 @@
                 </div>
 
 
+                <!-- ================= PAGES API PARTENAIRE ================= -->
                 <div class="doc-page" id="page-partenaire-explication">
                     <h1>API Partenaire - Explication générale</h1>
                     <p class="doc-description">Cette API vous permet de configurer, lister et lier vos boutiques physiques ou vos comptes d'apport d'affaires tiers.</p>
@@ -525,6 +540,7 @@
                 </div>
 
 
+                <!-- ================= PAGES API LOGISTIQUE ================= -->
                 <div class="doc-page" id="page-logistique-explication">
                     <h1>API Logistique - Explication générale</h1>
                     <p class="doc-description">Permet d'automatiser l'envoi d'appareils rachetés en générant des étiquettes de transport (Mondial Relay, Chronopost, Colissimo) et en suivant les statuts logistiques.</p>
@@ -546,6 +562,7 @@
                 </div>
 
 
+                <!-- ================= PAGES API PANDAS ================= -->
                 <div class="doc-page" id="page-pandas-explication">
                     <h1>API Pandas - Explication générale</h1>
                     <p class="doc-description">Fournit des agrégats de données massives (Big Data) pour l'édition de bilans RSE et l'analyse de l'empreinte carbone évitée grâce aux reprises d'appareils.</p>
@@ -567,6 +584,7 @@
                 </div>
 
 
+                <!-- ================= PAGES API B2B ================= -->
                 <div class="doc-page" id="page-b2b-explication">
                     <h1>API B2B - Explication générale</h1>
                     <p class="doc-description">Destinée aux entreprises souhaitant faire estimer et revendre une flotte complète de parcs informatiques ou de téléphones d'entreprise (Rachats en masse).</p>
@@ -588,6 +606,7 @@
                 </div>
 
 
+                <!-- PAGE PROVISOIRE -->
                 <div class="doc-page" id="page-coming-soon">
                     <h1>Route en cours de documentation</h1>
                     <p class="doc-description">La description détaillée des paramètres et des réponses JSON pour cette route est en cours de finalisation.</p>
@@ -597,6 +616,7 @@
         </div>
     </div>
 
+    <!-- LOGIQUE JAVASCRIPT INTERACTIVE -->
     <script>
         function handleLogin(event) {
             event.preventDefault();
