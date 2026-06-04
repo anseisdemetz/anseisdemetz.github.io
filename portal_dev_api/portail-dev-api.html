@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0083)file:///C:/Users/J%C3%A9r%C3%B4meCourivaud/Downloads/gemini-code-1780557263846.html -->
-<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparecycle - Portail Développeurs &amp; API</title>
+    <title>Comparecycle - Portail Développeurs & API</title>
     <!-- Inclusion des icônes Material Design -->
-    <link href="./portail-dev-api_files/icon" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         /* --- VARIABLES DE DESIGN (Marque Blanche / Comparecycle) --- */
         :root {
@@ -525,20 +523,20 @@
 <body>
 
     <!-- 1. ÉCRAN DE CONNEXION (LOGIN) -->
-    <div class="login-wrapper" id="login-screen" style="display: none;">
+    <div class="login-wrapper" id="login-screen">
         <div class="login-card">
-            <img src="./portail-dev-api_files/ba8f5633caaec3bcce74d2c9b3151035928e9a62.png" alt="Logo Comparecycle" class="login-logo">
+            <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F3%2Fba8f5633caaec3bcce74d2c9b3151035928e9a62.png&w=640&q=75" alt="Logo Comparecycle" class="login-logo">
             <h2>Portail Développeur</h2>
             <p>Connectez-vous pour accéder à l'API Tradin</p>
             
             <form onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label for="email">Identifiant ou Email</label>
-                    <input type="text" id="email" value="dev@comparecycle.com" required="">
+                    <input type="text" id="email" value="dev@comparecycle.com" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" id="password" value="••••••••••••" required="">
+                    <input type="password" id="password" value="••••••••••••" required>
                 </div>
                 <button type="submit" class="login-btn">Se connecter</button>
             </form>
@@ -546,12 +544,12 @@
     </div>
 
     <!-- 2. INTERFACE APPLICATION -->
-    <div class="app-wrapper" id="app-screen" style="display: flex;">
+    <div class="app-wrapper" id="app-screen">
         
         <!-- HEADER -->
         <header>
             <div class="logo-area">
-                <img src="./portail-dev-api_files/ba8f5633caaec3bcce74d2c9b3151035928e9a62.png" alt="Logo Comparecycle" class="logo-comparecycle">
+                <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F3%2Fba8f5633caaec3bcce74d2c9b3151035928e9a62.png&w=640&q=75" alt="Logo Comparecycle" class="logo-comparecycle">
                 <div class="divider"></div>
                 <div class="tool-title">Developer API Hub (Tradin)</div>
             </div>
@@ -559,14 +557,14 @@
             <div class="header-controls">
                 <!-- Sélecteur d'environnement -->
                 <div class="env-selector">
-                    <button class="env-btn active preprod" id="btn-preprod" onclick="switchEnv(&#39;preprod&#39;)">PREPROD</button>
-                    <button class="env-btn prod" id="btn-prod" onclick="switchEnv(&#39;prod&#39;)">PRODUCTION</button>
+                    <button class="env-btn active preprod" id="btn-preprod" onclick="switchEnv('preprod')">PREPROD</button>
+                    <button class="env-btn prod" id="btn-prod" onclick="switchEnv('prod')">PRODUCTION</button>
                 </div>
 
                 <!-- NOUVEAU : Sélecteur de Langue -->
                 <div class="lang-selector">
-                    <button class="lang-btn active" id="lang-fr" onclick="switchLang(&#39;fr&#39;)">FR</button>
-                    <button class="lang-btn" id="lang-en" onclick="switchLang(&#39;en&#39;)">EN</button>
+                    <button class="lang-btn active" id="lang-fr" onclick="switchLang('fr')">FR</button>
+                    <button class="lang-btn" id="lang-en" onclick="switchLang('en')">EN</button>
                 </div>
 
                 <!-- Menu Profil Utilisateur avec Material Icon -->
@@ -599,7 +597,7 @@
                     <div class="collection-subtitle">v1.0.0 • Postman Collection</div>
                     
                     <!-- NOUVEAU : Bouton de téléchargement Postman -->
-                    <a href="file:///C:/Users/J%C3%A9r%C3%B4meCourivaud/Downloads/gemini-code-1780557263846.html#" class="download-postman-btn" onclick="alert(&#39;Téléchargement de la collection Postman (Api - Tradin.postman_collection.json)...&#39;)">
+                    <a href="#" class="download-postman-btn" onclick="alert('Téléchargement de la collection Postman (Api - Tradin.postman_collection.json)...')">
                         <span class="material-icons">download</span>
                         <span>Télécharger la collection Postman</span>
                     </a>
@@ -608,26 +606,26 @@
                 <!-- GUIDE & CONFIG -->
                 <div class="folder">
                     <div class="folder-title guide-folder">Guide</div>
-                    <div class="api-item" id="menu-explication" onclick="switchPage(&#39;page-explication&#39;, this)">Explication générale</div>
-                    <div class="api-item" id="menu-keys" onclick="switchPage(&#39;page-keys&#39;, this)">Paramètres clés API</div>
+                    <div class="api-item active" id="menu-explication" onclick="switchPage('page-explication', this)">Explication générale</div>
+                    <div class="api-item" id="menu-keys" onclick="switchPage('page-keys', this)">Paramètres clés API</div>
                 </div>
 
                 <!-- ENDPOINTS API -->
                 <div class="folder">
                     <div class="folder-title api-folder">Auth</div>
-                    <div class="api-item" onclick="switchPage(&#39;page-brands&#39;, this)"><span class="badge post">POST</span> Login</div>
-                    <div class="api-item" onclick="switchPage(&#39;page-brands&#39;, this)"><span class="badge post">POST</span> Refresh Token</div>
+                    <div class="api-item" onclick="switchPage('page-brands', this)"><span class="badge post">POST</span> Login</div>
+                    <div class="api-item" onclick="switchPage('page-brands', this)"><span class="badge post">POST</span> Refresh Token</div>
                 </div>
 
                 <div class="folder">
                     <div class="folder-title api-folder">Brand</div>
-                    <div class="api-item" id="menu-brands" onclick="switchPage(&#39;page-brands&#39;, this)"><span class="badge get">GET</span> List Brands</div>
-                    <div class="api-item" onclick="switchPage(&#39;page-brands&#39;, this)"><span class="badge get">GET</span> Get Brand By ID</div>
+                    <div class="api-item" id="menu-brands" onclick="switchPage('page-brands', this)"><span class="badge get">GET</span> List Brands</div>
+                    <div class="api-item" onclick="switchPage('page-brands', this)"><span class="badge get">GET</span> Get Brand By ID</div>
                 </div>
 
                 <div class="folder">
                     <div class="folder-title api-folder">Category</div>
-                    <div class="api-item active" onclick="switchPage(&#39;page-brands&#39;, this)"><span class="badge get">GET</span> List Categories</div>
+                    <div class="api-item" onclick="switchPage('page-brands', this)"><span class="badge get">GET</span> List Categories</div>
                 </div>
             </sidebar>
 
@@ -635,9 +633,11 @@
             <div class="content-area">
                 
                 <!-- PAGE 1 : EXPLICATION GÉNÉRALE -->
-                <div class="doc-page" id="page-explication">
+                <div class="doc-page active-page" id="page-explication">
                     <h1 class="translatable" data-fr="Explication générale" data-en="General Overview">Explication générale</h1>
-                    <p class="doc-description translatable" data-fr="Bienvenue sur l&#39;API de Trade-in (reprise) de Comparecycle. Cette API en marque blanche vous permet d&#39;intégrer notre tunnel d&#39;estimation et de rachat directement sur vos plateformes ou applications partenaires." data-en="Welcome to the Comparecycle Trade-in API. This white-label API allows you to seamlessly integrate our evaluation and buyback funnel directly into your partner platforms or applications.">
+                    <p class="doc-description translatable" 
+                       data-fr="Bienvenue sur l'API de Trade-in (reprise) de Comparecycle. Cette API en marque blanche vous permet d'intégrer notre tunnel d'estimation et de rachat directement sur vos plateformes ou applications partenaires."
+                       data-en="Welcome to the Comparecycle Trade-in API. This white-label API allows you to seamlessly integrate our evaluation and buyback funnel directly into your partner platforms or applications.">
                        Bienvenue sur l'API de Trade-in (reprise) de Comparecycle. Cette API en marque blanche vous permet d'intégrer notre tunnel d'estimation et de rachat directement sur vos plateformes ou applications partenaires.
                     </p>
                     
@@ -646,7 +646,7 @@
                     <ol>
                         <li class="translatable" data-fr="Authentification : Récupération de votre token via le endpoint /auth/login." data-en="Authentication: Retrieve your bearer token using the /auth/login endpoint.">Authentification : Récupération de votre token via le endpoint <code>/auth/login</code>.</li>
                         <li class="translatable" data-fr="Catalogue : Exploration des marques (Brand) et des catégories (Category)." data-en="Catalog Exploration: Browse available brands (Brand) and device categories (Category).">Catalogue : Exploration des marques (<code>Brand</code>) et des catégories (<code>Category</code>).</li>
-                        <li class="translatable" data-fr="Évaluation : Récupération des questions de diagnostic dynamiques propres à l&#39;appareil." data-en="Evaluation: Fetch dynamic conditional criteria questions matching the specific device.">Évaluation : Récupération des questions de diagnostic dynamiques propres à l'appareil.</li>
+                        <li class="translatable" data-fr="Évaluation : Récupération des questions de diagnostic dynamiques propres à l'appareil." data-en="Evaluation: Fetch dynamic conditional criteria questions matching the specific device.">Évaluation : Récupération des questions de diagnostic dynamiques propres à l'appareil.</li>
                     </ol>
                 </div>
 
@@ -659,13 +659,13 @@
                     <div class="key-card">
                         <div class="key-info">
                             <strong>Client ID (Preproduction)</strong><br>
-                            <input type="text" value="cc_tradin_client_preprod_882x1z" readonly="">
+                            <input type="text" value="cc_tradin_client_preprod_882x1z" readonly>
                         </div>
                     </div>
                 </div>
 
                 <!-- PAGE 3 : ROUTE LIST BRANDS -->
-                <div class="doc-page active-page" id="page-brands">
+                <div class="doc-page" id="page-brands">
                     <h1>List Brands</h1>
                     <p class="doc-description translatable" data-fr="Récupère la liste complète des marques partenaires." data-en="Retrieves the full list of available partner brands.">Récupère la liste complète des marques partenaires.</p>
 
@@ -754,5 +754,5 @@
             });
         }
     </script>
-
-</body></html>
+</body>
+</html>
