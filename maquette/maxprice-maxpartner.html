@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Attribution Logique Cumulative par Grade</title>
+    <style>
+        /* --- RESET & VARIABLES (FLAT DESIGN) --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-app: #f4f6f9;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+            --primary: #3498db;
+            --primary-hover: #2980b9;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #e67e22;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 300px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h1 { font-size: 1.3rem; margin-bottom: 24px; font-weight: 600; border-bottom: 2px solid var(--bg-app); padding-bottom: 12px; }
+        h2 { font-size: 0.95rem; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+        .form-select { width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 6px; background-color: #fafbfc; color: var(--text-main); font-size: 0.9rem; outline: none; }
+
+        /* Bouton d'action Sidebar */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            background-color: var(--primary);
+            color: white;
+            transition: background-color 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* --- BARRE DE CONFIGURATION HAUTE --- */
+        .top-control-bar {
+            background-color: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-selection-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .top-selection-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .top-select-inline {
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            outline: none;
+            background-color: #fafbfc;
+        }
+
+        /* Onglets des Grades */
+        .grade-tabs {
+            display: flex;
+            gap: 6px;
+            background: #e2e8f0;
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .grade-tab {
+            padding: 8px 14px;
+            border: none;
+            background: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .grade-tab.active {
+            background-color: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* --- TABLES & CARDS --- */
+        .table-container {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            background-color: #fafbfc;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 20px;
+            border-bottom: 2px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        /* Encart Partenaire Attribué */
+        .partner-card {
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--success);
+            padding: 8px 12px;
+            border-radius: 6px;
+            background-color: #f4fbf7;
+        }
+        
+        /* Encart en cas de basculement/dépassement */
+        .partner-card.fallback {
+            border-left-color: var(--primary);
+            background-color: #f4f9fd;
+        }
+
+        .partner-name { font-weight: 700; font-size: 0.9rem; color: #117a65; display: flex; align-items: center; justify-content: space-between;}
+        .partner-card.fallback .partner-name { color: #2980b9; }
+        
+        .calc-details {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .price-highlight {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* --- MINI LISTE CLASSEMENT AVEC STATUT --- */
+        .rank-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.8rem;
+        }
+
+        .rank-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 8px;
+            border-radius: 4px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Multi-statuts pour la démo visuelle du dépassement */
+        .rank-list li.status-allocated {
+            border-left: 3px solid var(--success);
+            background-color: #e8f8f5;
+            font-weight: 600;
+        }
+
+        .rank-list li.status-rejected {
+            border-left: 3px solid var(--danger);
+            background-color: #fde8e8;
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .rank-list li.status-fallback-allocated {
+            border-left: 3px solid var(--primary);
+            background-color: #e8f4fd;
+            font-weight: 600;
+        }
+
+        .badge-reason {
+            font-size: 0.7rem;
+            background-color: var(--danger);
+            color: white;
+            padding: 1px 4px;
+            border-radius: 3px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-delete {
+            background: none; border: none; color: var(--danger); cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- SIDEBAR FILTRES ET BOUTON D'AJOUT -->
+        <aside class="sidebar">
+            <h1>Filtres Catalogue</h1>
+            <div class="form-group">
+                <label>Catégorie</label>
+                <select class="form-select">
+                    <option value="mobile">Mobile</option>
+                    <option value="">-- Aucune sélection --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Marque</label>
+                <select class="form-select">
+                    <option value="apple">Apple</option>
+                    <option value="">-- Aucune sélection --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Modèle</label>
+                <select class="form-select">
+                    <option value="all">Tous les modèles</option>
+                    <option value="">-- Aucune sélection --</option>
+                </select>
+            </div>
+
+            <!-- Réintroduction du bouton d'ajout demandé -->
+            <button class="btn-primary">
+                + Ajouter à l'analyse
+            </button>
+        </aside>
+
+        <!-- CONTENU PRINCIPAL (INCHANGÉ) -->
+        <main class="main-content">
+            
+            <!-- BARRE DE SÉLECTION DU GRADE -->
+            <div class="top-control-bar">
+                <div class="top-selection-group">
+                    <label>Filtre Grade Actif :</label>
+                    <div class="grade-tabs">
+                        <button class="grade-tab active">A</button>
+                        <button class="grade-tab">A-</button>
+                        <button class="grade-tab">B</button>
+                        <button class="grade-tab">C</button>
+                        <button class="grade-tab">C-</button>
+                        <button class="grade-tab">D</button>
+                        <button class="grade-tab">D-</button>
+                    </div>
+                </div>
+
+                <div class="top-selection-group">
+                    <label for="top-select">Affichage :</label>
+                    <select id="top-select" class="top-select-inline">
+                        <option value="3" selected>Top 3 Prix</option>
+                        <option value="5">Top 5 Prix</option>
+                        <option value="10">Top 10 Prix</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- TABLEAU DES RÉSULTATS -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 220px;">Produit (Ordre séquentiel)</th>
+                            <th style="width: 90px;">Grade</th>
+                            <th style="width: 90px;">Prix Max</th>
+                            <th>Calcul de l'Encours Virtuel & Attribution</th>
+                            <th style="width: 280px;">Analyse du Classement Général</th>
+                            <th style="width: 40px; text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <!-- LIGNE 1 : LANDIPHONE prend -->
+                        <tr>
+                            <td>
+                                <strong>1. iPhone 17 Pro 512Go</strong><br>
+                                <small style="color: var(--text-muted)">Apple • Réf: AP-17P512</small>
+                            </td>
+                            <td><span class="grade-label" style="font-weight: bold; color: var(--primary);">Grade A</span></td>
+                            <td><span class="price-highlight">1 250 €</span></td>
+                            <td>
+                                <div class="partner-card">
+                                    <div class="partner-name"><span>🏆 LANDIPHONE (Attribué)</span></div>
+                                    <div class="calc-details">
+                                        Encours virtuel : Précédents + 1 250 € = <strong>48 250 €</strong><br>
+                                        <span style="color: var(--success);">✔ Inférieur au plafond autorisé. Reste dispo.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-allocated"><span>1. LANDIPHONE</span> <strong>1 250 €</strong></li>
+                                    <li><span>2. FOXWAY</span> <span>1 200 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" title="Retirer ce produit">🗑</button></td>
+                        </tr>
+
+                        <!-- LIGNE 2 : LANDIPHONE prend encore -->
+                        <tr>
+                            <td>
+                                <strong>2. iPhone 17 Pro 256Go</strong><br>
+                                <small style="color: var(--text-muted)">Apple • Réf: AP-17P256</small>
+                            </td>
+                            <td><span class="grade-label" style="font-weight: bold; color: var(--primary);">Grade A</span></td>
+                            <td><span class="price-highlight">1 100 €</span></td>
+                            <td>
+                                <div class="partner-card">
+                                    <div class="partner-name"><span>🏆 LANDIPHONE (Attribué)</span></div>
+                                    <div class="calc-details">
+                                        Encours virtuel : Précédents + 1 100 € = <strong>49 350 €</strong><br>
+                                        <span style="color: var(--success);">✔ Inférieur au plafond autorisé. Reste dispo.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-allocated"><span>1. LANDIPHONE</span> <strong>1 100 €</strong></li>
+                                    <li><span>2. FOXWAY</span> <span>1 050 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" title="Retirer ce produit">🗑</button></td>
+                        </tr>
+
+                        <!-- LIGNE 3 : BASCULEMENT SUR FOXWAY CAR PLAFOND ATTEINT -->
+                        <tr>
+                            <td>
+                                <strong>3. iPhone 16 Pro Max</strong><br>
+                                <small style="color: var(--text-muted)">Apple • Réf: AP-16PM</small>
+                            </td>
+                            <td><span class="grade-label" style="font-weight: bold; color: var(--primary);">Grade A</span></td>
+                            <td><span class="price-highlight">950 €</span></td>
+                            <td>
+                                <div class="partner-card fallback">
+                                    <div class="partner-name"><span>🔄 FOXWAY (Attribution de repli)</span></div>
+                                    <div class="calc-details">
+                                        LANDIPHONE virtuel (Précédents + 950 €) ➔ <strong style="color:var(--danger)">Plafond Dépassé</strong><br>
+                                        Redirection sur FOXWAY. Nouvel encours : <strong>10 950 €</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-rejected"><span>1. LANDIPHONE (950 €)</span> <span class="badge-reason">Plafond atteint</span></li>
+                                    <li class="status-fallback-allocated"><span>2. FOXWAY</span> <strong>910 € (Attribué)</strong></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" title="Retirer ce produit">🗑</button></td>
+                        </tr>
+
+                        <!-- LIGNE 4 : LANDIPHONE REVIENT CAR LE RELIQUAT SUFFIT -->
+                        <tr>
+                            <td>
+                                <strong>4. iPhone SE 64Go</strong><br>
+                                <small style="color: var(--text-muted)">Apple • Réf: AP-SE64</small>
+                            </td>
+                            <td><span class="grade-label" style="font-weight: bold; color: var(--primary);">Grade A</span></td>
+                            <td><span class="price-highlight">350 €</span></td>
+                            <td>
+                                <div class="partner-card">
+                                    <div class="partner-name"><span>🏆 LANDIPHONE (Attribué)</span></div>
+                                    <div class="calc-details">
+                                        Encours virtuel : Précédents + 350 € = <strong>49 700 €</strong><br>
+                                        <span style="color: var(--success);">✔ Capacité résiduelle suffisante pour cette ligne.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-allocated"><span>1. LANDIPHONE</span> <strong>350 €</strong></li>
+                                    <li><span>2. FOXWAY</span> <span>310 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" title="Retirer ce produit">🗑</button></td>
+                        </tr>
+
+                        <!-- LIGNE 5 : NOUVEAU BLOCAGE, REDIRECTION FOXWAY -->
+                        <tr>
+                            <td>
+                                <strong>5. iPhone 15 Black</strong><br>
+                                <small style="color: var(--text-muted)">Apple • Réf: AP-15B</small>
+                            </td>
+                            <td><span class="grade-label" style="font-weight: bold; color: var(--primary);">Grade A</span></td>
+                            <td><span class="price-highlight">600 €</span></td>
+                            <td>
+                                <div class="partner-card fallback">
+                                    <div class="partner-name"><span>🔄 FOXWAY (Attribution de repli)</span></div>
+                                    <div class="calc-details">
+                                        LANDIPHONE virtuel (Précédents + 600 €) ➔ <strong style="color:var(--danger)">Plafond Dépassé</strong><br>
+                                        Redirection sur FOXWAY. Nouvel encours : <strong>11 530 €</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-rejected"><span>1. LANDIPHONE (600 €)</span> <span class="badge-reason">Plafond atteint</span></li>
+                                    <li class="status-fallback-allocated"><span>2. FOXWAY</span> <strong>580 € (Attribué)</strong></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" title="Retirer ce produit">🗑</button></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCRIPT INTERACTIF MAQUETTE -->
+    <script>
+        // Gestion dynamique des onglets de grade
+        const tabs = document.querySelectorAll('.grade-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const gradeLabels = document.querySelectorAll('.grade-label');
+                gradeLabels.forEach(label => {
+                    label.textContent = 'Grade ' + tab.textContent;
+                });
+            });
+        });
+
+        // Gestion de la corbeille
+        const deleteButtons = document.querySelectorAll('.btn-delete');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const row = e.target.closest('tr');
+                if (row) {
+                    row.style.transition = 'all 0.3s ease';
+                    row.style.opacity = '0';
+                    setTimeout(() => row.remove(), 300);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
