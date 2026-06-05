@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUX CONTRÔLÉ - Interface Unifiée Mutualisée</title>
+    <style>
+        /* --- RESET & VARIABLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-app: #f4f6f9;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+            --primary: #3498db;
+            --primary-hover: #2980b9;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #e67e22;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- SIDEBAR MUTUALISÉE --- */
+        .sidebar {
+            width: 320px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .sidebar h1 { font-size: 1.2rem; margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--bg-app); padding-bottom: 12px; }
+        
+        /* Commutateur de Mode Global */
+        .mode-switch-container {
+            background: #e2e8f0;
+            padding: 4px;
+            border-radius: 8px;
+            display: flex;
+            margin-bottom: 24px;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: 6px;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .mode-btn.active {
+            background-color: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Groupes de la Sidebar (Affichage conditionnel en JS) */
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+        .form-select { width: 100%; padding: 8px 12px; border: 2px solid var(--border-color); border-radius: 6px; outline: none; }
+        
+        .import-zone { background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 6px; padding: 16px; text-align: center; margin-bottom: 20px; cursor: pointer; }
+        .import-zone p { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* KPI & Suivi Enveloppes */
+        .kpi-card { background-color: var(--bg-app); padding: 12px; border-radius: 6px; border-left: 4px solid var(--primary); margin-bottom: 16px; }
+        .kpi-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+        .kpi-value { font-size: 1.1rem; font-weight: 700; margin-top: 2px; }
+
+        .partner-status-box { border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: auto; }
+        .partner-status-box h2 { font-size: 0.8rem; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .partner-progress-item { margin-bottom: 12px; }
+        .partner-progress-info { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; margin-bottom: 2px; }
+        .progress-bar-bg { background-color: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background-color: var(--success); transition: width 0.3s; }
+        .progress-bar-fill.danger { background-color: var(--danger); }
+
+        /* --- CONTENU PRINCIPAL --- */
+        .main-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Barre haute (Spécifique Simulation) */
+        .top-control-bar { background-color: var(--card-bg); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .grade-tabs { display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 6px; }
+        .grade-tab { padding: 6px 12px; border: none; background: none; font-weight: 600; font-size: 0.8rem; cursor: pointer; border-radius: 4px; }
+        .grade-tab.active { background-color: var(--card-bg); color: var(--primary); }
+
+        /* --- TABLEAU --- */
+        .table-container { background-color: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); }
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        .data-table th { background-color: #fafbfc; color: var(--text-muted); font-weight: 600; padding: 12px 20px; border-bottom: 2px solid var(--border-color); text-transform: uppercase; font-size: 0.7rem; }
+        .data-table td { padding: 14px 20px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+
+        .badge-grade { display: inline-block; padding: 3px 6px; font-weight: 700; font-size: 0.75rem; border-radius: 4px; background-color: #e8f4fd; color: var(--primary); border: 1px solid #b3d7f2; }
+        
+        .partner-selector-card { border: 1px solid var(--border-color); border-left: 4px solid var(--success); padding: 10px; border-radius: 6px; background-color: #f4fbf7; }
+        .partner-selector-card.alert-danger { border-left-color: var(--danger); background-color: #fdf3f2; }
+        
+        .select-partner-inline { width: 100%; padding: 6px 8px; font-weight: 700; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 4px; background-color: white; outline: none; margin-bottom: 4px; }
+        .select-partner-inline:disabled { background-color: transparent; border: none; padding: 0; cursor: default; color: #117a65; appearance: none; -webkit-appearance: none; }
+
+        .calc-details { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+        .price-highlight { font-weight: 700; color: var(--text-main); }
+
+        .rank-list { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; }
+        .rank-list li { display: flex; justify-content: space-between; padding: 4px 6px; border-radius: 4px; background: #f8fafc; border: 1px solid var(--border-color); }
+        .rank-list li.rank-1 { border-left: 3px solid var(--success); background-color: #e8f8f5; font-weight: 600; }
+
+        /* Footer Action Bar */
+        .footer-action-bar { display: flex; justify-content: space-between; align-items: center; background-color: var(--sidebar-bg); padding: 16px 24px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .btn-primary-action { background-color: var(--primary); color: white; border: none; padding: 12px 24px; font-size: 0.9rem; font-weight: 700; border-radius: 6px; cursor: pointer; }
+        .btn-primary-action.mode-prod { background-color: var(--success); }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <h1>FLUX CONTRÔLÉ</h1>
+            
+            <div class="mode-switch-container">
+                <button class="mode-btn active" id="btn-mode-sim" onclick="switchMode('simulation')">SIMULATION</button>
+                <button class="mode-btn" id="btn-mode-prod" onclick="switchMode('operational')">OPÉRATIONNEL</button>
+            </div>
+
+            <div id="sidebar-sim-view">
+                <div class="form-group">
+                    <label>Catégorie</label>
+                    <select class="form-select"><option>Mobile</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Marque</label>
+                    <select class="form-select"><option>Apple</option></select>
+                </div>
+            </div>
+
+            <div id="sidebar-prod-view" style="display: none;">
+                <div class="import-zone">
+                    <strong>Importer un Lot (.csv)</strong>
+                    <p>Fichier d'homologation des grades</p>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Volume du Lot Réel</div>
+                    <div class="kpi-value">3 Appareils</div>
+                </div>
+            </div>
+
+            <div class="partner-status-box">
+                <h2>Suivi des Enveloppes</h2>
+                <div class="partner-progress-item">
+                    <div class="partner-progress-info"><span>LANDIPHONE</span><strong id="kpi-landiphone">0 € / 50k €</strong></div>
+                    <div class="progress-bar-bg"><div id="bar-landiphone" class="progress-bar-fill"></div></div>
+                </div>
+                <div class="partner-progress-item">
+                    <div class="partner-progress-info"><span>FOXWAY</span><strong id="kpi-foxway">0 € / 30k €</strong></div>
+                    <div class="progress-bar-bg"><div id="bar-foxway" class="progress-bar-fill"></div></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <div class="top-control-bar" id="top-control-bar">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size:0.85rem; font-weight:600; color:var(--text-muted)">Grade Pivot Global :</span>
+                    <div class="grade-tabs">
+                        <button class="grade-tab active" onclick="changeGlobalGrade('A')">A</button>
+                        <button class="grade-tab" onclick="changeGlobalGrade('B')">B</button>
+                        <button class="grade-tab" onclick="changeGlobalGrade('C')">C</button>
+                    </div>
+                </div>
+                <span style="font-size:0.8rem; color:var(--text-muted)">Vue Catalogue Théorique</span>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 200px;">Produit</th>
+                            <th style="width: 100px; text-align: center;">Grade</th>
+                            <th style="width: 90px;">Prix Offert</th>
+                            <th style="width: 420px;">Calcul de l'Encours &amp; Routage</th>
+                            <th style="width: 220px;">Top Offres</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="product-row" data-price-landiphone="1250" data-price-foxway="1200">
+                            <td><strong class="prod-title">iPhone 17 Pro 512Go</strong></td>
+                            <td style="text-align: center;"><span class="badge-grade" id="grade-l1">Grade A</span></td>
+                            <td><span class="price-highlight" id="price-l1">1 250 €</span></td>
+                            <td>
+                                <div class="partner-selector-card">
+                                    <select class="select-partner-inline" onchange="runCascadeEngine()">
+                                        <option value="landiphone" selected>🏆 LANDIPHONE</option>
+                                        <option value="foxway">🥈 FOXWAY</option>
+                                    </select>
+                                    <div class="calc-details">
+                                        Encours initial : <span class="val-initial">0 €</span> | Cumulé : <span class="val-cumule" style="font-weight:700;">0 €</span><br>
+                                        Reste disponible partenaire : <span class="val-reste">0 €</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><ul class="rank-list"><li class="rank-1"><span>1. LANDIPHONE</span> <strong id="podium-l1-p1">1 250 €</strong></li></ul></td>
+                        </tr>
+
+                        <tr class="product-row" data-price-landiphone="1100" data-price-foxway="1050">
+                            <td><strong class="prod-title">iPhone 17 Pro 256Go</strong></td>
+                            <td style="text-align: center;"><span class="badge-grade" id="grade-l2">Grade A</span></td>
+                            <td><span class="price-highlight" id="price-l2">1 100 €</span></td>
+                            <td>
+                                <div class="partner-selector-card">
+                                    <select class="select-partner-inline" onchange="runCascadeEngine()">
+                                        <option value="landiphone" selected>🏆 LANDIPHONE</option>
+                                        <option value="foxway">🥈 FOXWAY</option>
+                                    </select>
+                                    <div class="calc-details">
+                                        Encours initial : <span class="val-initial">0 €</span> | Cumulé : <span class="val-cumule" style="font-weight:700;">0 €</span><br>
+                                        Reste disponible partenaire : <span class="val-reste">0 €</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><ul class="rank-list"><li class="rank-1"><span>1. LANDIPHONE</span> <strong id="podium-l2-p1">1 100 €</strong></li></ul></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="footer-action-bar">
+                <span id="footer-desc" style="font-size:0.8rem; color:var(--text-muted)">Mode Simulation actif.</span>
+                <button class="btn-primary-action" id="main-cta-btn" onclick="triggerCTA()">+ Ajouter à l'analyse</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentMode = 'simulation'; // État global de l'application
+        const CONFIG = { landiphone: { baseEncours: 46500, max: 50000 }, foxway: { baseEncours: 10000, max: 30000 } };
+
+        // 1. FONCTION DE COMMUTATION DE VUE (The Switch)
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Éléments du DOM à modifier
+            const btnSim = document.getElementById('btn-mode-sim');
+            const btnProd = document.getElementById('btn-mode-prod');
+            const sideSim = document.getElementById('sidebar-sim-view');
+            const sideProd = document.getElementById('sidebar-prod-view');
+            const topBar = document.getElementById('top-control-bar');
+            const ctaBtn = document.getElementById('main-cta-btn');
+            const footerDesc = document.getElementById('footer-desc');
+            const dropdowns = document.querySelectorAll('.select-partner-inline');
+
+            if (mode === 'simulation') {
+                btnSim.className = "mode-btn active"; btnProd.className = "mode-btn";
+                sideSim.style.display = "block"; sideProd.style.display = "none";
+                topBar.style.display = "flex";
+                ctaBtn.className = "btn-primary-action"; ctaBtn.textContent = "+ Ajouter à l'analyse";
+                footerDesc.textContent = "Mode Simulation : Ajustement théorique par grade global.";
+                dropdowns.forEach(d => d.disabled = true); // Désactive la sélection manuelle
+                
+                // Forcer les grades à être identiques pour la simulation
+                changeGlobalGrade('A');
+            } else {
+                btnSim.className = "mode-btn"; btnProd.className = "mode-btn active";
+                sideSim.style.display = "none"; sideProd.style.display = "block";
+                topBar.style.display = "none";
+                ctaBtn.className = "btn-primary-action mode-prod"; ctaBtn.textContent = "Valider et figer le lot";
+                footerDesc.textContent = "⚠️ Mode Opérationnel : Maîtrise des flux réels et forçages autorisés.";
+                dropdowns.forEach(d => d.disabled = false); // Active le contrôle manuel des lignes
+                
+                // Simuler des grades hétérogènes pour le lot réel
+                document.getElementById('grade-l1').className = "badge-grade"; document.getElementById('grade-l1').textContent = "Grade A";
+                document.getElementById('grade-l2').className = "badge-grade low"; document.getElementById('grade-l2').textContent = "Grade C";
+                document.getElementById('price-l2').textContent = "450 €";
+                document.getElementById('podium-l2-p1').textContent = "450 €";
+                document.querySelectorAll('.product-row')[1].setAttribute('data-price-landiphone', '450');
+            }
+            runCascadeEngine();
+        }
+
+        // 2. LOGIQUE SIMULATION : CHANGEMENT DES GRADES DU CATALOGUE
+        function changeGlobalGrade(grade) {
+            document.querySelectorAll('.grade-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Aligner toutes les lignes sur le grade sélectionné
+            document.getElementById('grade-l1').textContent = "Grade " + grade;
+            document.getElementById('grade-l2').textContent = "Grade " + grade;
+            runCascadeEngine();
+        }
+
+        // 3. MOTEUR DE CALCUL UNIQUE ET MUTUALISÉ 
+        function runCascadeEngine() {
+            let currentEncours = { landiphone: CONFIG.landiphone.baseEncours, foxway: CONFIG.foxway.baseEncours };
+            const rows = document.querySelectorAll('.product-row');
+
+            rows.forEach((row) => {
+                const select = row.querySelector('.select-partner-inline');
+                const chosenPartner = select.value;
+                const card = row.querySelector('.partner-selector-card');
+                const price = parseInt(row.getAttribute(`data-price-${chosenPartner}`), 10);
+
+                const initialVirtualEncours = currentEncours[chosenPartner];
+                currentEncours[chosenPartner] += price;
+                const remainingBudget = CONFIG[chosenPartner].max - currentEncours[chosenPartner];
+
+                card.querySelector('.val-initial').textContent = initialVirtualEncours.toLocaleString() + " €";
+                card.querySelector('.val-cumule').textContent = currentEncours[chosenPartner].toLocaleString() + " €";
+                
+                const resteElement = card.querySelector('.val-reste');
+                resteElement.textContent = remainingBudget.toLocaleString() + " €";
+
+                if (currentEncours[chosenPartner] > CONFIG[chosenPartner].max) {
+                    card.className = "partner-selector-card alert-danger";
+                    resteElement.style.color = "var(--danger)";
+                } else {
+                    card.className = "partner-selector-card";
+                    resteElement.style.color = "var(--success)";
+                }
+            });
+
+            // Mettre à jour la sidebar (commune aux deux modes)
+            document.getElementById('kpi-landiphone').textContent = currentEncours.landiphone.toLocaleString() + " € / 50k €";
+            document.getElementById('bar-landiphone').style.width = (currentEncours.landiphone / CONFIG.landiphone.max * 100) + "%";
+            document.getElementById('kpi-foxway').textContent = currentEncours.foxway.toLocaleString() + " € / 30k €";
+            document.getElementById('bar-foxway').style.width = (currentEncours.foxway / CONFIG.foxway.max * 100) + "%";
+        }
+
+        function triggerCTA() {
+            if(currentMode === 'simulation') {
+                alert('Filtres appliqués au catalogue de simulation.');
+            } else {
+                alert('Ordre d’affectation définitive transmis aux partenaires.');
+            }
+        }
+
+        // Init au chargement
+        window.onload = () => { runCascadeEngine(); switchMode('simulation'); };
+    </script>
+</body>
+</html>
