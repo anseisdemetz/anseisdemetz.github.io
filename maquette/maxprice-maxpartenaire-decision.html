@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production - Validation des Attributions de Lot</title>
+    <style>
+        /* --- RESET & VARIABLES (FLAT DESIGN) --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-app: #f4f6f9;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+            --primary: #3498db;
+            --primary-hover: #2980b9;
+            --success: #2ecc71;
+            --success-hover: #27ae60;
+            --danger: #e74c3c;
+            --warning: #e67e22;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- SIDEBAR : RÉSUMÉ & KPI DU LOT --- */
+        .sidebar {
+            width: 340px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .sidebar h1 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--bg-app);
+            padding-bottom: 12px;
+        }
+
+        /* Panneau de statistiques */
+        .kpi-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background-color: var(--bg-app);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid var(--text-muted);
+        }
+        .kpi-card.highlight { border-left-color: var(--primary); }
+
+        .kpi-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+        .kpi-value { font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-top: 4px; }
+
+        /* État Global des Partenaires */
+        .partner-status-box {
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .partner-progress-item {
+            margin-bottom: 14px;
+        }
+
+        .partner-progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar-bg {
+            background-color: #e2e8f0;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--success);
+            border-radius: 3px;
+        }
+        .progress-bar-fill.warning { background-color: var(--warning); }
+
+        /* --- CONTENU PRINCIPAL --- */
+        .main-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-header h2 { font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- TABLEAU --- */
+        .table-container {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            background-color: #fafbfc;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 20px;
+            border-bottom: 2px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        /* Badge de Grade fixe */
+        .badge-grade {
+            display: inline-block;
+            padding: 4px 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            background-color: #e8f4fd;
+            color: var(--primary);
+            border: 1px solid #b3d7f2;
+        }
+        .badge-grade.low { background-color: #fef5e7; color: var(--warning); border-color: #fadbd8; }
+
+        /* Encarts Partenaires */
+        .partner-card {
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--success);
+            padding: 8px 12px;
+            border-radius: 6px;
+            background-color: #f4fbf7;
+        }
+        .partner-card.fallback {
+            border-left-color: var(--primary);
+            background-color: #f4f9fd;
+        }
+
+        .partner-name { font-weight: 700; font-size: 0.9rem; color: #117a65; }
+        .partner-card.fallback .partner-name { color: #2980b9; }
+
+        .calc-details { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+        .price-highlight { font-weight: 700; color: var(--text-main); }
+
+        /* Listes de classement */
+        .rank-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.8rem;
+        }
+
+        .rank-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 8px;
+            border-radius: 4px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+        }
+        .rank-list li.status-allocated { border-left: 3px solid var(--success); background-color: #e8f8f5; font-weight: 600; }
+        .rank-list li.status-rejected { border-left: 3px solid var(--danger); background-color: #fde8e8; text-decoration: line-through; color: var(--text-muted); }
+        .rank-list li.status-fallback-allocated { border-left: 3px solid var(--primary); background-color: #e8f4fd; font-weight: 600; }
+
+        .badge-reason { font-size: 0.68rem; background-color: var(--danger); color: white; padding: 1px 4px; border-radius: 3px; text-decoration: none; }
+
+        /* --- FOOTER AVEC LE TEXTE ET LE CTA DE VALIDATION --- */
+        .footer-action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--sidebar-bg);
+            padding: 16px 24px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .footer-info-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            max-width: 60%;
+            line-height: 1.4;
+        }
+
+        .btn-cta-validate {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+        }
+
+        .btn-cta-validate:hover {
+            background-color: var(--success-hover);
+        }
+
+        .btn-delete { background: none; border: none; color: var(--danger); cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <h1>Résumé du Lot Reçu</h1>
+            
+            <div class="kpi-container">
+                <div class="kpi-card highlight">
+                    <div class="kpi-label">ID du Lot Homologué</div>
+                    <div class="kpi-value">LOT-2026-A8</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Produits</div>
+                    <div class="kpi-value">5 Appareils</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Valeur Totale Affectée</div>
+                    <div class="kpi-value">4 250 €</div>
+                </div>
+            </div>
+
+            <div class="partner-status-box">
+                <h2>Suivi global des enveloppes</h2>
+                
+                <div class="partner-progress-item">
+                    <div class="partner-progress-info">
+                        <span>LANDIPHONE</span>
+                        <strong>49 700 € / 50 000 €</strong>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill warning" style="width: 99.4%;"></div>
+                    </div>
+                </div>
+
+                <div class="partner-progress-item">
+                    <div class="partner-progress-info">
+                        <span>FOXWAY</span>
+                        <strong>11 490 € / 30 000 €</strong>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 38.3%;"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <div class="main-header">
+                <h2>Rapport d'affectation automatique par produit qualifié</h2>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 220px;">Produit Reçu</th>
+                            <th style="width: 90px; text-align: center;">Grade Fixé</th>
+                            <th style="width: 90px;">Prix Retenu</th>
+                            <th>Calcul de l'Encours Virtuel Cumulative</th>
+                            <th style="width: 280px;">Détail des Offres</th>
+                            <th style="width: 40px; text-align: center;">Retirer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>
+                                <strong>iPhone 17 Pro 512Go</strong><br>
+                                <small style="color: var(--text-muted)">N° de Série : SN-784920</small>
+                            </td>
+                            <td style="text-align: center;"><span class="badge-grade">Grade A</span></td>
+                            <td><span class="price-highlight">1 250 €</span></td>
+                            <td>
+                                <div class="partner-card">
+                                    <div class="partner-name">🏆 LANDIPHONE (Attribué)</div>
+                                    <div class="calc-details">
+                                        Cumulé : Précédents + 1 250 € = <strong>48 250 €</strong><br>
+                                        <span style="color: var(--success);">✔ Solde disponible suffisant chez le partenaire.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-allocated"><span>1. LANDIPHONE</span> <strong>1 250 €</strong></li>
+                                    <li><span>2. FOXWAY</span> <span>1 200 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete">🗑</button></td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <strong>iPhone 17 Pro 256Go</strong><br>
+                                <small style="color: var(--text-muted)">N° de Série : SN-102948</small>
+                            </td>
+                            <td style="text-align: center;"><span class="badge-grade">Grade A-</span></td>
+                            <td><span class="price-highlight">1 100 €</span></td>
+                            <td>
+                                <div class="partner-card">
+                                    <div class="partner-name">🏆 LANDIPHONE (Attribué)</div>
+                                    <div class="calc-details">
+                                        Cumulé : Précédents + 1 100 € = <strong>49 350 €</strong><br>
+                                        <span style="color: var(--success);">✔ Solde disponible suffisant chez le partenaire.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-allocated"><span>1. LANDIPHONE</span> <strong>1 100 €</strong></li>
+                                    <li><span>2. FOXWAY</span> <span>1 050 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete">🗑</button></td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <strong>iPhone 16 Pro Max</strong><br>
+                                <small style="color: var(--text-muted)">N° de Série : SN-994012</small>
+                            </td>
+                            <td style="text-align: center;"><span class="badge-grade low">Grade B</span></td>
+                            <td><span class="price-highlight">910 €</span></td>
+                            <td>
+                                <div class="partner-card fallback">
+                                    <div class="partner-name">🔄 FOXWAY (Attribution de repli)</div>
+                                    <div class="calc-details">
+                                        LANDIPHONE virtuel (Précédents + 950€) ➔ <strong style="color:var(--danger)">Plafond Atteint</strong><br>
+                                        Dossier routé vers FOXWAY. Nouvel encours : <strong>10 910 €</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-rejected"><span>1. LANDIPHONE (950 €)</span> <span class="badge-reason">Plafond atteint</span></li>
+                                    <li class="status-fallback-allocated"><span>2. FOXWAY</span> <strong>910 € (Attribué)</strong></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete">🗑</button></td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <strong>iPhone SE 64Go</strong><br>
+                                <small style="color: var(--text-muted)">N° de Série : SN-554102</small>
+                            </td>
+                            <td style="text-align: center;"><span class="badge-grade low">Grade C</span></td>
+                            <td><span class="price-highlight">350 €</span></td>
+                            <td>
+                                <div class="partner-card">
+                                    <div class="partner-name">🏆 LANDIPHONE (Attribué)</div>
+                                    <div class="calc-details">
+                                        Cumulé : 49 350 € + 350 € = <strong>49 700 €</strong><br>
+                                        <span style="color: var(--success);">✔ La marge résiduelle (650 €) a permis d'absorber la ligne.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-allocated"><span>1. LANDIPHONE</span> <strong>350 €</strong></li>
+                                    <li><span>2. FOXWAY</span> <span>310 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete">🗑</button></td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <strong>iPhone 15 Black</strong><br>
+                                <small style="color: var(--text-muted)">N° de Série : SN-332019</small>
+                            </td>
+                            <td style="text-align: center;"><span class="badge-grade">Grade A</span></td>
+                            <td><span class="price-highlight">580 €</span></td>
+                            <td>
+                                <div class="partner-card fallback">
+                                    <div class="partner-name">🔄 FOXWAY (Attribution de repli)</div>
+                                    <div class="calc-details">
+                                        LANDIPHONE virtuel (Précédents + 600€) ➔ <strong style="color:var(--danger)">Plafond Atteint</strong><br>
+                                        Dossier routé vers FOXWAY. Nouvel encours : <strong>11 490 €</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="status-rejected"><span>1. LANDIPHONE (600 €)</span> <span class="badge-reason">Plafond atteint</span></li>
+                                    <li class="status-fallback-allocated"><span>2. FOXWAY</span> <strong>580 € (Attribué)</strong></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete">🗑</button></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="footer-action-bar">
+                <div class="footer-info-text">
+                    ⚠️ <strong>Vérification réglementaire :</strong> En cliquant sur le bouton de validation, vous confirmez l'envoi de l'ordre d'attribution automatique. Les enveloppes financières des partenaires seront bloquées et gelées pour ce lot.
+                </div>
+                <button class="btn-cta-validate" onclick="alert('Succès : Les attributions du lot ont été validées et transmises aux partenaires !')">
+                    Valider et figer le lot
+                </button>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Interaction factice pour la corbeille
+        const deleteButtons = document.querySelectorAll('.btn-delete');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const row = e.target.closest('tr');
+                if (row) {
+                    row.style.transition = 'all 0.3s ease';
+                    row.style.opacity = '0';
+                    setTimeout(() => row.remove(), 300);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
