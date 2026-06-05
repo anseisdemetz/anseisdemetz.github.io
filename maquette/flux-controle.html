@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLUX CONTRÔLÉ - Interface Unifiée Mutualisée</title>
+    <title>FLUX CONTRÔLÉ - Version Finale Unifiée</title>
     <style>
-        /* --- RESET & VARIABLES --- */
+        /* --- RESET & VARIABLES (FLAT DESIGN) --- */
         * {
             margin: 0;
             padding: 0;
@@ -22,6 +22,7 @@
             --primary: #3498db;
             --primary-hover: #2980b9;
             --success: #2ecc71;
+            --success-hover: #27ae60;
             --danger: #e74c3c;
             --warning: #e67e22;
             --border-color: #e2e8f0;
@@ -43,7 +44,7 @@
 
         /* --- SIDEBAR MUTUALISÉE --- */
         .sidebar {
-            width: 320px;
+            width: 340px;
             background-color: var(--sidebar-bg);
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -52,7 +53,14 @@
             overflow-y: auto;
         }
 
-        .sidebar h1 { font-size: 1.2rem; margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--bg-app); padding-bottom: 12px; }
+        .sidebar h1 { 
+            font-size: 1.3rem; 
+            margin-bottom: 20px; 
+            font-weight: 700; 
+            border-bottom: 2px solid var(--bg-app); 
+            padding-bottom: 12px; 
+            letter-spacing: -0.5px;
+        }
         
         /* Commutateur de Mode Global */
         .mode-switch-container {
@@ -64,7 +72,7 @@
         }
         .mode-btn {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             border: none;
             background: none;
             font-weight: 700;
@@ -80,13 +88,14 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* Groupes de la Sidebar (Affichage conditionnel en JS) */
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-        .form-select { width: 100%; padding: 8px 12px; border: 2px solid var(--border-color); border-radius: 6px; outline: none; }
+        /* Groupes de Formulaires (Filtres Catalogue) */
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+        .form-select { width: 100%; padding: 8px 12px; border: 2px solid var(--border-color); border-radius: 6px; outline: none; background-color: #fafbfc; color: var(--text-main); font-weight: 500; }
         
-        .import-zone { background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 6px; padding: 16px; text-align: center; margin-bottom: 20px; cursor: pointer; }
-        .import-zone p { font-size: 0.75rem; color: var(--text-muted); }
+        /* Zone d'import de fichier (Opérationnel) */
+        .import-zone { background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 6px; padding: 20px 16px; text-align: center; margin-bottom: 20px; cursor: pointer; }
+        .import-zone p { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
 
         /* KPI & Suivi Enveloppes */
         .kpi-card { background-color: var(--bg-app); padding: 12px; border-radius: 6px; border-left: 4px solid var(--primary); margin-bottom: 16px; }
@@ -94,9 +103,9 @@
         .kpi-value { font-size: 1.1rem; font-weight: 700; margin-top: 2px; }
 
         .partner-status-box { border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: auto; }
-        .partner-status-box h2 { font-size: 0.8rem; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .partner-status-box h2 { font-size: 0.8rem; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; }
         .partner-progress-item { margin-bottom: 12px; }
-        .partner-progress-info { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; margin-bottom: 2px; }
+        .partner-progress-info { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; margin-bottom: 4px; }
         .progress-bar-bg { background-color: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background-color: var(--success); transition: width 0.3s; }
         .progress-bar-fill.danger { background-color: var(--danger); }
@@ -111,37 +120,48 @@
             gap: 20px;
         }
 
-        /* Barre haute (Spécifique Simulation) */
-        .top-control-bar { background-color: var(--card-bg); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .grade-tabs { display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 6px; }
-        .grade-tab { padding: 6px 12px; border: none; background: none; font-weight: 600; font-size: 0.8rem; cursor: pointer; border-radius: 4px; }
+        /* Onglets de Grade globaux (Simulation) */
+        .top-control-bar { background-color: var(--card-bg); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; }
+        .grade-tabs { display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 6px; width: max-content; }
+        .grade-tab { padding: 6px 14px; border: none; background: none; font-weight: 700; font-size: 0.8rem; cursor: pointer; border-radius: 4px; color: var(--text-muted); }
         .grade-tab.active { background-color: var(--card-bg); color: var(--primary); }
 
-        /* --- TABLEAU --- */
-        .table-container { background-color: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); }
+        /* --- TABLEAU UNIFIÉ --- */
+        .table-container { background-color: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; }
         .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        .data-table th { background-color: #fafbfc; color: var(--text-muted); font-weight: 600; padding: 12px 20px; border-bottom: 2px solid var(--border-color); text-transform: uppercase; font-size: 0.7rem; }
+        .data-table th { background-color: #fafbfc; color: var(--text-muted); font-weight: 600; padding: 14px 20px; border-bottom: 2px solid var(--border-color); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
         .data-table td { padding: 14px 20px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
 
-        .badge-grade { display: inline-block; padding: 3px 6px; font-weight: 700; font-size: 0.75rem; border-radius: 4px; background-color: #e8f4fd; color: var(--primary); border: 1px solid #b3d7f2; }
-        
-        .partner-selector-card { border: 1px solid var(--border-color); border-left: 4px solid var(--success); padding: 10px; border-radius: 6px; background-color: #f4fbf7; }
+        .badge-grade { display: inline-block; padding: 4px 8px; font-weight: 700; font-size: 0.75rem; border-radius: 4px; background-color: #e8f4fd; color: var(--primary); border: 1px solid #b3d7f2; text-align: center; min-width: 75px; }
+        .badge-grade.low { background-color: #fef5e7; color: var(--warning); border-color: #fadbd8; }
+        .badge-grade.critical { background-color: #fdf3f2; color: var(--danger); border-color: #fadbd8; }
+
+        /* Encart de calcul et sélecteur de partenaire */
+        .partner-selector-card { border: 1px solid var(--border-color); border-left: 4px solid var(--success); padding: 12px; border-radius: 6px; background-color: #f4fbf7; transition: all 0.2s ease; }
         .partner-selector-card.alert-danger { border-left-color: var(--danger); background-color: #fdf3f2; }
         
-        .select-partner-inline { width: 100%; padding: 6px 8px; font-weight: 700; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 4px; background-color: white; outline: none; margin-bottom: 4px; }
-        .select-partner-inline:disabled { background-color: transparent; border: none; padding: 0; cursor: default; color: #117a65; appearance: none; -webkit-appearance: none; }
+        .select-partner-inline { width: 100%; padding: 8px 10px; font-weight: 700; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 4px; background-color: white; outline: none; margin-bottom: 6px; color: var(--text-main); cursor: pointer; }
+        .select-partner-inline:disabled { background-color: transparent; border: none; padding: 0; cursor: default; color: #117a65; appearance: none; -webkit-appearance: none; font-size: 0.9rem; }
 
-        .calc-details { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
-        .price-highlight { font-weight: 700; color: var(--text-main); }
+        .calc-details { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+        .price-highlight { font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
 
-        .rank-list { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; }
-        .rank-list li { display: flex; justify-content: space-between; padding: 4px 6px; border-radius: 4px; background: #f8fafc; border: 1px solid var(--border-color); }
+        /* Podium complet à 3 Partenaires */
+        .rank-list { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; min-width: 220px; }
+        .rank-list li { display: flex; justify-content: space-between; padding: 5px 8px; border-radius: 4px; background: #f8fafc; border: 1px solid var(--border-color); }
         .rank-list li.rank-1 { border-left: 3px solid var(--success); background-color: #e8f8f5; font-weight: 600; }
+        .rank-list li.rank-2 { border-left: 3px solid var(--primary); }
+        .rank-list li.rank-3 { border-left: 3px solid #94a3b8; }
 
         /* Footer Action Bar */
         .footer-action-bar { display: flex; justify-content: space-between; align-items: center; background-color: var(--sidebar-bg); padding: 16px 24px; border-radius: 8px; border: 1px solid var(--border-color); }
-        .btn-primary-action { background-color: var(--primary); color: white; border: none; padding: 12px 24px; font-size: 0.9rem; font-weight: 700; border-radius: 6px; cursor: pointer; }
+        .btn-primary-action { background-color: var(--primary); color: white; border: none; padding: 12px 26px; font-size: 0.95rem; font-weight: 700; border-radius: 6px; cursor: pointer; transition: background-color 0.2s; }
+        .btn-primary-action:hover { background-color: var(--primary-hover); }
         .btn-primary-action.mode-prod { background-color: var(--success); }
+        .btn-primary-action.mode-prod:hover { background-color: var(--success-hover); }
+
+        .btn-delete { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.1rem; padding: 4px 8px; transition: transform 0.1s; }
+        .btn-delete:hover { transform: scale(1.15); }
     </style>
 </head>
 <body>
@@ -159,33 +179,61 @@
             <div id="sidebar-sim-view">
                 <div class="form-group">
                     <label>Catégorie</label>
-                    <select class="form-select"><option>Mobile</option></select>
+                    <select class="form-select">
+                        <option>Mobile / Smartphones</option>
+                        <option>Tablettes</option>
+                        <option>Mac &amp; PC Portable</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Marque</label>
-                    <select class="form-select"><option>Apple</option></select>
+                    <select class="form-select">
+                        <option>Apple</option>
+                        <option>Samsung</option>
+                        <option>Google</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Modèle</label>
+                    <select class="form-select">
+                        <option>-- Toutes les sélections --</option>
+                        <option>iPhone 17 Pro Series</option>
+                        <option>Galaxy S26 Ultra</option>
+                        <option>Pixel 10 Pro</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label>Déclinaison Produit</label>
+                    <select class="form-select">
+                        <option>-- Toutes les déclinaisons --</option>
+                        <option>512 Go - Silver</option>
+                        <option>256 Go - Carbon</option>
+                    </select>
                 </div>
             </div>
 
             <div id="sidebar-prod-view" style="display: none;">
                 <div class="import-zone">
-                    <strong>Importer un Lot (.csv)</strong>
-                    <p>Fichier d'homologation des grades</p>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary); vertical-align: middle;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    <strong style="display:inline-block; font-size:0.85rem; margin-left:6px; color: var(--text-main);">Importer un Lot (.csv)</strong>
+                    <p>Fichier d'homologation des ateliers</p>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">Volume du Lot Réel</div>
-                    <div class="kpi-value">3 Appareils</div>
+                    <div class="kpi-label">Volume du Lot Réel Reçu</div>
+                    <div class="kpi-value">5 Smartphones Qualifiés</div>
                 </div>
             </div>
 
             <div class="partner-status-box">
-                <h2>Suivi des Enveloppes</h2>
+                <h2>Suivi des Enveloppes Globales</h2>
                 <div class="partner-progress-item">
-                    <div class="partner-progress-info"><span>LANDIPHONE</span><strong id="kpi-landiphone">0 € / 50k €</strong></div>
+                    <div class="partner-progress-info"><span>LANDIPHONE</span><strong id="kpi-landiphone">0 € / 50 000 €</strong></div>
                     <div class="progress-bar-bg"><div id="bar-landiphone" class="progress-bar-fill"></div></div>
                 </div>
                 <div class="partner-progress-item">
-                    <div class="partner-progress-info"><span>FOXWAY</span><strong id="kpi-foxway">0 € / 30k €</strong></div>
+                    <div class="partner-progress-info"><span>FOXWAY</span><strong id="kpi-foxway">0 € / 30 000 €</strong></div>
                     <div class="progress-bar-bg"><div id="bar-foxway" class="progress-bar-fill"></div></div>
                 </div>
             </div>
@@ -194,38 +242,43 @@
         <main class="main-content">
             
             <div class="top-control-bar" id="top-control-bar">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <span style="font-size:0.85rem; font-weight:600; color:var(--text-muted)">Grade Pivot Global :</span>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform: uppercase;">Grade Pivot Global de Simulation :</span>
                     <div class="grade-tabs">
-                        <button class="grade-tab active" onclick="changeGlobalGrade('A')">A</button>
-                        <button class="grade-tab" onclick="changeGlobalGrade('B')">B</button>
-                        <button class="grade-tab" onclick="changeGlobalGrade('C')">C</button>
+                        <button class="grade-tab active" onclick="changeGlobalGrade(this, 'A')">A</button>
+                        <button class="grade-tab" onclick="changeGlobalGrade(this, 'A-')">A-</button>
+                        <button class="grade-tab" onclick="changeGlobalGrade(this, 'B')">B</button>
+                        <button class="grade-tab" onclick="changeGlobalGrade(this, 'C')">C</button>
+                        <button class="grade-tab" onclick="changeGlobalGrade(this, 'C-')">C-</button>
+                        <button class="grade-tab" onclick="changeGlobalGrade(this, 'D')">D</button>
+                        <button class="grade-tab" onclick="changeGlobalGrade(this, 'D-')">D-</button>
                     </div>
                 </div>
-                <span style="font-size:0.8rem; color:var(--text-muted)">Vue Catalogue Théorique</span>
             </div>
 
             <div class="table-container">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th style="width: 200px;">Produit</th>
+                            <th style="width: 210px;">Produit Spécifié</th>
                             <th style="width: 100px; text-align: center;">Grade</th>
-                            <th style="width: 90px;">Prix Offert</th>
-                            <th style="width: 420px;">Calcul de l'Encours &amp; Routage</th>
-                            <th style="width: 220px;">Top Offres</th>
+                            <th style="width: 90px;">Prix Max</th>
+                            <th style="width: 420px;">Calcul de l'Encours &amp; Routage Automatique</th>
+                            <th style="width: 250px;">Podium complet (Top 3 Offres)</th>
+                            <th style="width: 50px; text-align: center;">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="product-row" data-price-landiphone="1250" data-price-foxway="1200">
-                            <td><strong class="prod-title">iPhone 17 Pro 512Go</strong></td>
+                    <tbody id="table-body">
+                        
+                        <tr class="product-row" data-price-landiphone="1250" data-price-foxway="1200" data-prod-grade="A">
+                            <td><strong>iPhone 17 Pro 512Go</strong><br><small style="color: var(--text-muted)">Apple Cloud Silver</small></td>
                             <td style="text-align: center;"><span class="badge-grade" id="grade-l1">Grade A</span></td>
                             <td><span class="price-highlight" id="price-l1">1 250 €</span></td>
                             <td>
                                 <div class="partner-selector-card">
                                     <select class="select-partner-inline" onchange="runCascadeEngine()">
-                                        <option value="landiphone" selected>🏆 LANDIPHONE</option>
-                                        <option value="foxway">🥈 FOXWAY</option>
+                                        <option value="landiphone" selected>🏆 LANDIPHONE (Offre n°1)</option>
+                                        <option value="foxway">🥈 FOXWAY (Offre n°2)</option>
                                     </select>
                                     <div class="calc-details">
                                         Encours initial : <span class="val-initial">0 €</span> | Cumulé : <span class="val-cumule" style="font-weight:700;">0 €</span><br>
@@ -233,18 +286,25 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><ul class="rank-list"><li class="rank-1"><span>1. LANDIPHONE</span> <strong id="podium-l1-p1">1 250 €</strong></li></ul></td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="rank-1"><span>1. LANDIPHONE</span> <strong class="pod-p1">1 250 €</strong></li>
+                                    <li class="rank-2"><span>2. FOXWAY</span> <span class="pod-p2">1 200 €</span></li>
+                                    <li class="rank-3"><span>3. VICTONICE</span> <span>1 150 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" onclick="removeRow(this)">🗑</button></td>
                         </tr>
 
-                        <tr class="product-row" data-price-landiphone="1100" data-price-foxway="1050">
-                            <td><strong class="prod-title">iPhone 17 Pro 256Go</strong></td>
-                            <td style="text-align: center;"><span class="badge-grade" id="grade-l2">Grade A</span></td>
+                        <tr class="product-row" data-price-landiphone="1100" data-price-foxway="1050" data-prod-grade="B">
+                            <td><strong>Galaxy S26 Ultra 256Go</strong><br><small style="color: var(--text-muted)">Samsung Titanium Gray</small></td>
+                            <td style="text-align: center;"><span class="badge-grade" id="grade-l2">Grade B</span></td>
                             <td><span class="price-highlight" id="price-l2">1 100 €</span></td>
                             <td>
                                 <div class="partner-selector-card">
                                     <select class="select-partner-inline" onchange="runCascadeEngine()">
-                                        <option value="landiphone" selected>🏆 LANDIPHONE</option>
-                                        <option value="foxway">🥈 FOXWAY</option>
+                                        <option value="landiphone" selected>🏆 LANDIPHONE (Offre n°1)</option>
+                                        <option value="foxway">🥈 FOXWAY (Offre n°2)</option>
                                     </select>
                                     <div class="calc-details">
                                         Encours initial : <span class="val-initial">0 €</span> | Cumulé : <span class="val-cumule" style="font-weight:700;">0 €</span><br>
@@ -252,28 +312,114 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><ul class="rank-list"><li class="rank-1"><span>1. LANDIPHONE</span> <strong id="podium-l2-p1">1 100 €</strong></li></ul></td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="rank-1"><span>1. LANDIPHONE</span> <strong class="pod-p1">1 100 €</strong></li>
+                                    <li class="rank-2"><span>2. FOXWAY</span> <span class="pod-p2">1 050 €</span></li>
+                                    <li class="rank-3"><span>3. VICTONICE</span> <span>990 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" onclick="removeRow(this)">🗑</button></td>
                         </tr>
+
+                        <tr class="product-row" data-price-landiphone="950" data-price-foxway="910" data-prod-grade="C">
+                            <td><strong>iPhone 16 Pro Max</strong><br><small style="color: var(--text-muted)">Apple Obsidian Black</small></td>
+                            <td style="text-align: center;"><span class="badge-grade low" id="grade-l3">Grade C</span></td>
+                            <td><span class="price-highlight" id="price-l3">950 €</span></td>
+                            <td>
+                                <div class="partner-selector-card">
+                                    <select class="select-partner-inline" onchange="runCascadeEngine()">
+                                        <option value="landiphone" selected>🏆 LANDIPHONE (Offre n°1)</option>
+                                        <option value="foxway">🥈 FOXWAY (Offre n°2)</option>
+                                    </select>
+                                    <div class="calc-details">
+                                        Encours initial : <span class="val-initial">0 €</span> | Cumulé : <span class="val-cumule" style="font-weight:700;">0 €</span><br>
+                                        Reste disponible partenaire : <span class="val-reste">0 €</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="rank-1"><span>1. LANDIPHONE</span> <strong class="pod-p1">950 €</strong></li>
+                                    <li class="rank-2"><span>2. FOXWAY</span> <span class="pod-p2">910 €</span></li>
+                                    <li class="rank-3"><span>3. VICTONICE</span> <span>860 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" onclick="removeRow(this)">🗑</button></td>
+                        </tr>
+
+                        <tr class="product-row" data-price-landiphone="780" data-price-foxway="800" data-prod-grade="A-">
+                            <td><strong>Pixel 10 Pro 128Go</strong><br><small style="color: var(--text-muted)">Google Porcelain</small></td>
+                            <td style="text-align: center;"><span class="badge-grade" id="grade-l4">Grade A-</span></td>
+                            <td><span class="price-highlight" id="price-l4">800 €</span></td>
+                            <td>
+                                <div class="partner-selector-card">
+                                    <select class="select-partner-inline" onchange="runCascadeEngine()">
+                                        <option value="foxway" selected>🏆 FOXWAY (Offre n°1)</option>
+                                        <option value="landiphone">🥈 LANDIPHONE (Offre n°2)</option>
+                                    </select>
+                                    <div class="calc-details">
+                                        Encours initial : <span class="val-initial">0 €</span> | Cumulé : <span class="val-cumule" style="font-weight:700;">0 €</span><br>
+                                        Reste disponible partenaire : <span class="val-reste">0 €</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="rank-1"><span>1. FOXWAY</span> <strong class="pod-p1">800 €</strong></li>
+                                    <li class="rank-2"><span>2. LANDIPHONE</span> <span class="pod-p2">780 €</span></li>
+                                    <li class="rank-3"><span>3. VICTONICE</span> <span>720 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" onclick="removeRow(this)">🗑</button></td>
+                        </tr>
+
+                        <tr class="product-row" data-price-landiphone="410" data-price-foxway="390" data-prod-grade="D">
+                            <td><strong>Galaxy S25 FE 128Go</strong><br><small style="color: var(--text-muted)">Samsung Mint Green</small></td>
+                            <td style="text-align: center;"><span class="badge-grade critical" id="grade-l5">Grade D</span></td>
+                            <td><span class="price-highlight" id="price-l5">410 €</span></td>
+                            <td>
+                                <div class="partner-selector-card">
+                                    <select class="select-partner-inline" onchange="runCascadeEngine()">
+                                        <option value="landiphone" selected>🏆 LANDIPHONE (Offre n°1)</option>
+                                        <option value="foxway">🥈 FOXWAY (Offre n°2)</option>
+                                    </select>
+                                    <div class="calc-details">
+                                        Encours initial : <span class="val-initial">0 €</span> | Cumulé : <span class="val-cumule" style="font-weight:700;">0 €</span><br>
+                                        Reste disponible partenaire : <span class="val-reste">0 €</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="rank-list">
+                                    <li class="rank-1"><span>1. LANDIPHONE</span> <strong class="pod-p1">410 €</strong></li>
+                                    <li class="rank-2"><span>2. FOXWAY</span> <span class="pod-p2">390 €</span></li>
+                                    <li class="rank-3"><span>3. VICTONICE</span> <span>340 €</span></li>
+                                </ul>
+                            </td>
+                            <td style="text-align: center;"><button class="btn-delete" onclick="removeRow(this)">🗑</button></td>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>
 
             <div class="footer-action-bar">
-                <span id="footer-desc" style="font-size:0.8rem; color:var(--text-muted)">Mode Simulation actif.</span>
+                <span id="footer-desc" style="font-size:0.82rem; color:var(--text-muted); font-weight: 500;">Mode Simulation actif.</span>
                 <button class="btn-primary-action" id="main-cta-btn" onclick="triggerCTA()">+ Ajouter à l'analyse</button>
             </div>
         </main>
     </div>
 
     <script>
-        let currentMode = 'simulation'; // État global de l'application
-        const CONFIG = { landiphone: { baseEncours: 46500, max: 50000 }, foxway: { baseEncours: 10000, max: 30000 } };
+        let currentMode = 'simulation';
+        // Enveloppes de base historiques sécurisées
+        const CONFIG = { landiphone: { baseEncours: 44500, max: 50000 }, foxway: { baseEncours: 10000, max: 30000 } };
 
-        // 1. FONCTION DE COMMUTATION DE VUE (The Switch)
+        // 1. COMMUTATION DES COMPOSANTS (SIMULATION <-> OPÉRATIONNEL)
         function switchMode(mode) {
             currentMode = mode;
             
-            // Éléments du DOM à modifier
             const btnSim = document.getElementById('btn-mode-sim');
             const btnProd = document.getElementById('btn-mode-prod');
             const sideSim = document.getElementById('sidebar-sim-view');
@@ -288,41 +434,82 @@
                 sideSim.style.display = "block"; sideProd.style.display = "none";
                 topBar.style.display = "flex";
                 ctaBtn.className = "btn-primary-action"; ctaBtn.textContent = "+ Ajouter à l'analyse";
-                footerDesc.textContent = "Mode Simulation : Ajustement théorique par grade global.";
-                dropdowns.forEach(d => d.disabled = true); // Désactive la sélection manuelle
+                footerDesc.textContent = "Mode Simulation : Analyse globale du catalogue sur grade pivot unifié.";
+                dropdowns.forEach(d => d.disabled = true); // Bloque le choix manuel en simulation
                 
-                // Forcer les grades à être identiques pour la simulation
-                changeGlobalGrade('A');
+                // Rétablir de force les grades pour qu'ils soient tous alignés (Règle de Simulation)
+                const activeTab = document.querySelector('.grade-tab.active');
+                applySimulationGrades(activeTab ? activeTab.textContent : 'A');
             } else {
                 btnSim.className = "mode-btn"; btnProd.className = "mode-btn active";
                 sideSim.style.display = "none"; sideProd.style.display = "block";
                 topBar.style.display = "none";
                 ctaBtn.className = "btn-primary-action mode-prod"; ctaBtn.textContent = "Valider et figer le lot";
-                footerDesc.textContent = "⚠️ Mode Opérationnel : Maîtrise des flux réels et forçages autorisés.";
-                dropdowns.forEach(d => d.disabled = false); // Active le contrôle manuel des lignes
+                footerDesc.textContent = "⚠️ Mode Opérationnel : Lot de production hétérogène. Ajustement du flux par ligne débloqué.";
+                dropdowns.forEach(d => d.disabled = false); // Libère la main pour la gestion opérationnelle
                 
-                // Simuler des grades hétérogènes pour le lot réel
-                document.getElementById('grade-l1').className = "badge-grade"; document.getElementById('grade-l1').textContent = "Grade A";
-                document.getElementById('grade-l2').className = "badge-grade low"; document.getElementById('grade-l2').textContent = "Grade C";
-                document.getElementById('price-l2').textContent = "450 €";
-                document.getElementById('podium-l2-p1').textContent = "450 €";
-                document.querySelectorAll('.product-row')[1].setAttribute('data-price-landiphone', '450');
+                // Rétablir les vrais grades disparates du lot physique reçu
+                restoreOperationalGrades();
             }
             runCascadeEngine();
         }
 
-        // 2. LOGIQUE SIMULATION : CHANGEMENT DES GRADES DU CATALOGUE
-        function changeGlobalGrade(grade) {
+        // 2. MÉCANIQUE DE SIMULATION : ALIGNEMENT DES GRADES SUR LE PIVOT
+        function changeGlobalGrade(element, grade) {
             document.querySelectorAll('.grade-tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Aligner toutes les lignes sur le grade sélectionné
-            document.getElementById('grade-l1').textContent = "Grade " + grade;
-            document.getElementById('grade-l2').textContent = "Grade " + grade;
+            element.classList.add('active');
+            applySimulationGrades(grade);
             runCascadeEngine();
         }
 
-        // 3. MOTEUR DE CALCUL UNIQUE ET MUTUALISÉ 
+        function applySimulationGrades(grade) {
+            const rows = document.querySelectorAll('.product-row');
+            rows.forEach((row, index) => {
+                const badge = row.querySelector('.badge-grade');
+                badge.textContent = "Grade " + grade;
+                
+                // Modulateur de prix fictif basé sur le grade choisi pour animer la démo
+                let modifier = 1;
+                if(grade === 'A-') modifier = 0.95;
+                if(grade === 'B') modifier = 0.85;
+                if(grade === 'C') { modifier = 0.75; badge.className = "badge-grade low"; }
+                else if(grade === 'C-') { modifier = 0.65; badge.className = "badge-grade low"; }
+                else if(grade === 'D' || grade === 'D-') { modifier = 0.5; badge.className = "badge-grade critical"; }
+                else { badge.className = "badge-grade"; }
+
+                // Mise à jour dynamique des cellules de prix pour la simulation
+                const baseP1 = parseInt(row.getAttribute('data-price-landiphone') || 1000, 10);
+                const baseP2 = parseInt(row.getAttribute('data-price-foxway') || 900, 10);
+                
+                row.querySelector('.price-highlight').textContent = Math.round(Math.max(baseP1, baseP2) * modifier) + " €";
+                row.querySelector('.pod-p1').textContent = Math.round(baseP1 * modifier) + " €";
+                row.querySelector('.pod-p2').textContent = Math.round(baseP2 * modifier) + " €";
+            });
+        }
+
+        // 3. MÉCANIQUE OPÉRATIONNELLE : RETOUR AUX GRADES FIXES DU LOT
+        function restoreOperationalGrades() {
+            const rows = document.querySelectorAll('.product-row');
+            rows.forEach((row) => {
+                const nativeGrade = row.getAttribute('data-prod-grade');
+                const badge = row.querySelector('.badge-grade');
+                badge.textContent = "Grade " + nativeGrade;
+
+                if(nativeGrade === 'C') badge.className = "badge-grade low";
+                else if(nativeGrade === 'B') badge.className = "badge-grade";
+                else if(nativeGrade === 'D') badge.className = "badge-grade critical";
+                else badge.className = "badge-grade";
+
+                // Reprendre les prix d'origine injectés dans le HTML
+                const p1 = parseInt(row.getAttribute('data-price-landiphone'), 10);
+                const p2 = parseInt(row.getAttribute('data-price-foxway'), 10);
+                row.querySelector('.price-highlight').textContent = Math.max(p1, p2) + " €";
+                row.querySelector('.pod-p1').textContent = p1 + " €";
+                row.querySelector('.pod-p2').textContent = p2 + " €";
+            });
+        }
+
+        // 4. L'ALGORITHME DE CHAÎNAGE DES ENCOURS VIRTUTELS CUMULATIFS (Unique et Mutualisé)
         function runCascadeEngine() {
             let currentEncours = { landiphone: CONFIG.landiphone.baseEncours, foxway: CONFIG.foxway.baseEncours };
             const rows = document.querySelectorAll('.product-row');
@@ -331,10 +518,13 @@
                 const select = row.querySelector('.select-partner-inline');
                 const chosenPartner = select.value;
                 const card = row.querySelector('.partner-selector-card');
-                const price = parseInt(row.getAttribute(`data-price-${chosenPartner}`), 10);
+                
+                // Extraction du prix affiché à l'écran (qui dépend des grades appliqués)
+                let cellPriceText = row.querySelector('.price-highlight').textContent;
+                let currentPrice = parseInt(cellPriceText.replace(/[^0-9]/g, ''), 10);
 
                 const initialVirtualEncours = currentEncours[chosenPartner];
-                currentEncours[chosenPartner] += price;
+                currentEncours[chosenPartner] += currentPrice;
                 const remainingBudget = CONFIG[chosenPartner].max - currentEncours[chosenPartner];
 
                 card.querySelector('.val-initial').textContent = initialVirtualEncours.toLocaleString() + " €";
@@ -343,32 +533,48 @@
                 const resteElement = card.querySelector('.val-reste');
                 resteElement.textContent = remainingBudget.toLocaleString() + " €";
 
+                // Alerte visuelle si le flux cumulé sature le plafond
                 if (currentEncours[chosenPartner] > CONFIG[chosenPartner].max) {
                     card.className = "partner-selector-card alert-danger";
                     resteElement.style.color = "var(--danger)";
+                    resteElement.textContent += " (CAPACITÉ SATURÉE)";
                 } else {
                     card.className = "partner-selector-card";
                     resteElement.style.color = "var(--success)";
                 }
             });
 
-            // Mettre à jour la sidebar (commune aux deux modes)
-            document.getElementById('kpi-landiphone').textContent = currentEncours.landiphone.toLocaleString() + " € / 50k €";
-            document.getElementById('bar-landiphone').style.width = (currentEncours.landiphone / CONFIG.landiphone.max * 100) + "%";
-            document.getElementById('kpi-foxway').textContent = currentEncours.foxway.toLocaleString() + " € / 30k €";
-            document.getElementById('bar-foxway').style.width = (currentEncours.foxway / CONFIG.foxway.max * 100) + "%";
+            // Actualisation des deux jauges de la sidebar
+            document.getElementById('kpi-landiphone').textContent = currentEncours.landiphone.toLocaleString() + " € / " + CONFIG.landiphone.max.toLocaleString() + " €";
+            document.getElementById('bar-landiphone').style.width = Math.min((currentEncours.landiphone / CONFIG.landiphone.max * 100), 100) + "%";
+            document.getElementById('bar-landiphone').className = currentEncours.landiphone > CONFIG.landiphone.max ? "progress-bar-fill danger" : "progress-bar-fill";
+
+            document.getElementById('kpi-foxway').textContent = currentEncours.foxway.toLocaleString() + " € / " + CONFIG.foxway.max.toLocaleString() + " €";
+            document.getElementById('bar-foxway').style.width = Math.min((currentEncours.foxway / CONFIG.foxway.max * 100), 100) + "%";
+            document.getElementById('bar-foxway').className = currentEncours.foxway > CONFIG.foxway.max ? "progress-bar-fill danger" : "progress-bar-fill";
         }
 
+        // Action sur suppression individuelle d'une ligne
+        function removeRow(btn) {
+            const row = btn.closest('tr');
+            row.style.opacity = '0';
+            setTimeout(() => {
+                row.remove();
+                runCascadeEngine(); // Recalcule la chaîne immédiatement
+            }, 200);
+        }
+
+        // Déclencheur des boutons d'actions principaux
         function triggerCTA() {
             if(currentMode === 'simulation') {
-                alert('Filtres appliqués au catalogue de simulation.');
+                alert('Action : Les critères du catalogue ont été appliqués pour mettre à jour la simulation théorique.');
             } else {
-                alert('Ordre d’affectation définitive transmis aux partenaires.');
+                alert('Succès : Les ordres d’attribution de ce lot opérationnel ont été validés et figés. Transmission en cours aux partenaires.');
             }
         }
 
-        // Init au chargement
-        window.onload = () => { runCascadeEngine(); switchMode('simulation'); };
+        // Lancement initial au chargement
+        window.onload = () => { switchMode('simulation'); };
     </script>
 </body>
 </html>
