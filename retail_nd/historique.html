@@ -361,6 +361,9 @@
         // Initialisation des icônes Lucide
         lucide.createIcons();
     </script>
+
+<!-- -------------------------------COMPOSANT CONTENU DU PANIER DE REPRISE --------------------------------------- -->
+
     <div id="cart-drawer" class="fixed inset-0 z-[100] invisible transition-all duration-300">
         <div id="cart-overlay" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300"></div>
         
@@ -369,7 +372,7 @@
             <div class="p-6 border-b border-border flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <i data-lucide="shopping-basket" class="w-5 h-5 text-[#e30613]"></i>
-                    <h2 class="text-lg font-semibold text-foreground">Panier de reprises</h2>
+                    <h1 class="text-lg font-semibold text-foreground">Panier de reprises</h1>
                     <span class="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#e30613] text-[10px] font-bold text-white">3</span>
                 </div>
                 <button id="cart-close" class="p-1 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
@@ -377,48 +380,55 @@
                 </button>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-6 space-y-4">
+            <div class="flex-1 overflow-y-auto p-6">
                 
-                <div class="flex items-center gap-4 p-3 border border-border rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
-                    <div class="w-20 h-20 bg-white border border-border rounded-lg p-2 flex items-center justify-center shrink-0">
-                        <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F10%2F334ce7c092539db60c33e9d6d72122b06bf9ac7a.png&w=96&q=75" 
-                             alt="Apple iPhone 16" class="object-contain max-h-full max-w-full">
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-sm font-medium text-foreground truncate">Apple iPhone 16 512Go</h3>
-                        <p class="text-base font-semibold text-[#e30613] mt-1">524 €</p>
-                    </div>
-                    <button class="p-1 text-muted-foreground hover:text-red-500 rounded-md hover:bg-red-50 transition-colors">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
-                </div>
+                <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                    <i data-lucide="layers" class="w-4 h-4 text-slate-500"></i>
+                    Lot n° C68M68P6R
+                </h2>
 
-                <div class="flex items-center gap-4 p-3 border border-border rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
-                    <div class="w-20 h-20 bg-white border border-border rounded-lg p-2 flex items-center justify-center shrink-0">
-                        <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F10%2Fb7ede81c55b4f9f7a785ab5410b179ce036645fb.png&w=96&q=75" 
-                             alt="Oppo Reno6 Pro 5G" class="object-contain max-h-full max-w-full">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 p-3 border border-border rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
+                        <div class="w-20 h-20 bg-white border border-border rounded-lg p-2 flex items-center justify-center shrink-0">
+                            <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F10%2F334ce7c092539db60c33e9d6d72122b06bf9ac7a.png&w=96&q=75" 
+                                 alt="Apple iPhone 16" class="object-contain max-h-full max-w-full">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-medium text-foreground truncate">Apple iPhone 16 512Go</h3>
+                            <p class="text-base font-semibold text-[#e30613] mt-1">524 €</p>
+                        </div>
+                        <button class="p-1 text-muted-foreground hover:text-red-500 rounded-md hover:bg-red-50 transition-colors">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-sm font-medium text-foreground truncate">Oppo Reno6 Pro 5G 256Go</h3>
-                        <p class="text-base font-semibold text-[#e30613] mt-1">47 €</p>
-                    </div>
-                    <button class="p-1 text-muted-foreground hover:text-red-500 rounded-md hover:bg-red-50 transition-colors">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
-                </div>
 
-                <div class="flex items-center gap-4 p-3 border border-border rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
-                    <div class="w-20 h-20 bg-white border border-border rounded-lg p-2 flex items-center justify-center shrink-0">
-                        <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F10%2Fabc250d09e5e7a278c6b6d0ffd519adba29c9b38.png&w=96&q=75" 
-                             alt="Xiaomi Redmi Note 13 Pro+" class="object-contain max-h-full max-w-full">
+                    <div class="flex items-center gap-4 p-3 border border-border rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
+                        <div class="w-20 h-20 bg-white border border-border rounded-lg p-2 flex items-center justify-center shrink-0">
+                            <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F10%2Fb7ede81c55b4f9f7a785ab5410b179ce036645fb.png&w=96&q=75" 
+                                 alt="Oppo Reno6 Pro 5G" class="object-contain max-h-full max-w-full">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-medium text-foreground truncate">Oppo Reno6 Pro 5G 256Go</h3>
+                            <p class="text-base font-semibold text-[#e30613] mt-1">47 €</p>
+                        </div>
+                        <button class="p-1 text-muted-foreground hover:text-red-500 rounded-md hover:bg-red-50 transition-colors">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-sm font-medium text-foreground truncate">Xiaomi Redmi Note 13 Pro+ 512Go</h3>
-                        <p class="text-base font-semibold text-[#e30613] mt-1">94 €</p>
+
+                    <div class="flex items-center gap-4 p-3 border border-border rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
+                        <div class="w-20 h-20 bg-white border border-border rounded-lg p-2 flex items-center justify-center shrink-0">
+                            <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F10%2Fabc250d09e5e7a278c6b6d0ffd519adba29c9b38.png&w=96&q=75" 
+                                 alt="Xiaomi Redmi Note 13 Pro+" class="object-contain max-h-full max-w-full">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-medium text-foreground truncate">Xiaomi Redmi Note 13 Pro+ 512Go</h3>
+                            <p class="text-base font-semibold text-[#e30613] mt-1">94 €</p>
+                        </div>
+                        <button class="p-1 text-muted-foreground hover:text-red-500 rounded-md hover:bg-red-50 transition-colors">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
                     </div>
-                    <button class="p-1 text-muted-foreground hover:text-red-500 rounded-md hover:bg-red-50 transition-colors">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
                 </div>
 
             </div>
