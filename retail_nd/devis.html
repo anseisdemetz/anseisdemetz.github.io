@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auchan by CompaRecycle - Devis de reprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#ffffff',
+                        foreground: '#1f2937',
+                        border: '#e5e7eb',
+                        muted: {
+                            DEFAULT: '#f3f4f6',
+                            foreground: '#6b7280'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Masquer la barre de défilement pour la nav horizontale */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen bg-background flex flex-col font-sans antialiased">
+
+    <header class="sticky top-0 z-50 bg-background border-b border-border">
+
+        <div class="border-b border-border">
+            <div class="max-w-[1760px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-6">
+                <div class="flex items-center gap-2 shrink-0">
+                    <span class="text-[#e30613] font-bold text-xl leading-none">Auchan</span>
+                    <span class="text-muted-foreground text-xs">by <span class="text-foreground font-medium">CompaRecycle</span></span>
+                </div>
+
+                <div class="flex items-center gap-2 shrink-0">
+                    <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 transition-colors">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-muted-foreground"></i>
+                        <span class="text-sm font-medium">Auchan Gap</span>
+                    </div>
+
+                    <div class="flex items-center justify-center p-2 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                        <i data-lucide="help-circle" class="w-5 h-5 text-muted-foreground"></i>
+                    </div>
+
+                    <div class="flex items-center justify-center p-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                        <div class="bg-foreground text-background rounded-full p-1.5 flex items-center justify-center">
+                            <i data-lucide="user" class="w-4 h-4 text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-[1760px] mx-auto px-6 lg:px-10">
+          <div class="flex items-center justify-between">
+            <nav class="flex items-center gap-6 overflow-x-auto scrollbar-hide">
+              <a href="index.html" class="relative pb-3 cursor-pointer group">
+                <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Reprise</span>
+                <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+              </a>
+              <a href="expedition.html" class="relative pb-3 cursor-pointer group">
+                <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Expédition</span>
+                <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+              </a>
+              <a href="historique.html" class="relative pb-3 cursor-pointer group">
+                <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Historique</span>
+                <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+              </a>
+              <a href="#" class="relative pb-3 cursor-pointer group">
+                <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">PLV</span>
+                <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+              </a>
+              <a href="devis.html" class="relative pb-3 cursor-pointer group">
+                <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-[#e30613]">Devis</span>
+                <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-100 transition-all duration-300"></div>
+              </a>
+              <a href="#" class="relative pb-3 cursor-pointer group">
+                <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Guide</span>
+                <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+              </a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-6 py-3 shrink-0 pl-8">
+              <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                <span class="text-sm text-muted-foreground whitespace-nowrap">Volume à expédier</span>
+                <span class="text-sm font-semibold text-foreground">1</span>
+              </div>
+              <div class="w-px h-4 bg-border"></div>
+              <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                <span class="text-sm text-muted-foreground whitespace-nowrap">Valeur à expédier</span>
+                <span class="text-sm font-semibold text-[#2da44e]">558 €</span>
+              </div>
+              <div class="w-px h-4 bg-border"></div>
+              <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                <span class="text-sm text-muted-foreground whitespace-nowrap">Valeur en écart</span>
+                <span class="text-sm font-semibold text-foreground">0 €</span>
+              </div>
+              <div class="w-px h-4 bg-border"></div>
+              <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                <span class="text-sm text-muted-foreground whitespace-nowrap">Quarantaines</span>
+                <span class="text-sm font-semibold text-foreground">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-[1760px] w-full mx-auto px-6 lg:px-10 py-8">
+        
+        <div class="max-w-2xl mx-auto mb-10">
+          <div class="flex items-center gap-3 border border-border rounded-lg px-4 py-3 bg-background shadow-sm focus-within:ring-2 focus-within:ring-[#e30613]/20 focus-within:border-[#e30613] transition-all">
+            <input
+              type="text"
+              placeholder="N° de devis"
+              class="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+            />
+            <button class="text-muted-foreground hover:text-[#e30613] transition-colors p-1">
+              <i data-lucide="scan-barcode" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="max-w-2xl mx-auto mb-12">
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="w-32 h-32 relative shrink-0 overflow-hidden rounded-2xl border border-border/50 shadow-sm bg-slate-50 flex items-center justify-center">
+              <img src="img/devis-scanner.jpg" alt="Scanner de devis" class="object-contain p-2 w-full h-full">
+            </div>
+            
+            <div class="text-center md:text-left flex-1">
+              <p class="text-foreground leading-relaxed">
+                Votre client vient d'être redirigé dans votre magasin via le site <span class="font-medium">comparecycle.com</span>.
+              </p>
+              <p class="text-foreground leading-relaxed font-medium">
+                S'il a un devis de reprise, pensez à scanner son code barre.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <h2 class="text-center text-lg font-medium text-foreground mb-6">
+            Evaluation Vision AI
+          </h2>
+
+          <div class="border border-border rounded-lg overflow-hidden bg-white shadow-sm">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50/70 border-b border-border">
+                  <th class="p-4 font-medium text-muted-foreground text-sm">Code-barre</th>
+                  <th class="p-4 font-medium text-muted-foreground text-sm">Imei</th>
+                  <th class="p-4 font-medium text-muted-foreground text-sm">Date de création</th>
+                  <th class="p-4 font-medium text-muted-foreground text-sm">Client</th>
+                  <th class="p-4 font-medium text-muted-foreground text-sm">Modèle</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-border">
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="p-4 font-mono text-sm text-slate-900">VE9Z3WT2LF</td>
+                  <td class="p-4 font-mono text-sm text-slate-600">350096142078652</td>
+                  <td class="p-4 text-sm text-slate-600">30/03/2026</td>
+                  <td class="p-4 text-sm text-[#0ea5e9] font-medium">Chantale G.</td>
+                  <td class="p-4 text-sm text-slate-800">Apple iPhone 16 Pro Max 256Go</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex items-center justify-end gap-6 mt-4 text-sm">
+            <div class="flex items-center gap-2">
+              <span class="text-muted-foreground">Lignes par page</span>
+              <select id="rows-per-page" class="bg-background border border-border rounded px-2 py-1 outline-none text-sm cursor-pointer">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100" selected>100</option>
+              </select>
+            </div>
+
+            <span class="text-muted-foreground">1 à 1 sur 1</span>
+
+            <div class="flex items-center gap-1">
+              <button class="p-1.5 rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled>
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+              </button>
+              <span class="px-3 py-1 bg-muted rounded text-sm font-medium">1</span>
+              <button class="p-1.5 rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-border bg-[#fafafa] mt-auto">
+        <div class="max-w-[1760px] mx-auto px-6 lg:px-10 py-6">
+          <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-6 text-sm text-muted-foreground">
+              <span>© 2026 CompaRecycle</span>
+              <span>·</span>
+              <span class="hover:underline cursor-pointer">Confidentialité</span>
+              <span>·</span>
+              <span class="hover:underline cursor-pointer">Conditions</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                <i data-lucide="mail" class="w-4 h-4"></i>
+                support-reprise@comparecycle.com
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div class="w-2.5 h-2.5 rounded-full bg-[#e30613]"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-[#2da44e]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialisation de la bibliothèque d'icônes Lucide
+        lucide.createIcons();
+    </script>
+</body>
+</html>

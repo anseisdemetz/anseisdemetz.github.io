@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auchan by CompaRecycle - Reprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#ffffff',
+                        foreground: '#1f2937',
+                        border: '#e5e7eb',
+                        muted: {
+                            DEFAULT: '#f3f4f6',
+                            foreground: '#6b7280'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Masquer la barre de défilement pour la nav horizontale */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen bg-background text-foreground antialiased">
+
+    <header class="sticky top-0 z-50 bg-background border-b border-border">
+
+        <div class="border-b border-border">
+            <div class="max-w-[1760px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-6">
+                <div class="flex items-center gap-2 shrink-0">
+                    <span class="text-[#e30613] font-bold text-xl leading-none">Auchan</span>
+                    <span class="text-muted-foreground text-xs">by <span class="text-foreground font-medium">CompaRecycle</span></span>
+                </div>
+
+                <div class="flex items-center gap-2 shrink-0">
+                    <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 transition-colors">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-muted-foreground"></i>
+                        <span class="text-sm font-medium">Auchan Gap</span>
+                    </div>
+
+                    <div class="flex items-center justify-center p-2 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                        <i data-lucide="help-circle" class="w-5 h-5 text-muted-foreground"></i>
+                    </div>
+
+                    <div class="flex items-center justify-center p-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                        <div class="bg-foreground text-background rounded-full p-1.5 flex items-center justify-center">
+                            <i data-lucide="user" class="w-4 h-4 text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-[1760px] mx-auto px-6 lg:px-10">
+            <div class="flex items-center justify-between">
+                <nav class="flex items-center gap-6 overflow-x-auto scrollbar-hide">
+                    <a href="index.html" class="relative pb-3 cursor-pointer group">
+                        <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-[#e30613]">Reprise</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-100 transition-all duration-300"></div>
+                    </a>
+                    <a href="expedition.html" class="relative pb-3 cursor-pointer group">
+                        <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Expédition</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                    </a>
+                    <a href="historique.html" class="relative pb-3 cursor-pointer group">
+                        <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Historique</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                    </a>
+                    <a href="#" class="relative pb-3 cursor-pointer group">
+                        <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">PLV</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                    </a>
+                    <a href="devis.html" class="relative pb-3 cursor-pointer group">
+                        <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Devis</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                    </a>
+                    <a href="#" class="relative pb-3 cursor-pointer group">
+                        <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Guide</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                    </a>
+                </nav>
+
+                <div class="hidden md:flex items-center gap-6 py-3 shrink-0 pl-8">
+                    <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                        <span class="text-sm text-muted-foreground whitespace-nowrap">Volume à expédier</span>
+                        <span class="text-sm font-semibold text-foreground">1</span>
+                    </div>
+                    <div class="w-px h-4 bg-border"></div>
+                    <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                        <span class="text-sm text-muted-foreground whitespace-nowrap">Valeur à expédier</span>
+                        <span class="text-sm font-semibold text-[#2da44e]">558 €</span>
+                    </div>
+                    <div class="w-px h-4 bg-border"></div>
+                    <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                        <span class="text-sm text-muted-foreground whitespace-nowrap">Valeur en écart</span>
+                        <span class="text-sm font-semibold text-foreground">0 €</span>
+                    </div>
+                    <div class="w-px h-4 bg-border"></div>
+                    <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                        <span class="text-sm text-muted-foreground whitespace-nowrap">Quarantaines</span>
+                        <span class="text-sm font-semibold text-foreground">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1760px] mx-auto px-6 lg:px-10 py-8">
+
+        <div id="bonus-slider" class="relative rounded-2xl overflow-hidden text-white transition-all duration-500" style="min-height: 140px;">
+            <div class="flex items-center justify-between px-8 py-6 h-full">
+                <div class="flex-1 max-w-xl">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span id="slider-dates" class="text-xs font-medium bg-white/20 rounded-full px-3 py-1"></span>
+                        <button id="slider-cta" class="text-xs font-semibold bg-white text-foreground rounded-full px-4 py-1.5 hover:bg-white/90 transition-colors"></button>
+                    </div>
+                    <div class="flex items-baseline gap-3">
+                        <span id="slider-amount" class="text-5xl font-bold leading-none"></span>
+                        <p id="slider-description" class="text-sm text-white/80 max-w-xs leading-snug"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-4 right-5 flex items-center gap-2 z-10">
+                <div id="slider-dots" class="flex items-center gap-1.5 mr-2"></div>
+                
+                <button id="slider-prev" class="bg-white/20 hover:bg-white/30 transition-colors rounded-full p-1.5 flex items-center justify-center">
+                    <i data-lucide="chevron-left" class="w-4 h-4 text-white"></i>
+                </button>
+                <button id="slider-next" class="bg-white/20 hover:bg-white/30 transition-colors rounded-full p-1.5 flex items-center justify-center">
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6 mt-10">
+            <div>
+                <h1 class="text-2xl font-semibold text-foreground mb-1">Sélectionnez une catégorie</h1>
+                <p class="text-muted-foreground">11 catégories disponibles pour la reprise</p>
+            </div>
+
+            <div class="hidden md:flex flex-1 max-w-xl items-center gap-3 border border-border rounded-full px-4 py-2.5 bg-background shadow-sm focus-within:ring-2 focus-within:ring-foreground/10 transition-shadow ml-4">
+                <i data-lucide="search" class="w-4 h-4 text-muted-foreground shrink-0"></i>
+                <input
+                    type="text"
+                    placeholder="Référence produit, IMEI, code-barres..."
+                    class="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+                />
+                <button class="bg-foreground text-background rounded-full p-1.5 shrink-0 hover:bg-foreground/80 transition-colors flex items-center justify-center">
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+            
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="smartphone" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Mobile</h3>
+                        <p class="text-xs text-muted-foreground">245 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="tablet" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Tablette</h3>
+                        <p class="text-xs text-muted-foreground">89 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="watch" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Montre connectée</h3>
+                        <p class="text-xs text-muted-foreground">156 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="gamepad-2" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Console de salon</h3>
+                        <p class="text-xs text-muted-foreground">67 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="gamepad-2" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Console portable</h3>
+                        <p class="text-xs text-muted-foreground">43 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="headphones" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Casque sans fil</h3>
+                        <p class="text-xs text-muted-foreground">112 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="speaker" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Enceinte connectée</h3>
+                        <p class="text-xs text-muted-foreground">78 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="laptop" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Ordinateur portable</h3>
+                        <p class="text-xs text-muted-foreground">134 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="monitor" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Tout en un</h3>
+                        <p class="text-xs text-muted-foreground">56 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="pc-case" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Unité centrale</h3>
+                        <p class="text-xs text-muted-foreground">34 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer">
+                <div class="aspect-[4/3] bg-gradient-to-br from-[#f5f5f5] to-[#ebebeb] rounded-xl flex flex-col items-center justify-center mb-3 group-hover:shadow-lg transition-all overflow-hidden relative gap-3">
+                    <i data-lucide="recycle" class="w-12 h-12 text-foreground/70 transition-all duration-300 group-hover:scale-110 group-hover:text-[#e30613]"></i>
+                    <div class="text-center">
+                        <h3 class="font-medium text-foreground text-sm leading-tight mb-0.5">Divers DEEE</h3>
+                        <p class="text-xs text-muted-foreground">28 produits</p>
+                    </div>
+                    <div class="absolute inset-0 bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="border-t border-border bg-[#fafafa] mt-12">
+        <div class="max-w-[1760px] mx-auto px-6 lg:px-10 py-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-6 text-sm text-muted-foreground">
+                    <span>© 2026 CompaRecycle</span>
+                    <span>·</span>
+                    <span class="hover:underline cursor-pointer">Confidentialité</span>
+                    <span>·</span>
+                    <span class="hover:underline cursor-pointer">Conditions</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                        support-reprise@comparecycle.com
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#e30613]"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#2da44e]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Données du Slider (Bonus)
+        const BONUSES = [
+            {
+                bg: "bg-[#0097a7]",
+                dates: "Du 15 décembre au 31 mars 2026",
+                cta: "Nos bonus du moment en magasin",
+                amount: "50€",
+                description: "de bonus pour toute reprise d'un smartphone à valoir sur l'achat d'un Google Pixel 9a"
+            },
+            {
+                bg: "bg-[#2da44e]",
+                dates: "Du 1er janvier au 30 juin 2026",
+                cta: "Voir toutes les offres",
+                amount: "30€",
+                description: "de bonus pour toute reprise d'une tablette à valoir sur votre prochain achat"
+            },
+            {
+                bg: "bg-[#e30613]",
+                dates: "Du 1er mars au 30 avril 2026",
+                cta: "Découvrir l'offre",
+                amount: "20€",
+                description: "de bonus pour toute reprise d'un ordinateur portable en bon état"
+            }
+        ];
+
+        let currentIndex = 0;
+        let sliderInterval;
+
+        // Éléments du DOM
+        const sliderEl = document.getElementById('bonus-slider');
+        const datesEl = document.getElementById('slider-dates');
+        const ctaEl = document.getElementById('slider-cta');
+        const amountEl = document.getElementById('slider-amount');
+        const descriptionEl = document.getElementById('slider-description');
+        const dotsContainer = document.getElementById('slider-dots');
+
+        // Initialisation des puces (dots)
+        function initDots() {
+            dotsContainer.innerHTML = '';
+            BONUSES.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = `w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? "bg-white w-4" : "bg-white/40"}`;
+                dot.addEventListener('click', () => {
+                    goToSlide(i);
+                    resetAutoplay();
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        // Mise à jour de l'affichage du slide
+        function updateSlider() {
+            const currentBonus = BONUSES[currentIndex];
+            
+            // On retire les anciennes classes de couleur de fond pour mettre la nouvelle
+            sliderEl.className = `relative rounded-2xl overflow-hidden text-white transition-all duration-500 ${currentBonus.bg}`;
+            
+            datesEl.textContent = currentBonus.dates;
+            ctaEl.textContent = currentBonus.cta;
+            amountEl.textContent = currentBonus.amount;
+            descriptionEl.textContent = currentBonus.description;
+
+            // Mise à jour visuelle des puces
+            const dots = dotsContainer.querySelectorAll('button');
+            dots.forEach((dot, i) => {
+                if (i === currentIndex) {
+                    dot.classList.remove('bg-white/40', 'w-1.5');
+                    dot.classList.add('bg-white', 'w-4');
+                } else {
+                    dot.classList.remove('bg-white', 'w-4');
+                    dot.classList.add('bg-white/40', 'w-1.5');
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % BONUSES.length;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + BONUSES.length) % BONUSES.length;
+            updateSlider();
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateSlider();
+        }
+
+        function startAutoplay() {
+            sliderInterval = setInterval(nextSlide, 5000); // Change toutes les 5 secondes
+        }
+
+        function resetAutoplay() {
+            clearInterval(sliderInterval);
+            startAutoplay();
+        }
+
+        // Listeners pour les flèches
+        document.getElementById('slider-next').addEventListener('click', () => {
+            nextSlide();
+            resetAutoplay();
+        });
+        document.getElementById('slider-prev').addEventListener('click', () => {
+            prevSlide();
+            resetAutoplay();
+        });
+
+        // Démarrage
+        initDots();
+        updateSlider();
+        startAutoplay();
+
+        // Initialisation de la bibliothèque d'icônes Lucide
+        lucide.createIcons();
+    </script>
+</body>
+</html>
