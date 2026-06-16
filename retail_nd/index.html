@@ -48,8 +48,8 @@
                         <span class="text-sm font-medium">Auchan Gap</span>
                     </div>
 
-                    <div class="flex items-center justify-center p-2 rounded-full hover:bg-muted transition-colors cursor-pointer">
-                        <i data-lucide="help-circle" class="w-5 h-5 text-muted-foreground"></i>
+                    <div id="info-trigger" class="flex items-center justify-center p-2 rounded-full hover:bg-muted transition-colors cursor-pointer text-muted-foreground hover:text-foreground" title="Instructions de reprise">
+                        <i data-lucide="help-circle" class="w-5 h-5"></i>
                     </div>
 
                     <a href="connexion.html">
@@ -292,6 +292,63 @@
         </div>
     </main>
 
+
+    <div id="info-popin" class="fixed inset-0 z-[110] flex items-center justify-center invisible transition-all duration-300">
+        <div id="info-overlay" class="absolute inset-0 bg-slate-900/60 opacity-0 transition-opacity duration-300"></div>
+        
+        <div id="info-card" class="relative bg-white rounded-2xl w-full max-w-xl mx-4 p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300 flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-border">
+                <div class="flex items-center gap-2.5 text-[#e30613]">
+                    <i data-lucide="info" class="w-5 h-5"></i>
+                    <h2 class="text-lg font-bold text-slate-900">Règles d'évaluation de l'appareil</h2>
+                </div>
+                <button id="info-close" class="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto py-5 space-y-5 text-sm text-slate-600 leading-relaxed">
+                <p>Pour assurer une cotation juste, veillez à suivre scrupuleusement la méthodologie suivante lors des étapes de diagnostic :</p>
+                
+                <div class="space-y-3">
+                    <div class="flex gap-3 items-start">
+                        <div class="bg-blue-50 text-blue-600 p-2 rounded-lg shrink-0 mt-0.5"><i data-lucide="smartphone" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Vérification de l'état fonctionnel</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Le téléphone doit s'allumer, charger complètement, accéder au système et ne disposer d'aucun compte iCloud / Google actif bloquant.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <div class="bg-amber-50 text-amber-600 p-2 rounded-lg shrink-0 mt-0.5"><i data-lucide="eye" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Inspection visuelle approfondie</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Analysez l'écran sous une source de lumière directe. Distinguez bien les micro-rayures superficielles des bris ou fissures profonds.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <div class="bg-emerald-50 text-emerald-600 p-2 rounded-lg shrink-0 mt-0.5"><i data-lucide="shield-check" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Sécurité et conformité légale</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Le numéro IMEI sera analysé pour vérifier que l'appareil n'est ni déclaré volé, ni blacklisté par les opérateurs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-500 flex items-start gap-2.5">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
+                    <span>Toute fausse déclaration ou erreur de grade constatée en atelier logistique CompaRecycle entraînera un réajustement automatique de l'offre finale de reprise.</span>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-border flex justify-end">
+                <button id="info-btn-close" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition-colors cursor-pointer">
+                    Compris, j'ai pris note
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <footer class="border-t border-border bg-[#fafafa] mt-24">
         <div class="max-w-full mx-auto px-8 lg:px-14 py-6">
             <div class="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -317,7 +374,46 @@
     </footer>
 
     <script>
+
         document.addEventListener('DOMContentLoaded', () => {
+
+            // --- GESTION DE LA POPIN D'INFORMATION ---
+            const triggerInfo = document.getElementById('info-trigger');
+            const popin = document.getElementById('info-popin');
+            const overlayInfo = document.getElementById('info-overlay');
+            const cardInfo = document.getElementById('info-card');
+            const closeBtn = document.getElementById('info-close');
+            const closeBtnAction = document.getElementById('info-btn-close');
+
+            function openPopin() {
+                popin.classList.remove('invisible');
+                setTimeout(() => {
+                    overlayInfo.classList.remove('opacity-0');
+                    overlayInfo.classList.add('opacity-100');
+                    cardInfo.classList.remove('scale-95', 'opacity-0');
+                    cardInfo.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+
+            function closePopin() {
+                overlayInfo.classList.remove('opacity-100');
+                overlayInfo.classList.add('opacity-0');
+                cardInfo.classList.remove('scale-100', 'opacity-100');
+                cardInfo.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    popin.classList.add('invisible');
+                }, 300);
+            }
+
+            // Événements d'ouverture et fermeture de la popin
+            if (triggerInfo) triggerInfo.addEventListener('click', openPopin);
+            if (closeBtn) closeBtn.addEventListener('click', closePopin);
+            if (closeBtnAction) closeBtnAction.addEventListener('click', closePopin);
+            if (overlayInfo) overlayInfo.addEventListener('click', closePopin);
+
+            // Ouvrir automatiquement au premier chargement pour guider l'opérateur (Optionnel)
+            // openPopin();
+
             // Initialisation des icônes Lucide
             lucide.createIcons();
 
