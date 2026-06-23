@@ -8,43 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     
     <script src="https://code.highcharts.com/highcharts.js"></script>
-    <style>
-        /* Styles pour assurer la fixation et le positionnement du menu */
-        .sidebar {
-            width: 250px;
-            background-color: #333C44;
-        }
-        .main-content {
-            margin-left: 250px;
-        }
-    </style>
 </head>
-<body class="bg-gray-50 flex min-h-screen">
+<body class="bg-gray-50 p-6">
 
-    <aside class="sidebar fixed top-0 bottom-0 left-0 h-screen text-white flex flex-col z-10 shadow-lg">
-        <div class="p-6 border-b border-gray-700">
-            <div class="text-xl font-bold tracking-wider uppercase text-gray-200">Espace Affilié</div>
-        </div>
-        <nav class="flex-1 p-4 space-y-2">
-            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-blue-600 text-white font-medium transition shadow-sm">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2zm12 0v-11a2 2 0 00-2-2h-2a2 2 0 00-2 2v11a2 2 0 002 2h2a2 2 0 002-2zM11 19V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
-                </svg>
-                <span>Statistiques</span>
-            </a>
-            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
-                </svg>
-                <span>Mes Dossiers</span>
-            </a>
-        </nav>
-        <div class="p-4 border-t border-gray-700 text-xs text-gray-400 text-center">
-            v1.0.0 — Sandbox
-        </div>
-    </aside>
-
-    <main class="main-content flex-1 p-8">
+    <div class="max-w-7xl mx-auto">
         
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-200 pb-5">
             <div>
@@ -53,55 +20,62 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex flex-wrap gap-4 items-end">
-            
-            <div class="flex-1 min-w-[150px]">
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date de début</label>
-                <input type="date" value="2026-05-01" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
-            </div>
+    <!-- BARRE DE FILTRES HORIZONTALE -->
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex flex-wrap gap-4 items-end">
+        
+        <!-- Filtre Date de début -->
+        <div class="flex-1 min-w-[150px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date de début</label>
+            <input type="date" value="2026-05-01" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+        </div>
 
-            <div class="flex-1 min-w-[150px]">
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date de fin</label>
-                <input type="date" value="2026-05-31" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
-            </div>
+        <!-- Filtre Date de fin -->
+        <div class="flex-1 min-w-[150px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date de fin</label>
+            <input type="date" value="2026-05-31" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+        </div>
 
-            <div class="flex-1 min-w-[180px]">
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Catégorie</label>
-                <select class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
-                    <option value="all">Toutes les catégories</option>
-                    <option value="smartphone">Smartphones</option>
-                    <option value="tablette">Tablettes</option>
-                    <option value="ordinateur">Ordinateurs Portables</option>
-                    <option value="audio">Audio & Écouteurs</option>
-                </select>
-            </div>
+        <!-- Filtre Catégorie de produits -->
+        <div class="flex-1 min-w-[180px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Catégorie</label>
+            <select class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+                <option value="all">Toutes les catégories</option>
+                <option value="smartphone">Smartphones</option>
+                <option value="tablette">Tablettes</option>
+                <option value="ordinateur">Ordinateurs Portables</option>
+                <option value="audio">Audio & Écouteurs</option>
+            </select>
+        </div>
 
-            <div class="flex-1 min-w-[150px]">
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Marque</label>
-                <select class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
-                    <option value="all">Toutes les marques</option>
-                    <option value="apple">Apple</option>
-                    <option value="samsung">Samsung</option>
-                    <option value="xiaomi">Xiaomi</option>
-                    <option value="sony">Sony</option>
-                </select>
-            </div>
+        <!-- Filtre Marques -->
+        <div class="flex-1 min-w-[150px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Marque</label>
+            <select class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+                <option value="all">Toutes les marques</option>
+                <option value="apple">Apple</option>
+                <option value="samsung">Samsung</option>
+                <option value="xiaomi">Xiaomi</option>
+                <option value="sony">Sony</option>
+            </select>
+        </div>
 
-            <div class="flex-1 min-w-[180px]">
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Modèle</label>
-                <select class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
-                    <option value="all">Tous les modèles</option>
-                    <option value="iphone15">iPhone 15 Pro</option>
-                    <option value="iphone14">iPhone 14</option>
-                    <option value="galaxys24">Galaxy S24 Ultra</option>
-                    <option value="galaxya55">Galaxy A55</option>
-                </select>
-            </div>
+        <!-- Filtre Modèles -->
+        <div class="flex-1 min-w-[180px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Modèle</label>
+            <select class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+                <option value="all">Tous les modèles</option>
+                <option value="iphone15">iPhone 15 Pro</option>
+                <option value="iphone14">iPhone 14</option>
+                <option value="galaxys24">Galaxy S24 Ultra</option>
+                <option value="galaxya55">Galaxy A55</option>
+            </select>
+        </div>
 
-            <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm shadow-sm transition h-[38px]">
-                Filtrer
-            </button>
-        </div>        
+        <!-- Bouton Réinitialiser / Appliquer -->
+        <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm shadow-sm transition h-[38px]">
+            Filtrer
+        </button>
+    </div>        
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
             
@@ -190,78 +164,82 @@
             </div>
         </div>
 
-    </main>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
             // Graphique 1 : Évolution temporelle
-            Highcharts.chart('chart-evolution', {
-                chart: { 
-                    type: 'column' 
-                },
-                title: { 
-                    text: 'Évolution quotidienne des flux logistiques — Mai', 
-                    align: 'left', 
-                    style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } 
-                },
-                xAxis: { 
-                    categories: [
-                        '1 mai', '2 mai', '3 mai', '4 mai', '5 mai', '6 mai', '7 mai', '8 mai', '9 mai', '10 mai', 
-                        '11 mai', '12 mai', '13 mai', '14 mai', '15 mai', '16 mai', '17 mai', '18 mai', '19 mai', '20 mai', 
-                        '21 mai', '22 mai', '23 mai', '24 mai', '25 mai', '26 mai', '27 mai', '28 mai', '29 mai', '30 mai', '31 mai'
-                    ],
-                    labels: {
-                        rotation: -45,
-                        style: { fontSize: '10px' }
-                    }
-                },
-                yAxis: { 
-                    min: 0, 
-                    title: { text: 'Volume de saisies' } 
-                },
-                tooltip: {
-                    shared: true,
-                    headerFormat: '<b>{point.x}</b><br/>'
-                },
-                plotOptions: { 
-                    column: { 
-                        stacking: 'normal',
-                        borderWidth: 0,
-                        pointPadding: 0.1
-                    } 
-                },
-                series: [
-                    { 
-                        name: 'Reçues', 
-                        data: [
-                            38, 5, 2, 42, 45, 39, 41, 37, 4, 1, 
-                            44, 48, 40, 38, 42, 6, 2, 35, 31, 28, 
-                            25, 22, 3, 1, 15, 12, 8, 5, 2, 0, 0
-                        ], 
-                        color: '#10b981' 
-                    },
-                    { 
-                        name: 'En attente', 
-                        data: [
-                            0, 0, 0, 1, 0, 2, 1, 3, 0, 0, 
-                            2, 1, 3, 4, 5, 1, 0, 8, 12, 15, 
-                            18, 21, 4, 2, 24, 28, 33, 31, 35, 8, 4
-                        ], 
-                        color: '#f59e0b' 
-                    },
-                    { 
-                        name: 'Annulées', 
-                        data: [
-                            7, 2, 1, 8, 6, 7, 5, 9, 2, 1, 
-                            6, 8, 7, 6, 9, 3, 1, 7, 5, 8, 
-                            6, 7, 2, 1, 9, 6, 7, 8, 5, 2, 1
-                        ], 
-                        color: '#ef4444' 
-                    }
-                ],
-                credits: { enabled: false }
-            });
+Highcharts.chart('chart-evolution', {
+    chart: { 
+        type: 'column' 
+    },
+    title: { 
+        text: 'Évolution quotidienne des flux logistiques — Mai', 
+        align: 'left', 
+        style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } 
+    },
+    xAxis: { 
+        // Génération des 31 jours de mai
+        categories: [
+            '1 mai', '2 mai', '3 mai', '4 mai', '5 mai', '6 mai', '7 mai', '8 mai', '9 mai', '10 mai', 
+            '11 mai', '12 mai', '13 mai', '14 mai', '15 mai', '16 mai', '17 mai', '18 mai', '19 mai', '20 mai', 
+            '21 mai', '22 mai', '23 mai', '24 mai', '25 mai', '26 mai', '27 mai', '28 mai', '29 mai', '30 mai', '31 mai'
+        ],
+        labels: {
+            rotation: -45,
+            style: { fontSize: '10px' }
+        }
+    },
+    yAxis: { 
+        min: 0, 
+        title: { text: 'Volume de saisies' } 
+    },
+    tooltip: {
+        shared: true,
+        headerFormat: '<b>{point.x}</b><br/>'
+    },
+    plotOptions: { 
+        column: { 
+            stacking: 'normal',
+            borderWidth: 0,
+            pointPadding: 0.1
+        } 
+    },
+    series: [
+        { 
+            name: 'Reçues', 
+            // Début de mois : presque tout est reçu. Fin de mois : le transport est en cours.
+            data: [
+                38, 5, 2, 42, 45, 39, 41, 37, 4, 1, 
+                44, 48, 40, 38, 42, 6, 2, 35, 31, 28, 
+                25, 22, 3, 1, 15, 12, 8, 5, 2, 0, 0
+            ], 
+            color: '#10b981' 
+        },
+        { 
+            name: 'En attente', 
+            // L'encours grandit fortement sur les 10 derniers jours (produits en transit)
+            data: [
+                0, 0, 0, 1, 0, 2, 1, 3, 0, 0, 
+                2, 1, 3, 4, 5, 1, 0, 8, 12, 15, 
+                18, 21, 4, 2, 24, 28, 33, 31, 35, 8, 4
+            ], 
+            color: '#f59e0b' 
+        },
+        { 
+            name: 'Annulées', 
+            // Répartition stable et réaliste (les week-ends, quelques annulations se font en ligne)
+            data: [
+                7, 2, 1, 8, 6, 7, 5, 9, 2, 1, 
+                6, 8, 7, 6, 9, 3, 1, 7, 5, 8, 
+                6, 7, 2, 1, 9, 6, 7, 8, 5, 2, 1
+            ], 
+            color: '#ef4444' 
+        }
+    ],
+    credits: { enabled: false }
+});
 
             // Graphique 2 : Vieillissement des encours
             Highcharts.chart('chart-aging', {
