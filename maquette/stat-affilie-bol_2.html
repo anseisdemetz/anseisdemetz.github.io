@@ -396,16 +396,76 @@ Highcharts.chart('chart-funnel', {
 
             // Graphique 4 : Impact Financier Écart de Prix Moyen
             Highcharts.chart('chart-cp-impact', {
-                chart: { type: 'column' },
-                title: { text: 'Écart de Prix Moyen (Initial vs Proposé)', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
-                xAxis: { categories: ['CP Acceptées', 'CP Refusées'] },
-                yAxis: { title: { text: 'Montant Moyen (€)' } },
-                series: [
-                    { name: 'Prix Initial Moyen', data: [190, 210], color: '#3b82f6' },
-                    { name: 'Prix Après Expertise', data: [145, 120], color: '#6366f1' }
-                ],
-                credits: { enabled: false }
-            });
+                    chart: { 
+                        type: 'column' 
+                    },
+                    accessibility: { 
+                        enabled: false 
+                    },
+                    title: { 
+                        text: 'Écart de Prix Moyen (Initial vs Proposé)', 
+                        align: 'left', 
+                        style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } 
+                    },
+                    xAxis: { 
+                        categories: ['CP Acceptées', 'CP Refusées'] 
+                    },
+                    yAxis: { 
+                        title: { text: 'Montant Moyen (€)' } 
+                    },
+                    tooltip: {
+                        shared: true,
+                        formatter: function () {
+                            let s = '<b>' + this.x + '</b>';
+                            let initialPrice, currentPrice;
+                            
+                            this.points.forEach(function (point) {
+                                s += '<br/>' + point.series.name + ': <b>' + point.y + ' €</b>';
+                                if (point.series.index === 0) initialPrice = point.y;
+                                if (point.series.index === 1) currentPrice = point.y;
+                            });
+                            
+                            if (initialPrice && currentPrice) {
+                                let change = ((currentPrice - initialPrice) / initialPrice * 100).toFixed(1);
+                                s += '<br/><span style="color:#ef4444; font-weight:bold;">Variation : ' + change + '%</span>';
+                            }
+                            return s;
+                        }
+                    },
+                    series: [
+                        { 
+                            name: 'Prix Initial Moyen', 
+                            data: [190, 210], 
+                            color: '#3b82f6' 
+                        }, 
+                        { 
+                            name: 'Prix Après Expertise', 
+                            data: [145, 120], 
+                            color: '#6366f1',
+                            dataLabels: {
+                                enabled: true,
+                                inside: false,
+                                style: {
+                                    fontSize: '11px',
+                                    fontWeight: 'bold',
+                                    textOutline: 'none'
+                                },
+                                // Formateur pour calculer et afficher la variation en % directement sur la barre
+                                formatter: function () {
+                                    // index 0 = CP Acceptées, index 1 = CP Refusées
+                                    let initialData = this.series.chart.series[0].data[this.point.index].y;
+                                    let currentData = this.y;
+                                    let pctChange = ((currentData - initialData) / initialData * 100).toFixed(1);
+                                    
+                                    return this.y + ' € (' + pctChange + '%)';
+                                }
+                            }
+                        }
+                    ],
+                    credits: { 
+                        enabled: false 
+                    }
+                });
         });
     </script>
 </body>
