@@ -8,8 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     
     <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/funnel.js"></script>
-    
+
     <style>
         /* Styles pour assurer la fixation et le positionnement du menu */
         .sidebar {
@@ -176,12 +175,6 @@
             </div>
         </div>
 
-        <div id="new" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <div class="lg:col-span-2 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div id="chart-pyramid" style="width:100%; height:320px;"></div>
-            </div>
-        </div>
-
         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
             <div class="border-b border-gray-100 pb-4 mb-6">
                 <h2 class="text-lg font-bold text-gray-800">Conformité & Contrepropositions</h2>
@@ -202,34 +195,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            
-            
-            Highcharts.chart('chart-pyramid', {
-                chart: {
-                    type: 'pyramid'
-                },
-                title: {
-                    text: 'Performance des Lots'
-                },
-                plotOptions: {
-                    pyramid: {
-                        dataLabels: {
-                            enabled: true,
-                            format: '223', // Affiche la valeur (ex: 242, 223...) au centre
-                            inside: true
-                        }
-                    }
-                },
-                series: [{
-                    name: 'Lots',
-                    data: [
-                        ['Lots saisis', 242],
-                        ['Lots validés', 223],
-                        ['Lots reçus', 185],
-                        ['Lots payés', 163]
-                    ]
-                }]
-            });
 
             // Graphique 1 : Évolution temporelle
             Highcharts.chart('chart-evolution', {
