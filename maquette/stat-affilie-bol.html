@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Affilié Complet - 30 Jours</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+<body class="bg-gray-50 p-6">
+
+    <div class="max-w-7xl mx-auto">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-200 pb-5">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Suivi des Reprises et Performance</h1>
+                <p class="text-sm text-gray-500">Période d'analyse : 30 derniers jours glissants — Profil Affilié</p>
+            </div>
+            <button class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition">
+                Exporter les anomalies
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total des Saisies</span>
+                <div class="text-3xl font-extrabold text-gray-900 mt-1">1 240</div>
+                <p class="text-xs text-gray-500 mt-1">Brouillons, annulées, finalisées</p>
+                <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Valeur Totale</span>
+                        <span class="text-sm font-bold text-gray-700">229 400 €</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Prix Moyen</span>
+                        <span class="text-sm font-bold text-gray-700">185 €</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Annulées</span>
+                <div class="text-3xl font-extrabold text-red-600 mt-1">175</div>
+                <p class="text-xs text-red-500 font-medium mt-1">Taux d'annulation : 14.1%</p>
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <span class="text-[10px] uppercase text-gray-400 block">Origine</span>
+                    <span class="text-xs text-gray-600 font-medium">Clients : 68% | Automatiques : 32%</span>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Reprises Reçues</span>
+                <div class="text-3xl font-extrabold text-green-600 mt-1">900</div>
+                <p class="text-xs text-green-500 font-medium mt-1">Taux de réception vs saisies : 72.5%</p>
+                <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Valeur Reçue</span>
+                        <span class="text-sm font-bold text-gray-700">166 500 €</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Prix Moyen</span>
+                        <span class="text-sm font-bold text-gray-700">185 €</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Transactions en Attente</span>
+                <div class="text-3xl font-extrabold text-yellow-500 mt-1">165</div>
+                <p class="text-xs text-yellow-600 font-medium mt-1">Reprises finalisées non reçues</p>
+                <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Valeur Bloquée</span>
+                        <span class="text-sm font-bold text-gray-700">30 525 €</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Prix Moyen</span>
+                        <span class="text-sm font-bold text-gray-700">185 €</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="lg:col-span-2 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <div id="chart-evolution" style="width:100%; height:320px;"></div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <div id="chart-aging" style="width:100%; height:320px;"></div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+            <div class="border-b border-gray-100 pb-4 mb-6">
+                <h2 class="text-lg font-bold text-gray-800">Analyse de la Conformité & Contrepropositions (CP)</h2>
+                <p class="text-xs text-gray-400 mt-0.5">Focus sur les écarts de prix appliqués suite à l'expertise Mobiltron</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-1">
+                    <div id="chart-cp-split" style="width:100%; height:280px;"></div>
+                </div>
+                <div class="lg:col-span-2">
+                    <div id="chart-cp-impact" style="width:100%; height:280px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // Graphique 1 : Évolution temporelle
+            Highcharts.chart('chart-evolution', {
+                chart: { type: 'column' },
+                title: { text: 'Dynamique des flux logistiques', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
+                xAxis: { categories: ['Semaine 22', 'Semaine 23', 'Semaine 24', 'Semaine 25'] },
+                yAxis: { min: 0, title: { text: 'Volume de saisies' } },
+                plotOptions: { column: { stacking: 'normal' } },
+                series: [
+                    { name: 'Reçues', data: [280, 310, 190, 120], color: '#10b981' },
+                    { name: 'En attente', data: [15, 25, 45, 80], color: '#f59e0b' },
+                    { name: 'Annulées', data: [45, 35, 55, 40], color: '#ef4444' }
+                ],
+                credits: { enabled: false }
+            });
+
+            // Graphique 2 : Vieillissement des encours
+            Highcharts.chart('chart-aging', {
+                chart: { type: 'bar' },
+                title: { text: 'Ancienneté des encours en attente', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
+                xAxis: { categories: ['0-5 jours', '6-10 jours', '+10 jours'] },
+                yAxis: { title: { text: 'Produits' } },
+                plotOptions: { bar: { colorByPoint: true } },
+                colors: ['#34d399', '#fbbf24', '#f87171'],
+                legend: { enabled: false },
+                series: [{ name: 'Volume', data: [100, 45, 20] }],
+                credits: { enabled: false }
+            });
+
+            // Graphique 3 : Répartition des Contrepropositions (Split)
+            Highcharts.chart('chart-cp-split', {
+                chart: { type: 'pie' },
+                title: { text: 'Statut des décisions CP', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
+                plotOptions: { pie: { innerSize: '55%', dataLabels: { enabled: true, format: '{point.name}: {point.y}' } } },
+                series: [{
+                    name: 'Dossiers',
+                    data: [
+                        { name: 'Acceptées', y: 85, color: '#10b981' },
+                        { name: 'Refusées', y: 40, color: '#ef4444' },
+                        { name: 'En attente', y: 25, color: '#9ca3af' }
+                    ]
+                }],
+                credits: { enabled: false }
+            });
+
+            // Graphique 4 : Impact Financier Écart de Prix Moyen
+            Highcharts.chart('chart-cp-impact', {
+                chart: { type: 'column' },
+                title: { text: 'Écart de Prix Moyen (Initial vs Proposé)', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
+                xAxis: { categories: ['CP Acceptées', 'CP Refusées'] },
+                yAxis: { title: { text: 'Montant Moyen (€)' } },
+                series: [
+                    { name: 'Prix Initial Moyen', data: [190, 210], color: '#3b82f6' },
+                    { name: 'Prix Après Expertise', data: [145, 120], color: '#6366f1' }
+                ],
+                credits: { enabled: false }
+            });
+        });
+    </script>
+</body>
+</html>
