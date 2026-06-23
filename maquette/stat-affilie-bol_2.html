@@ -106,9 +106,9 @@
 
 <!-- Les encarts -->
 
-<div class="flex flex-col lg:flex-row gap-6 mb-8">
+<div style="display: flex; flex-direction: row; gap: 24px; margin-bottom: 32px; flex-wrap: wrap;">
     
-    <div class="flex-1 flex flex-col gap-5">
+    <div style="flex: 1; min-w: 300px; display: flex; flex-direction: column; gap: 20px;">
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
@@ -190,7 +190,7 @@
 
     </div>
 
-    <div class="w-full lg:w-[400px] bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center">
+    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100" style="width: 400px; min-width: 350px; display: flex; align-items: center; justify-content: center;">
         <div id="chart-funnel" style="width: 100%; height: 290px;"></div>
     </div>
 
@@ -227,6 +227,74 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+Highcharts.chart('chart-funnel', {
+    chart: { 
+        type: 'funnel',
+        marginRight: 100 // Laisse de l'espace à droite pour que les étiquettes ne soient pas coupées
+    },
+    accessibility: { 
+        enabled: false // Supprime le warning de la console
+    },
+    title: { 
+        text: 'Entonnoir de Conversion Global', 
+        align: 'left', 
+        style: { fontSize: '14px', fontWeight: 'bold', color: '#1f2937' } 
+    },
+    plotOptions: {
+        funnel: {
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b><br>{point.y:,.0f} ({point.percentByTotal:.1f}%)',
+                softConnector: true,
+                style: { fontSize: '10px' }
+            },
+            center: ['40%', '50%'],
+            width: '70%'
+        }
+    },
+    series: [{
+        name: 'Volume de conversion',
+        data: [
+            {
+                name: 'Saisies (Initial)',
+                y: 1240,
+                color: '#3b82f6',
+                percentByTotal: 100
+            },
+            {
+                name: 'Reçues (Logistique)',
+                y: 900,
+                color: '#10b981',
+                percentByTotal: 72.5 // Taux de réception (900 / 1240)
+            },
+            {
+                name: 'Validées (Payées)',
+                y: 835,
+                color: '#6366f1',
+                percentByTotal: 67.3 // Taux de conversion final (835 / 1240)
+            }
+        ]
+    }],
+    tooltip: {
+        formatter: function () {
+            // Info-bulle personnalisée pour afficher les doubles taux de conversion demandés
+            if (this.point.index === 0) {
+                return '<b>' + this.point.name + '</b>: ' + this.point.y + ' dossiers';
+            }
+            if (this.point.index === 1) {
+                return '<b>' + this.point.name + '</b>: ' + this.point.y + ' dossiers<br>• ' + (this.point.y / 1240 * 100).toFixed(1) + '% du total saisi';
+            }
+            if (this.point.index === 2) {
+                return '<b>' + this.point.name + '</b>: ' + this.point.y + ' dossiers<br>• ' + (this.point.y / 900 * 100).toFixed(1) + '% du total reçu<br>• ' + (this.point.y / 1240 * 100).toFixed(1) + '% du total saisi';
+            }
+        }
+    },
+    credits: { 
+        enabled: false 
+    }
+});            
+
 
             // Graphique 1 : Évolution temporelle
             Highcharts.chart('chart-evolution', {
