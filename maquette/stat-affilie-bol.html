@@ -18,9 +18,9 @@
                 <h1 class="text-2xl font-bold text-gray-900">Suivi des Reprises et Performance</h1>
                 <p class="text-sm text-gray-500">Période d'analyse : 30 derniers jours glissants — Profil Affilié</p>
             </div>
-            <button class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition">
+            <!-- <button class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition">
                 Exporter les anomalies
-            </button>
+            </button> -->
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
@@ -96,8 +96,8 @@
 
         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
             <div class="border-b border-gray-100 pb-4 mb-6">
-                <h2 class="text-lg font-bold text-gray-800">Analyse de la Conformité & Contrepropositions (CP)</h2>
-                <p class="text-xs text-gray-400 mt-0.5">Focus sur les écarts de prix appliqués suite à l'expertise Mobiltron</p>
+                <h2 class="text-lg font-bold text-gray-800">Conformité & Contrepropositions</h2>
+                <p class="text-xs text-gray-400 mt-0.5">Focus sur les écarts de prix appliqués suite à l'homologation</p>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -118,7 +118,7 @@
             // Graphique 1 : Évolution temporelle
             Highcharts.chart('chart-evolution', {
                 chart: { type: 'column' },
-                title: { text: 'Dynamique des flux logistiques', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
+                title: { text: 'Focus des flux logistiques', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
                 xAxis: { categories: ['Semaine 22', 'Semaine 23', 'Semaine 24', 'Semaine 25'] },
                 yAxis: { min: 0, title: { text: 'Volume de saisies' } },
                 plotOptions: { column: { stacking: 'normal' } },
@@ -133,9 +133,9 @@
             // Graphique 2 : Vieillissement des encours
             Highcharts.chart('chart-aging', {
                 chart: { type: 'bar' },
-                title: { text: 'Ancienneté des encours en attente', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
+                title: { text: 'Focus des transactions en attente', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
                 xAxis: { categories: ['0-5 jours', '6-10 jours', '+10 jours'] },
-                yAxis: { title: { text: 'Produits' } },
+                yAxis: { title: { text: 'Nb produits' } },
                 plotOptions: { bar: { colorByPoint: true } },
                 colors: ['#34d399', '#fbbf24', '#f87171'],
                 legend: { enabled: false },
