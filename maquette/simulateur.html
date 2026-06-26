@@ -19,7 +19,7 @@
         <section class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="bg-slate-50/60 border border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-slate-300 transition-colors">
                 <div>
-                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Affilié sélectionné</span>
+                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Affilié</span>
                     <div id="kpi-affilie-principal" class="text-lg font-bold text-slate-900 tracking-tight leading-tight mb-2">TechRetail France</div>
                 </div>
                 <div class="relative">
@@ -55,7 +55,7 @@
             </div>
 
             <div class="bg-blue-50/40 border border-blue-100 rounded-xl p-4 flex flex-col justify-center shadow-sm shadow-blue-500/[0.02]">
-                <span class="block text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-1">Gain total estimé</span>
+                <span class="block text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-1">Coût total de la simulation</span>
                 <div class="text-2xl font-bold text-slate-900 tracking-tight">
                     <span id="kpi-gain-total">0,00</span> <span class="text-blue-600 text-xl">€</span>
                 </div>
@@ -160,10 +160,10 @@
             </section>
 
             <section class="space-y-3">
-                <div class="flex justify-between items-center">
+                <!-- <div class="flex justify-between items-center">
                     <h2 class="text-base font-semibold text-slate-900">Résultats de la simulation</h2>
                     <span class="text-xs text-slate-400 font-medium">Mise à jour en temps réel</span>
-                </div>
+                </div> -->
                 
                 <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white">
                     <table class="w-full text-left border-collapse text-sm">
@@ -174,7 +174,7 @@
                                 <th class="py-3.5 px-4 text-right w-28">Quantité</th>
                                 <th class="py-3.5 px-4 w-64">Partenaire</th>
                                 <th class="py-3.5 px-4 w-72">Calcul de l'encours</th>
-                                <th class="py-3.5 px-4 text-right w-40">Prix total produit</th>
+                                <th class="py-3.5 px-4 text-right w-40">Total</th>
                                 <th class="py-3.5 px-4 text-center w-28">Actions</th>
                             </tr>
                         </thead>
@@ -213,10 +213,10 @@
                                 </td>
                                 <td class="py-3 px-4 align-middle text-xs space-y-1 text-slate-600 bg-emerald-50 border border-emerald-200 rounded-lg js-encours-card">
                                     <div>Partenaire : <span class="font-bold text-slate-900 js-encours-nom">Kalidil</span></div>
-                                    <div class="flex justify-between"><span>Encours Total :</span> <span class="font-medium text-slate-700 js-encours-total">85 000,00 €</span></div>
-                                    <div class="flex justify-between"><span>Encours Réel :</span> <span class="font-medium text-slate-700 js-encours-reel">72 600,00 €</span></div>
+                                    <div class="flex justify-between"><span>Encours total :</span> <span class="font-medium text-slate-700 js-encours-total">85 000,00 €</span></div>
+                                    <div class="flex justify-between"><span>Encours théorique :</span> <span class="font-medium text-slate-700 js-encours-reel">72 600,00 €</span></div>
                                     <div class="flex justify-between pt-0.5 border-t border-dashed border-emerald-300/60 js-encours-separator">
-                                        <span class="font-medium text-slate-600">Encours Théorique :</span> 
+                                        <span class="font-medium text-slate-600">Encours simulation :</span> 
                                         <span class="font-bold text-emerald-700 js-encours-theorique">72 350,00 €</span>
                                     </div>
                                 </td>
@@ -409,9 +409,9 @@
                 </td>
                 <td class="py-3 px-4 align-middle text-xs space-y-1 text-slate-600 bg-emerald-50 border border-emerald-200 rounded-lg js-encours-card">
                     <div>Partenaire : <span class="font-bold text-slate-900 js-encours-nom">Kalidil</span></div>
-                    <div class="flex justify-between"><span>Encours Total :</span> <span class="font-medium text-slate-700 js-encours-total">0,00 €</span></div>
-                    <div class="flex justify-between"><span>Encours Réel :</span> <span class="font-medium text-slate-700 js-encours-reel">0,00 €</span></div>
-                    <div class="flex justify-between pt-0.5 border-t border-dashed border-emerald-300/60 js-encours-separator"><span class="font-medium text-slate-600">Encours Théorique :</span> <span class="font-bold text-emerald-700 js-encours-theorique">0,00 €</span></div>
+                    <div class="flex justify-between"><span>Encours total :</span> <span class="font-medium text-slate-700 js-encours-total">0,00 €</span></div>
+                    <div class="flex justify-between"><span>Encours théorique :</span> <span class="font-medium text-slate-700 js-encours-reel">0,00 €</span></div>
+                    <div class="flex justify-between pt-0.5 border-t border-dashed border-emerald-300/60 js-encours-separator"><span class="font-medium text-slate-600">Encours simulation :</span> <span class="font-bold text-emerald-700 js-encours-theorique">0,00 €</span></div>
                 </td>
                 <td class="py-3 px-4 text-right font-medium text-emerald-600 align-middle js-prix-total">0,00 €</td>
                 <td class="py-3 px-4 text-center align-middle">
