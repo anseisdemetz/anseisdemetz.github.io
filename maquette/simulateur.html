@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de Flux - CompareCycle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+
+    <div class="w-full mx-auto bg-white rounded-xl shadow-sm border border-slate-100 p-6 md:p-8">
+        
+        <header class="mb-8">
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Simulateur de flux</h1>
+            <p class="text-sm text-slate-500 mt-1">Plateforme de flux contrôlé CompareCycle</p>
+        </header>
+
+        <section class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="bg-slate-50/60 border border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-slate-300 transition-colors">
+                <div>
+                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Affilié sélectionné</span>
+                    <div id="kpi-affilie-principal" class="text-lg font-bold text-slate-900 tracking-tight leading-tight mb-2">TechRetail France</div>
+                </div>
+                <div class="relative">
+                    <select id="kpi-affilie-select" onchange="changerAffilie(this)" class="block w-full bg-white border border-slate-200 rounded px-2 py-1 text-[11px] text-slate-500 font-medium focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer">
+                        <option value="">Changer d'affilié...</option>
+                        <option value="Orange BE">Orange BE</option>
+                        <option value="Orange LU">Orange LU</option>
+                        <option value="Auchan">Auchan</option>
+                        <option value="Nos">Nos</option>
+                        <option value="Tamet">Tamet</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-slate-400">
+                        <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50/60 border border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-slate-300 transition-colors">
+                <div>
+                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Date de l'argus</span>
+                    <div id="kpi-date-principal" class="text-lg font-bold text-slate-900 tracking-tight leading-tight mb-2">18/06/2026</div>
+                </div>
+                <div class="relative flex items-center bg-white border border-slate-200 rounded px-2 py-0.5 cursor-pointer">
+                    <input 
+                        type="date" 
+                        id="kpi-date-input" 
+                        value="2026-06-18" 
+                        onchange="changerDate(this)" 
+                        class="block w-full bg-transparent text-[11px] text-slate-500 font-medium focus:outline-none cursor-pointer [color-scheme:light] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:opacity-0"
+                    >
+                    <i data-lucide="calendar" class="w-3 h-3 text-slate-400 ml-1 pointer-events-none"></i>
+                </div>
+            </div>
+
+            <div class="bg-blue-50/40 border border-blue-100 rounded-xl p-4 flex flex-col justify-center shadow-sm shadow-blue-500/[0.02]">
+                <span class="block text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-1">Gain total estimé</span>
+                <div class="text-2xl font-bold text-slate-900 tracking-tight">
+                    <span id="kpi-gain-total">0,00</span> <span class="text-blue-600 text-xl">€</span>
+                </div>
+            </div>
+        </section>
+
+        <main class="space-y-8">
+            
+            <section class="bg-slate-50/40 border border-slate-150 rounded-xl p-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4 items-end">
+                    
+                    <div>
+                        <label for="categorie" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Catégorie</label>
+                        <div class="relative">
+                            <select id="categorie" class="block w-full bg-white border border-slate-200 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-pointer">
+                                <option value="">Choisir...</option>
+                                <option value="Mobile">Mobile</option>
+                                <option value="Tablette">Tablette</option>
+                                <option value="Ecouteur">Écouteur</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="marque" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Marque</label>
+                        <div class="relative">
+                            <select id="marque" class="block w-full bg-white border border-slate-200 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-pointer">
+                                <option value="">Choisir...</option>
+                                <option value="Apple">Apple</option>
+                                <option value="Samsung">Samsung</option>
+                                <option value="Oppo">Oppo</option>
+                                <option value="Xiaomi">Xiaomi</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="modele" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Modèle</label>
+                        <div class="relative">
+                            <select id="modele" disabled class="block w-full bg-slate-100 border border-slate-200 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-not-allowed">
+                                <option value="">Choisir...</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="produit" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Produit</label>
+                        <div class="relative">
+                            <select id="produit" disabled class="block w-full bg-slate-100 border border-slate-200 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-not-allowed">
+                                <option value="">Choisir...</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="grade" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Grade</label>
+                        <div class="relative">
+                            <select id="grade" class="block w-full bg-white border border-slate-200 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-pointer">
+                                <option value="">Choisir...</option>
+                                <option value="Grade A">Grade A</option>
+                                <option value="Grade A-">Grade A-</option>
+                                <option value="Grade B">Grade B</option>
+                                <option value="Grade C">Grade C</option>
+                                <option value="Grade C-">Grade C-</option>
+                                <option value="Grade D">Grade D</option>
+                                <option value="Grade D-">Grade D-</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="quantite" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Quantité</label>
+                        <input type="number" id="quantite" min="1" value="1" class="block w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <button type="button" id="btn-reset" title="Réinitialiser les champs" class="p-2.5 rounded-lg border border-slate-200 text-slate-400 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-colors flex items-center justify-center">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        </button>
+                        <button type="button" id="btn-ajouter" class="flex-1 inline-flex items-center justify-center space-x-1.5 px-4 py-2 bg-blue-600 text-sm font-medium text-white rounded-lg hover:bg-blue-700 active:scale-[0.98] transition-all shadow-sm shadow-blue-500/5">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Ajouter</span>
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-base font-semibold text-slate-900">Résultats de la simulation</h2>
+                    <span class="text-xs text-slate-400 font-medium">Mise à jour en temps réel</span>
+                </div>
+                
+                <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-400">
+                                <th class="py-3.5 px-4">Produit</th>
+                                <th class="py-3.5 px-4 text-center w-28">Grade</th>
+                                <th class="py-3.5 px-4 text-right w-28">Quantité</th>
+                                <th class="py-3.5 px-4 w-64">Partenaire</th>
+                                <th class="py-3.5 px-4 w-72">Calcul de l'encours</th>
+                                <th class="py-3.5 px-4 text-right w-40">Prix total produit</th>
+                                <th class="py-3.5 px-4 text-center w-28">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableau-simulation-body" class="divide-y divide-slate-100 text-slate-700">
+                            <tr class="hover:bg-slate-50/60 transition-colors" data-prix-actif="250" data-encours-total="85000" data-envoye-non-paye="12400">
+                                <td class="py-3 px-4 font-medium text-slate-900 align-middle">Apple iPhone 17 512Go</td>
+                                <td class="py-3 px-4 text-center align-middle">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">Grade A</span>
+                                </td>
+                                <td class="py-3 px-4 text-right align-middle">
+                                    <input type="number" min="1" value="12" oninput="recalculerLigne(this)" class="w-16 ml-auto bg-white border border-slate-200 rounded-md px-2 py-1 text-sm text-right font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                                </td>
+                                <td class="py-3 px-4 align-middle">
+                                    <div class="space-y-1 font-medium text-xs text-slate-600 mb-1.5">
+                                        <div onclick="selectionnerPartenairePodium(this, 'Kalidil', 250)" class="flex justify-between px-2 py-0.5 rounded border cursor-pointer transition-all bg-blue-50 border-blue-200 text-blue-900 shadow-sm font-semibold js-podium-item"><span class="font-bold">Kalidil</span> <span class="text-blue-600 font-bold">250 €</span></div>
+                                        <div onclick="selectionnerPartenairePodium(this, 'ALI PHONES', 240)" class="flex justify-between px-2 py-0.5 rounded border border-transparent cursor-pointer transition-all hover:bg-slate-100 js-podium-item"><span>ALI PHONES</span> <span class="text-slate-500">240 €</span></div>
+                                        <div onclick="selectionnerPartenairePodium(this, 'JANADO GmbH', 190)" class="flex justify-between px-2 py-0.5 rounded border border-transparent cursor-pointer transition-all hover:bg-slate-100 js-podium-item"><span>JANADO GmbH</span> <span class="text-slate-500">190 €</span></div>
+                                    </div>
+                                    <div class="relative">
+                                        <select onchange="selectionnerPartenaireListe(this)" class="block w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-[11px] text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer">
+                                            <option value="">Autres partenaires...</option>
+                                            <option value="GRESIVAUDAN INFORMATIQUE|180">GRESIVAUDAN INFORMATIQUE (180€)</option>
+                                            <option value="PHONER BUSINESS|175">PHONER BUSINESS (175€)</option>
+                                            <option value="ZAY PHONE'S|170">ZAY PHONE'S (170€)</option>
+                                            <option value="BULK GSM LTD|165">BULK GSM LTD (165€)</option>
+                                            <option value="CYKERO France|160">CYKERO France (160€)</option>
+                                            <option value="ECO MOBILE SOLUTION|155">ECO MOBILE SOLUTION (155€)</option>
+                                            <option value="FOXWAY OÜ|150">FOXWAY OÜ (150€)</option>
+                                            <option value="VICTONICE|145">VICTONICE (145€)</option>
+                                            <option value="SLS|140">SLS (140€)</option>
+                                        </select>
+                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-slate-400">
+                                            <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 align-middle text-xs space-y-1 text-slate-600 bg-emerald-50 border border-emerald-200 rounded-lg js-encours-card">
+                                    <div>Partenaire : <span class="font-bold text-slate-900 js-encours-nom">Kalidil</span></div>
+                                    <div class="flex justify-between"><span>Encours Total :</span> <span class="font-medium text-slate-700 js-encours-total">85 000,00 €</span></div>
+                                    <div class="flex justify-between"><span>Encours Réel :</span> <span class="font-medium text-slate-700 js-encours-reel">72 600,00 €</span></div>
+                                    <div class="flex justify-between pt-0.5 border-t border-dashed border-emerald-300/60 js-encours-separator">
+                                        <span class="font-medium text-slate-600">Encours Théorique :</span> 
+                                        <span class="font-bold text-emerald-700 js-encours-theorique">72 350,00 €</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-right font-medium text-emerald-600 align-middle js-prix-total">3 000,00 €</td>
+                                <td class="py-3 px-4 text-center align-middle">
+                                    <div class="inline-flex items-center space-x-2">
+                                        <button onclick="dupliquerLigne(this)" title="Dupliquer la ligne" class="p-1.5 rounded-md text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 bg-white shadow-sm transition-colors flex items-center justify-center">
+                                            <i data-lucide="copy" class="w-4 h-4"></i>
+                                        </button>
+                                        <button onclick="supprimerLigne(this)" title="Supprimer la ligne" class="p-1.5 rounded-md text-slate-500 hover:text-red-600 hover:bg-red-50 border border-slate-200 bg-white shadow-sm transition-colors flex items-center justify-center">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="mt-8 pt-4 border-t border-slate-100 flex justify-end space-x-3">
+            <button class="px-5 py-2 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                Annuler
+            </button>
+            <button class="px-5 py-2 rounded-lg bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 shadow-sm shadow-blue-500/10 active:scale-[0.98] transition-all">
+                Enregistrer
+            </button>
+        </footer>
+
+    </div>
+
+    <script>
+        const data = {
+            "Apple": {
+                "iPhone 13": ["iPhone 13 128Go", "iPhone 13 256Go"],
+                "iPhone 17": ["iPhone 17 256Go", "iPhone 17 512Go"]
+            },
+            "Samsung": {
+                "Galaxy 45": ["Galaxy 45 256Go", "Galaxy 45 1To"],
+                "Galaxy Pro 100": ["Galaxy Pro 100 256Go", "Galaxy Pro 100 1To"]
+            },
+            "Oppo": {
+                "Gamme Find X": ["Find X standard", "Find X Pro"] 
+            },
+            "Xiaomi": {
+                "Redmi 18": ["Redmi 18 128Go", "Redmi 18 256Go", "Redmi 18"],
+                "Redmi Pro 45": ["Redmi Pro 45 256Go", "Redmi Pro 45 512Go", "Redmi Pro 45 1To"]
+            }
+        };
+
+        const basePartenairesEncours = {
+            "Kalidil": { total: 85000, nonPaye: 12400 },
+            "ALI PHONES": { total: 60000, nonPaye: 8500 },
+            "JANADO GmbH": { total: 42000, nonPaye: 5800 },
+            "GRESIVAUDAN INFORMATIQUE": { total: 35000, nonPaye: 4000 },
+            "PHONER BUSINESS": { total: 75000, nonPaye: 15000 },
+            "ZAY PHONE'S": { total: 28000, nonPaye: 3100 },
+            "BULK GSM LTD": { total: 95000, nonPaye: 22000 },
+            "CYKERO France": { total: 50000, nonPaye: 6200 },
+            "ECO MOBILE SOLUTION": { total: 68000, nonPaye: 9400 },
+            "FOXWAY OÜ": { total: 100500, nonPaye: 18000 },
+            "VICTONICE": { total: 22000, nonPaye: 1500 },
+            "SLS": { total: 15000, nonPaye: 2000 }
+        };
+
+        const selectCategorie = document.getElementById('categorie');
+        const selectMarque = document.getElementById('marque');
+        const selectModele = document.getElementById('modele');
+        const selectProduit = document.getElementById('produit');
+        const selectGrade = document.getElementById('grade');
+        const inputQuantite = document.getElementById('quantite');
+        const tableBody = document.getElementById('tableau-simulation-body');
+        const btnReset = document.getElementById('btn-reset');
+        const btnAjouter = document.getElementById('btn-ajouter');
+        const kpiGainTotal = document.getElementById('kpi-gain-total');
+
+        function changerAffilie(selectElement) {
+            if(selectElement.value) {
+                document.getElementById('kpi-affilie-principal').textContent = selectElement.value;
+            }
+        }
+
+        function changerDate(inputElement) {
+            if (inputElement.value) {
+                const [annee, mois, jour] = inputElement.value.split('-');
+                document.getElementById('kpi-date-principal').textContent = `${jour}/${mois}/${annee}`;
+            } else {
+                document.getElementById('kpi-date-principal').textContent = "--/--/----";
+            }
+        }
+
+        selectMarque.addEventListener('change', function() {
+            const marque = this.value;
+            resetSelectModele();
+            resetSelectProduit();
+
+            if (marque && data[marque]) {
+                selectModele.disabled = false;
+                selectModele.className = selectModele.className.replace('bg-slate-100 cursor-not-allowed text-slate-400', 'bg-white cursor-pointer text-slate-700');
+                Object.keys(data[marque]).forEach(modele => {
+                    const opt = document.createElement('option');
+                    opt.value = modele; opt.textContent = modele;
+                    selectModele.appendChild(opt);
+                });
+            }
+        });
+
+        selectModele.addEventListener('change', function() {
+            const marque = selectMarque.value;
+            const modele = this.value;
+            resetSelectProduit();
+
+            if (marque && modele && data[marque][modele]) {
+                selectProduit.disabled = false;
+                selectProduit.className = selectProduit.className.replace('bg-slate-100 cursor-not-allowed text-slate-400', 'bg-white cursor-pointer text-slate-700');
+                data[marque][modele].forEach(produit => {
+                    const opt = document.createElement('option');
+                    opt.value = produit; opt.textContent = produit;
+                    selectProduit.appendChild(opt);
+                });
+            }
+        });
+
+        function resetSelectModele() {
+            selectModele.innerHTML = '<option value="">Choisir...</option>';
+            selectModele.disabled = true;
+            selectModele.className = selectModele.className.includes('bg-slate-100') ? selectModele.className : selectModele.className.replace('bg-white cursor-pointer text-slate-700', 'bg-slate-100 cursor-not-allowed text-slate-400');
+        }
+
+        function resetSelectProduit() {
+            selectProduit.innerHTML = '<option value="">Choisir...</option>';
+            selectProduit.disabled = true;
+            selectProduit.className = selectProduit.className.includes('bg-slate-100') ? selectProduit.className : selectProduit.className.replace('bg-white cursor-pointer text-slate-700', 'bg-slate-100 cursor-not-allowed text-slate-400');
+        }
+
+        btnReset.addEventListener('click', function() {
+            selectCategorie.value = ''; selectMarque.value = ''; resetSelectModele(); resetSelectProduit(); selectGrade.value = ''; inputQuantite.value = 1;
+        });
+
+        btnAjouter.addEventListener('click', function() {
+            const categorie = selectCategorie.value;
+            const marque = selectMarque.value;
+            const modele = selectModele.value;
+            const produit = selectProduit.value;
+            const grade = selectGrade.value;
+            const quantite = parseInt(inputQuantite.value) || 1;
+
+            if (!categorie || !marque || !modele || !produit || !grade) {
+                alert("Veuillez renseigner tous les critères avant l'ajout.");
+                return;
+            }
+
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/60 transition-colors border-b border-slate-100";
+            tr.setAttribute('data-prix-actif', '250');
+            tr.setAttribute('data-encours-total', '85000');
+            tr.setAttribute('data-envoye-non-paye', '12400');
+
+            let gradeBadgeColor = "bg-blue-50 text-blue-700 border-blue-100";
+            if (grade.includes('B')) gradeBadgeColor = "bg-amber-50 text-amber-700 border-amber-100";
+            if (grade.includes('C') || grade.includes('D')) gradeBadgeColor = "bg-rose-50 text-rose-700 border-rose-100";
+
+            tr.innerHTML = `
+                <td class="py-3 px-4 font-medium text-slate-900 align-middle">${marque} ${produit}</td>
+                <td class="py-3 px-4 text-center align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${gradeBadgeColor} border">${grade}</span></td>
+                <td class="py-3 px-4 text-right align-middle"><input type="number" min="1" value="${quantite}" oninput="recalculerLigne(this)" class="w-16 ml-auto bg-white border border-slate-200 rounded-md px-2 py-1 text-sm text-right font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"></td>
+                <td class="py-3 px-4 align-middle">
+                    <div class="space-y-1 font-medium text-xs text-slate-600 mb-1.5">
+                        <div onclick="selectionnerPartenairePodium(this, 'Kalidil', 250)" class="flex justify-between px-2 py-0.5 rounded border cursor-pointer transition-all bg-blue-50 border-blue-200 text-blue-900 shadow-sm font-semibold js-podium-item"><span class="font-bold">Kalidil</span> <span class="text-blue-600 font-bold">250 €</span></div>
+                        <div onclick="selectionnerPartenairePodium(this, 'ALI PHONES', 240)" class="flex justify-between px-2 py-0.5 rounded border border-transparent cursor-pointer transition-all hover:bg-slate-100 js-podium-item"><span>ALI PHONES</span> <span class="text-slate-500">240 €</span></div>
+                        <div onclick="selectionnerPartenairePodium(this, 'JANADO GmbH', 190)" class="flex justify-between px-2 py-0.5 rounded border border-transparent cursor-pointer transition-all hover:bg-slate-100 js-podium-item"><span>JANADO GmbH</span> <span class="text-slate-500">190 €</span></div>
+                    </div>
+                    <div class="relative">
+                        <select onchange="selectionnerPartenaireListe(this)" class="block w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-[11px] text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer">
+                            <option value="">Autres partenaires...</option>
+                            <option value="GRESIVAUDAN INFORMATIQUE|180">GRESIVAUDAN INFORMATIQUE (180€)</option>
+                            <option value="PHONER BUSINESS|175">PHONER BUSINESS (175€)</option>
+                            <option value="ZAY PHONE'S|170">ZAY PHONE'S (170€)</option>
+                            <option value="BULK GSM LTD|165">BULK GSM LTD (165€)</option>
+                            <option value="CYKERO France|160">CYKERO France (160€)</option>
+                            <option value="ECO MOBILE SOLUTION|155">ECO MOBILE SOLUTION (155€)</option>
+                            <option value="FOXWAY OÜ|150">FOXWAY OÜ (150€)</option>
+                            <option value="VICTONICE|145">VICTONICE (145€)</option>
+                            <option value="SLS|140">SLS (140€)</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-slate-400"><i data-lucide="chevron-down" class="w-3 h-3"></i></div>
+                    </div>
+                </td>
+                <td class="py-3 px-4 align-middle text-xs space-y-1 text-slate-600 bg-emerald-50 border border-emerald-200 rounded-lg js-encours-card">
+                    <div>Partenaire : <span class="font-bold text-slate-900 js-encours-nom">Kalidil</span></div>
+                    <div class="flex justify-between"><span>Encours Total :</span> <span class="font-medium text-slate-700 js-encours-total">0,00 €</span></div>
+                    <div class="flex justify-between"><span>Encours Réel :</span> <span class="font-medium text-slate-700 js-encours-reel">0,00 €</span></div>
+                    <div class="flex justify-between pt-0.5 border-t border-dashed border-emerald-300/60 js-encours-separator"><span class="font-medium text-slate-600">Encours Théorique :</span> <span class="font-bold text-emerald-700 js-encours-theorique">0,00 €</span></div>
+                </td>
+                <td class="py-3 px-4 text-right font-medium text-emerald-600 align-middle js-prix-total">0,00 €</td>
+                <td class="py-3 px-4 text-center align-middle">
+                    <div class="inline-flex items-center space-x-2">
+                        <button onclick="dupliquerLigne(this)" class="p-1.5 rounded-md text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 bg-white shadow-sm transition-colors flex items-center justify-center"><i data-lucide="copy" class="w-4 h-4"></i></button>
+                        <button onclick="supprimerLigne(this)" class="p-1.5 rounded-md text-slate-500 hover:text-red-600 hover:bg-red-50 border border-slate-200 bg-white shadow-sm transition-colors flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                </td>
+            `;
+
+            tableBody.insertBefore(tr, tableBody.firstChild);
+            calculerTableauGlobal();
+            lucide.createIcons();
+        });
+
+        function selectionnerPartenairePodium(element, nomPartenaire, prixUnitaire) {
+            const ligne = element.closest('tr');
+            ligne.querySelectorAll('.js-podium-item').forEach(item => {
+                item.className = "flex justify-between px-2 py-0.5 rounded border border-transparent cursor-pointer transition-all hover:bg-slate-100 js-podium-item";
+                item.firstElementChild.className = ""; item.lastElementChild.className = "text-slate-500";
+            });
+            element.className = "flex justify-between px-2 py-0.5 rounded border cursor-pointer transition-all bg-blue-50 border-blue-200 text-blue-900 shadow-sm font-semibold js-podium-item";
+            element.firstElementChild.className = "font-bold"; element.lastElementChild.className = "text-blue-600 font-bold";
+
+            const selectListe = ligne.querySelector('select');
+            selectListe.value = "";
+            selectListe.className = "block w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-[11px] text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer";
+
+            const encoursPartenaire = basePartenairesEncours[nomPartenaire];
+            ligne.setAttribute('data-encours-total', encoursPartenaire.total);
+            ligne.setAttribute('data-envoye-non-paye', encoursPartenaire.nonPaye);
+            ligne.querySelector('.js-encours-nom').textContent = nomPartenaire;
+            ligne.setAttribute('data-prix-actif', prixUnitaire);
+            calculerTableauGlobal();
+        }
+
+        function selectionnerPartenaireListe(selectElement) {
+            const ligne = selectElement.closest('tr');
+            const valueCombo = selectElement.value;
+            if (!valueCombo) {
+                selectionnerPartenairePodium(ligne.querySelector('.js-podium-item'), 'Kalidil', 250);
+                return;
+            }
+            const [nomPartenaire, prixUnitaire] = valueCombo.split('|');
+            ligne.querySelectorAll('.js-podium-item').forEach(item => {
+                item.className = "flex justify-between px-2 py-0.5 rounded border border-transparent cursor-pointer transition-all opacity-40 hover:bg-slate-100 js-podium-item";
+                item.firstElementChild.className = ""; item.lastElementChild.className = "text-slate-500";
+            });
+            selectElement.className = "block w-full bg-blue-50 border-blue-200 rounded px-2 py-1 text-[11px] text-blue-900 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer";
+
+            const encoursPartenaire = basePartenairesEncours[nomPartenaire];
+            ligne.setAttribute('data-encours-total', encoursPartenaire.total);
+            ligne.setAttribute('data-envoye-non-paye', encoursPartenaire.nonPaye);
+            ligne.querySelector('.js-encours-nom').textContent = nomPartenaire;
+            ligne.setAttribute('data-prix-actif', prixUnitaire);
+            calculerTableauGlobal();
+        }
+
+        function recalculerLigne(inputElement) {
+            calculerTableauGlobal();
+        }
+
+        function fixerEvenementsLigne(ligne) {
+            // Recouvrement des événements perdus lors du clonage de node
+            const inputNum = ligne.querySelector('input[type="number"]');
+            if (inputNum) {
+                inputNum.oninput = function() { recalculerLigne(this); };
+            }
+            const selectListe = ligne.querySelector('select');
+            if (selectListe) {
+                selectListe.onchange = function() { selectionnerPartenaireListe(this); };
+            }
+            // Réassigner les clics sur les éléments du podium d'origine fixes
+            const itemsPodium = ligne.querySelectorAll('.js-podium-item');
+            if(itemsPodium.length >= 3) {
+                itemsPodium[0].onclick = function() { selectionnerPartenairePodium(this, 'Kalidil', 250); };
+                itemsPodium[1].onclick = function() { selectionnerPartenairePodium(this, 'ALI PHONES', 240); };
+                itemsPodium[2].onclick = function() { selectionnerPartenairePodium(this, 'JANADO GmbH', 190); };
+            }
+        }
+
+        function calculerTableauGlobal() {
+            // Objet pour stocker la somme des PRIX UNIQUES unitaires des partenaires des lignes précédentes
+            const prixPrecedentsParPartenaire = {};
+            const lignes = document.querySelectorAll('#tableau-simulation-body tr');
+
+            lignes.forEach(ligne => {
+                // S'assurer que les événements sont attachés (nécessaire après duplication ou premier rendu)
+                fixerEvenementsLigne(ligne);
+
+                const quantite = parseInt(ligne.querySelector('input[type="number"]').value) || 0;
+                const prixUnitaire = parseFloat(ligne.getAttribute('data-prix-actif')) || 0;
+                const totalProduit = quantite * prixUnitaire;
+                
+                ligne.querySelector('.js-prix-total').textContent = totalProduit.toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+
+                const nomPartenaire = ligne.querySelector('.js-encours-nom').textContent.trim();
+                const encoursTotal = parseFloat(ligne.getAttribute('data-encours-total')) || 0;
+                const envoyeNonPaye = parseFloat(ligne.getAttribute('data-envoye-non-paye')) || 0;
+                const encoursReel = encoursTotal - envoyeNonPaye;
+
+                // Récupération de la somme des prix unitaires des lignes supérieures
+                const sommePrixPrecedents = prixPrecedentsParPartenaire[nomPartenaire] || 0;
+
+                // NOUVELLE FORMULE : Encours Réel - (Quantité * Prix) - Somme des prix unitaires précédents
+                const encoursTheorique = encoursReel - totalProduit - sommePrixPrecedents;
+
+                // On ajoute le PRIX UNITAIRE de la ligne actuelle pour les lignes suivantes
+                prixPrecedentsParPartenaire[nomPartenaire] = sommePrixPrecedents + prixUnitaire;
+
+                // Rendu UI de l'encours
+                ligne.querySelector('.js-encours-total').textContent = encoursTotal.toLocaleString('fr-FR') + ',00 €';
+                ligne.querySelector('.js-encours-reel').textContent = encoursReel.toLocaleString('fr-FR') + ',00 €';
+                
+                const txtEncoursTheorique = ligne.querySelector('.js-encours-theorique');
+                txtEncoursTheorique.textContent = encoursTheorique.toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+                
+                const encoursCard = ligne.querySelector('.js-encours-card');
+                const separator = ligne.querySelector('.js-encours-separator');
+
+                if (encoursTheorique < 0) {
+                    encoursCard.className = "py-3 px-4 align-middle text-xs space-y-1 text-red-900 bg-red-50 border border-red-200 rounded-lg js-encours-card";
+                    separator.className = "flex justify-between pt-0.5 border-t border-dashed border-red-300/60 js-encours-separator";
+                    txtEncoursTheorique.className = "font-bold text-red-600 js-encours-theorique";
+                } else {
+                    encoursCard.className = "py-3 px-4 align-middle text-xs space-y-1 text-emerald-950 bg-emerald-50 border border-emerald-200 rounded-lg js-encours-card";
+                    separator.className = "flex justify-between pt-0.5 border-t border-dashed border-emerald-300/60 js-encours-separator";
+                    txtEncoursTheorique.className = "font-bold text-emerald-700 js-encours-theorique";
+                }
+            });
+
+            calculerGainTotalKPI();
+        }
+
+        function calculerGainTotalKPI() {
+            let sommeGlobale = 0;
+            document.querySelectorAll('.js-prix-total').forEach(cellule => {
+                const textePropre = cellule.textContent.replace(/[^0-9,.-]/g, '').replace(',', '.');
+                sommeGlobale += parseFloat(textePropre) || 0;
+            });
+            kpiGainTotal.textContent = sommeGlobale.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
+        }
+
+        function supprimerLigne(button) {
+            const ligne = button.closest('tr');
+            if(ligne) { 
+                ligne.remove(); 
+                calculerTableauGlobal();
+            }
+        }
+
+        function dupliquerLigne(button) {
+            const ligneOrigine = button.closest('tr');
+            if(ligneOrigine) {
+                const quantiteCourante = ligneOrigine.querySelector('input[type="number"]').value;
+                const selectCourantValue = ligneOrigine.querySelector('select').value;
+                
+                const prixActif = ligneOrigine.getAttribute('data-prix-actif');
+                const encoursTotal = ligneOrigine.getAttribute('data-encours-total');
+                const nonPaye = ligneOrigine.getAttribute('data-envoye-non-paye');
+
+                const ligneCopie = ligneOrigine.cloneNode(true);
+                
+                ligneCopie.querySelector('input[type="number"]').value = quantiteCourante;
+                ligneCopie.querySelector('select').value = selectCourantValue;
+                ligneCopie.setAttribute('data-prix-actif', prixActif);
+                ligneCopie.setAttribute('data-encours-total', encoursTotal);
+                ligneCopie.setAttribute('data-envoye-non-paye', nonPaye);
+                
+                ligneOrigine.parentNode.insertBefore(ligneCopie, ligneOrigine.nextSibling);
+                
+                calculerTableauGlobal();
+                lucide.createIcons();
+            }
+        }
+
+        // Initialisation globale au premier chargement
+        calculerTableauGlobal();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
