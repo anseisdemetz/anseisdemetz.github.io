@@ -19,7 +19,7 @@
         <section class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="bg-slate-50/60 border border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-slate-300 transition-colors">
                 <div>
-                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Affilié</span>
+                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Affilié sélectionné</span>
                     <div id="kpi-affilie-principal" class="text-lg font-bold text-slate-900 tracking-tight leading-tight mb-2">TechRetail France</div>
                 </div>
                 <div class="relative">
@@ -55,7 +55,7 @@
             </div>
 
             <div class="bg-blue-50/40 border border-blue-100 rounded-xl p-4 flex flex-col justify-center shadow-sm shadow-blue-500/[0.02]">
-                <span class="block text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-1">Coût total de la simulation</span>
+                <span class="block text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-1">Gain total estimé</span>
                 <div class="text-2xl font-bold text-slate-900 tracking-tight">
                     <span id="kpi-gain-total">0,00</span> <span class="text-blue-600 text-xl">€</span>
                 </div>
@@ -160,10 +160,10 @@
             </section>
 
             <section class="space-y-3">
-                <!-- <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center">
                     <h2 class="text-base font-semibold text-slate-900">Résultats de la simulation</h2>
                     <span class="text-xs text-slate-400 font-medium">Mise à jour en temps réel</span>
-                </div> -->
+                </div>
                 
                 <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white">
                     <table class="w-full text-left border-collapse text-sm">
@@ -174,7 +174,7 @@
                                 <th class="py-3.5 px-4 text-right w-28">Quantité</th>
                                 <th class="py-3.5 px-4 w-64">Partenaire</th>
                                 <th class="py-3.5 px-4 w-72">Calcul de l'encours</th>
-                                <th class="py-3.5 px-4 text-right w-40">Total</th>
+                                <th class="py-3.5 px-4 text-right w-40">Prix total produit</th>
                                 <th class="py-3.5 px-4 text-center w-28">Actions</th>
                             </tr>
                         </thead>
@@ -213,10 +213,10 @@
                                 </td>
                                 <td class="py-3 px-4 align-middle text-xs space-y-1 text-slate-600 bg-emerald-50 border border-emerald-200 rounded-lg js-encours-card">
                                     <div>Partenaire : <span class="font-bold text-slate-900 js-encours-nom">Kalidil</span></div>
-                                    <div class="flex justify-between"><span>Encours total :</span> <span class="font-medium text-slate-700 js-encours-total">85 000,00 €</span></div>
-                                    <div class="flex justify-between"><span>Encours théorique :</span> <span class="font-medium text-slate-700 js-encours-reel">72 600,00 €</span></div>
+                                    <div class="flex justify-between"><span>Encours Total :</span> <span class="font-medium text-slate-700 js-encours-total">85 000,00 €</span></div>
+                                    <div class="flex justify-between"><span>Encours Réel :</span> <span class="font-medium text-slate-700 js-encours-reel">72 600,00 €</span></div>
                                     <div class="flex justify-between pt-0.5 border-t border-dashed border-emerald-300/60 js-encours-separator">
-                                        <span class="font-medium text-slate-600">Encours simulation :</span> 
+                                        <span class="font-medium text-slate-600">Encours Théorique :</span> 
                                         <span class="font-bold text-emerald-700 js-encours-theorique">72 350,00 €</span>
                                     </div>
                                 </td>
@@ -240,14 +240,35 @@
         </main>
 
         <footer class="mt-8 pt-4 border-t border-slate-100 flex justify-end space-x-3">
-            <button class="px-5 py-2 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+            <a href="simulateur-index.html" class="px-5 py-2 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
                 Annuler
-            </button>
-            <button class="px-5 py-2 rounded-lg bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 shadow-sm shadow-blue-500/10 active:scale-[0.98] transition-all">
+            </a>
+            <button onclick="ouvrirPopinEnregistrer()" class="px-5 py-2 rounded-lg bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 shadow-sm shadow-blue-500/10 active:scale-[0.98] transition-all">
                 Enregistrer
             </button>
         </footer>
 
+    </div>
+
+    <div id="popin-enregistrer" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 w-full max-w-md mx-4 animate-[fadeIn_0.2s_ease-out]">
+            <h3 class="text-base font-bold text-slate-900 mb-2">Enregistrer la simulation</h3>
+            <p class="text-xs text-slate-500 mb-4">Attribuez un nom à ce scénario pour pouvoir le retrouver ou le modifier plus tard.</p>
+            
+            <div class="mb-5">
+                <label for="nom-simulation" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Donner un nom à votre simulation</label>
+                <input type="text" id="nom-simulation" placeholder="Ex: Simulation Lots iPhone Q3" class="block w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button onclick="fermerPopinEnregistrer()" class="px-4 py-2 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                    Annuler
+                </button>
+                <button onclick="validerEnregistrementSimulation()" class="px-4 py-2 rounded-lg bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 transition-all">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -409,9 +430,9 @@
                 </td>
                 <td class="py-3 px-4 align-middle text-xs space-y-1 text-slate-600 bg-emerald-50 border border-emerald-200 rounded-lg js-encours-card">
                     <div>Partenaire : <span class="font-bold text-slate-900 js-encours-nom">Kalidil</span></div>
-                    <div class="flex justify-between"><span>Encours total :</span> <span class="font-medium text-slate-700 js-encours-total">0,00 €</span></div>
-                    <div class="flex justify-between"><span>Encours théorique :</span> <span class="font-medium text-slate-700 js-encours-reel">0,00 €</span></div>
-                    <div class="flex justify-between pt-0.5 border-t border-dashed border-emerald-300/60 js-encours-separator"><span class="font-medium text-slate-600">Encours simulation :</span> <span class="font-bold text-emerald-700 js-encours-theorique">0,00 €</span></div>
+                    <div class="flex justify-between"><span>Encours Total :</span> <span class="font-medium text-slate-700 js-encours-total">0,00 €</span></div>
+                    <div class="flex justify-between"><span>Encours Réel :</span> <span class="font-medium text-slate-700 js-encours-reel">0,00 €</span></div>
+                    <div class="flex justify-between pt-0.5 border-t border-dashed border-emerald-300/60 js-encours-separator"><span class="font-medium text-slate-600">Encours Théorique :</span> <span class="font-bold text-emerald-700 js-encours-theorique">0,00 €</span></div>
                 </td>
                 <td class="py-3 px-4 text-right font-medium text-emerald-600 align-middle js-prix-total">0,00 €</td>
                 <td class="py-3 px-4 text-center align-middle">
@@ -475,7 +496,6 @@
         }
 
         function fixerEvenementsLigne(ligne) {
-            // Recouvrement des événements perdus lors du clonage de node
             const inputNum = ligne.querySelector('input[type="number"]');
             if (inputNum) {
                 inputNum.oninput = function() { recalculerLigne(this); };
@@ -484,7 +504,6 @@
             if (selectListe) {
                 selectListe.onchange = function() { selectionnerPartenaireListe(this); };
             }
-            // Réassigner les clics sur les éléments du podium d'origine fixes
             const itemsPodium = ligne.querySelectorAll('.js-podium-item');
             if(itemsPodium.length >= 3) {
                 itemsPodium[0].onclick = function() { selectionnerPartenairePodium(this, 'Kalidil', 250); };
@@ -494,12 +513,10 @@
         }
 
         function calculerTableauGlobal() {
-            // Objet pour stocker la somme des PRIX UNIQUES unitaires des partenaires des lignes précédentes
             const prixPrecedentsParPartenaire = {};
             const lignes = document.querySelectorAll('#tableau-simulation-body tr');
 
             lignes.forEach(ligne => {
-                // S'assurer que les événements sont attachés (nécessaire après duplication ou premier rendu)
                 fixerEvenementsLigne(ligne);
 
                 const quantite = parseInt(ligne.querySelector('input[type="number"]').value) || 0;
@@ -513,16 +530,11 @@
                 const envoyeNonPaye = parseFloat(ligne.getAttribute('data-envoye-non-paye')) || 0;
                 const encoursReel = encoursTotal - envoyeNonPaye;
 
-                // Récupération de la somme des prix unitaires des lignes supérieures
                 const sommePrixPrecedents = prixPrecedentsParPartenaire[nomPartenaire] || 0;
-
-                // NOUVELLE FORMULE : Encours Réel - (Quantité * Prix) - Somme des prix unitaires précédents
                 const encoursTheorique = encoursReel - totalProduit - sommePrixPrecedents;
 
-                // On ajoute le PRIX UNITAIRE de la ligne actuelle pour les lignes suivantes
                 prixPrecedentsParPartenaire[nomPartenaire] = sommePrixPrecedents + prixUnitaire;
 
-                // Rendu UI de l'encours
                 ligne.querySelector('.js-encours-total').textContent = encoursTotal.toLocaleString('fr-FR') + ',00 €';
                 ligne.querySelector('.js-encours-reel').textContent = encoursReel.toLocaleString('fr-FR') + ',00 €';
                 
@@ -566,7 +578,7 @@
         function dupliquerLigne(button) {
             const ligneOrigine = button.closest('tr');
             if(ligneOrigine) {
-                const quantiteCourante = ligneOrigine.querySelector('input[type="number"]').value;
+                const quantiteCourante = ligneOrigine.querySelector('input[type=\"number\"]').value;
                 const selectCourantValue = ligneOrigine.querySelector('select').value;
                 
                 const prixActif = ligneOrigine.getAttribute('data-prix-actif');
@@ -575,7 +587,7 @@
 
                 const ligneCopie = ligneOrigine.cloneNode(true);
                 
-                ligneCopie.querySelector('input[type="number"]').value = quantiteCourante;
+                ligneCopie.querySelector('input[type=\"number\"]').value = quantiteCourante;
                 ligneCopie.querySelector('select').value = selectCourantValue;
                 ligneCopie.setAttribute('data-prix-actif', prixActif);
                 ligneCopie.setAttribute('data-encours-total', encoursTotal);
@@ -586,6 +598,29 @@
                 calculerTableauGlobal();
                 lucide.createIcons();
             }
+        }
+
+        // FONCTIONS POUR LA GESTION DE LA POPIN ENREGISTRER
+        function ouvrirPopinEnregistrer() {
+            const popin = document.getElementById('popin-enregistrer');
+            const inputNom = document.getElementById('nom-simulation');
+            popin.classList.remove('hidden');
+            inputNom.value = ''; // Réinitialisation du champ à chaque ouverture
+            inputNom.focus();
+        }
+
+        function fermerPopinEnregistrer() {
+            document.getElementById('popin-enregistrer').classList.add('hidden');
+        }
+
+        function validerEnregistrementSimulation() {
+            const nom = document.getElementById('nom-simulation').value.trim();
+            if (!nom) {
+                alert("Veuillez donner un nom à votre simulation avant de l'enregistrer.");
+                return;
+            }
+            alert(`Simulation "${nom}" enregistrée avec succès !`);
+            fermerPopinEnregistrer();
         }
 
         // Initialisation globale au premier chargement
