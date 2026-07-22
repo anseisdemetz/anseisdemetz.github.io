@@ -66,17 +66,23 @@
                     </div>
                     <div class="flex items-center space-x-6 text-xs text-slate-600">
                         <div><span class="text-slate-400">Affilié :</span> <strong id="info-affilie" class="text-slate-800">TechRetail France</strong></div>
-                        <div><span class="text-slate-400">Total lignes unitaires :</span> <strong id="info-total-lignes" class="text-slate-800">14</strong></div>
+                        <div><span class="text-slate-400">Total lignes unitaires :</span> <strong id="info-total-lignes" class="text-slate-800">42</strong></div>
                     </div>
                 </div>
 
                 <!-- OUTIL DE SAISIE RAPIDE EN MASSE -->
                 <div id="section-saisie-masse" class="bg-blue-50/40 border border-blue-100 rounded-xl p-4">
-                    <div class="flex items-center space-x-2 mb-3">
-                        <i data-lucide="zap" class="w-4 h-4 text-blue-600"></i>
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-blue-900">Remplissage en masse (Saisie rapide)</h4>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="zap" class="w-4 h-4 text-blue-600"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-blue-900">Remplissage en masse (Saisie rapide)</h4>
+                        </div>
+                        <button onclick="ouvrirPopinImportImei()" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium transition-all shadow-sm flex items-center space-x-1.5">
+                            <i data-lucide="barcode" class="w-3.5 h-3.5 text-blue-400"></i>
+                            <span>Coller des IMEI en masse</span>
+                        </button>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
                         <div>
                             <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Type d'Homologation</label>
                             <select id="masse-homologation" class="block w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium">
@@ -92,14 +98,6 @@
                                 <option value="TVA classique">TVA classique</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">% TVA</label>
-                            <input type="number" id="masse-taux-tva" placeholder="Ex: 20" class="block w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">N° TVA</label>
-                            <input type="text" id="masse-no-tva" placeholder="Ex: FR12345678" class="block w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium">
-                        </div>
                         <button onclick="appliquerSaisieMasse()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-1.5 rounded-lg text-xs transition-all shadow-sm">
                             Appliquer à toutes les lignes
                         </button>
@@ -114,15 +112,16 @@
                                 <th class="py-3.5 px-3">N° Transaction</th>
                                 <th class="py-3.5 px-3">Produit & Grade</th>
                                 <th class="py-3.5 px-3">Partenaire / Prix</th>
+                                <th class="py-3.5 px-3">Prix affilié</th>
+                                <th class="py-3.5 px-3">Marge CR</th>
                                 <th class="py-3.5 px-3 w-40">IMEI <span class="text-red-500">*</span></th>
                                 <th class="py-3.5 px-3 w-36">Homologation</th>
                                 <th class="py-3.5 px-3 w-36">Type TVA <span class="text-red-500">*</span></th>
-                                <th class="py-3.5 px-3 w-24">% TVA <span class="text-red-500">*</span></th>
-                                <th class="py-3.5 px-3 w-36">N° TVA <span class="text-red-500">*</span></th>
+                                <th class="py-3.5 px-3 text-right">Date de création</th>
                             </tr>
                         </thead>
                         <tbody id="tableau-integration-body" class="divide-y divide-slate-100 text-slate-700">
-                            <!-- Les lignes unitaire générées dynamiquement viendront ici -->
+                            <!-- Les lignes unitaires générées dynamiquement viendront ici -->
                         </tbody>
                     </table>
                 </div>
@@ -144,6 +143,49 @@
 
     </div>
 
+    <!-- POPIN : IMPORTATION EN MASSE DES IMEI -->
+    <div id="popin-import-imei" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 w-full max-w-lg mx-4">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+                    <i data-lucide="barcode" class="w-5 h-5 text-blue-600"></i>
+                    <span>Saisie rapide des IMEI par produit</span>
+                </h3>
+                <button onclick="fermerPopinImportImei()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Collez directement une liste de numéros d'IMEI issus de vos mails, factures ou fichiers Excel. Le système les distribuera dans l'ordre sur le produit sélectionné.</p>
+            
+            <div class="space-y-4 mb-5">
+                <div>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Cibler un produit et un grade</label>
+                    <select id="select-produit-imei-cible" onchange="majCompteurLignesCibles()" class="block w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                        <!-- Options générées dynamiquement -->
+                    </select>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Liste des IMEI (1 par ligne, espace ou virgule)</label>
+                        <span id="compteur-imei-detectes" class="text-[11px] font-semibold text-blue-600">0 IMEI détecté(s)</span>
+                    </div>
+                    <textarea id="textarea-imei-paste" rows="8" oninput="calculerImeiColles()" placeholder="Exemple:&#10;358912345678901&#10;358912345678902&#10;358912345678903..." class="block w-full bg-white border border-slate-200 rounded-lg p-3 text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <span id="info-match-lignes" class="text-[11px] font-medium text-slate-500">Attendu : <strong id="nb-lignes-attendues" class="text-slate-800">0</strong> lignes</span>
+                <div class="flex space-x-2">
+                    <button onclick="fermerPopinImportImei()" class="px-4 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-600 hover:bg-slate-50">
+                        Annuler
+                    </button>
+                    <button onclick="distribuerImeiEnMasse()" class="px-4 py-2 rounded-lg bg-blue-600 text-xs font-semibold text-white hover:bg-blue-700 transition-all shadow-sm">
+                        Distribuer les IMEI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- POPIN : SÉLECTIONNER UNE SIMULATION -->
     <div id="popin-selection-simu" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 w-full max-w-md mx-4">
@@ -154,14 +196,7 @@
                 <button onclick="choisirSimulationEtCharger('Lot Smartphones Q3')" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex justify-between items-center group">
                     <div>
                         <strong class="block text-xs font-bold text-slate-800 group-hover:text-blue-900">Lot Smartphones Q3</strong>
-                        <span class="text-[11px] text-slate-400">TechRetail France • 14 articles</span>
-                    </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-blue-600"></i>
-                </button>
-                <button onclick="choisirSimulationEtCharger('Arrivage Auchan Tablettes')" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex justify-between items-center group">
-                    <div>
-                        <strong class="block text-xs font-bold text-slate-800 group-hover:text-blue-900">Arrivage Auchan Tablettes</strong>
-                        <span class="text-[11px] text-slate-400">Auchan • 5 articles</span>
+                        <span class="text-[11px] text-slate-400">TechRetail France • 42 articles</span>
                     </div>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-blue-600"></i>
                 </button>
@@ -184,19 +219,27 @@
 
     <!-- SCRIPT DE FONCTIONNEMENT INTERACTIF -->
     <script>
-        // DONNÉES DE DÉMONSTRATION DES SIMULATIONS
+        // DONNÉES DE DÉMONSTRATION MISES À JOUR (20 iPhone Grade A, 10 iPhone Grade B, 12 Galaxy Flip Grade C-)
         const simulationsMock = {
             "Lot Smartphones Q3": {
                 affilie: "TechRetail France",
+                dateArgus: "21 juillet 2026",
                 produits: [
-                    { marque: "Apple", modele: "iPhone 14 256Go", grade: "Grade A", prix: 250, quantite: 10, partenaire: "Kalidil" },
-                    { marque: "Samsung", modele: "Galaxy S23 128Go", grade: "Grade B", prix: 250, quantite: 4, partenaire: "ALI PHONES" }
-                ]
-            },
-            "Arrivage Auchan Tablettes": {
-                affilie: "Auchan",
-                produits: [
-                    { marque: "Apple", modele: "iPad Air 64Go", grade: "Grade A-", prix: 310, quantite: 5, partenaire: "JANADO GmbH" }
+                    { 
+                        marque: "Apple", modele: "iPhone 14 128Go", grade: "Grade A", 
+                        prix: 250, quantite: 20, partenaire: "Kalidil",
+                        prixAffilies: [250, 230, 265, 250, 220]
+                    },
+                    { 
+                        marque: "Apple", modele: "iPhone 14 128Go", grade: "Grade B", 
+                        prix: 210, quantite: 10, partenaire: "ALI PHONES",
+                        prixAffilies: [210, 200, 220]
+                    },
+                    { 
+                        marque: "Samsung", modele: "Galaxy Flip 1To", grade: "Grade C-", 
+                        prix: 340, quantite: 12, partenaire: "JANADO GmbH",
+                        prixAffilies: [340, 350, 320, 340]
+                    }
                 ]
             }
         };
@@ -230,13 +273,34 @@
             tbody.innerHTML = '';
 
             let totalLignes = 0;
+            const selectCibleImei = document.getElementById('select-produit-imei-cible');
+            selectCibleImei.innerHTML = '';
 
             // Pour chaque produit, on crée autant de lignes qu'il y a de quantité
             simu.produits.forEach((prod) => {
+                const produitClef = `${prod.marque} ${prod.modele} - ${prod.grade}`;
+                
+                // Alimentation du sélecteur de la modale d'IMEI
+                const opt = document.createElement('option');
+                opt.value = produitClef;
+                opt.textContent = `${produitClef} (${prod.quantite} articles)`;
+                selectCibleImei.appendChild(opt);
+
                 for(let i = 0; i < prod.quantite; i++) {
                     totalLignes++;
+                    const prixAffilie = prod.prixAffilies[i % prod.prixAffilies.length];
+                    const margeCr = prod.prix - prixAffilie;
+
+                    let badgeMarge = `<span class="font-bold text-emerald-600">+${margeCr},00 €</span>`;
+                    if(margeCr === 0) {
+                        badgeMarge = `<span class="font-bold text-slate-500">0,00 €</span>`;
+                    } else if(margeCr < 0) {
+                        badgeMarge = `<span class="font-bold text-rose-600">${margeCr},00 €</span>`;
+                    }
+
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-slate-50/80 transition-colors js-ligne-produit";
+                    tr.setAttribute('data-produit-clef', produitClef);
 
                     tr.innerHTML = `
                         <td class="py-3 px-3 align-middle font-mono text-[11px] font-bold text-slate-400 js-cell-transaction">
@@ -248,7 +312,13 @@
                         </td>
                         <td class="py-3 px-3 align-middle">
                             <div class="font-semibold text-slate-800">${prod.partenaire}</div>
-                            <div class="text-[11px] font-bold text-emerald-600">${prod.prix},00 €</div>
+                            <div class="text-[11px] font-bold text-blue-600">${prod.prix},00 €</div>
+                        </td>
+                        <td class="py-3 px-3 align-middle font-bold text-slate-700">
+                            ${prixAffilie},00 €
+                        </td>
+                        <td class="py-3 px-3 align-middle">
+                            ${badgeMarge}
                         </td>
                         <td class="py-3 px-3 align-middle">
                             <input type="text" placeholder="N° IMEI / Série" class="w-full bg-white border border-slate-200 rounded px-2 py-1 text-xs font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 js-input-imei">
@@ -266,11 +336,8 @@
                                 <option value="TVA classique">TVA classique</option>
                             </select>
                         </td>
-                        <td class="py-3 px-3 align-middle">
-                            <input type="number" placeholder="%" class="w-full bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 js-input-taux-tva">
-                        </td>
-                        <td class="py-3 px-3 align-middle">
-                            <input type="text" placeholder="N° TVA" class="w-full bg-white border border-slate-200 rounded px-2 py-1 text-xs font-mono focus:ring-1 focus:ring-blue-500 js-input-no-tva">
+                        <td class="py-3 px-3 align-middle text-right font-medium text-slate-500">
+                            ${simu.dateArgus}
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -292,18 +359,89 @@
             lucide.createIcons();
         }
 
-        // APPLICATION DE LA SAISIE EN MASSE
+        // FONCTIONNALITÉ CREATIVE : GESTION DE L'IMPORTATION ET DISTRIBUTIVITÉ DES IMEI
+        function ouvrirPopinImportImei() {
+            document.getElementById('popin-import-imei').classList.remove('hidden');
+            document.getElementById('textarea-imei-paste').value = '';
+            calculerImeiColles();
+            majCompteurLignesCibles();
+        }
+
+        function fermerPopinImportImei() {
+            document.getElementById('popin-import-imei').classList.add('hidden');
+        }
+
+        function majCompteurLignesCibles() {
+            const produitClef = document.getElementById('select-produit-imei-cible').value;
+            const lignesMatching = document.querySelectorAll(`.js-ligne-produit[data-produit-clef="${produitClef}"]`);
+            document.getElementById('nb-lignes-attendues').textContent = lignesMatching.length;
+        }
+
+        function extraireImeiDepuisTexte(texte) {
+            if(!texte) return [];
+            // Découpage selon retours à la ligne, virgules, points-virgules ou espaces
+            return texte.split(/[\n\r,;\s]+/).map(item => item.trim()).filter(item => item.length > 0);
+        }
+
+        function calculerImeiColles() {
+            const contenu = document.getElementById('textarea-imei-paste').value;
+            const imeiListe = extraireImeiDepuisTexte(contenu);
+            const nbImei = imeiListe.length;
+            
+            const txtCompteur = document.getElementById('compteur-imei-detectes');
+            txtCompteur.textContent = `${nbImei} IMEI détecté(s)`;
+
+            const nbAttendus = parseInt(document.getElementById('nb-lignes-attendues').textContent) || 0;
+            if(nbImei === nbAttendus && nbImei > 0) {
+                txtCompteur.className = "text-[11px] font-bold text-emerald-600";
+            } else if(nbImei > nbAttendus) {
+                txtCompteur.className = "text-[11px] font-bold text-amber-600";
+            } else {
+                txtCompteur.className = "text-[11px] font-semibold text-blue-600";
+            }
+        }
+
+        function distribuerImeiEnMasse() {
+            const produitClef = document.getElementById('select-produit-imei-cible').value;
+            const contenu = document.getElementById('textarea-imei-paste').value;
+            const imeiListe = extraireImeiDepuisTexte(contenu);
+
+            if(imeiListe.length === 0) {
+                alert("Veuillez coller au moins un numéro d'IMEI.");
+                return;
+            }
+
+            const lignesMatching = document.querySelectorAll(`.js-ligne-produit[data-produit-clef="${produitClef}"]`);
+            
+            // Distribution dans l'ordre
+            lignesMatching.forEach((row, index) => {
+                if(index < imeiListe.length) {
+                    const inputImei = row.querySelector('.js-input-imei');
+                    inputImei.value = imeiListe[index];
+                    inputImei.classList.remove('border-red-500', 'bg-red-50');
+                    inputImei.classList.add('bg-blue-50/50', 'border-blue-300');
+                }
+            });
+
+            fermerPopinImportImei();
+
+            if(imeiListe.length < lignesMatching.length) {
+                alert(`${imeiListe.length} IMEI distribués sur les ${lignesMatching.length} lignes disponibles. Il reste des lignes à renseigner.`);
+            } else if(imeiListe.length > lignesMatching.length) {
+                alert(`${lignesMatching.length} IMEI distribués avec succès. (${imeiListe.length - lignesMatching.length} IMEI en trop dans votre liste ont été ignorés).`);
+            } else {
+                alert(`Succès ! Les ${lignesMatching.length} IMEI ont été associés parfaitement.`);
+            }
+        }
+
+        // APPLICATION DE LA SAISIE EN MASSE (HOMOLOGATION ET TVA)
         function appliquerSaisieMasse() {
             const homologation = document.getElementById('masse-homologation').value;
             const typeTva = document.getElementById('masse-type-tva').value;
-            const tauxTva = document.getElementById('masse-taux-tva').value;
-            const noTva = document.getElementById('masse-no-tva').value;
 
             document.querySelectorAll('.js-ligne-produit').forEach(row => {
                 if(homologation) row.querySelector('.js-select-homologation').value = homologation;
                 if(typeTva) row.querySelector('.js-select-type-tva').value = typeTva;
-                if(tauxTva) row.querySelector('.js-input-taux-tva').value = tauxTva;
-                if(noTva) row.querySelector('.js-input-no-tva').value = noTva;
             });
         }
 
@@ -323,10 +461,8 @@
             document.querySelectorAll('.js-ligne-produit').forEach(row => {
                 const imei = row.querySelector('.js-input-imei');
                 const typeTva = row.querySelector('.js-select-type-tva');
-                const tauxTva = row.querySelector('.js-input-taux-tva');
-                const noTva = row.querySelector('.js-input-no-tva');
 
-                [imei, typeTva, tauxTva, noTva].forEach(input => {
+                [imei, typeTva].forEach(input => {
                     if(!input.value.trim()) {
                         input.classList.add('border-red-500', 'bg-red-50');
                         erreurs = true;
@@ -337,7 +473,7 @@
             });
 
             if(erreurs) {
-                alert("Veuillez renseigner tous les champs obligatoires (IMEI, Type de TVA, % TVA et N° TVA) avant de procéder à l'intégration.");
+                alert("Veuillez renseigner tous les champs obligatoires (IMEI et Type de TVA) avant de procéder à l'intégration.");
                 return;
             }
 
