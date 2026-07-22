@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intégrateur - CompareCycle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes spinner {
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-custom {
+            animation: spinner 0.8s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+
+    <div class="w-full mx-auto bg-white rounded-xl shadow-sm border border-slate-100 p-6 md:p-8">
+        
+        <!-- HEADER ET NAVIGATION DE L'OUTIL -->
+        <header class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-100 pb-6">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span id="badge-statut" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                        TEMPORAIRE / BROUILLON
+                    </span>
+                    <h1 class="text-2xl font-bold text-slate-900 tracking-tight">INTEGRATEUR</h1>
+                </div>
+                <p class="text-sm text-slate-500 mt-1">Transformez vos simulations en transactions unitaires contrôlées</p>
+            </div>
+
+            <!-- ACTIONS RAPIDES -->
+            <div class="flex flex-wrap items-center gap-3">
+                <button onclick="ouvrirPopinSelectionSimulation()" class="inline-flex items-center space-x-1.5 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium transition-all shadow-sm">
+                    <i data-lucide="folder-open" class="w-3.5 h-3.5"></i>
+                    <span>Charger une autre simulation</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- VUE UNIQUE : INTEGRATEUR (BROUILLON / INTÉGRÉ) -->
+        <div id="vue-integrateur" class="space-y-6">
+
+            <!-- BANDEAU INFORMATIONS SIMULATION SOURCE -->
+            <div id="integrateur-empty-state" class="hidden p-8 text-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+                <i data-lucide="file-spreadsheet" class="w-10 h-10 text-slate-400 mx-auto mb-3"></i>
+                <h3 class="text-sm font-bold text-slate-700">Aucune simulation chargée dans l'intégrateur</h3>
+                <p class="text-xs text-slate-400 mt-1 mb-4">Sélectionnez une simulation existante pour générer les lignes de transaction.</p>
+                <button onclick="ouvrirPopinSelectionSimulation()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-all">
+                    Choisir une simulation
+                </button>
+            </div>
+
+            <div id="integrateur-content" class="space-y-6">
+                
+                <!-- ENTÊTE DE LA SIMULATION CHARGÉE -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-slate-900 text-white rounded-lg"><i data-lucide="layers" class="w-5 h-5"></i></div>
+                        <div>
+                            <span class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Source d'intégration</span>
+                            <h3 class="text-base font-bold text-slate-900" id="titre-simu-chargee">Lot Smartphones Q3</h3>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-6 text-xs text-slate-600">
+                        <div><span class="text-slate-400">Affilié :</span> <strong id="info-affilie" class="text-slate-800">TechRetail France</strong></div>
+                        <div><span class="text-slate-400">Total lignes unitaires :</span> <strong id="info-total-lignes" class="text-slate-800">14</strong></div>
+                    </div>
+                </div>
+
+                <!-- OUTIL DE SAISIE RAPIDE EN MASSE -->
+                <div id="section-saisie-masse" class="bg-blue-50/40 border border-blue-100 rounded-xl p-4">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <i data-lucide="zap" class="w-4 h-4 text-blue-600"></i>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-blue-900">Remplissage en masse (Saisie rapide)</h4>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Type d'Homologation</label>
+                            <select id="masse-homologation" class="block w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium">
+                                <option value="Complet">Complet</option>
+                                <option value="Cosmétique">Cosmétique</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Type de TVA</label>
+                            <select id="masse-type-tva" class="block w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium">
+                                <option value="">Choisir...</option>
+                                <option value="TVA sur marge">TVA sur marge</option>
+                                <option value="TVA classique">TVA classique</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">% TVA</label>
+                            <input type="number" id="masse-taux-tva" placeholder="Ex: 20" class="block w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">N° TVA</label>
+                            <input type="text" id="masse-no-tva" placeholder="Ex: FR12345678" class="block w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium">
+                        </div>
+                        <button onclick="appliquerSaisieMasse()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-1.5 rounded-lg text-xs transition-all shadow-sm">
+                            Appliquer à toutes les lignes
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TABLEAU D'INTÉGRATION DES PRODUITS UNITAIRES -->
+                <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white shadow-sm">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase tracking-wider text-slate-400">
+                                <th class="py-3.5 px-3">N° Transaction</th>
+                                <th class="py-3.5 px-3">Produit & Grade</th>
+                                <th class="py-3.5 px-3">Partenaire / Prix</th>
+                                <th class="py-3.5 px-3 w-40">IMEI <span class="text-red-500">*</span></th>
+                                <th class="py-3.5 px-3 w-36">Homologation</th>
+                                <th class="py-3.5 px-3 w-36">Type TVA <span class="text-red-500">*</span></th>
+                                <th class="py-3.5 px-3 w-24">% TVA <span class="text-red-500">*</span></th>
+                                <th class="py-3.5 px-3 w-36">N° TVA <span class="text-red-500">*</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableau-integration-body" class="divide-y divide-slate-100 text-slate-700">
+                            <!-- Les lignes unitaire générées dynamiquement viendront ici -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- FOOTER AVEC BOUTONS D'ACTION -->
+                <footer class="pt-4 border-t border-slate-100 flex justify-end items-center space-x-3">
+                    <button onclick="enregistrerBrouillonTemporaire()" id="btn-enregistrer-brouillon" class="px-4 py-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all flex items-center space-x-1.5 shadow-sm">
+                        <i data-lucide="save" class="w-3.5 h-3.5 text-slate-500"></i>
+                        <span>Enregistrer brouillon</span>
+                    </button>
+                    <button onclick="integrerEtGenererTransactions()" id="btn-integrer-final" class="px-5 py-2 rounded-lg bg-blue-600 text-xs font-semibold text-white hover:bg-blue-700 active:scale-[0.98] transition-all shadow-sm shadow-blue-500/10 flex items-center space-x-1.5">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <span>Intégrer les produits</span>
+                    </button>
+                </footer>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- POPIN : SÉLECTIONNER UNE SIMULATION -->
+    <div id="popin-selection-simu" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 w-full max-w-md mx-4">
+            <h3 class="text-base font-bold text-slate-900 mb-1">Changer de simulation</h3>
+            <p class="text-xs text-slate-500 mb-4">Choisissez la simulation à charger dans l'outil d'intégration.</p>
+            
+            <div class="space-y-2 mb-6">
+                <button onclick="choisirSimulationEtCharger('Lot Smartphones Q3')" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex justify-between items-center group">
+                    <div>
+                        <strong class="block text-xs font-bold text-slate-800 group-hover:text-blue-900">Lot Smartphones Q3</strong>
+                        <span class="text-[11px] text-slate-400">TechRetail France • 14 articles</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-blue-600"></i>
+                </button>
+                <button onclick="choisirSimulationEtCharger('Arrivage Auchan Tablettes')" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex justify-between items-center group">
+                    <div>
+                        <strong class="block text-xs font-bold text-slate-800 group-hover:text-blue-900">Arrivage Auchan Tablettes</strong>
+                        <span class="text-[11px] text-slate-400">Auchan • 5 articles</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-blue-600"></i>
+                </button>
+            </div>
+
+            <div class="flex justify-end">
+                <button onclick="fermerPopinSelectionSimulation()" class="px-4 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-600 hover:bg-slate-50">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ECRAN OVERLAY DE CHARGEMENT / TRANSITION -->
+    <div id="loader-overlay" class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-md text-white">
+        <div class="w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full animate-spin-custom mb-4"></div>
+        <h4 id="loader-title" class="text-base font-bold tracking-tight">Chargement en cours...</h4>
+        <p id="loader-subtitle" class="text-xs text-slate-300 mt-1">Éclatement des produits de la simulation...</p>
+    </div>
+
+    <!-- SCRIPT DE FONCTIONNEMENT INTERACTIF -->
+    <script>
+        // DONNÉES DE DÉMONSTRATION DES SIMULATIONS
+        const simulationsMock = {
+            "Lot Smartphones Q3": {
+                affilie: "TechRetail France",
+                produits: [
+                    { marque: "Apple", modele: "iPhone 14 256Go", grade: "Grade A", prix: 250, quantite: 10, partenaire: "Kalidil" },
+                    { marque: "Samsung", modele: "Galaxy S23 128Go", grade: "Grade B", prix: 250, quantite: 4, partenaire: "ALI PHONES" }
+                ]
+            },
+            "Arrivage Auchan Tablettes": {
+                affilie: "Auchan",
+                produits: [
+                    { marque: "Apple", modele: "iPad Air 64Go", grade: "Grade A-", prix: 310, quantite: 5, partenaire: "JANADO GmbH" }
+                ]
+            }
+        };
+
+        let simulationCourante = null;
+
+        function choisirSimulationEtCharger(nomSimu) {
+            fermerPopinSelectionSimulation();
+            afficherLoader("Chargement de la simulation...", "Éclatement des lignes de produits unitaires...");
+            
+            setTimeout(() => {
+                chargerSimulationDansIntegrateur(nomSimu);
+                masquerLoader();
+            }, 600);
+        }
+
+        // ÉCLATEMENT ET REMPLISSAGE DE LA TABLE INTÉGRATEUR
+        function chargerSimulationDansIntegrateur(nomSimu) {
+            const simu = simulationsMock[nomSimu];
+            if(!simu) return;
+
+            simulationCourante = simu;
+
+            document.getElementById('integrateur-empty-state').classList.add('hidden');
+            document.getElementById('integrateur-content').classList.remove('hidden');
+
+            document.getElementById('titre-simu-chargee').textContent = nomSimu;
+            document.getElementById('info-affilie').textContent = simu.affilie;
+
+            const tbody = document.getElementById('tableau-integration-body');
+            tbody.innerHTML = '';
+
+            let totalLignes = 0;
+
+            // Pour chaque produit, on crée autant de lignes qu'il y a de quantité
+            simu.produits.forEach((prod) => {
+                for(let i = 0; i < prod.quantite; i++) {
+                    totalLignes++;
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-50/80 transition-colors js-ligne-produit";
+
+                    tr.innerHTML = `
+                        <td class="py-3 px-3 align-middle font-mono text-[11px] font-bold text-slate-400 js-cell-transaction">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded bg-slate-100 text-slate-500 border border-slate-200">BROUILLON</span>
+                        </td>
+                        <td class="py-3 px-3 align-middle">
+                            <div class="font-bold text-slate-900">${prod.marque} ${prod.modele}</div>
+                            <div class="text-[10px] text-slate-400 font-medium">${prod.grade}</div>
+                        </td>
+                        <td class="py-3 px-3 align-middle">
+                            <div class="font-semibold text-slate-800">${prod.partenaire}</div>
+                            <div class="text-[11px] font-bold text-emerald-600">${prod.prix},00 €</div>
+                        </td>
+                        <td class="py-3 px-3 align-middle">
+                            <input type="text" placeholder="N° IMEI / Série" class="w-full bg-white border border-slate-200 rounded px-2 py-1 text-xs font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 js-input-imei">
+                        </td>
+                        <td class="py-3 px-3 align-middle">
+                            <select class="w-full bg-white border border-slate-200 rounded px-1.5 py-1 text-xs focus:ring-1 focus:ring-blue-500 js-select-homologation">
+                                <option value="Complet" selected>Complet</option>
+                                <option value="Cosmétique">Cosmétique</option>
+                            </select>
+                        </td>
+                        <td class="py-3 px-3 align-middle">
+                            <select class="w-full bg-white border border-slate-200 rounded px-1.5 py-1 text-xs focus:ring-1 focus:ring-blue-500 js-select-type-tva">
+                                <option value="" selected>Choisir...</option>
+                                <option value="TVA sur marge">TVA sur marge</option>
+                                <option value="TVA classique">TVA classique</option>
+                            </select>
+                        </td>
+                        <td class="py-3 px-3 align-middle">
+                            <input type="number" placeholder="%" class="w-full bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 js-input-taux-tva">
+                        </td>
+                        <td class="py-3 px-3 align-middle">
+                            <input type="text" placeholder="N° TVA" class="w-full bg-white border border-slate-200 rounded px-2 py-1 text-xs font-mono focus:ring-1 focus:ring-blue-500 js-input-no-tva">
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+
+            document.getElementById('info-total-lignes').textContent = totalLignes;
+            
+            // Réinitialisation des boutons si déjà intégrés précédemment
+            document.getElementById('section-saisie-masse').classList.remove('hidden');
+            document.getElementById('btn-enregistrer-brouillon').classList.remove('hidden');
+            
+            const btnFinal = document.getElementById('btn-integrer-final');
+            btnFinal.disabled = false;
+            btnFinal.className = "px-5 py-2 rounded-lg bg-blue-600 text-xs font-semibold text-white hover:bg-blue-700 active:scale-[0.98] transition-all shadow-sm shadow-blue-500/10 flex items-center space-x-1.5";
+            btnFinal.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Intégrer les produits</span>`;
+
+            masserStatutBadge("TEMPORAIRE / BROUILLON", "bg-amber-100 text-amber-800 border-amber-200");
+            lucide.createIcons();
+        }
+
+        // APPLICATION DE LA SAISIE EN MASSE
+        function appliquerSaisieMasse() {
+            const homologation = document.getElementById('masse-homologation').value;
+            const typeTva = document.getElementById('masse-type-tva').value;
+            const tauxTva = document.getElementById('masse-taux-tva').value;
+            const noTva = document.getElementById('masse-no-tva').value;
+
+            document.querySelectorAll('.js-ligne-produit').forEach(row => {
+                if(homologation) row.querySelector('.js-select-homologation').value = homologation;
+                if(typeTva) row.querySelector('.js-select-type-tva').value = typeTva;
+                if(tauxTva) row.querySelector('.js-input-taux-tva').value = tauxTva;
+                if(noTva) row.querySelector('.js-input-no-tva').value = noTva;
+            });
+        }
+
+        // ENREGISTREMENT EN BROUILLON TEMPORAIRE
+        function enregistrerBrouillonTemporaire() {
+            afficherLoader("Sauvegarde temporaire...", "Enregistrement du brouillon en cours...");
+            setTimeout(() => {
+                masquerLoader();
+                alert("Brouillon temporaire enregistré avec succès.");
+            }, 600);
+        }
+
+        // TRANSFORMATION FINALE EN TRANSACTIONS
+        function integrerEtGenererTransactions() {
+            // Validation des champs
+            let erreurs = false;
+            document.querySelectorAll('.js-ligne-produit').forEach(row => {
+                const imei = row.querySelector('.js-input-imei');
+                const typeTva = row.querySelector('.js-select-type-tva');
+                const tauxTva = row.querySelector('.js-input-taux-tva');
+                const noTva = row.querySelector('.js-input-no-tva');
+
+                [imei, typeTva, tauxTva, noTva].forEach(input => {
+                    if(!input.value.trim()) {
+                        input.classList.add('border-red-500', 'bg-red-50');
+                        erreurs = true;
+                    } else {
+                        input.classList.remove('border-red-500', 'bg-red-50');
+                    }
+                });
+            });
+
+            if(erreurs) {
+                alert("Veuillez renseigner tous les champs obligatoires (IMEI, Type de TVA, % TVA et N° TVA) avant de procéder à l'intégration.");
+                return;
+            }
+
+            // Transition de génération
+            afficherLoader("Création des transactions...", "Génération des numéros de transactions unitaires...");
+
+            setTimeout(() => {
+                let chronoNumber = 7845126;
+                document.querySelectorAll('.js-ligne-produit').forEach(row => {
+                    const transactionNum = "GRE" + (chronoNumber++);
+                    row.querySelector('.js-cell-transaction').innerHTML = `
+                        <span class="inline-flex items-center px-2 py-0.5 rounded font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            ${transactionNum}
+                        </span>
+                    `;
+
+                    // Verrouillage des contrôles après intégration
+                    row.querySelectorAll('input, select').forEach(el => el.disabled = true);
+                });
+
+                document.getElementById('section-saisie-masse').classList.add('hidden');
+                document.getElementById('btn-enregistrer-brouillon').classList.add('hidden');
+                
+                const btnFinal = document.getElementById('btn-integrer-final');
+                btnFinal.disabled = true;
+                btnFinal.className = "px-5 py-2 rounded-lg bg-emerald-600 text-xs font-semibold text-white cursor-default shadow-sm inline-flex items-center space-x-1.5";
+                btnFinal.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i><span>Transactions créées</span>`;
+
+                masserStatutBadge("INTÉGRÉ / TRANSACTIONS CRÉÉES", "bg-emerald-100 text-emerald-800 border-emerald-200");
+                masquerLoader();
+                lucide.createIcons();
+            }, 1200);
+        }
+
+        // UTILITAIRES D'AFFICHAGE
+        function masserStatutBadge(texte, classes) {
+            const badge = document.getElementById('badge-statut');
+            badge.textContent = texte;
+            badge.className = `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${classes}`;
+        }
+
+        function afficherLoader(titre, sousTitre) {
+            document.getElementById('loader-title').textContent = titre;
+            document.getElementById('loader-subtitle').textContent = sousTitre;
+            document.getElementById('loader-overlay').classList.remove('hidden');
+        }
+
+        function masquerLoader() {
+            document.getElementById('loader-overlay').classList.add('hidden');
+        }
+
+        function ouvrirPopinSelectionSimulation() {
+            document.getElementById('popin-selection-simu').classList.remove('hidden');
+        }
+
+        function fermerPopinSelectionSimulation() {
+            document.getElementById('popin-selection-simu').classList.add('hidden');
+        }
+
+        // Initialisation automatique au chargement
+        window.addEventListener('DOMContentLoaded', () => {
+            chargerSimulationDansIntegrateur('Lot Smartphones Q3');
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
