@@ -9,46 +9,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         [v-cloak] { display: none; }
-        .mastered-row { background-color: #f0fdf4; }
+        .status-known { background-color: #f0fdf4; }
+        .status-unknown { background-color: #fef2f2; }
     </style>
 </head>
 <body class="h-full font-sans text-slate-800 antialiased flex flex-col min-h-screen">
 
     <!-- Header / Navbar -->
     <header class="bg-indigo-700 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="bg-indigo-800 p-2.5 rounded-xl text-indigo-200">
-                    <i class="fa-solid fa-book-bookmark text-2xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold leading-tight">VocabApp</h1>
-                    <p class="text-xs text-indigo-200">Gestionnaire de vocabulaire de lecture</p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-indigo-800 p-2 sm:p-2.5 rounded-xl text-indigo-200">
+                        <i class="fa-solid fa-book-bookmark text-xl sm:text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-bold leading-tight">VocabApp</h1>
+                        <p class="text-xs text-indigo-200">Gestionnaire de vocabulaire de lecture</p>
+                    </div>
                 </div>
             </div>
 
             <!-- Language Switcher -->
-            <div class="flex bg-indigo-800/70 p-1 rounded-xl text-sm font-medium">
-                <button id="btn-lang-english" onclick="switchLanguage('english')" class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 bg-white text-indigo-900 shadow-sm font-semibold">
+            <div class="flex bg-indigo-800/70 p-1 rounded-xl text-xs sm:text-sm font-medium w-full sm:w-auto justify-center">
+                <button id="btn-lang-english" onclick="switchLanguage('english')" class="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-150 bg-white text-indigo-900 shadow-sm font-semibold">
                     <span>🇬🇧</span> <span>Anglais</span> <span id="badge-count-english" class="ml-1 text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">0</span>
                 </button>
-                <button id="btn-lang-italian" onclick="switchLanguage('italian')" class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 text-indigo-100 hover:text-white">
+                <button id="btn-lang-italian" onclick="switchLanguage('italian')" class="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-150 text-indigo-100 hover:text-white">
                     <span>🇮🇹</span> <span>Italien</span> <span id="badge-count-italian" class="ml-1 text-xs px-2 py-0.5 rounded-full bg-indigo-900/50 text-indigo-200">0</span>
                 </button>
             </div>
 
             <!-- Top Actions -->
-            <div class="flex items-center space-x-2">
-                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-3.5 py-2 rounded-lg text-sm flex items-center space-x-1.5 shadow-sm transition">
+            <div class="flex items-center justify-center sm:justify-end space-x-2 w-full sm:w-auto flex-wrap gap-y-2">
+                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-3 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
                     <i class="fa-solid fa-plus"></i> <span>Ajouter</span>
                 </button>
                 
-                <label class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3.5 py-2 rounded-lg text-sm flex items-center space-x-1.5 shadow-sm transition cursor-pointer">
+                <label class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition cursor-pointer">
                     <i class="fa-solid fa-file-import"></i> <span>Importer JSON</span>
                     <input type="file" id="json-file-input" accept=".json" class="hidden" onchange="importJSON(event)">
                 </label>
 
-                <button onclick="exportJSON()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-3.5 py-2 rounded-lg text-sm flex items-center space-x-1.5 shadow-sm transition">
+                <button onclick="exportJSON()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-3 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
                     <i class="fa-solid fa-download"></i> <span>Télécharger (Git)</span>
                 </button>
             </div>
@@ -56,26 +59,29 @@
     </header>
 
     <!-- Main Content Area -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
 
         <!-- Stats & Filter Bar -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-5 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-5 flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
             
             <!-- Progress Counter -->
-            <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-lg border border-indigo-100 shadow-inner">
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-base sm:text-lg border border-indigo-100 shadow-inner shrink-0">
                     <span id="stat-percent">0%</span>
                 </div>
-                <div>
-                    <div class="text-sm font-semibold text-slate-700 flex items-center space-x-2">
-                        <span>Progression de la liste</span>
+                <div class="flex-1">
+                    <div class="text-xs sm:text-sm font-semibold text-slate-700 flex items-center space-x-2">
+                        <span>Progression</span>
                         <span id="current-lang-label" class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-normal">Anglais</span>
                     </div>
-                    <div class="text-xs text-slate-500 mt-0.5">
-                        <span id="stat-mastered" class="font-semibold text-emerald-600">0</span> retenus sur <span id="stat-total" class="font-semibold text-slate-700">0</span> mots (<span id="stat-remaining" class="text-amber-600 font-semibold">0</span> à apprendre)
+                    <div class="text-xs text-slate-500 mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5">
+                        <span class="text-emerald-600 font-medium"><i class="fa-solid fa-check text-[10px]"></i> <span id="stat-known">0</span> Sais</span>
+                        <span class="text-rose-600 font-medium"><i class="fa-solid fa-xmark text-[10px]"></i> <span id="stat-unknown">0</span> Ne sais pas</span>
+                        <span class="text-slate-500 font-medium"><i class="fa-solid fa-clock text-[10px]"></i> <span id="stat-unstudied">0</span> Pas encore appris</span>
+                        <span class="text-slate-400">(Total: <span id="stat-total">0</span>)</span>
                     </div>
                     <!-- Progress bar -->
-                    <div class="w-48 bg-slate-100 h-2 rounded-full overflow-hidden mt-1.5">
+                    <div class="w-full sm:w-48 bg-slate-100 h-2 rounded-full overflow-hidden mt-1.5">
                         <div id="stat-progressbar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%;"></div>
                     </div>
                 </div>
@@ -84,49 +90,54 @@
             <!-- View Filter Tabs & Search -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <!-- Search input -->
-                <div class="relative">
+                <div class="relative w-full sm:w-auto">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Rechercher un mot, traduction..." class="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white w-full sm:w-56">
+                    <input type="text" id="search-input" oninput="renderTable()" placeholder="Rechercher un mot, traduction..." class="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white w-full sm:w-52">
                 </div>
 
                 <!-- Filter Mode Switcher -->
-                <div class="inline-flex bg-slate-100 p-1 rounded-lg text-xs font-medium self-start sm:self-auto">
-                    <button id="filter-unmastered" onclick="setFilterView('unmastered')" class="px-3 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition">
-                        🎯 À apprendre
+                <div class="grid grid-cols-2 sm:flex bg-slate-100 p-1 rounded-lg text-xs font-medium gap-1">
+                    <button id="filter-unstudied" onclick="setFilterView('unstudied')" class="px-2.5 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center">
+                        ⏳ Pas encore appris
                     </button>
-                    <button id="filter-all" onclick="setFilterView('all')" class="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition">
+                    <button id="filter-unknown" onclick="setFilterView('unknown')" class="px-2.5 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition text-center">
+                        ❌ Je ne sais pas
+                    </button>
+                    <button id="filter-known" onclick="setFilterView('known')" class="px-2.5 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition text-center">
+                        ✅ Je sais
+                    </button>
+                    <button id="filter-all" onclick="setFilterView('all')" class="px-2.5 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition text-center">
                         👁️ Tout afficher
-                    </button>
-                    <button id="filter-mastered" onclick="setFilterView('mastered')" class="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition">
-                        ✅ Retenus
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Git Instruction Banner -->
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-center justify-between text-xs text-amber-800">
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 sm:p-3.5 flex items-center justify-between text-xs text-amber-800">
             <div class="flex items-center space-x-2">
-                <i class="fa-brands fa-git-alt text-lg text-amber-600"></i>
-                <span><strong>Workflow Git :</strong> Modifiez votre vocabulaire, puis cliquez sur <em>"Télécharger (Git)"</em> pour remplacer le fichier <code>vocabulary_db.json</code> local et faites un <code>git push</code>.</span>
+                <i class="fa-brands fa-git-alt text-base sm:text-lg text-amber-600 shrink-0"></i>
+                <span><strong>Workflow Git :</strong> Modifiez votre vocabulaire, puis cliquez sur <em>"Télécharger (Git)"</em> pour remplacer <code>vocabulary_db.json</code> localement et faites un <code>git push</code>.</span>
             </div>
             <button onclick="this.parentElement.style.display='none'" class="text-amber-500 hover:text-amber-800 ml-2">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
-        <!-- Vocabulary Table Card -->
+        <!-- Vocabulary Table / Card List Container -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="overflow-x-auto">
+            
+            <!-- Desktop Table View (hidden on mobile) -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-50/80 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 font-semibold">
-                            <th class="py-3.5 px-4 w-12 text-center">Statut</th>
+                            <th class="py-3.5 px-4 w-44 text-center">Statut</th>
                             <th class="py-3.5 px-4">Mot / Expression</th>
                             <th class="py-3.5 px-4">Traduction (Français)</th>
                             <th id="th-pronunciation" class="py-3.5 px-4">Prononciation</th>
                             <th class="py-3.5 px-4">Exemple d'utilisation</th>
-                            <th class="py-3.5 px-4 w-16 text-right">Actions</th>
+                            <th class="py-3.5 px-4 w-12 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="vocab-table-body" class="divide-y divide-slate-100 text-sm">
@@ -135,28 +146,33 @@
                 </table>
             </div>
 
+            <!-- Mobile Card View (shown on mobile) -->
+            <div id="vocab-mobile-list" class="block md:hidden divide-y divide-slate-100">
+                <!-- Dynamic Mobile Cards -->
+            </div>
+
             <!-- Empty State -->
             <div id="empty-state" class="hidden py-12 text-center text-slate-400">
                 <i class="fa-solid fa-box-open text-4xl mb-3 text-slate-300"></i>
-                <p class="font-medium text-slate-600">Aucun mot correspondant dans cette liste</p>
-                <p class="text-xs text-slate-400 mt-1">Ajustez vos filtres de recherche ou ajoutez un nouveau mot.</p>
+                <p class="font-medium text-slate-600">Aucun mot correspondant dans ce filtre</p>
+                <p class="text-xs text-slate-400 mt-1">Ajustez vos filtres de recherche ou changez de vue.</p>
             </div>
         </div>
     </main>
 
     <!-- Modal: Add New Vocabulary -->
     <div id="add-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4 border border-slate-100 animate-in fade-in zoom-in duration-150">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-5 sm:p-6 space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 class="text-lg font-bold text-slate-800">Ajouter un nouveau mot</h3>
+                <h3 class="text-base sm:text-lg font-bold text-slate-800">Ajouter un nouveau mot</h3>
                 <button onclick="closeModal('add-modal')" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <form id="add-word-form" onsubmit="handleAddWord(event)" class="space-y-3.5 text-sm">
+            <form id="add-word-form" onsubmit="handleAddWord(event)" class="space-y-3.5 text-xs sm:text-sm">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Langue cible</label>
+                    <label class="block font-semibold text-slate-600 mb-1">Langue cible</label>
                     <select id="add-target-lang" onchange="toggleAddPronunciationField()" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         <option value="english">🇬🇧 Anglais</option>
                         <option value="italian">🇮🇹 Italien</option>
@@ -164,22 +180,22 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Mot / Expression</label>
+                    <label class="block font-semibold text-slate-600 mb-1">Mot / Expression</label>
                     <input type="text" id="add-term" required placeholder="ex: To yield, Sfumatura" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Traduction en Français</label>
+                    <label class="block font-semibold text-slate-600 mb-1">Traduction en Français</label>
                     <input type="text" id="add-translation" required placeholder="ex: Céder, Nuance" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div id="field-pronunciation">
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Prononciation (Phonétique API)</label>
+                    <label class="block font-semibold text-slate-600 mb-1">Prononciation (Phonétique API)</label>
                     <input type="text" id="add-pronunciation" placeholder="ex: /jiːld/" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Phrase d'utilisation dans son contexte</label>
+                    <label class="block font-semibold text-slate-600 mb-1">Phrase d'utilisation dans son contexte</label>
                     <textarea id="add-sentence" rows="3" placeholder="ex: The driver yielded the right of way." class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                 </div>
 
@@ -202,7 +218,7 @@
         };
 
         let currentLang = 'english';
-        let filterView = 'unmastered'; // 'unmastered', 'all', 'mastered'
+        let filterView = 'unstudied'; // 'unstudied', 'unknown', 'known', 'all'
 
         // Initialization
         document.addEventListener('DOMContentLoaded', async () => {
@@ -216,6 +232,7 @@
             if (localSaved) {
                 try {
                     db = JSON.parse(localSaved);
+                    migrateLegacyStatus();
                     return;
                 } catch (e) {
                     console.error("Local cache invalid, fetching default JSON file");
@@ -226,11 +243,31 @@
                 const response = await fetch('vocabulary_db.json');
                 if (response.ok) {
                     db = await response.json();
+                    migrateLegacyStatus();
                     saveLocalCache();
                 }
             } catch (err) {
                 console.warn("Could not load default vocabulary_db.json directly, initializing empty state", err);
             }
+        }
+
+        // Migrate legacy boolean 'mastered' to string status: 'known', 'unknown', 'unstudied'
+        function migrateLegacyStatus() {
+            ['english', 'italian'].forEach(lang => {
+                if (db.languages[lang] && db.languages[lang].vocabulary) {
+                    db.languages[lang].vocabulary.forEach(item => {
+                        if (item.status === undefined) {
+                            if (item.mastered === true) {
+                                item.status = 'known';
+                            } else if (item.mastered === false) {
+                                item.status = 'unstudied';
+                            } else {
+                                item.status = 'unstudied';
+                            }
+                        }
+                    });
+                }
+            });
         }
 
         function saveLocalCache() {
@@ -241,16 +278,15 @@
         function switchLanguage(lang) {
             currentLang = lang;
             
-            // Toggle active tab buttons
             const btnEn = document.getElementById('btn-lang-english');
             const btnIt = document.getElementById('btn-lang-italian');
 
             if (lang === 'english') {
-                btnEn.className = "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 bg-white text-indigo-900 shadow-sm font-semibold";
-                btnIt.className = "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 text-indigo-100 hover:text-white";
+                btnEn.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-150 bg-white text-indigo-900 shadow-sm font-semibold";
+                btnIt.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-150 text-indigo-100 hover:text-white";
             } else {
-                btnIt.className = "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 bg-white text-indigo-900 shadow-sm font-semibold";
-                btnEn.className = "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 text-indigo-100 hover:text-white";
+                btnIt.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-150 bg-white text-indigo-900 shadow-sm font-semibold";
+                btnEn.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-150 text-indigo-100 hover:text-white";
             }
 
             renderApp();
@@ -259,20 +295,23 @@
         function setFilterView(view) {
             filterView = view;
             
-            const btnUnm = document.getElementById('filter-unmastered');
+            const btnUnstudied = document.getElementById('filter-unstudied');
+            const btnUnknown = document.getElementById('filter-unknown');
+            const btnKnown = document.getElementById('filter-known');
             const btnAll = document.getElementById('filter-all');
-            const btnMas = document.getElementById('filter-mastered');
 
-            [btnUnm, btnAll, btnMas].forEach(b => {
-                b.className = "px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition font-normal";
+            [btnUnstudied, btnUnknown, btnKnown, btnAll].forEach(b => {
+                b.className = "px-2.5 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition font-normal text-center";
             });
 
-            if (view === 'unmastered') {
-                btnUnm.className = "px-3 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition";
+            if (view === 'unstudied') {
+                btnUnstudied.className = "px-2.5 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center";
+            } else if (view === 'unknown') {
+                btnUnknown.className = "px-2.5 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center";
+            } else if (view === 'known') {
+                btnKnown.className = "px-2.5 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center";
             } else if (view === 'all') {
-                btnAll.className = "px-3 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition";
-            } else if (view === 'mastered') {
-                btnMas.className = "px-3 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition";
+                btnAll.className = "px-2.5 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center";
             }
 
             renderTable();
@@ -288,14 +327,16 @@
             // Update stats
             const currentList = db.languages[currentLang].vocabulary;
             const total = currentList.length;
-            const mastered = currentList.filter(item => item.mastered).length;
-            const remaining = total - mastered;
-            const percent = total > 0 ? Math.round((mastered / total) * 100) : 0;
+            const known = currentList.filter(item => item.status === 'known').length;
+            const unknown = currentList.filter(item => item.status === 'unknown').length;
+            const unstudied = currentList.filter(item => item.status === 'unstudied' || !item.status).length;
+            const percent = total > 0 ? Math.round((known / total) * 100) : 0;
 
             document.getElementById('current-lang-label').innerText = db.languages[currentLang].name;
             document.getElementById('stat-total').innerText = total;
-            document.getElementById('stat-mastered').innerText = mastered;
-            document.getElementById('stat-remaining').innerText = remaining;
+            document.getElementById('stat-known').innerText = known;
+            document.getElementById('stat-unknown').innerText = unknown;
+            document.getElementById('stat-unstudied').innerText = unstudied;
             document.getElementById('stat-percent').innerText = `${percent}%`;
             document.getElementById('stat-progressbar').style.width = `${percent}%`;
 
@@ -314,16 +355,21 @@
             const list = db.languages[currentLang].vocabulary;
             const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
             const tbody = document.getElementById('vocab-table-body');
+            const mobileList = document.getElementById('vocab-mobile-list');
             const emptyState = document.getElementById('empty-state');
             const hasPron = db.languages[currentLang].has_pronunciation;
 
             tbody.innerHTML = '';
+            mobileList.innerHTML = '';
 
             // Filter logic
             const filtered = list.filter(item => {
+                const itemStatus = item.status || 'unstudied';
+
                 // View Filter
-                if (filterView === 'unmastered' && item.mastered) return false;
-                if (filterView === 'mastered' && !item.mastered) return false;
+                if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
+                if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
+                if (filterView === 'known' && itemStatus !== 'known') return false;
 
                 // Search Filter
                 if (searchQuery) {
@@ -344,19 +390,34 @@
             }
 
             filtered.forEach(item => {
+                const itemStatus = item.status || 'unstudied';
+                
+                // Class according to status
+                let rowBgClass = "hover:bg-slate-50 transition";
+                if (itemStatus === 'known') rowBgClass = "status-known transition hover:bg-emerald-100/60";
+                if (itemStatus === 'unknown') rowBgClass = "status-unknown transition hover:bg-rose-100/60";
+
+                // --- 1. Desktop Table Row ---
                 const tr = document.createElement('tr');
-                tr.className = item.mastered ? "mastered-row transition hover:bg-emerald-100/50" : "hover:bg-slate-50 transition";
+                tr.className = rowBgClass;
 
                 tr.innerHTML = `
-                    <td class="py-3 px-4 text-center">
-                        <button onclick="toggleMastered('${item.id}')" title="${item.mastered ? 'Marquer à apprendre' : 'Marquer comme retenu'}" class="w-7 h-7 rounded-lg flex items-center justify-center transition ${item.mastered ? 'bg-emerald-500 text-white shadow-sm' : 'border border-slate-300 text-transparent hover:text-slate-300'}">
-                            <i class="fa-solid fa-check text-xs"></i>
-                        </button>
+                    <td class="py-3 px-3 text-center">
+                        <div class="inline-flex rounded-lg p-0.5 bg-slate-100 border border-slate-200">
+                            <button onclick="setStatus('${item.id}', 'known')" title="Je sais" class="px-2 py-1 rounded-md text-xs font-semibold flex items-center space-x-1 transition ${itemStatus === 'known' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 hover:text-emerald-700'}">
+                                <i class="fa-solid fa-check"></i>
+                                <span>SAIS</span>
+                            </button>
+                            <button onclick="setStatus('${item.id}', 'unknown')" title="Je ne sais pas" class="px-2 py-1 rounded-md text-xs font-semibold flex items-center space-x-1 transition ${itemStatus === 'unknown' ? 'bg-rose-500 text-white shadow-sm' : 'text-slate-600 hover:text-rose-700'}">
+                                <i class="fa-solid fa-xmark"></i>
+                                <span>SAIS PAS</span>
+                            </button>
+                        </div>
                     </td>
-                    <td class="py-3 px-4 font-semibold ${item.mastered ? 'text-slate-600 line-through' : 'text-slate-900'}">
+                    <td class="py-3 px-4 font-semibold ${itemStatus === 'known' ? 'text-slate-600 line-through' : 'text-slate-900'}">
                         <div class="flex items-center space-x-2">
                             <span>${escapeHtml(item.term)}</span>
-                            <button onclick="speakTerm('${escapeHtml(item.term)}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
+                            <button onclick="speakTerm('${escapeHtml(item.term)}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition p-1" title="Écouter">
                                 <i class="fa-solid fa-volume-high text-xs"></i>
                             </button>
                         </div>
@@ -375,14 +436,64 @@
                     </td>
                 `;
                 tbody.appendChild(tr);
+
+                // --- 2. Mobile Card Item ---
+                const card = document.createElement('div');
+                card.className = `p-4 space-y-3 ${rowBgClass}`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-base ${itemStatus === 'known' ? 'text-slate-600 line-through' : 'text-slate-900'}">${escapeHtml(item.term)}</span>
+                                <button onclick="speakTerm('${escapeHtml(item.term)}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
+                                    <i class="fa-solid fa-volume-high text-sm"></i>
+                                </button>
+                            </div>
+                            ${hasPron && item.pronunciation ? `<p class="text-xs font-mono text-slate-500 mt-0.5">${escapeHtml(item.pronunciation)}</p>` : ''}
+                        </div>
+                        <button onclick="deleteWord('${item.id}')" class="text-slate-300 hover:text-rose-500 transition p-1" title="Supprimer">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+
+                    <div class="text-sm font-medium text-slate-700 border-l-2 border-indigo-500 pl-2 py-0.5">
+                        ${escapeHtml(item.translation)}
+                    </div>
+
+                    ${item.sentence ? `<p class="text-xs italic text-slate-600 bg-slate-50/80 p-2 rounded-lg border border-slate-100">"${escapeHtml(item.sentence)}"</p>` : ''}
+
+                    <div class="flex justify-between items-center pt-1">
+                        <span class="text-[11px] text-slate-400">Statut :</span>
+                        <div class="inline-flex rounded-lg p-0.5 bg-slate-100 border border-slate-200">
+                            <button onclick="setStatus('${item.id}', 'known')" class="px-3 py-1 rounded-md text-xs font-semibold flex items-center space-x-1 transition ${itemStatus === 'known' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600'}">
+                                <i class="fa-solid fa-check"></i>
+                                <span>JE SAIS</span>
+                            </button>
+                            <button onclick="setStatus('${item.id}', 'unknown')" class="px-3 py-1 rounded-md text-xs font-semibold flex items-center space-x-1 transition ${itemStatus === 'unknown' ? 'bg-rose-500 text-white shadow-sm' : 'text-slate-600'}">
+                                <i class="fa-solid fa-xmark"></i>
+                                <span>JE SAIS PAS</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                mobileList.appendChild(card);
             });
         }
 
         // Action Handlers
-        function toggleMastered(id) {
+        function setStatus(id, newStatus) {
             const item = db.languages[currentLang].vocabulary.find(x => x.id === id);
             if (item) {
-                item.mastered = !item.mastered;
+                // If clicking the status it already has, reset to 'unstudied'
+                if (item.status === newStatus) {
+                    item.status = 'unstudied';
+                } else {
+                    item.status = newStatus;
+                }
+                // Keep 'mastered' synced for backwards compatibility
+                item.mastered = (item.status === 'known');
+                
                 saveLocalCache();
                 renderApp();
             }
@@ -412,6 +523,7 @@
                 translation: translation,
                 pronunciation: targetLang === 'english' ? pronunciation : '',
                 sentence: sentence,
+                status: 'unstudied',
                 mastered: false,
                 source: "Ajout manuel"
             };
@@ -419,7 +531,6 @@
             db.languages[targetLang].vocabulary.unshift(newEntry);
             saveLocalCache();
 
-            // Switch to the language where word was added if needed
             currentLang = targetLang;
             switchLanguage(currentLang);
 
@@ -449,6 +560,7 @@
                     const importedDb = JSON.parse(e.target.result);
                     if (importedDb.languages && importedDb.languages.english && importedDb.languages.italian) {
                         db = importedDb;
+                        migrateLegacyStatus();
                         saveLocalCache();
                         renderApp();
                         alert("Base de données mise à jour avec succès !");
