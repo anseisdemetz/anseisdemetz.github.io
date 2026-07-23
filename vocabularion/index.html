@@ -145,6 +145,7 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-50/80 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 font-semibold">
+                            <th class="py-3.5 px-3 w-12 text-center">N°</th>
                             <th class="py-3.5 px-4 w-44 text-center">Statut</th>
                             <th id="th-term-header" class="py-3.5 px-4">Mot / Expression</th>
                             <th class="py-3.5 px-4">Traduction (Français)</th>
@@ -477,8 +478,9 @@
                 emptyState.classList.add('hidden');
             }
 
-            filtered.forEach(item => {
+            filtered.forEach((item, index) => {
                 const itemStatus = item.status || 'unstudied';
+                const rowNum = index + 1; // Dynamic sequential row number starting at 1
                 
                 let rowBgClass = "hover:bg-slate-50 transition";
                 if (itemStatus === 'known') rowBgClass = "status-known transition hover:bg-emerald-100/60";
@@ -497,6 +499,7 @@
                 tr.className = rowBgClass;
 
                 tr.innerHTML = `
+                    <td class="py-3 px-3 text-center font-mono text-xs text-slate-400 font-semibold">${rowNum}</td>
                     <td class="py-3 px-3 text-center">
                         <div class="inline-flex rounded-lg p-0.5 bg-slate-100 border border-slate-200">
                             <button onclick="setStatus('${item.id}', 'known')" title="Je sais" class="px-2 py-1 rounded-md text-xs font-semibold flex items-center space-x-1 transition ${itemStatus === 'known' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 hover:text-emerald-700'}">
@@ -540,6 +543,7 @@
                     <div class="flex justify-between items-start gap-2">
                         <div>
                             <div class="flex items-center space-x-2">
+                                <span class="font-mono text-xs text-slate-400 font-bold bg-slate-200/60 px-1.5 py-0.5 rounded">#${rowNum}</span>
                                 <span class="font-bold text-base ${itemStatus === 'known' ? 'text-slate-600 line-through' : 'text-slate-900'}">${termDisplay}</span>
                                 <button onclick="speakTerm('${escapeHtml(item.term)}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
                                     <i class="fa-solid fa-volume-high text-sm"></i>
@@ -634,7 +638,7 @@
 
             lines.forEach(line => {
                 line = line.trim();
-                if (line.startswith('|') && !line.includes(':---') && !line.toLowerCase().includes('français')) {
+                if (line.startsWith('|') && !line.includes(':---') && !line.toLowerCase().includes('français')) {
                     const parts = line.split('|').map(p => p.trim()).filter((p, idx, arr) => idx > 0 && idx < arr.length - 1);
                     
                     if (parts.length >= 3) {
