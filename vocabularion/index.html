@@ -42,16 +42,11 @@
 
             <!-- Top Actions -->
             <div class="flex items-center justify-center sm:justify-end space-x-2 w-full sm:w-auto flex-wrap gap-y-2">
-                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-3 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
-                    <i class="fa-solid fa-plus"></i> <span>Ajouter</span>
+                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
+                    <i class="fa-solid fa-plus"></i> <span>Ajouter du vocabulaire</span>
                 </button>
-                
-                <label class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition cursor-pointer">
-                    <i class="fa-solid fa-file-import"></i> <span>Importer JSON</span>
-                    <input type="file" id="json-file-input" accept=".json" class="hidden" onchange="importJSON(event)">
-                </label>
 
-                <button onclick="exportJSON()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-3 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
+                <button onclick="exportJSON()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
                     <i class="fa-solid fa-download"></i> <span>Télécharger (Git)</span>
                 </button>
             </div>
@@ -180,31 +175,57 @@
 
     <!-- Modal: Add New Vocabulary -->
     <div id="add-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-5 sm:p-6 space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-5 sm:p-6 space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 class="text-base sm:text-lg font-bold text-slate-800">Ajouter un nouveau mot</h3>
+                <h3 class="text-base sm:text-lg font-bold text-slate-800">Ajouter du vocabulaire</h3>
                 <button onclick="closeModal('add-modal')" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <form id="add-word-form" onsubmit="handleAddWord(event)" class="space-y-3.5 text-xs sm:text-sm">
+            <!-- Modal Tab Selector -->
+            <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+                <button id="tab-btn-md" onclick="switchAddTab('markdown')" class="flex-1 py-2 rounded-lg bg-white text-indigo-900 shadow-sm transition text-center">
+                    📋 Coller du Markdown
+                </button>
+                <button id="tab-btn-manual" onclick="switchAddTab('manual')" class="flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center">
+                    ✏️ Ajout manuel
+                </button>
+            </div>
+
+            <!-- Common Language Selector -->
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Langue de destination</label>
+                <select id="add-target-lang" onchange="toggleAddPronunciationField()" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="english">🇬🇧 Anglais</option>
+                    <option value="italian">🇮🇹 Italien</option>
+                </select>
+            </div>
+
+            <!-- Form 1: Markdown Import -->
+            <form id="add-md-form" onsubmit="handleAddMarkdown(event)" class="space-y-3.5 text-xs sm:text-sm">
                 <div>
-                    <label class="block font-semibold text-slate-600 mb-1">Langue cible</label>
-                    <select id="add-target-lang" onchange="toggleAddPronunciationField()" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="english">🇬🇧 Anglais</option>
-                        <option value="italian">🇮🇹 Italien</option>
-                    </select>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Collez le(s) tableau(x) Markdown brut(s)</label>
+                    <textarea id="add-md-input" rows="8" required placeholder="| Français | Italien | Phrase d'exemple |&#10;| :--- | :--- | :--- |&#10;| Ouvrir tout grand | Spalancare | Non spalancare la finestra |" class="w-full font-mono text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
+                    <p class="text-[11px] text-slate-400 mt-1">L'application détecte automatiquement le format à 3 ou 4 colonnes.</p>
                 </div>
 
+                <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('add-modal')" class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-medium">Annuler</button>
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-sm">Importer les mots</button>
+                </div>
+            </form>
+
+            <!-- Form 2: Manual Single Item -->
+            <form id="add-word-form" onsubmit="handleAddWord(event)" class="hidden space-y-3.5 text-xs sm:text-sm">
                 <div>
                     <label class="block font-semibold text-slate-600 mb-1">Mot / Expression</label>
-                    <input type="text" id="add-term" required placeholder="ex: To yield, Sfumatura" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="add-term" placeholder="ex: To yield, Sfumatura" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
                     <label class="block font-semibold text-slate-600 mb-1">Traduction en Français</label>
-                    <input type="text" id="add-translation" required placeholder="ex: Céder, Nuance" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="add-translation" placeholder="ex: Céder, Nuance" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div id="field-pronunciation">
@@ -273,7 +294,7 @@
             }
         }
 
-        // Migrate legacy boolean 'mastered' to string status: 'known', 'unknown', 'unstudied'
+        // Migrate legacy boolean 'mastered' to string status
         function migrateLegacyStatus() {
             ['english', 'italian'].forEach(lang => {
                 if (db.languages[lang] && db.languages[lang].vocabulary) {
@@ -281,8 +302,6 @@
                         if (item.status === undefined) {
                             if (item.mastered === true) {
                                 item.status = 'known';
-                            } else if (item.mastered === false) {
-                                item.status = 'unstudied';
                             } else {
                                 item.status = 'unstudied';
                             }
@@ -437,12 +456,10 @@
             const filtered = list.filter(item => {
                 const itemStatus = item.status || 'unstudied';
 
-                // View Filter
                 if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
                 if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
                 if (filterView === 'known' && itemStatus !== 'known') return false;
 
-                // Search Filter
                 if (searchQuery) {
                     const matchTerm = item.term.toLowerCase().includes(searchQuery);
                     const matchTrans = item.translation.toLowerCase().includes(searchQuery);
@@ -463,12 +480,10 @@
             filtered.forEach(item => {
                 const itemStatus = item.status || 'unstudied';
                 
-                // Class according to status
                 let rowBgClass = "hover:bg-slate-50 transition";
                 if (itemStatus === 'known') rowBgClass = "status-known transition hover:bg-emerald-100/60";
                 if (itemStatus === 'unknown') rowBgClass = "status-unknown transition hover:bg-rose-100/60";
 
-                // Prepare Masked / Visible Text Components
                 const termDisplay = hideTargetTerm 
                     ? `<span onclick="this.innerText='${escapeHtml(item.term)}'; this.className='font-semibold cursor-default text-indigo-700';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
                     : `<span>${escapeHtml(item.term)}</span>`;
@@ -477,7 +492,7 @@
                     ? `<span onclick="this.innerText='${escapeHtml(item.translation)}'; this.className='text-slate-700 cursor-default';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
                     : `<span>${escapeHtml(item.translation)}</span>`;
 
-                // --- 1. Desktop Table Row ---
+                // 1. Desktop Table Row
                 const tr = document.createElement('tr');
                 tr.className = rowBgClass;
 
@@ -517,7 +532,7 @@
                 `;
                 tbody.appendChild(tr);
 
-                // --- 2. Mobile Card Item ---
+                // 2. Mobile Card Item
                 const card = document.createElement('div');
                 card.className = `p-4 space-y-3 ${rowBgClass}`;
 
@@ -565,13 +580,11 @@
         function setStatus(id, newStatus) {
             const item = db.languages[currentLang].vocabulary.find(x => x.id === id);
             if (item) {
-                // If clicking the status it already has, reset to 'unstudied'
                 if (item.status === newStatus) {
                     item.status = 'unstudied';
                 } else {
                     item.status = newStatus;
                 }
-                // Keep 'mastered' synced for backwards compatibility
                 item.mastered = (item.status === 'known');
                 
                 saveLocalCache();
@@ -587,6 +600,91 @@
             }
         }
 
+        // Switch between Markdown import and Manual add tabs inside Modal
+        function switchAddTab(tab) {
+            const btnMd = document.getElementById('tab-btn-md');
+            const btnManual = document.getElementById('tab-btn-manual');
+            const formMd = document.getElementById('add-md-form');
+            const formManual = document.getElementById('add-word-form');
+
+            if (tab === 'markdown') {
+                btnMd.className = "flex-1 py-2 rounded-lg bg-white text-indigo-900 shadow-sm transition text-center";
+                btnManual.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center";
+                formMd.classList.remove('hidden');
+                formManual.classList.add('hidden');
+            } else {
+                btnManual.className = "flex-1 py-2 rounded-lg bg-white text-indigo-900 shadow-sm transition text-center";
+                btnMd.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center";
+                formManual.classList.remove('hidden');
+                formMd.classList.add('hidden');
+            }
+        }
+
+        // Handle Markdown Paste Parsing
+        function handleAddMarkdown(e) {
+            e.preventDefault();
+            const targetLang = document.getElementById('add-target-lang').value;
+            const mdContent = document.getElementById('add-md-input').value;
+
+            if (!mdContent.trim()) return;
+
+            const lines = mdContent.split('\n');
+            let addedCount = 0;
+            let hasPron = false;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startswith('|') && !line.includes(':---') && !line.toLowerCase().includes('français')) {
+                    const parts = line.split('|').map(p => p.trim()).filter((p, idx, arr) => idx > 0 && idx < arr.length - 1);
+                    
+                    if (parts.length >= 3) {
+                        const french = parts[0].replace(/\*\*/g, '').trim();
+                        const term = parts[1].replace(/\*\*/g, '').trim();
+                        let pronunciation = "";
+                        let sentence = "";
+
+                        if (parts.length >= 4) {
+                            pronunciation = parts[2].trim();
+                            sentence = parts[3].replace(/\*\*/g, '').trim();
+                            hasPron = true;
+                        } else {
+                            sentence = parts[2].replace(/\*\*/g, '').trim();
+                        }
+
+                        if (sentence === "//") sentence = "";
+
+                        if (french && term) {
+                            const newEntry = {
+                                id: `${targetLang}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+                                term: term,
+                                translation: french,
+                                pronunciation: pronunciation,
+                                sentence: sentence,
+                                status: 'unstudied',
+                                mastered: false,
+                                source: "Import Markdown"
+                            };
+                            db.languages[targetLang].vocabulary.unshift(newEntry);
+                            addedCount++;
+                        }
+                    }
+                }
+            });
+
+            if (hasPron) {
+                db.languages[targetLang].has_pronunciation = true;
+            }
+
+            saveLocalCache();
+            currentLang = targetLang;
+            switchLanguage(currentLang);
+
+            closeModal('add-modal');
+            document.getElementById('add-md-input').value = '';
+            alert(`${addedCount} mots ajoutés avec succès !`);
+        }
+
+        // Handle Single Manual Word Add
         function handleAddWord(e) {
             e.preventDefault();
             const targetLang = document.getElementById('add-target-lang').value;
@@ -627,31 +725,6 @@
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-        }
-
-        // Import JSON file
-        function importJSON(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedDb = JSON.parse(e.target.result);
-                    if (importedDb.languages && importedDb.languages.english && importedDb.languages.italian) {
-                        db = importedDb;
-                        migrateLegacyStatus();
-                        saveLocalCache();
-                        renderApp();
-                        alert("Base de données mise à jour avec succès !");
-                    } else {
-                        alert("Le fichier JSON ne respecte pas la structure attendue.");
-                    }
-                } catch (err) {
-                    alert("Erreur lors de la lecture du fichier JSON.");
-                }
-            };
-            reader.readAsText(file);
         }
 
         // Speech Synthesis API
