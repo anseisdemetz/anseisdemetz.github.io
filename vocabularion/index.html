@@ -113,6 +113,24 @@
             </div>
         </div>
 
+        <!-- Visibility Toggle Controls -->
+        <div class="bg-indigo-50/70 border border-indigo-100 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+            <div class="flex items-center space-x-2 text-indigo-900 font-semibold">
+                <i class="fa-solid fa-eye-slash text-indigo-600"></i>
+                <span>Masquer le vocabulaire pour réviser :</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="toggle-term-btn" onclick="toggleTermVisibility()" class="px-3 py-1.5 rounded-lg bg-white border border-indigo-200 text-indigo-800 hover:bg-indigo-100 font-medium transition flex items-center space-x-1.5 shadow-sm">
+                    <i id="toggle-term-icon" class="fa-solid fa-eye"></i>
+                    <span id="toggle-term-label">Masquer Langue Cible</span>
+                </button>
+                <button id="toggle-trans-btn" onclick="toggleTransVisibility()" class="px-3 py-1.5 rounded-lg bg-white border border-indigo-200 text-indigo-800 hover:bg-indigo-100 font-medium transition flex items-center space-x-1.5 shadow-sm">
+                    <i id="toggle-trans-icon" class="fa-solid fa-eye"></i>
+                    <span id="toggle-trans-label">Masquer Français</span>
+                </button>
+            </div>
+        </div>
+
         <!-- Git Instruction Banner -->
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 sm:p-3.5 flex items-center justify-between text-xs text-amber-800">
             <div class="flex items-center space-x-2">
@@ -133,7 +151,7 @@
                     <thead>
                         <tr class="bg-slate-50/80 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 font-semibold">
                             <th class="py-3.5 px-4 w-44 text-center">Statut</th>
-                            <th class="py-3.5 px-4">Mot / Expression</th>
+                            <th id="th-term-header" class="py-3.5 px-4">Mot / Expression</th>
                             <th class="py-3.5 px-4">Traduction (Français)</th>
                             <th id="th-pronunciation" class="py-3.5 px-4">Prononciation</th>
                             <th class="py-3.5 px-4">Exemple d'utilisation</th>
@@ -219,6 +237,10 @@
 
         let currentLang = 'english';
         let filterView = 'unstudied'; // 'unstudied', 'unknown', 'known', 'all'
+        
+        // Column Masking State
+        let hideTargetTerm = false;
+        let hideTranslation = false;
 
         // Initialization
         document.addEventListener('DOMContentLoaded', async () => {
@@ -317,6 +339,51 @@
             renderTable();
         }
 
+        // Toggle Masking Actions
+        function toggleTermVisibility() {
+            hideTargetTerm = !hideTargetTerm;
+            updateMaskingControls();
+            renderTable();
+        }
+
+        function toggleTransVisibility() {
+            hideTranslation = !hideTranslation;
+            updateMaskingControls();
+            renderTable();
+        }
+
+        function updateMaskingControls() {
+            const langName = db.languages[currentLang].name;
+            
+            const termLabel = document.getElementById('toggle-term-label');
+            const termIcon = document.getElementById('toggle-term-icon');
+            const termBtn = document.getElementById('toggle-term-btn');
+
+            if (hideTargetTerm) {
+                termLabel.innerText = `Afficher ${langName}`;
+                termIcon.className = "fa-solid fa-eye-slash";
+                termBtn.className = "px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium transition flex items-center space-x-1.5 shadow-sm";
+            } else {
+                termLabel.innerText = `Masquer ${langName}`;
+                termIcon.className = "fa-solid fa-eye";
+                termBtn.className = "px-3 py-1.5 rounded-lg bg-white border border-indigo-200 text-indigo-800 hover:bg-indigo-100 font-medium transition flex items-center space-x-1.5 shadow-sm";
+            }
+
+            const transLabel = document.getElementById('toggle-trans-label');
+            const transIcon = document.getElementById('toggle-trans-icon');
+            const transBtn = document.getElementById('toggle-trans-btn');
+
+            if (hideTranslation) {
+                transLabel.innerText = "Afficher Français";
+                transIcon.className = "fa-solid fa-eye-slash";
+                transBtn.className = "px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium transition flex items-center space-x-1.5 shadow-sm";
+            } else {
+                transLabel.innerText = "Masquer Français";
+                transIcon.className = "fa-solid fa-eye";
+                transBtn.className = "px-3 py-1.5 rounded-lg bg-white border border-indigo-200 text-indigo-800 hover:bg-indigo-100 font-medium transition flex items-center space-x-1.5 shadow-sm";
+            }
+        }
+
         function renderApp() {
             // Update badges
             const enCount = db.languages.english.vocabulary.length;
@@ -340,6 +407,9 @@
             document.getElementById('stat-percent').innerText = `${percent}%`;
             document.getElementById('stat-progressbar').style.width = `${percent}%`;
 
+            // Table header target term label
+            document.getElementById('th-term-header').innerText = `Mot / Expression (${db.languages[currentLang].name})`;
+
             // Pronunciation column visibility
             const thPron = document.getElementById('th-pronunciation');
             if (db.languages[currentLang].has_pronunciation) {
@@ -348,6 +418,7 @@
                 thPron.style.display = 'none';
             }
 
+            updateMaskingControls();
             renderTable();
         }
 
@@ -397,6 +468,15 @@
                 if (itemStatus === 'known') rowBgClass = "status-known transition hover:bg-emerald-100/60";
                 if (itemStatus === 'unknown') rowBgClass = "status-unknown transition hover:bg-rose-100/60";
 
+                // Prepare Masked / Visible Text Components
+                const termDisplay = hideTargetTerm 
+                    ? `<span onclick="this.innerText='${escapeHtml(item.term)}'; this.className='font-semibold cursor-default text-indigo-700';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
+                    : `<span>${escapeHtml(item.term)}</span>`;
+
+                const transDisplay = hideTranslation
+                    ? `<span onclick="this.innerText='${escapeHtml(item.translation)}'; this.className='text-slate-700 cursor-default';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
+                    : `<span>${escapeHtml(item.translation)}</span>`;
+
                 // --- 1. Desktop Table Row ---
                 const tr = document.createElement('tr');
                 tr.className = rowBgClass;
@@ -416,14 +496,14 @@
                     </td>
                     <td class="py-3 px-4 font-semibold ${itemStatus === 'known' ? 'text-slate-600 line-through' : 'text-slate-900'}">
                         <div class="flex items-center space-x-2">
-                            <span>${escapeHtml(item.term)}</span>
+                            ${termDisplay}
                             <button onclick="speakTerm('${escapeHtml(item.term)}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition p-1" title="Écouter">
                                 <i class="fa-solid fa-volume-high text-xs"></i>
                             </button>
                         </div>
                     </td>
                     <td class="py-3 px-4 text-slate-700">
-                        ${escapeHtml(item.translation)}
+                        ${transDisplay}
                     </td>
                     ${hasPron ? `<td class="py-3 px-4 text-xs font-mono text-slate-500">${escapeHtml(item.pronunciation || '')}</td>` : ''}
                     <td class="py-3 px-4 text-slate-600 italic text-xs leading-relaxed max-w-xs sm:max-w-md">
@@ -445,7 +525,7 @@
                     <div class="flex justify-between items-start gap-2">
                         <div>
                             <div class="flex items-center space-x-2">
-                                <span class="font-bold text-base ${itemStatus === 'known' ? 'text-slate-600 line-through' : 'text-slate-900'}">${escapeHtml(item.term)}</span>
+                                <span class="font-bold text-base ${itemStatus === 'known' ? 'text-slate-600 line-through' : 'text-slate-900'}">${termDisplay}</span>
                                 <button onclick="speakTerm('${escapeHtml(item.term)}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
                                     <i class="fa-solid fa-volume-high text-sm"></i>
                                 </button>
@@ -458,7 +538,7 @@
                     </div>
 
                     <div class="text-sm font-medium text-slate-700 border-l-2 border-indigo-500 pl-2 py-0.5">
-                        ${escapeHtml(item.translation)}
+                        ${transDisplay}
                     </div>
 
                     ${item.sentence ? `<p class="text-xs italic text-slate-600 bg-slate-50/80 p-2 rounded-lg border border-slate-100">"${escapeHtml(item.sentence)}"</p>` : ''}
