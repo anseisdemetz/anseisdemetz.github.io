@@ -12,8 +12,9 @@
           "translation": "En quelque sorte",
           "pronunciation": "/ɪn sʌm weɪz/",
           "sentence": "In some ways, learning English is easier than learning French.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_2",
@@ -21,8 +22,9 @@
           "translation": "Faire semblant",
           "pronunciation": "/tʊ prɪˈtend/",
           "sentence": "The children love to pretend they are superheroes.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_3",
@@ -31,7 +33,8 @@
           "pronunciation": "/tʊ rænt/",
           "sentence": "He started to rant about the terrible service at the restaurant.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_4",
@@ -40,7 +43,8 @@
           "pronunciation": "/tʊ tɜːn aʊt/",
           "sentence": "Don't worry, I am sure everything will turn out fine.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_5",
@@ -48,8 +52,9 @@
           "translation": "Amertume",
           "pronunciation": "/ˈbɪt.ə.nəs/",
           "sentence": "She felt no bitterness towards them after the argument.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_6",
@@ -58,7 +63,8 @@
           "pronunciation": "/rɪˈlent.ləs/",
           "sentence": "The relentless rain didn't stop all day long.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_7",
@@ -66,8 +72,9 @@
           "translation": "Au milieu de",
           "pronunciation": "/ɪn ðə mɪdst ɒv/",
           "sentence": "It is hard to stay calm in the midst of a crisis.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_8",
@@ -75,8 +82,9 @@
           "translation": "Éviter, fuir",
           "pronunciation": "/tʊ ʃʌn/",
           "sentence": "He decided to shun social media to focus on his studies.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_9",
@@ -84,8 +92,9 @@
           "translation": "Dégringoler, tomber",
           "pronunciation": "/tʊ ˈtʌm.bəl/",
           "sentence": "I watched the autumn leaves tumble down from the trees.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_10",
@@ -93,8 +102,9 @@
           "translation": "Embrasser, caresser",
           "pronunciation": "/tʊ ˈfɒn.dəl/",
           "sentence": "The old man used to fondle his cat while watching TV.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_11",
@@ -102,8 +112,9 @@
           "translation": "Amasser, stocker",
           "pronunciation": "/tʊ hɔːd/",
           "sentence": "Some people tend to hoard old newspapers they will never read.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_12",
@@ -111,8 +122,9 @@
           "translation": "Au hasard, désordonné",
           "pronunciation": "/hæpˈhæz.əd/",
           "sentence": "The books were piled in a haphazard way on the desk.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_13",
@@ -120,8 +132,9 @@
           "translation": "Se plier à, céder à",
           "pronunciation": "/tʊ baʊ tʊ/",
           "sentence": "The government had to bow to public pressure and change the law.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_14",
@@ -129,8 +142,9 @@
           "translation": "Tenir, contenir",
           "pronunciation": "/tʊ həʊld/",
           "sentence": "Could you please hold my bag for a moment?",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_15",
@@ -138,8 +152,9 @@
           "translation": "Presser, serrer",
           "pronunciation": "/tʊ skwiːz/",
           "sentence": "You need to squeeze the lemon to get the juice.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_16",
@@ -147,8 +162,9 @@
           "translation": "Tenue, vêtements",
           "pronunciation": "/əˈtaɪər/",
           "sentence": "Professional attire is required for the job interview.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_17",
@@ -157,7 +173,8 @@
           "pronunciation": "/bʌntʃ/",
           "sentence": "He bought a bunch of bananas at the supermarket.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_18",
@@ -165,8 +182,9 @@
           "translation": "Gonfler",
           "pronunciation": "/tʊ swel/",
           "sentence": "His ankle began to swell after he fell down.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_19",
@@ -174,8 +192,9 @@
           "translation": "Grincer des dents (gêne)",
           "pronunciation": "/tʊ krɪndʒ/",
           "sentence": "I cringe every time I hear my own voice on a recording.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_20",
@@ -184,7 +203,8 @@
           "pronunciation": "/ˌfɔːθˈkʌm.ɪŋ/",
           "sentence": "Information about the forthcoming trip will be shared soon.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_21",
@@ -193,7 +213,8 @@
           "pronunciation": "/ˈʃʌd.ər.ɪŋ/",
           "sentence": "She took a shuddering breath before walking onto the stage.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_22",
@@ -201,8 +222,9 @@
           "translation": "Moquerie",
           "pronunciation": "/ˈmɒk.ər.i/",
           "sentence": "His bad accent became a subject of mockery in class.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_23",
@@ -211,7 +233,8 @@
           "pronunciation": "/ˈtretʃ.ər.i/",
           "sentence": "The movie is full of political intrigue and treachery.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_24",
@@ -220,7 +243,8 @@
           "pronunciation": "/dɪˈsiːt/",
           "sentence": "Their relationship was ruined by lies and deceit.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_25",
@@ -229,7 +253,8 @@
           "pronunciation": "/əˈten.dəns/",
           "sentence": "Teachers check student attendance every morning.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_26",
@@ -238,7 +263,8 @@
           "pronunciation": "/ˈpɒm.ɪ.nəns/",
           "sentence": "The young artist quickly rose to prominence.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_27",
@@ -247,7 +273,8 @@
           "pronunciation": "/ə slɪp/",
           "sentence": "It was just a slip of the tongue, he didn't mean it.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_28",
@@ -255,8 +282,9 @@
           "translation": "Marcher (à pas réguliers)",
           "pronunciation": "/tʊ peɪs/",
           "sentence": "He started to pace up and down the room while waiting.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_29",
@@ -265,7 +293,8 @@
           "pronunciation": "/ɡluːm/",
           "sentence": "We could barely see anything in the gloom of the forest.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_30",
@@ -274,7 +303,8 @@
           "pronunciation": "/ˈɡraɪ.mi/",
           "sentence": "His hands were grimy after fixing the bicycle chain.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_31",
@@ -282,8 +312,9 @@
           "translation": "Charbon de bois",
           "pronunciation": "/ˈtʃɑː.kəʊl/",
           "sentence": "We need to buy some charcoal for the barbecue.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_32",
@@ -291,8 +322,9 @@
           "translation": "Vapeurs, fumées",
           "pronunciation": "/fjuːmz/",
           "sentence": "The kitchen was filled with toxic fumes from the burnt plastic.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_33",
@@ -301,7 +333,8 @@
           "pronunciation": "/mæt/",
           "sentence": "Please wipe your shoes on the doormat before entering.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_34",
@@ -310,7 +343,8 @@
           "pronunciation": "/tʊ tʌk ɪn/",
           "sentence": "Parents usually tuck in their children before bedtime.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_35",
@@ -319,7 +353,8 @@
           "pronunciation": "/rɪˈkluː.ʒən/",
           "sentence": "The writer spent the summer in seclusion to finish his book.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_36",
@@ -327,8 +362,9 @@
           "translation": "Retentissement métallique",
           "pronunciation": "/klæŋ/",
           "sentence": "The sudden clang of the metal gate made me jump.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_37",
@@ -336,8 +372,9 @@
           "translation": "Menaçant, imminent",
           "pronunciation": "/ˈluː.mɪŋ/",
           "sentence": "The students are worried about the looming final exams.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_38",
@@ -345,8 +382,9 @@
           "translation": "Lueur",
           "pronunciation": "/ɡləʊ/",
           "sentence": "The soft glow of the candles made the room look cozy.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_39",
@@ -355,7 +393,8 @@
           "pronunciation": "/tʊ ˈbɪl.əʊ/",
           "sentence": "Smoke began to billow out of the old chimney.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_40",
@@ -363,8 +402,9 @@
           "translation": "Signifier, vouloir dire",
           "pronunciation": "/tʊ miːn/",
           "sentence": "What does this specific word mean in French?",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_41",
@@ -372,8 +412,9 @@
           "translation": "Au-dessus (de la tête)",
           "pronunciation": "/ˌəʊ.vəˈhed/",
           "sentence": "A large plane flew overhead just a minute ago.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_42",
@@ -381,8 +422,9 @@
           "translation": "Crépuscule",
           "pronunciation": "/ˈtwaɪ.laɪt/",
           "sentence": "The park looks beautiful in the purple light of twilight.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_43",
@@ -390,8 +432,9 @@
           "translation": "Intimité",
           "pronunciation": "/ˈɪn.tɪ.mə.si/",
           "sentence": "The small restaurant offers a sense of privacy and intimacy.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_44",
@@ -399,8 +442,9 @@
           "translation": "Enclos, espace fermé",
           "pronunciation": "/ɪnˈkləʊ.ʒər/",
           "sentence": "The sheep were kept safe inside a wooden enclosure.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_45",
@@ -408,8 +452,9 @@
           "translation": "Regarder (avec attention)",
           "pronunciation": "/tʊ pɪər/",
           "sentence": "She had to peer through the window to see inside.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_46",
@@ -417,8 +462,9 @@
           "translation": "Suspendu au-dessus",
           "pronunciation": "/ˌəʊ.vəˈhæŋ.ɪŋ/",
           "sentence": "Watch your head because of the overhanging branches.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_47",
@@ -426,8 +472,9 @@
           "translation": "Traîner les pieds",
           "pronunciation": "/tʊ ˈʃʌf.əl/",
           "sentence": "The tired old man began to shuffle slowly down the street.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_48",
@@ -435,8 +482,9 @@
           "translation": "Frotter",
           "pronunciation": "/tʊ rʌb/",
           "sentence": "You should rub some cream on your dry skin.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_49",
@@ -445,7 +493,8 @@
           "pronunciation": "/rɪˈvɜː.bər.eɪt/",
           "sentence": "The sound of the drums started to reverberate through the hall.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_50",
@@ -453,8 +502,9 @@
           "translation": "Politesse, courtoisie",
           "pronunciation": "/ˈkɜː.tə.siz/",
           "sentence": "It is important to exchange basic courtesies when you meet someone.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_51",
@@ -463,7 +513,8 @@
           "pronunciation": "/kɜːs/",
           "sentence": "The old witch put a terrible curse on the castle.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_52",
@@ -472,7 +523,8 @@
           "pronunciation": "/ˈaʊt.kraɪz/",
           "sentence": "The new tax led to public outcries across the country.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_53",
@@ -481,7 +533,8 @@
           "pronunciation": "/ˈpʌz.lɪŋ/",
           "sentence": "The detective found the missing keys in a puzzling place.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_54",
@@ -489,8 +542,9 @@
           "translation": "Brioche, petit pain",
           "pronunciation": "/ə bʌn/",
           "sentence": "She bought a sweet bun and a coffee for breakfast.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_55",
@@ -499,7 +553,8 @@
           "pronunciation": "/tʊ ˈɡriːt/",
           "sentence": "The host was at the door to greet the guests with a smile.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_56",
@@ -507,8 +562,9 @@
           "translation": "Piété",
           "pronunciation": "/ˈpaɪ.ə.ti/",
           "sentence": "The family was respected for their quiet piety and kindness.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_57",
@@ -516,8 +572,9 @@
           "translation": "Bruit de rumeur",
           "pronunciation": "/tʊ ˈruː.mər/",
           "sentence": "It is rumoured that the famous band will split up soon.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_58",
@@ -525,8 +582,9 @@
           "translation": "Convoquer, appeler",
           "pronunciation": "/tʊ ˈsʌm.ən/",
           "sentence": "The manager decided to summon an emergency meeting.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_59",
@@ -534,8 +592,9 @@
           "translation": "Une course, une commission",
           "pronunciation": "/ən ˈer.ənd/",
           "sentence": "My mother sent me on an errand to the bakery.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_60",
@@ -544,7 +603,8 @@
           "pronunciation": "/ˈweɪ.ri/",
           "sentence": "You should be wary of emails asking for your password.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_61",
@@ -553,7 +613,8 @@
           "pronunciation": "/ˈkwɒr.əl.səm/",
           "sentence": "He becomes very quarrelsome when he is tired.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_62",
@@ -561,8 +622,9 @@
           "translation": "Stand, échoppe",
           "pronunciation": "/stɔːl/",
           "sentence": "I bought these fresh vegetables from a market stall.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_63",
@@ -571,7 +633,8 @@
           "pronunciation": "/ə ɡlimps ɒv/",
           "sentence": "I caught a glimpse of the celebrity before she drove away.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_64",
@@ -580,7 +643,8 @@
           "pronunciation": "/stɜːn/",
           "sentence": "The teacher gave him a stern look when he arrived late.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_65",
@@ -589,7 +653,8 @@
           "pronunciation": "/fɪəs/",
           "sentence": "A fierce wind blew across the valley all night.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_66",
@@ -597,8 +662,9 @@
           "translation": "Faible",
           "pronunciation": "/ˈfiː.bəl/",
           "sentence": "The sick man made a feeble attempt to sit up.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_67",
@@ -606,8 +672,9 @@
           "translation": "Solennellement",
           "pronunciation": "/ˈsɒl.əm.li/",
           "sentence": "He solemnly promised to keep her secret.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_68",
@@ -616,7 +683,8 @@
           "pronunciation": "/kʌf/",
           "sentence": "The detective adjusted the cuff of his shirt.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_69",
@@ -624,8 +692,9 @@
           "translation": "Moulin à vent",
           "pronunciation": "/ˈwɪnd.mɪl/",
           "sentence": "The old windmill on the hill still turns in the breeze.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_70",
@@ -633,8 +702,9 @@
           "translation": "Brillant, étincelant",
           "pronunciation": "/tʊ ˈɡlɪs.ən/",
           "sentence": "The wet leaves began to glisten under the morning sun.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_71",
@@ -643,7 +713,8 @@
           "pronunciation": "/tʊ ɡreɪz/",
           "sentence": "I managed to graze my knee when I fell on the gravel.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_72",
@@ -652,7 +723,8 @@
           "pronunciation": "/rɪˈpriːv/",
           "sentence": "The sudden cool rain brought a welcome reprieve from the heat.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_73",
@@ -660,8 +732,9 @@
           "translation": "Trébucher",
           "pronunciation": "/tʊ ˈstʌm.bəl/",
           "sentence": "Be careful not to stumble on the uneven pavement.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_74",
@@ -670,16 +743,8 @@
           "pronunciation": "/tʊ hʌʃ/",
           "sentence": "The mother tried to hush the crying baby.",
           "mastered": false,
-          "source": "Gravel Heart"
-        },
-        {
-          "id": "en_75",
-          "term": "Driven snow",
-          "translation": "Neige fraîche, neige immaculée",
-          "pronunciation": "/ˈdrɪv.ən snəʊ/",
-          "sentence": "Her white dress was as clean and bright as driven snow.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_76",
@@ -687,8 +752,9 @@
           "translation": "Ombre, nuance",
           "pronunciation": "/ʃeɪd/",
           "sentence": "Let's sit in the shade of this big oak tree.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_77",
@@ -697,7 +763,8 @@
           "pronunciation": "/tʊ ɡrɪn/",
           "sentence": "He couldn't help but grin when he heard the good news.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_78",
@@ -706,7 +773,8 @@
           "pronunciation": "/ɔːˈdiːl/",
           "sentence": "Surviving the storm at sea was a terrible ordeal.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_79",
@@ -715,7 +783,8 @@
           "pronunciation": "/ɪn ðæt rɪˈɡɑːd/",
           "sentence": "The plan is simple, and in that regard, it is perfect.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_80",
@@ -723,8 +792,9 @@
           "translation": "Frénésie",
           "pronunciation": "/ˈfren.zi/",
           "sentence": "The shoppers went into a frenzy during the winter sales.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_81",
@@ -733,7 +803,8 @@
           "pronunciation": "/tʊ skɒf/",
           "sentence": "It is not polite to scoff at other people's ideas.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_82",
@@ -741,8 +812,9 @@
           "translation": "Bien que, pourtant",
           "pronunciation": "/ðəʊ/",
           "sentence": "Though she was tired, she continued to work.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_83",
@@ -751,7 +823,8 @@
           "pronunciation": "/kɔːk/",
           "sentence": "He carefully pulled the cork out of the wine bottle.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_84",
@@ -759,8 +832,9 @@
           "translation": "Enrubanné, décoré",
           "pronunciation": "/fesˈtuːnd/",
           "sentence": "The streets were festooned with colorful lights for the festival.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_85",
@@ -769,7 +843,8 @@
           "pronunciation": "/ˈfeð.ər/",
           "sentence": "The bird dropped a beautiful blue feather on the grass.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_86",
@@ -778,7 +853,8 @@
           "pronunciation": "/tʊ ɡrɑːnt/",
           "sentence": "The university decided to grant him a full scholarship.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_87",
@@ -786,8 +862,9 @@
           "translation": "Fardeau, charge",
           "pronunciation": "/ˈbɜː.dən/",
           "sentence": "Carrying this heavy suitcase became a real burden.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_88",
@@ -796,7 +873,8 @@
           "pronunciation": "/ˌself.dɪˈluː.dɪŋ/",
           "sentence": "Believing he can win without training is self-deluding thinking.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_89",
@@ -805,7 +883,8 @@
           "pronunciation": "/ˌself.fʊlˈfɪl.mənt/",
           "sentence": "Many people seek self-fulfilment through their creative hobbies.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_90",
@@ -814,7 +893,8 @@
           "pronunciation": "/ˈtæs.əl/",
           "sentence": "A golden tassel hung from the corner of the cushion.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_91",
@@ -823,7 +903,8 @@
           "pronunciation": "/hʌŋ/",
           "sentence": "The wet coat hung near the heater to dry.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_92",
@@ -831,8 +912,9 @@
           "translation": "Pèlerinage",
           "pronunciation": "/ˈpɪl.ɡrɪ.mɪdʒ/",
           "sentence": "Every year, thousands of people make a pilgrimage to this temple.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_93",
@@ -841,7 +923,8 @@
           "pronunciation": "/ˈbʊl.i/",
           "sentence": "The school principal took strict action against the bully.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_94",
@@ -850,7 +933,8 @@
           "pronunciation": "/tʊ ˈtʃʌk.əl/",
           "sentence": "I heard him chuckle quietly while reading his book.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_95",
@@ -859,7 +943,8 @@
           "pronunciation": "/tʊ bɪd/",
           "sentence": "He wanted to bid on the antique painting at the auction.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_96",
@@ -868,7 +953,8 @@
           "pronunciation": "/ˈwɒn.tɪŋ/",
           "sentence": "His excuse was wanting in credibility, so no one believed him.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_97",
@@ -877,7 +963,8 @@
           "pronunciation": "/ˈhed.i/",
           "sentence": "The heady perfume of the spring flowers filled the garden.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_98",
@@ -886,7 +973,8 @@
           "pronunciation": "/frɪndʒ/",
           "sentence": "They prefer to live on the fringe of the big city.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_99",
@@ -895,7 +983,8 @@
           "pronunciation": "/ˈræl.i/",
           "sentence": "A large crowd gathered for the political rally in the square.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_100",
@@ -904,7 +993,8 @@
           "pronunciation": "/skaʊl/",
           "sentence": "She had a deep scowl on her face when she was interrupted.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_101",
@@ -912,8 +1002,9 @@
           "translation": "Enroué, bruyant",
           "pronunciation": "/ˈrɔː.kəs/",
           "sentence": "The party next door was filled with raucous laughter.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_102",
@@ -922,7 +1013,8 @@
           "pronunciation": "/tʊ tɔːnt/",
           "sentence": "Cruel children sometimes taunt those who are different.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_103",
@@ -931,7 +1023,8 @@
           "pronunciation": "/tʊ trɪp/",
           "sentence": "Walk carefully so you do not trip over the loose cables.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_104",
@@ -939,8 +1032,9 @@
           "translation": "Renverser, répandre",
           "pronunciation": "/tʊ spɪl/",
           "sentence": "Try not to spill your hot coffee on the documents.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_105",
@@ -949,7 +1043,8 @@
           "pronunciation": "/ˈkrɪst.li/",
           "sentence": "The sheets were crisply folded and smelled like lavender.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_106",
@@ -957,8 +1052,9 @@
           "translation": "Deuil",
           "pronunciation": "/ɪn ˈmɔː.nɪŋ/",
           "sentence": "The entire nation was in mourning after the tragic event.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_107",
@@ -967,7 +1063,8 @@
           "pronunciation": "/ˈʌpˌraɪ.zɪŋ/",
           "sentence": "The military quickly ended the local uprising.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_108",
@@ -976,7 +1073,8 @@
           "pronunciation": "/bʌt/",
           "sentence": "He accidentally dropped his cigarette butt on the ground.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_109",
@@ -985,7 +1083,8 @@
           "pronunciation": "/tʊ bɪˈɡet/",
           "sentence": "They believe that violence can only beget more violence.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_110",
@@ -994,7 +1093,8 @@
           "pronunciation": "/ˈsɒr.əʊ/",
           "sentence": "She expressed deep sorrow over the loss of her dog.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_111",
@@ -1003,7 +1103,8 @@
           "pronunciation": "/ˈfuː.lɪʃ/",
           "sentence": "It would be foolish to go out in this storm without a coat.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_112",
@@ -1012,7 +1113,8 @@
           "pronunciation": "/tʊ smʌdʒ/",
           "sentence": "Be careful not to smudge the wet ink on your drawing.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_113",
@@ -1021,7 +1123,8 @@
           "pronunciation": "/θruːˈaʊt/",
           "sentence": "The noise could be heard throughout the entire building.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_114",
@@ -1029,8 +1132,9 @@
           "translation": "Empilé sur",
           "pronunciation": "/stækt ɒn/",
           "sentence": "Heavy boxes were stacked on top of each other in the garage.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_115",
@@ -1038,8 +1142,9 @@
           "translation": "Autrement, sinon",
           "pronunciation": "/ˈʌð.ə.waɪz/",
           "sentence": "We must leave now, otherwise we will miss our flight.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_116",
@@ -1048,7 +1153,8 @@
           "pronunciation": "/tʊ bɪˈfɔːl/",
           "sentence": "We prayed that no harm would befall the travelers.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_117",
@@ -1056,8 +1162,9 @@
           "translation": "Plus sage",
           "pronunciation": "/ˈwaɪ.zər/",
           "sentence": "With age, he became wiser and more patient.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_118",
@@ -1066,7 +1173,8 @@
           "pronunciation": "/tʊ sɒb/",
           "sentence": "The lost child began to sob quietly on the bench.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_119",
@@ -1074,8 +1182,9 @@
           "translation": "Matelas",
           "pronunciation": "/ˈmæt.rəs/",
           "sentence": "The new mattress is much more comfortable than the old one.",
-          "mastered": false,
-          "source": "Gravel Heart"
+          "mastered": true,
+          "source": "Gravel Heart",
+          "status": "known"
         },
         {
           "id": "en_120",
@@ -1084,7 +1193,8 @@
           "pronunciation": "/ˈlʌm.pi/",
           "sentence": "Sleeping on a lumpy bed made his back ache.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_121",
@@ -1093,7 +1203,8 @@
           "pronunciation": "/ˈstʌf.i/",
           "sentence": "The meeting room became very stuffy with the windows closed.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_122",
@@ -1102,7 +1213,8 @@
           "pronunciation": "/tʊ skəʊld/",
           "sentence": "Parents sometimes have to scold their kids for safety.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_123",
@@ -1111,7 +1223,8 @@
           "pronunciation": "/ˈʃɑːp.li/",
           "sentence": "The path turns sharply to the left near the river.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unknown"
         },
         {
           "id": "en_124",
@@ -1120,7 +1233,8 @@
           "pronunciation": "/tʊ bɪˈɡrʌdʒ/",
           "sentence": "You shouldn't begrudge him his hard-earned success.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_125",
@@ -1129,7 +1243,8 @@
           "pronunciation": "/ɡɔːnt/",
           "sentence": "The survivor looked gaunt and pale after weeks at sea.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_126",
@@ -1138,7 +1253,8 @@
           "pronunciation": "/ˈʃrɪv.əld/",
           "sentence": "The forgotten grapes turned into shrivelled raisins in the sun.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_127",
@@ -1147,7 +1263,8 @@
           "pronunciation": "/ˈtaɪə.ləs/",
           "sentence": "Thanks to her tireless efforts, the project was a success.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_128",
@@ -1156,7 +1273,8 @@
           "pronunciation": "/plʌmp/",
           "sentence": "These plump tomatoes are perfect for making fresh sauce.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_129",
@@ -1165,7 +1283,8 @@
           "pronunciation": "/tʊ friː/",
           "sentence": "The volunteer worked to free the bird caught in the net.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_130",
@@ -1174,7 +1293,8 @@
           "pronunciation": "/ˌdiː.teɪˈniː/",
           "sentence": "The lawyer was allowed to visit the detainee in prison.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_131",
@@ -1183,7 +1303,8 @@
           "pronunciation": "/dɪˈspeər/",
           "sentence": "He was filled with despair when he lost his job.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_132",
@@ -1192,7 +1313,8 @@
           "pronunciation": "/ˈɡriː.vɪŋ/",
           "sentence": "The grieving family appreciated the support of their neighbors.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_133",
@@ -1201,7 +1323,8 @@
           "pronunciation": "/tʊ wiːp/",
           "sentence": "The sad movie made many people in the audience weep.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_134",
@@ -1210,7 +1333,8 @@
           "pronunciation": "/ˈswəʊ.lən/",
           "sentence": "His sprained ankle was very red and swollen.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_135",
@@ -1219,7 +1343,8 @@
           "pronunciation": "/tʊ kəʊp/",
           "sentence": "It is hard to cope with so much stress at work.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_136",
@@ -1228,7 +1353,8 @@
           "pronunciation": "/tʊ rek/",
           "sentence": "One mistake could wreck years of hard work.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_137",
@@ -1237,7 +1363,8 @@
           "pronunciation": "/əˈfiːld/",
           "sentence": "You don't need to travel far afield to find beautiful scenery.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_138",
@@ -1246,7 +1373,8 @@
           "pronunciation": "/ˈtɜː.mɔɪl/",
           "sentence": "The country's economy was in complete turmoil.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_139",
@@ -1255,7 +1383,8 @@
           "pronunciation": "/ˈkæl.əs.nəs/",
           "sentence": "We were shocked by his callousness towards the animals.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_140",
@@ -1264,7 +1393,8 @@
           "pronunciation": "/tʊ liːp/",
           "sentence": "The cat tried to leap onto the high kitchen counter.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_141",
@@ -1273,7 +1403,8 @@
           "pronunciation": "/əʊθ/",
           "sentence": "The new president took the oath of office today.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_142",
@@ -1282,7 +1413,8 @@
           "pronunciation": "/stuːl/",
           "sentence": "He sat on a wooden stool in the kitchen.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_143",
@@ -1291,7 +1423,8 @@
           "pronunciation": "/ˈʌp.raɪt/",
           "sentence": "Please place the glass in an upright position.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_144",
@@ -1300,7 +1433,8 @@
           "pronunciation": "/tʊ lɜːtʃ/",
           "sentence": "The old bus began to lurch violently on the bumpy road.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_145",
@@ -1309,7 +1443,8 @@
           "pronunciation": "/tʊ slʌmp/",
           "sentence": "Tired after work, he managed to slump into his favorite armchair.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_146",
@@ -1318,7 +1453,8 @@
           "pronunciation": "/tʊ ɡrəʊn/",
           "sentence": "The heavy wooden shelves started to groan under the weight.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_147",
@@ -1327,7 +1463,8 @@
           "pronunciation": "/ɡrɪp/",
           "sentence": "Keep a firm grip on the handrail while walking down.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_148",
@@ -1336,7 +1473,8 @@
           "pronunciation": "/brɑːntʃ/",
           "sentence": "A bird sat on the highest branch of the tree.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_149",
@@ -1345,7 +1483,8 @@
           "pronunciation": "/ˈwɪə.rə.li/",
           "sentence": "She sat down wearily on the sofa after a twelve-hour shift.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_150",
@@ -1354,7 +1493,8 @@
           "pronunciation": "/ˈpliː.dɪŋ/",
           "sentence": "The dog gave her a pleading look for a piece of bread.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_151",
@@ -1363,7 +1503,8 @@
           "pronunciation": "/ˈsʌl.ən/",
           "sentence": "The teenager sat in a sullen silence during the family dinner.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_152",
@@ -1372,7 +1513,8 @@
           "pronunciation": "/tʊ θwɔːt/",
           "sentence": "The security guards managed to thwart the robbery.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_153",
@@ -1381,7 +1523,8 @@
           "pronunciation": "/ˈdiː.vi.əs/",
           "sentence": "He came up with a devious plan to win the game by cheating.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_154",
@@ -1390,7 +1533,8 @@
           "pronunciation": "/tʊ ˈmʌd.əl/",
           "sentence": "Try not to muddle the keys, or we will get locked out.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_155",
@@ -1399,7 +1543,8 @@
           "pronunciation": "/tʊ dɪsˈɡaɪz/",
           "sentence": "He used a wig and glasses to disguise himself.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_156",
@@ -1408,7 +1553,8 @@
           "pronunciation": "/dɪˈstrɔːt/",
           "sentence": "She was completely distraught when her wallet went missing.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_157",
@@ -1417,7 +1563,8 @@
           "pronunciation": "/wɔːf/",
           "sentence": "The fishing boats were tied securely to the wharf.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_158",
@@ -1426,7 +1573,8 @@
           "pronunciation": "/ˈʃæɡ.i/",
           "sentence": "The shaggy dog desperately needed a haircut.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_159",
@@ -1435,7 +1583,8 @@
           "pronunciation": "/slʌm/",
           "sentence": "Government projects aim to rebuild and clean up the slum.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_160",
@@ -1444,7 +1593,8 @@
           "pronunciation": "/tʊ ˈwaɪ.dən/",
           "sentence": "They plan to widen the narrow road to prevent accidents.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_161",
@@ -1453,7 +1603,8 @@
           "pronunciation": "/tʊ ˈfɪd.əl/",
           "sentence": "Stop trying to fiddle with the settings; you will break it.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_162",
@@ -1462,7 +1613,8 @@
           "pronunciation": "/tʊ ˈfɪd.ʒɪt/",
           "sentence": "Children often fidget when they are bored in class.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_163",
@@ -1471,7 +1623,8 @@
           "pronunciation": "/ˈrest.ləs/",
           "sentence": "He spent a restless night tossing and turning in bed.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_164",
@@ -1480,7 +1633,8 @@
           "pronunciation": "/tʊ prɒd/",
           "sentence": "You may need to prod him a little to make him finish his homework.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_165",
@@ -1489,7 +1643,8 @@
           "pronunciation": "/tʊ prəˈvəʊk/",
           "sentence": "Do not tease the dog, or you might provoke it to bite.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_166",
@@ -1498,7 +1653,8 @@
           "pronunciation": "/ɪnˈten.dɪd/",
           "sentence": "The intended effect of the medicine was to reduce pain.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_167",
@@ -1507,7 +1663,8 @@
           "pronunciation": "/ˈstaɪ.pend/",
           "sentence": "The PhD student receives a monthly stipend for his research.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_168",
@@ -1516,7 +1673,8 @@
           "pronunciation": "/ˈɡliː.mɪŋ/",
           "sentence": "The kitchen was spotless, with gleaming white countertops.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_169",
@@ -1525,7 +1683,8 @@
           "pronunciation": "/wɪt/",
           "sentence": "He is known for his quick wit and sharp humor.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_170",
@@ -1534,7 +1693,8 @@
           "pronunciation": "/tʊ sɜːdʒ/",
           "sentence": "A wave of excitement began to surge through the crowd.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_171",
@@ -1543,7 +1703,8 @@
           "pronunciation": "/tʊ ˈskʌr.i/",
           "sentence": "I saw a tiny mouse scurry behind the kitchen cupboard.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_172",
@@ -1552,7 +1713,8 @@
           "pronunciation": "/ˈstel.θi/",
           "sentence": "The cat made a stealthy approach towards the bird.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_173",
@@ -1561,7 +1723,8 @@
           "pronunciation": "/ˈmʌf.əld/",
           "sentence": "I heard muffled voices speaking through the thick wall.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_174",
@@ -1570,7 +1733,8 @@
           "pronunciation": "/tʊ səˈpres/",
           "sentence": "It was hard for her to suppress her laughter during the exam.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_175",
@@ -1579,7 +1743,8 @@
           "pronunciation": "/ˈæv.ɪd/",
           "sentence": "She is an avid reader and buys three new books every week.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_176",
@@ -1588,7 +1753,8 @@
           "pronunciation": "/tʊ ˈkaʊn.səl/",
           "sentence": "The doctor decided to counsel the patient on healthy habits.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_177",
@@ -1597,7 +1763,8 @@
           "pronunciation": "/tʊ pɑːt wɪð/",
           "sentence": "It was very difficult for her to part with her old family letters.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_178",
@@ -1606,7 +1773,8 @@
           "pronunciation": "/ˈtʃer.ɪʃt/",
           "sentence": "This old watch is my most cherished possession.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_179",
@@ -1615,7 +1783,8 @@
           "pronunciation": "/ˌnjuː.liˈwed/",
           "sentence": "The newly-wed couple decided to spend their honeymoon in Italy.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_180",
@@ -1624,7 +1793,8 @@
           "pronunciation": "/tʊ ˈmɪm.ɪk/",
           "sentence": "He loves to mimic the way his older brother talks.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_181",
@@ -1633,7 +1803,8 @@
           "pronunciation": "/ˈkaʊ.əd.li/",
           "sentence": "Spreading anonymous rumors is a cowardly act.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_182",
@@ -1642,7 +1813,8 @@
           "pronunciation": "/ˈmɪs.tʃɪ.vəs.li/",
           "sentence": "The little girl smiled mischievously before hiding the keys.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_183",
@@ -1651,7 +1823,8 @@
           "pronunciation": "/tʊ ˈswæɡ.ər/",
           "sentence": "He started to swagger around the room after winning the game.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_184",
@@ -1660,7 +1833,8 @@
           "pronunciation": "/ʃrɪl/",
           "sentence": "The kettle let out a shrill whistle when the water boiled.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_185",
@@ -1669,7 +1843,8 @@
           "pronunciation": "/ˈwɪz.dəm/",
           "sentence": "We should listen to the wisdom of older generations.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_186",
@@ -1678,7 +1853,8 @@
           "pronunciation": "/tʊ ɡəʊd/",
           "sentence": "He tried to goad his opponent into making a mistake.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_187",
@@ -1687,7 +1863,8 @@
           "pronunciation": "/tʊ dʒɪər/",
           "sentence": "The angry crowd began to jeer at the politician.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_188",
@@ -1696,7 +1873,8 @@
           "pronunciation": "/ˈbel.i/",
           "sentence": "He laughed so hard that his belly started to ache.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_189",
@@ -1705,7 +1883,8 @@
           "pronunciation": "/tʊ nɒd/",
           "sentence": "You just need to nod if you agree with my proposal.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_190",
@@ -1714,7 +1893,8 @@
           "pronunciation": "/tʊ ˌriː.əˈʃʊər/",
           "sentence": "I did my best to reassure him that everything would be fine.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_191",
@@ -1723,7 +1903,8 @@
           "pronunciation": "/tʊ bʌldʒ/",
           "sentence": "His pockets began to bulge with all the candies he took.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_192",
@@ -1732,7 +1913,8 @@
           "pronunciation": "/tʊ pləˈkeɪt/",
           "sentence": "The manager tried to placate the angry customer with a refund.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_193",
@@ -1741,7 +1923,8 @@
           "pronunciation": "/ˈretʃ.ɪd.nəs/",
           "sentence": "The war left behind a trail of absolute wretchedness.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_194",
@@ -1750,7 +1933,8 @@
           "pronunciation": "/ˈheɪ.trɪd/",
           "sentence": "We must work together to fight against hatred and racism.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_195",
@@ -1759,7 +1943,8 @@
           "pronunciation": "/tʊ baɪd/",
           "sentence": "You must learn to bide your time and wait for the right moment.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_196",
@@ -1768,7 +1953,8 @@
           "pronunciation": "/ˈfɔː.ɡraʊnd/",
           "sentence": "The flowers in the foreground of the photo are beautifully sharp.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_197",
@@ -1777,7 +1963,8 @@
           "pronunciation": "/ˈsɒr.əʊ.fəl/",
           "sentence": "She gave him a sorrowful look as he waved goodbye.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_198",
@@ -1786,7 +1973,8 @@
           "pronunciation": "/tʊ ˈdæŋ.ɡəl/",
           "sentence": "I like to sit on the dock and dangle my feet in the water.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_199",
@@ -1795,7 +1983,8 @@
           "pronunciation": "/tʊ twɪtʃ/",
           "sentence": "His left eye started to twitch because of the stress.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_200",
@@ -1804,7 +1993,8 @@
           "pronunciation": "/tʊ swiːp/",
           "sentence": "The wind was strong enough to sweep the leaves off the street.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_201",
@@ -1813,7 +2003,8 @@
           "pronunciation": "/tʊ ˈiːvz.drɒp/",
           "sentence": "It is very rude to eavesdrop on other people's private conversations.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_202",
@@ -1822,7 +2013,8 @@
           "pronunciation": "/bræt/",
           "sentence": "That spoiled brat keeps screaming because he wants a toy.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_203",
@@ -1831,7 +2023,8 @@
           "pronunciation": "/tʊ ʌnˈtæŋ.ɡəl/",
           "sentence": "It took me twenty minutes to untangle my headphones.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_204",
@@ -1840,7 +2033,8 @@
           "pronunciation": "/tʊ ˈrel.ɪʃ/",
           "sentence": "I always relish the quiet moments of the early morning.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_205",
@@ -1849,7 +2043,8 @@
           "pronunciation": "/ʌnˈiːz/",
           "sentence": "A growing feeling of unease filled the silent room.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_206",
@@ -1858,7 +2053,8 @@
           "pronunciation": "/tʊ iːz/",
           "sentence": "This hot tea will help to ease your sore throat.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_207",
@@ -1867,7 +2063,8 @@
           "pronunciation": "/tʊ ɡlaɪd/",
           "sentence": "The swans seemed to glide effortlessly across the lake.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_208",
@@ -1876,7 +2073,8 @@
           "pronunciation": "/tʊ ˈʃɪv.ər/",
           "sentence": "The cold wind made me shiver despite my warm jacket.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_209",
@@ -1885,7 +2083,8 @@
           "pronunciation": "/ˈbrɔː.dən.ɪŋ/",
           "sentence": "Traveling is excellent for the broadening of one's mind.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_210",
@@ -1894,7 +2093,8 @@
           "pronunciation": "/ˌfeərˈwel/",
           "sentence": "They organized a small farewell party for their colleague.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_211",
@@ -1903,7 +2103,8 @@
           "pronunciation": "/məʊˈmen.təs/",
           "sentence": "Getting married is a momentous decision in anyone's life.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_212",
@@ -1912,7 +2113,8 @@
           "pronunciation": "/tʊ prɪˈvent/",
           "sentence": "We must take action to prevent further damage to the environment.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_213",
@@ -1921,7 +2123,8 @@
           "pronunciation": "/tʊ biːm/",
           "sentence": "She couldn't help but beam with pride when she won the award.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_214",
@@ -1930,7 +2133,8 @@
           "pronunciation": "/ˈflʌs.təd/",
           "sentence": "He got very flustered when he couldn't find his passport.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_215",
@@ -1939,7 +2143,8 @@
           "pronunciation": "/ˈem.bə.si/",
           "sentence": "If you lose your passport abroad, go to your embassy.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_216",
@@ -1948,7 +2153,8 @@
           "pronunciation": "/ə rʌg/",
           "sentence": "We placed a soft blue rug under the coffee table.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_217",
@@ -1957,7 +2163,8 @@
           "pronunciation": "/ˈflɪm.zi/",
           "sentence": "This flimsy plastic table looks like it might break easily.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_218",
@@ -1966,7 +2173,8 @@
           "pronunciation": "/ˈɔːk.wəd.nəs/",
           "sentence": "There was a moment of awkwardness when nobody knew what to say.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_219",
@@ -1975,7 +2183,8 @@
           "pronunciation": "/ɪnˈtent.li/",
           "sentence": "The cat watched the little bird intently through the window.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_220",
@@ -1984,7 +2193,8 @@
           "pronunciation": "/tʊ ɪnˈkaʊn.tər/",
           "sentence": "We did not expect to encounter any major problems during the trip.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_221",
@@ -1993,7 +2203,8 @@
           "pronunciation": "/ˈhʌm.bəld/",
           "sentence": "He felt deeply humbled by the warm support of his friends.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_222",
@@ -2002,7 +2213,8 @@
           "pronunciation": "/rɪˈkɔɪl/",
           "sentence": "She couldn't help but recoil when she saw the large spider.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_223",
@@ -2011,7 +2223,8 @@
           "pronunciation": "/tʊ dɪˈspaɪz/",
           "sentence": "Honest people despise those who lie and cheat to succeed.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_224",
@@ -2020,7 +2233,8 @@
           "pronunciation": "/ˈtaɪə.səm/",
           "sentence": "Dealing with bureaucracy is always a tiresome process.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_225",
@@ -2029,7 +2243,8 @@
           "pronunciation": "/ˈrʌb.əl/",
           "sentence": "The rescue team searched through the rubble of the collapsed house.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_226",
@@ -2038,7 +2253,8 @@
           "pronunciation": "/ˈbəʊld.nəs/",
           "sentence": "I admire her boldness in speaking up against the decision.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_227",
@@ -2047,7 +2263,8 @@
           "pronunciation": "/ɡriːd/",
           "sentence": "The financial crisis was largely driven by human greed.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_228",
@@ -2056,7 +2273,8 @@
           "pronunciation": "/ˈfræn.tɪk/",
           "sentence": "The parents made a frantic search for their lost child.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_229",
@@ -2065,7 +2283,8 @@
           "pronunciation": "/tʊ weɪk/",
           "sentence": "Please try not to wake the baby when you enter the room.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_230",
@@ -2074,7 +2293,8 @@
           "pronunciation": "/kræmp/",
           "sentence": "He got a painful cramp in his leg while swimming.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_231",
@@ -2083,7 +2303,8 @@
           "pronunciation": "/kɑːf/",
           "sentence": "Running up the hill made his calf muscles very sore.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_232",
@@ -2092,7 +2313,8 @@
           "pronunciation": "/ˈruː.mi/",
           "sentence": "The new family car is extremely roomy and comfortable.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_233",
@@ -2101,7 +2323,8 @@
           "pronunciation": "/ˈmɪs.hæp/",
           "sentence": "Despite a small mishap at the airport, our trip was wonderful.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_234",
@@ -2110,7 +2333,8 @@
           "pronunciation": "/tʊ mɒp/",
           "sentence": "He had to mop his forehead because of the intense heat.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_235",
@@ -2119,7 +2343,8 @@
           "pronunciation": "/ˈstaɪ.flɪŋ/",
           "sentence": "The heat in the unventilated room was absolutely stifling.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_236",
@@ -2128,7 +2353,8 @@
           "pronunciation": "/tʊ tiːz/",
           "sentence": "It is okay to tease your friends as long as it is friendly.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_237",
@@ -2137,7 +2363,8 @@
           "pronunciation": "/tʊ ʌnˈhɪndʒ/",
           "sentence": "The tragic news threatened to unhinge her completely.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_238",
@@ -2146,7 +2373,8 @@
           "pronunciation": "/tʊ fraūn/",
           "sentence": "He began to frown as he read the confusing email.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_239",
@@ -2155,7 +2383,8 @@
           "pronunciation": "/ˈfɪl.θi/",
           "sentence": "Wash your hands immediately, they are absolutely filthy!",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_240",
@@ -2164,7 +2393,8 @@
           "pronunciation": "/ˈskruː.tɪ.ni/",
           "sentence": "The company's accounts are under close scrutiny by the state.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_241",
@@ -2173,7 +2403,8 @@
           "pronunciation": "/ˈʃɔː.tɪdʒ/",
           "sentence": "The dry summer caused a severe water shortage in the region.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_242",
@@ -2182,7 +2413,8 @@
           "pronunciation": "/tʊ ˈwɪə.ri/",
           "sentence": "Working long hours without a break will quickly weary you.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_243",
@@ -2191,7 +2423,8 @@
           "pronunciation": "/tʊ ləʊð/",
           "sentence": "I absolutely loathe having to wake up early on weekends.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_244",
@@ -2200,7 +2433,8 @@
           "pronunciation": "/ˈkeər.ɪŋ/",
           "sentence": "She is a very caring nurse who always listens to her patients.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_245",
@@ -2209,7 +2443,8 @@
           "pronunciation": "/tʊ bɪˈweər/",
           "sentence": "You must beware of slippery roads during the winter.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_246",
@@ -2218,7 +2453,8 @@
           "pronunciation": "/ˈretʃ.ɪd/",
           "sentence": "He lived in a wretched little house with no heating.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_247",
@@ -2227,7 +2463,8 @@
           "pronunciation": "/tʊ blɜːt aʊt/",
           "sentence": "He didn't mean to blurt out the secret, it was an accident.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_248",
@@ -2236,7 +2473,8 @@
           "pronunciation": "/tʊ ˈstɪf.ən/",
           "sentence": "I felt my muscles stiffen as I stepped into the cold water.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_249",
@@ -2245,7 +2483,8 @@
           "pronunciation": "/tʊ ˈkwɪv.ər/",
           "sentence": "Her chin began to quiver as she tried not to cry.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_250",
@@ -2254,7 +2493,8 @@
           "pronunciation": "/ˈnɑː.sti/",
           "sentence": "He has a nasty habit of interrupting people when they speak.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_251",
@@ -2263,7 +2503,8 @@
           "pronunciation": "/tʊ ˈdæb.əl/",
           "sentence": "He likes to dabble in painting, but he is not a professional.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_252",
@@ -2272,7 +2513,8 @@
           "pronunciation": "/tʊ ˌriː.ɪnˈrəʊl/",
           "sentence": "You need to re-enrol before the end of September.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_253",
@@ -2281,7 +2523,8 @@
           "pronunciation": "/ˈmɪs.tʃɪf/",
           "sentence": "The children are very quiet, they must be up to some mischief.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_254",
@@ -2290,7 +2533,8 @@
           "pronunciation": "/niːt/",
           "sentence": "She keeps her bedroom very neat and organized.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_255",
@@ -2299,7 +2543,8 @@
           "pronunciation": "/tʊ ˈʌt.ər/",
           "sentence": "He was so shocked he couldn't utter a single word.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_256",
@@ -2308,7 +2553,8 @@
           "pronunciation": "/tʊ θrʌst/",
           "sentence": "He decided to thrust his hands into his pockets to keep them warm.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_257",
@@ -2317,7 +2563,8 @@
           "pronunciation": "/ˌdɪs.əˈreɪ/",
           "sentence": "The sudden storm left the garden in complete disarray.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_258",
@@ -2326,7 +2573,8 @@
           "pronunciation": "/ˈmjuːt.li/",
           "sentence": "The dog sat mutely by the door, waiting for its owner.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_259",
@@ -2335,7 +2583,8 @@
           "pronunciation": "/ˈdwel.ɪŋ/",
           "sentence": "The old village consisted of small stone dwelling houses.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_260",
@@ -2344,7 +2593,8 @@
           "pronunciation": "/dʒɪst/",
           "sentence": "I didn't understand every word, but I got the gist of the story.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_261",
@@ -2353,7 +2603,8 @@
           "pronunciation": "/ˈɒd.li/",
           "sentence": "Oddly, the front door was unlocked when I arrived home.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_262",
@@ -2362,7 +2613,8 @@
           "pronunciation": "/beər/",
           "sentence": "The trees are completely bare during the cold winter months.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_263",
@@ -2371,7 +2623,8 @@
           "pronunciation": "/əˈlaʊ.əns/",
           "sentence": "My parents gave me a weekly allowance when I was a student.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_264",
@@ -2380,7 +2633,8 @@
           "pronunciation": "/ˈkɔː.ʃəs/",
           "sentence": "You should be cautious when driving on icy roads.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_265",
@@ -2389,7 +2643,8 @@
           "pronunciation": "/ˈskreɪ.pɪŋ/",
           "sentence": "I heard the loud scraping of a shovel on the snowy pavement.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_266",
@@ -2398,7 +2653,8 @@
           "pronunciation": "/tʊ ˈdɪl.ɪ.dʒənt.li/",
           "sentence": "She worked diligently to complete the project before the deadline.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_267",
@@ -2407,7 +2663,8 @@
           "pronunciation": "/ˌʌn.rɪˈkwaɪ.tɪd/",
           "sentence": "The book tells a sad story of unrequited love between two friends.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_268",
@@ -2416,7 +2673,8 @@
           "pronunciation": "/rɪˈsɪn.ə.ti/",
           "sentence": "There is a great bakery in the immediate vicinity of the station.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_269",
@@ -2425,7 +2683,8 @@
           "pronunciation": "/tʊ kaʊ/",
           "sentence": "The boss tried to cow the workers into accepting the new rules.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_270",
@@ -2434,7 +2693,8 @@
           "pronunciation": "/tʊ bləʊ/",
           "sentence": "A strong wind began to blow the dead leaves across the garden.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_271",
@@ -2443,7 +2703,8 @@
           "pronunciation": "/ˈtrɪŋ.kɪt/",
           "sentence": "She keeps every little plastic trinket she bought on holiday.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_272",
@@ -2452,7 +2713,8 @@
           "pronunciation": "/ˈɡriː.vəns/",
           "sentence": "The union met with the manager to discuss their grievance.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_273",
@@ -2461,7 +2723,8 @@
           "pronunciation": "/tʊ flɪŋ əˈweɪ/",
           "sentence": "You shouldn't fling away your money on things you do not need.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_274",
@@ -2470,7 +2733,8 @@
           "pronunciation": "/tʊ hætʃ/",
           "sentence": "The birds are waiting for their eggs to hatch in the nest.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_275",
@@ -2479,7 +2743,8 @@
           "pronunciation": "/tʊ prəʊb/",
           "sentence": "The journalist began to probe into the company's finances.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_276",
@@ -2488,7 +2753,8 @@
           "pronunciation": "/flɔːk/",
           "sentence": "A large flock of birds flew across the evening sky.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_277",
@@ -2497,7 +2763,8 @@
           "pronunciation": "/tʊ ʃrʌɡ/",
           "sentence": "If you don't know the answer, you can just shrug your shoulders.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_278",
@@ -2506,7 +2773,8 @@
           "pronunciation": "/rɪˈpel/",
           "sentence": "This special spray will help to repel mosquitoes at night.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_279",
@@ -2515,7 +2783,8 @@
           "pronunciation": "/ˈhɔː.tɪ.li/",
           "sentence": "She walked past us haughtily without saying hello.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_280",
@@ -2524,7 +2793,8 @@
           "pronunciation": "/rɪˈhɜː.səl/",
           "sentence": "The actors have one last rehearsal before the opening night.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_281",
@@ -2533,7 +2803,8 @@
           "pronunciation": "/iˈleɪ.ʃən/",
           "sentence": "She felt a sense of elation when she passed her final exam.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_282",
@@ -2542,7 +2813,8 @@
           "pronunciation": "/ə stæb ɒv/",
           "sentence": "He felt a stab of jealousy when he saw his friend's new car.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_283",
@@ -2551,7 +2823,8 @@
           "pronunciation": "/ə pæŋ ɒv/",
           "sentence": "A sudden pang of guilt hit her as she realized her mistake.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_284",
@@ -2560,7 +2833,8 @@
           "pronunciation": "/ˈɡɜː.ɡəl/",
           "sentence": "We listened to the gentle gurgle of the small stream in the forest.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_285",
@@ -2569,7 +2843,8 @@
           "pronunciation": "/tʊ liːk/",
           "sentence": "The old pipe began to leak water onto the bathroom floor.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_286",
@@ -2578,7 +2853,8 @@
           "pronunciation": "/bɪˈwɪl.dər.ɪŋ/",
           "sentence": "The city center can be bewildering for first-time visitors.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_287",
@@ -2587,7 +2863,8 @@
           "pronunciation": "/ˈdæz.lɪŋ/",
           "sentence": "The actress wore a dazzling white dress to the ceremony.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_288",
@@ -2596,7 +2873,8 @@
           "pronunciation": "/wɪld/",
           "sentence": "She is a strong-willed person who never gives up easily.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_289",
@@ -2605,7 +2883,8 @@
           "pronunciation": "/tʊ sɔːr/",
           "sentence": "We watched the eagles soar high above the snow-capped mountains.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_290",
@@ -2614,7 +2893,8 @@
           "pronunciation": "/tʊ ɡrɑːsp/",
           "sentence": "It took me a moment to grasp the meaning of his poem.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_291",
@@ -2623,7 +2903,8 @@
           "pronunciation": "/ˈbæn.tər/",
           "sentence": "The friendly banter between the colleagues made the workday pleasant.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_292",
@@ -2632,7 +2913,8 @@
           "pronunciation": "/dɪsˈteɪst/",
           "sentence": "He looked with obvious distaste at the cold, greasy food.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_293",
@@ -2641,7 +2923,8 @@
           "pronunciation": "/ˈiː.ɡə.nəs/",
           "sentence": "The children showed great eagerness to open their birthday presents.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_294",
@@ -2650,7 +2933,8 @@
           "pronunciation": "/tʊ ˈʌʃ.ər/",
           "sentence": "The receptionist arrived to usher the guests into the main hall.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_295",
@@ -2659,7 +2943,8 @@
           "pronunciation": "/tʊ ˈsməʊl.dər/",
           "sentence": "The embers of the campfire continued to smoulder in the dark.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_296",
@@ -2668,7 +2953,8 @@
           "pronunciation": "/tʊ səˈmaɪz/",
           "sentence": "From his silence, I was able to surmise that he was unhappy.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_297",
@@ -2677,7 +2963,8 @@
           "pronunciation": "/hɑːʃ/",
           "sentence": "The winters in the northern regions can be extremely harsh.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_298",
@@ -2686,7 +2973,8 @@
           "pronunciation": "/dɪˈpliː.ʃən/",
           "sentence": "The rapid depletion of water resources is a serious problem.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_299",
@@ -2695,7 +2983,8 @@
           "pronunciation": "/heɪz/",
           "sentence": "The mountains were hidden behind a thick summer haze.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_300",
@@ -2704,7 +2993,8 @@
           "pronunciation": "/pɔːtʃ/",
           "sentence": "We sat on the front porch to enjoy the cool evening breeze.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_301",
@@ -2713,7 +3003,8 @@
           "pronunciation": "/tʊ mɔːn/",
           "sentence": "It takes time to mourn the loss of a beloved pet.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_302",
@@ -2722,7 +3013,8 @@
           "pronunciation": "/frɔːt/",
           "sentence": "The negotiations were fraught with difficulties from the start.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_303",
@@ -2731,7 +3023,8 @@
           "pronunciation": "/freɪl/",
           "sentence": "The old man looked very frail after his long illness.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_304",
@@ -2740,7 +3033,8 @@
           "pronunciation": "/tʊ nʌdʒ/",
           "sentence": "She had to nudge her brother to keep him awake during the speech.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_305",
@@ -2749,7 +3043,8 @@
           "pronunciation": "/brɪsk/",
           "sentence": "We took a brisk walk in the park to warm up.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_306",
@@ -2758,7 +3053,8 @@
           "pronunciation": "/ˈɔː.nɪŋ/",
           "sentence": "We stood under the shop awning to shelter from the rain.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_307",
@@ -2767,7 +3063,8 @@
           "pronunciation": "/tʊ drɪp/",
           "sentence": "Fix that tap, or it will continue to drip all night.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_308",
@@ -2776,7 +3073,8 @@
           "pronunciation": "/puːl/",
           "sentence": "Children love to splash in the small pool of water.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_309",
@@ -2785,7 +3083,8 @@
           "pronunciation": "/ˈʃæl.əʊ/",
           "sentence": "The water in the bay is very shallow, so it is safe for kids.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_310",
@@ -2794,7 +3093,8 @@
           "pronunciation": "/ˈrem.nənt/",
           "sentence": "We could still see the remnant of the ancient castle wall.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_311",
@@ -2803,7 +3103,8 @@
           "pronunciation": "/tʊ ˈwɪð.ər/",
           "sentence": "Without water, the flowers will quickly wither in the sun.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_312",
@@ -2812,7 +3113,8 @@
           "pronunciation": "/tʊ ˈkwɪb.əl/",
           "sentence": "It is pointless to quibble over such a small amount of money.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_313",
@@ -2821,7 +3123,8 @@
           "pronunciation": "/tʊ ˈplʌn.dər/",
           "sentence": "The soldiers began to plunder the ancient village for gold.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_314",
@@ -2830,7 +3133,8 @@
           "pronunciation": "/tʊ skriːtʃ/",
           "sentence": "The car tires began to screech as he hit the brakes.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_315",
@@ -2839,7 +3143,8 @@
           "pronunciation": "/tʊ draʊn/",
           "sentence": "Be careful near the river so you do not drown.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_316",
@@ -2848,7 +3153,8 @@
           "pronunciation": "/ˈpɪt.i.fəl/",
           "sentence": "The abandoned puppy made a pitiful sound in the rain.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_317",
@@ -2857,7 +3163,8 @@
           "pronunciation": "/ˈmiː.ɡər/",
           "sentence": "They survived on a meagre diet of rice and bread.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_318",
@@ -2866,7 +3173,8 @@
           "pronunciation": "/ˈskuː.lɪŋ/",
           "sentence": "He received his early schooling in a small rural village.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_319",
@@ -2875,7 +3183,8 @@
           "pronunciation": "/ˈsnʌɡ.li/",
           "sentence": "The baby slept snugly inside the warm blanket.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_320",
@@ -2884,7 +3193,8 @@
           "pronunciation": "/ʌnˈruː.li/",
           "sentence": "The teacher struggled to manage the unruly class of children.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_321",
@@ -2893,7 +3203,8 @@
           "pronunciation": "/ˌmæl.kənˈtent/",
           "sentence": "A malcontent worker tried to start a strike in the factory.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_322",
@@ -2902,7 +3213,8 @@
           "pronunciation": "/tʊ dɪˈspær.ɪdʒ/",
           "sentence": "You should never disparage the hard work of your teammates.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_323",
@@ -2911,7 +3223,8 @@
           "pronunciation": "/tʊ stem frəm/",
           "sentence": "His lack of confidence seems to stem from his childhood.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_324",
@@ -2920,7 +3233,8 @@
           "pronunciation": "/tʊ dwel/",
           "sentence": "Many rare species dwell deep inside this forest.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_325",
@@ -2929,7 +3243,8 @@
           "pronunciation": "/tʊ dwel ɒn ˈsʌm.θɪŋ/",
           "sentence": "Try not to dwell on your past mistakes and focus on the future.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_326",
@@ -2938,7 +3253,8 @@
           "pronunciation": "/tʊ ˌəʊ.vəˈθrəʊ/",
           "sentence": "The rebels plotted to overthrow the dictator's regime.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_327",
@@ -2947,7 +3263,8 @@
           "pronunciation": "/səʊkt/",
           "sentence": "Take off your soaked coat before you catch a cold.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_328",
@@ -2956,7 +3273,8 @@
           "pronunciation": "/ˈkɒk.ər.əl/",
           "sentence": "The cockerel crows every morning at the break of dawn.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_329",
@@ -2965,7 +3283,8 @@
           "pronunciation": "/tʊ luːt/",
           "sentence": "Rioters began to loot shops during the night.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_330",
@@ -2974,7 +3293,8 @@
           "pronunciation": "/ˈdɔːn.tɪd/",
           "sentence": "She felt daunted by the sheer size of the task.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         },
         {
           "id": "en_331",
@@ -2983,7 +3303,8 @@
           "pronunciation": "/tʊ hiːd/",
           "sentence": "Drivers must heed the warning signs on the highway.",
           "mastered": false,
-          "source": "Gravel Heart"
+          "source": "Gravel Heart",
+          "status": "unstudied"
         }
       ]
     },
@@ -3000,7 +3321,8 @@
           "pronunciation": "",
           "sentence": "La vista dalla cima della montagna era davvero mozzafiato.",
           "mastered": false,
-          "source": "Iniziale"
+          "source": "Iniziale",
+          "status": "unstudied"
         },
         {
           "id": "it_2",
@@ -3009,7 +3331,8 @@
           "pronunciation": "",
           "sentence": "Amo chiacchierare con gli amici davanti a un buon caffè.",
           "mastered": false,
-          "source": "Iniziale"
+          "source": "Iniziale",
+          "status": "unstudied"
         },
         {
           "id": "it_3",
@@ -3018,7 +3341,8 @@
           "pronunciation": "",
           "sentence": "Questo romanzo cattura ogni sfumatura dei sentimenti umani.",
           "mastered": false,
-          "source": "Iniziale"
+          "source": "Iniziale",
+          "status": "unstudied"
         }
       ]
     }
