@@ -1,0 +1,3026 @@
+{
+  "languages": {
+    "english": {
+      "name": "Anglais",
+      "code": "en",
+      "flag": "🇬🇧",
+      "has_pronunciation": true,
+      "vocabulary": [
+        {
+          "id": "en_1",
+          "term": "In some ways",
+          "translation": "En quelque sorte",
+          "pronunciation": "/ɪn sʌm weɪz/",
+          "sentence": "In some ways, learning English is easier than learning French.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_2",
+          "term": "To pretend",
+          "translation": "Faire semblant",
+          "pronunciation": "/tʊ prɪˈtend/",
+          "sentence": "The children love to pretend they are superheroes.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_3",
+          "term": "To rant",
+          "translation": "Pester, s'emporter",
+          "pronunciation": "/tʊ rænt/",
+          "sentence": "He started to rant about the terrible service at the restaurant.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_4",
+          "term": "To turn out",
+          "translation": "Se révéler, s'avérer",
+          "pronunciation": "/tʊ tɜːn aʊt/",
+          "sentence": "Don't worry, I am sure everything will turn out fine.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_5",
+          "term": "Bitterness",
+          "translation": "Amertume",
+          "pronunciation": "/ˈbɪt.ə.nəs/",
+          "sentence": "She felt no bitterness towards them after the argument.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_6",
+          "term": "Relentless",
+          "translation": "Ininterrompu, implacable",
+          "pronunciation": "/rɪˈlent.ləs/",
+          "sentence": "The relentless rain didn't stop all day long.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_7",
+          "term": "In the midst of",
+          "translation": "Au milieu de",
+          "pronunciation": "/ɪn ðə mɪdst ɒv/",
+          "sentence": "It is hard to stay calm in the midst of a crisis.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_8",
+          "term": "To shun",
+          "translation": "Éviter, fuir",
+          "pronunciation": "/tʊ ʃʌn/",
+          "sentence": "He decided to shun social media to focus on his studies.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_9",
+          "term": "To tumble",
+          "translation": "Dégringoler, tomber",
+          "pronunciation": "/tʊ ˈtʌm.bəl/",
+          "sentence": "I watched the autumn leaves tumble down from the trees.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_10",
+          "term": "To fondle",
+          "translation": "Embrasser, caresser",
+          "pronunciation": "/tʊ ˈfɒn.dəl/",
+          "sentence": "The old man used to fondle his cat while watching TV.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_11",
+          "term": "To hoard",
+          "translation": "Amasser, stocker",
+          "pronunciation": "/tʊ hɔːd/",
+          "sentence": "Some people tend to hoard old newspapers they will never read.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_12",
+          "term": "Haphazard",
+          "translation": "Au hasard, désordonné",
+          "pronunciation": "/hæpˈhæz.əd/",
+          "sentence": "The books were piled in a haphazard way on the desk.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_13",
+          "term": "To bow to",
+          "translation": "Se plier à, céder à",
+          "pronunciation": "/tʊ baʊ tʊ/",
+          "sentence": "The government had to bow to public pressure and change the law.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_14",
+          "term": "To hold",
+          "translation": "Tenir, contenir",
+          "pronunciation": "/tʊ həʊld/",
+          "sentence": "Could you please hold my bag for a moment?",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_15",
+          "term": "To squeeze",
+          "translation": "Presser, serrer",
+          "pronunciation": "/tʊ skwiːz/",
+          "sentence": "You need to squeeze the lemon to get the juice.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_16",
+          "term": "Attire",
+          "translation": "Tenue, vêtements",
+          "pronunciation": "/əˈtaɪər/",
+          "sentence": "Professional attire is required for the job interview.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_17",
+          "term": "Bunch",
+          "translation": "Groupe, bouquet",
+          "pronunciation": "/bʌntʃ/",
+          "sentence": "He bought a bunch of bananas at the supermarket.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_18",
+          "term": "To swell",
+          "translation": "Gonfler",
+          "pronunciation": "/tʊ swel/",
+          "sentence": "His ankle began to swell after he fell down.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_19",
+          "term": "To cringe",
+          "translation": "Grincer des dents (gêne)",
+          "pronunciation": "/tʊ krɪndʒ/",
+          "sentence": "I cringe every time I hear my own voice on a recording.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_20",
+          "term": "Forthcoming",
+          "translation": "Proche, à venir",
+          "pronunciation": "/ˌfɔːθˈkʌm.ɪŋ/",
+          "sentence": "Information about the forthcoming trip will be shared soon.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_21",
+          "term": "Shuddering",
+          "translation": "Tremblant, frissonnant",
+          "pronunciation": "/ˈʃʌd.ər.ɪŋ/",
+          "sentence": "She took a shuddering breath before walking onto the stage.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_22",
+          "term": "Mockery",
+          "translation": "Moquerie",
+          "pronunciation": "/ˈmɒk.ər.i/",
+          "sentence": "His bad accent became a subject of mockery in class.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_23",
+          "term": "Treachery",
+          "translation": "Traîtrise, perfidie",
+          "pronunciation": "/ˈtretʃ.ər.i/",
+          "sentence": "The movie is full of political intrigue and treachery.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_24",
+          "term": "Deceit",
+          "translation": "Tromperie, tromper",
+          "pronunciation": "/dɪˈsiːt/",
+          "sentence": "Their relationship was ruined by lies and deceit.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_25",
+          "term": "Attendance",
+          "translation": "Présence",
+          "pronunciation": "/əˈten.dəns/",
+          "sentence": "Teachers check student attendance every morning.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_26",
+          "term": "Prominence",
+          "translation": "Importance, célébrité",
+          "pronunciation": "/ˈpɒm.ɪ.nəns/",
+          "sentence": "The young artist quickly rose to prominence.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_27",
+          "term": "A slip",
+          "translation": "Erreur, faux pas",
+          "pronunciation": "/ə slɪp/",
+          "sentence": "It was just a slip of the tongue, he didn't mean it.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_28",
+          "term": "To pace",
+          "translation": "Marcher (à pas réguliers)",
+          "pronunciation": "/tʊ peɪs/",
+          "sentence": "He started to pace up and down the room while waiting.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_29",
+          "term": "Gloom",
+          "translation": "Sombre, obscurité",
+          "pronunciation": "/ɡluːm/",
+          "sentence": "We could barely see anything in the gloom of the forest.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_30",
+          "term": "Grimy",
+          "translation": "Crasseux, encrassé",
+          "pronunciation": "/ˈɡraɪ.mi/",
+          "sentence": "His hands were grimy after fixing the bicycle chain.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_31",
+          "term": "Charcoal",
+          "translation": "Charbon de bois",
+          "pronunciation": "/ˈtʃɑː.kəʊl/",
+          "sentence": "We need to buy some charcoal for the barbecue.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_32",
+          "term": "Fumes",
+          "translation": "Vapeurs, fumées",
+          "pronunciation": "/fjuːmz/",
+          "sentence": "The kitchen was filled with toxic fumes from the burnt plastic.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_33",
+          "term": "Mat",
+          "translation": "Tapis, natte",
+          "pronunciation": "/mæt/",
+          "sentence": "Please wipe your shoes on the doormat before entering.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_34",
+          "term": "To tuck in",
+          "translation": "Border (dans un lit)",
+          "pronunciation": "/tʊ tʌk ɪn/",
+          "sentence": "Parents usually tuck in their children before bedtime.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_35",
+          "term": "Seclusion",
+          "translation": "Isolement, retraite",
+          "pronunciation": "/rɪˈkluː.ʒən/",
+          "sentence": "The writer spent the summer in seclusion to finish his book.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_36",
+          "term": "Clang",
+          "translation": "Retentissement métallique",
+          "pronunciation": "/klæŋ/",
+          "sentence": "The sudden clang of the metal gate made me jump.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_37",
+          "term": "Looming",
+          "translation": "Menaçant, imminent",
+          "pronunciation": "/ˈluː.mɪŋ/",
+          "sentence": "The students are worried about the looming final exams.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_38",
+          "term": "Glow",
+          "translation": "Lueur",
+          "pronunciation": "/ɡləʊ/",
+          "sentence": "The soft glow of the candles made the room look cozy.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_39",
+          "term": "To billow",
+          "translation": "Onduler, gonfler",
+          "pronunciation": "/tʊ ˈbɪl.əʊ/",
+          "sentence": "Smoke began to billow out of the old chimney.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_40",
+          "term": "To mean",
+          "translation": "Signifier, vouloir dire",
+          "pronunciation": "/tʊ miːn/",
+          "sentence": "What does this specific word mean in French?",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_41",
+          "term": "Overhead",
+          "translation": "Au-dessus (de la tête)",
+          "pronunciation": "/ˌəʊ.vəˈhed/",
+          "sentence": "A large plane flew overhead just a minute ago.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_42",
+          "term": "Twilight",
+          "translation": "Crépuscule",
+          "pronunciation": "/ˈtwaɪ.laɪt/",
+          "sentence": "The park looks beautiful in the purple light of twilight.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_43",
+          "term": "Intimacy",
+          "translation": "Intimité",
+          "pronunciation": "/ˈɪn.tɪ.mə.si/",
+          "sentence": "The small restaurant offers a sense of privacy and intimacy.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_44",
+          "term": "Enclosure",
+          "translation": "Enclos, espace fermé",
+          "pronunciation": "/ɪnˈkləʊ.ʒər/",
+          "sentence": "The sheep were kept safe inside a wooden enclosure.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_45",
+          "term": "To peer",
+          "translation": "Regarder (avec attention)",
+          "pronunciation": "/tʊ pɪər/",
+          "sentence": "She had to peer through the window to see inside.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_46",
+          "term": "Overhanging",
+          "translation": "Suspendu au-dessus",
+          "pronunciation": "/ˌəʊ.vəˈhæŋ.ɪŋ/",
+          "sentence": "Watch your head because of the overhanging branches.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_47",
+          "term": "To shuffle",
+          "translation": "Traîner les pieds",
+          "pronunciation": "/tʊ ˈʃʌf.əl/",
+          "sentence": "The tired old man began to shuffle slowly down the street.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_48",
+          "term": "To rub",
+          "translation": "Frotter",
+          "pronunciation": "/tʊ rʌb/",
+          "sentence": "You should rub some cream on your dry skin.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_49",
+          "term": "To reverberate",
+          "translation": "Résonner, retentir",
+          "pronunciation": "/rɪˈvɜː.bər.eɪt/",
+          "sentence": "The sound of the drums started to reverberate through the hall.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_50",
+          "term": "Courtesies",
+          "translation": "Politesse, courtoisie",
+          "pronunciation": "/ˈkɜː.tə.siz/",
+          "sentence": "It is important to exchange basic courtesies when you meet someone.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_51",
+          "term": "Curse",
+          "translation": "Malédiction, insulte",
+          "pronunciation": "/kɜːs/",
+          "sentence": "The old witch put a terrible curse on the castle.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_52",
+          "term": "Outcries",
+          "translation": "Protestations, clameurs",
+          "pronunciation": "/ˈaʊt.kraɪz/",
+          "sentence": "The new tax led to public outcries across the country.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_53",
+          "term": "Puzzling",
+          "translation": "Étrange, déroutant",
+          "pronunciation": "/ˈpʌz.lɪŋ/",
+          "sentence": "The detective found the missing keys in a puzzling place.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_54",
+          "term": "A bun",
+          "translation": "Brioche, petit pain",
+          "pronunciation": "/ə bʌn/",
+          "sentence": "She bought a sweet bun and a coffee for breakfast.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_55",
+          "term": "To greet",
+          "translation": "Saluer, accueillir",
+          "pronunciation": "/tʊ ˈɡriːt/",
+          "sentence": "The host was at the door to greet the guests with a smile.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_56",
+          "term": "Piety",
+          "translation": "Piété",
+          "pronunciation": "/ˈpaɪ.ə.ti/",
+          "sentence": "The family was respected for their quiet piety and kindness.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_57",
+          "term": "To rumour",
+          "translation": "Bruit de rumeur",
+          "pronunciation": "/tʊ ˈruː.mər/",
+          "sentence": "It is rumoured that the famous band will split up soon.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_58",
+          "term": "To summon",
+          "translation": "Convoquer, appeler",
+          "pronunciation": "/tʊ ˈsʌm.ən/",
+          "sentence": "The manager decided to summon an emergency meeting.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_59",
+          "term": "An errand",
+          "translation": "Une course, une commission",
+          "pronunciation": "/ən ˈer.ənd/",
+          "sentence": "My mother sent me on an errand to the bakery.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_60",
+          "term": "Wary",
+          "translation": "Méfiant",
+          "pronunciation": "/ˈweɪ.ri/",
+          "sentence": "You should be wary of emails asking for your password.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_61",
+          "term": "Quarrelsome",
+          "translation": "Querelleur, disputeur",
+          "pronunciation": "/ˈkwɒr.əl.səm/",
+          "sentence": "He becomes very quarrelsome when he is tired.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_62",
+          "term": "Stall",
+          "translation": "Stand, échoppe",
+          "pronunciation": "/stɔːl/",
+          "sentence": "I bought these fresh vegetables from a market stall.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_63",
+          "term": "A glimpse of",
+          "translation": "Un aperçu",
+          "pronunciation": "/ə ɡlimps ɒv/",
+          "sentence": "I caught a glimpse of the celebrity before she drove away.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_64",
+          "term": "Stern",
+          "translation": "Sévère, austère",
+          "pronunciation": "/stɜːn/",
+          "sentence": "The teacher gave him a stern look when he arrived late.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_65",
+          "term": "Fierce",
+          "translation": "Féroce, violent",
+          "pronunciation": "/fɪəs/",
+          "sentence": "A fierce wind blew across the valley all night.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_66",
+          "term": "Feeble",
+          "translation": "Faible",
+          "pronunciation": "/ˈfiː.bəl/",
+          "sentence": "The sick man made a feeble attempt to sit up.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_67",
+          "term": "Solemnly",
+          "translation": "Solennellement",
+          "pronunciation": "/ˈsɒl.əm.li/",
+          "sentence": "He solemnly promised to keep her secret.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_68",
+          "term": "Cuff",
+          "translation": "Manchette, giflette (ou menotter)",
+          "pronunciation": "/kʌf/",
+          "sentence": "The detective adjusted the cuff of his shirt.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_69",
+          "term": "Windmill",
+          "translation": "Moulin à vent",
+          "pronunciation": "/ˈwɪnd.mɪl/",
+          "sentence": "The old windmill on the hill still turns in the breeze.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_70",
+          "term": "To glisten",
+          "translation": "Brillant, étincelant",
+          "pronunciation": "/tʊ ˈɡlɪs.ən/",
+          "sentence": "The wet leaves began to glisten under the morning sun.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_71",
+          "term": "To graze",
+          "translation": "Écorcher, frôler",
+          "pronunciation": "/tʊ ɡreɪz/",
+          "sentence": "I managed to graze my knee when I fell on the gravel.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_72",
+          "term": "Reprieve",
+          "translation": "Sursis, répit",
+          "pronunciation": "/rɪˈpriːv/",
+          "sentence": "The sudden cool rain brought a welcome reprieve from the heat.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_73",
+          "term": "To stumble",
+          "translation": "Trébucher",
+          "pronunciation": "/tʊ ˈstʌm.bəl/",
+          "sentence": "Be careful not to stumble on the uneven pavement.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_74",
+          "term": "To hush",
+          "translation": "Silence, calmer",
+          "pronunciation": "/tʊ hʌʃ/",
+          "sentence": "The mother tried to hush the crying baby.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_75",
+          "term": "Driven snow",
+          "translation": "Neige fraîche, neige immaculée",
+          "pronunciation": "/ˈdrɪv.ən snəʊ/",
+          "sentence": "Her white dress was as clean and bright as driven snow.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_76",
+          "term": "Shade",
+          "translation": "Ombre, nuance",
+          "pronunciation": "/ʃeɪd/",
+          "sentence": "Let's sit in the shade of this big oak tree.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_77",
+          "term": "To grin",
+          "translation": "Sourire bêtement / de toutes ses dents",
+          "pronunciation": "/tʊ ɡrɪn/",
+          "sentence": "He couldn't help but grin when he heard the good news.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_78",
+          "term": "Ordeal",
+          "translation": "Épreuve, calvaire",
+          "pronunciation": "/ɔːˈdiːl/",
+          "sentence": "Surviving the storm at sea was a terrible ordeal.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_79",
+          "term": "In that regard",
+          "translation": "À cet égard",
+          "pronunciation": "/ɪn ðæt rɪˈɡɑːd/",
+          "sentence": "The plan is simple, and in that regard, it is perfect.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_80",
+          "term": "Frenzy",
+          "translation": "Frénésie",
+          "pronunciation": "/ˈfren.zi/",
+          "sentence": "The shoppers went into a frenzy during the winter sales.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_81",
+          "term": "To scoff",
+          "translation": "Se moquer, ricaner",
+          "pronunciation": "/tʊ skɒf/",
+          "sentence": "It is not polite to scoff at other people's ideas.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_82",
+          "term": "Though",
+          "translation": "Bien que, pourtant",
+          "pronunciation": "/ðəʊ/",
+          "sentence": "Though she was tired, she continued to work.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_83",
+          "term": "Cork",
+          "translation": "Bouchon de liège",
+          "pronunciation": "/kɔːk/",
+          "sentence": "He carefully pulled the cork out of the wine bottle.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_84",
+          "term": "Festooned",
+          "translation": "Enrubanné, décoré",
+          "pronunciation": "/fesˈtuːnd/",
+          "sentence": "The streets were festooned with colorful lights for the festival.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_85",
+          "term": "Feather",
+          "translation": "Plume",
+          "pronunciation": "/ˈfeð.ər/",
+          "sentence": "The bird dropped a beautiful blue feather on the grass.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_86",
+          "term": "To grant",
+          "translation": "Accorder, octroyer",
+          "pronunciation": "/tʊ ɡrɑːnt/",
+          "sentence": "The university decided to grant him a full scholarship.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_87",
+          "term": "Burden",
+          "translation": "Fardeau, charge",
+          "pronunciation": "/ˈbɜː.dən/",
+          "sentence": "Carrying this heavy suitcase became a real burden.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_88",
+          "term": "Self-deluding",
+          "translation": "Qui s'illusionne",
+          "pronunciation": "/ˌself.dɪˈluː.dɪŋ/",
+          "sentence": "Believing he can win without training is self-deluding thinking.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_89",
+          "term": "Self-fulfilment",
+          "translation": "Épanouissement personnel",
+          "pronunciation": "/ˌself.fʊlˈfɪl.mənt/",
+          "sentence": "Many people seek self-fulfilment through their creative hobbies.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_90",
+          "term": "Tassel",
+          "translation": "Gland (décoratif)",
+          "pronunciation": "/ˈtæs.əl/",
+          "sentence": "A golden tassel hung from the corner of the cushion.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_91",
+          "term": "Hung",
+          "translation": "Suspendu, pendu",
+          "pronunciation": "/hʌŋ/",
+          "sentence": "The wet coat hung near the heater to dry.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_92",
+          "term": "Pilgrimage",
+          "translation": "Pèlerinage",
+          "pronunciation": "/ˈpɪl.ɡrɪ.mɪdʒ/",
+          "sentence": "Every year, thousands of people make a pilgrimage to this temple.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_93",
+          "term": "Bully",
+          "translation": "Tyran, brute",
+          "pronunciation": "/ˈbʊl.i/",
+          "sentence": "The school principal took strict action against the bully.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_94",
+          "term": "To chuckle",
+          "translation": "Glousser, ricaner doucement",
+          "pronunciation": "/tʊ ˈtʃʌk.əl/",
+          "sentence": "I heard him chuckle quietly while reading his book.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_95",
+          "term": "To bid",
+          "translation": "Offre, enchère / ordonner",
+          "pronunciation": "/tʊ bɪd/",
+          "sentence": "He wanted to bid on the antique painting at the auction.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_96",
+          "term": "Wanting",
+          "translation": "Désireux, en manque",
+          "pronunciation": "/ˈwɒn.tɪŋ/",
+          "sentence": "His excuse was wanting in credibility, so no one believed him.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_97",
+          "term": "Heady",
+          "translation": "Enivrant, grisant",
+          "pronunciation": "/ˈhed.i/",
+          "sentence": "The heady perfume of the spring flowers filled the garden.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_98",
+          "term": "Fringe",
+          "translation": "Frange, marge",
+          "pronunciation": "/frɪndʒ/",
+          "sentence": "They prefer to live on the fringe of the big city.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_99",
+          "term": "Rally",
+          "translation": "Rassemblement, meeting",
+          "pronunciation": "/ˈræl.i/",
+          "sentence": "A large crowd gathered for the political rally in the square.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_100",
+          "term": "Scowl",
+          "translation": "Regard noir, froncement de sourcils",
+          "pronunciation": "/skaʊl/",
+          "sentence": "She had a deep scowl on her face when she was interrupted.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_101",
+          "term": "Raucous",
+          "translation": "Enroué, bruyant",
+          "pronunciation": "/ˈrɔː.kəs/",
+          "sentence": "The party next door was filled with raucous laughter.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_102",
+          "term": "To taunt",
+          "translation": "Taquiner, provoquer",
+          "pronunciation": "/tʊ tɔːnt/",
+          "sentence": "Cruel children sometimes taunt those who are different.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_103",
+          "term": "To trip",
+          "translation": "Trébucher, faire trébucher",
+          "pronunciation": "/tʊ trɪp/",
+          "sentence": "Walk carefully so you do not trip over the loose cables.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_104",
+          "term": "To spill",
+          "translation": "Renverser, répandre",
+          "pronunciation": "/tʊ spɪl/",
+          "sentence": "Try not to spill your hot coffee on the documents.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_105",
+          "term": "Crisply",
+          "translation": "Proprement, nettement",
+          "pronunciation": "/ˈkrɪst.li/",
+          "sentence": "The sheets were crisply folded and smelled like lavender.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_106",
+          "term": "In mourning",
+          "translation": "Deuil",
+          "pronunciation": "/ɪn ˈmɔː.nɪŋ/",
+          "sentence": "The entire nation was in mourning after the tragic event.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_107",
+          "term": "Uprising",
+          "translation": "Soulèvement, révolte",
+          "pronunciation": "/ˈʌpˌraɪ.zɪŋ/",
+          "sentence": "The military quickly ended the local uprising.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_108",
+          "term": "Butt",
+          "translation": "Extrémité, mégot / frapper du pommeau",
+          "pronunciation": "/bʌt/",
+          "sentence": "He accidentally dropped his cigarette butt on the ground.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_109",
+          "term": "To beget",
+          "translation": "Engendrer",
+          "pronunciation": "/tʊ bɪˈɡet/",
+          "sentence": "They believe that violence can only beget more violence.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_110",
+          "term": "Sorrow",
+          "translation": "Chagrin, douleur",
+          "pronunciation": "/ˈsɒr.əʊ/",
+          "sentence": "She expressed deep sorrow over the loss of her dog.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_111",
+          "term": "Foolish",
+          "translation": "Bête, idiot",
+          "pronunciation": "/ˈfuː.lɪʃ/",
+          "sentence": "It would be foolish to go out in this storm without a coat.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_112",
+          "term": "To smudge",
+          "translation": "Tache, barbouiller",
+          "pronunciation": "/tʊ smʌdʒ/",
+          "sentence": "Be careful not to smudge the wet ink on your drawing.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_113",
+          "term": "Throughout",
+          "translation": "Partout (dans), tout au long de",
+          "pronunciation": "/θruːˈaʊt/",
+          "sentence": "The noise could be heard throughout the entire building.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_114",
+          "term": "Stacked on",
+          "translation": "Empilé sur",
+          "pronunciation": "/stækt ɒn/",
+          "sentence": "Heavy boxes were stacked on top of each other in the garage.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_115",
+          "term": "Otherwise",
+          "translation": "Autrement, sinon",
+          "pronunciation": "/ˈʌð.ə.waɪz/",
+          "sentence": "We must leave now, otherwise we will miss our flight.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_116",
+          "term": "To befall",
+          "translation": "Arriver à, frapper (malheur)",
+          "pronunciation": "/tʊ bɪˈfɔːl/",
+          "sentence": "We prayed that no harm would befall the travelers.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_117",
+          "term": "Wiser",
+          "translation": "Plus sage",
+          "pronunciation": "/ˈwaɪ.zər/",
+          "sentence": "With age, he became wiser and more patient.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_118",
+          "term": "To sob",
+          "translation": "Sangloter",
+          "pronunciation": "/tʊ sɒb/",
+          "sentence": "The lost child began to sob quietly on the bench.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_119",
+          "term": "Mattress",
+          "translation": "Matelas",
+          "pronunciation": "/ˈmæt.rəs/",
+          "sentence": "The new mattress is much more comfortable than the old one.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_120",
+          "term": "Lumpy",
+          "translation": "Qui a des bosses / grumeleux",
+          "pronunciation": "/ˈlʌm.pi/",
+          "sentence": "Sleeping on a lumpy bed made his back ache.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_121",
+          "term": "Stuffy",
+          "translation": "Renfermé, étouffant",
+          "pronunciation": "/ˈstʌf.i/",
+          "sentence": "The meeting room became very stuffy with the windows closed.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_122",
+          "term": "To scold",
+          "translation": "Gronder, réprimander",
+          "pronunciation": "/tʊ skəʊld/",
+          "sentence": "Parents sometimes have to scold their kids for safety.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_123",
+          "term": "Sharply",
+          "translation": "Sévèrement, brusquement",
+          "pronunciation": "/ˈʃɑːp.li/",
+          "sentence": "The path turns sharply to the left near the river.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_124",
+          "term": "To begrudge",
+          "translation": "Envier, regretter",
+          "pronunciation": "/tʊ bɪˈɡrʌdʒ/",
+          "sentence": "You shouldn't begrudge him his hard-earned success.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_125",
+          "term": "Gaunt",
+          "translation": "Décharné, émacié",
+          "pronunciation": "/ɡɔːnt/",
+          "sentence": "The survivor looked gaunt and pale after weeks at sea.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_126",
+          "term": "Shrivelled",
+          "translation": "Flétri, rabougri",
+          "pronunciation": "/ˈʃrɪv.əld/",
+          "sentence": "The forgotten grapes turned into shrivelled raisins in the sun.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_127",
+          "term": "Tireless",
+          "translation": "Infatigable",
+          "pronunciation": "/ˈtaɪə.ləs/",
+          "sentence": "Thanks to her tireless efforts, the project was a success.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_128",
+          "term": "Plump",
+          "translation": "Potelé, dodu",
+          "pronunciation": "/plʌmp/",
+          "sentence": "These plump tomatoes are perfect for making fresh sauce.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_129",
+          "term": "To free",
+          "translation": "Libérer, relâcher",
+          "pronunciation": "/tʊ friː/",
+          "sentence": "The volunteer worked to free the bird caught in the net.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_130",
+          "term": "Detainee",
+          "translation": "Détenu",
+          "pronunciation": "/ˌdiː.teɪˈniː/",
+          "sentence": "The lawyer was allowed to visit the detainee in prison.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_131",
+          "term": "Despair",
+          "translation": "Désespoir",
+          "pronunciation": "/dɪˈspeər/",
+          "sentence": "He was filled with despair when he lost his job.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_132",
+          "term": "Grieving",
+          "translation": "Affligé, endeuillé",
+          "pronunciation": "/ˈɡriː.vɪŋ/",
+          "sentence": "The grieving family appreciated the support of their neighbors.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_133",
+          "term": "To weep",
+          "translation": "Pleurer, larmoyer",
+          "pronunciation": "/tʊ wiːp/",
+          "sentence": "The sad movie made many people in the audience weep.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_134",
+          "term": "Swollen",
+          "translation": "Enflé, gonflé",
+          "pronunciation": "/ˈswəʊ.lən/",
+          "sentence": "His sprained ankle was very red and swollen.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_135",
+          "term": "To cope",
+          "translation": "Faire face, surmonter",
+          "pronunciation": "/tʊ kəʊp/",
+          "sentence": "It is hard to cope with so much stress at work.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_136",
+          "term": "To wreck",
+          "translation": "Épave, ruine / faire naufrage",
+          "pronunciation": "/tʊ rek/",
+          "sentence": "One mistake could wreck years of hard work.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_137",
+          "term": "Afield",
+          "translation": "Au loin, plus loin",
+          "pronunciation": "/əˈfiːld/",
+          "sentence": "You don't need to travel far afield to find beautiful scenery.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_138",
+          "term": "Turmoil",
+          "translation": "Tourmente, confusion",
+          "pronunciation": "/ˈtɜː.mɔɪl/",
+          "sentence": "The country's economy was in complete turmoil.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_139",
+          "term": "Callousness",
+          "translation": "Cruauté, insensibilité",
+          "pronunciation": "/ˈkæl.əs.nəs/",
+          "sentence": "We were shocked by his callousness towards the animals.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_140",
+          "term": "To leap",
+          "translation": "Sauter, bondir",
+          "pronunciation": "/tʊ liːp/",
+          "sentence": "The cat tried to leap onto the high kitchen counter.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_141",
+          "term": "Oath",
+          "translation": "Serment",
+          "pronunciation": "/əʊθ/",
+          "sentence": "The new president took the oath of office today.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_142",
+          "term": "Stool",
+          "translation": "Tabouret",
+          "pronunciation": "/stuːl/",
+          "sentence": "He sat on a wooden stool in the kitchen.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_143",
+          "term": "Upright",
+          "translation": "Droit, vertical, honnête",
+          "pronunciation": "/ˈʌp.raɪt/",
+          "sentence": "Please place the glass in an upright position.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_144",
+          "term": "To lurch",
+          "translation": "Embardée, vaciller",
+          "pronunciation": "/tʊ lɜːtʃ/",
+          "sentence": "The old bus began to lurch violently on the bumpy road.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_145",
+          "term": "To slump",
+          "translation": "S'effondrer, s'affaler",
+          "pronunciation": "/tʊ slʌmp/",
+          "sentence": "Tired after work, he managed to slump into his favorite armchair.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_146",
+          "term": "To groan",
+          "translation": "Gémir, grogner",
+          "pronunciation": "/tʊ ɡrəʊn/",
+          "sentence": "The heavy wooden shelves started to groan under the weight.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_147",
+          "term": "Grip",
+          "translation": "Emprise, poignée",
+          "pronunciation": "/ɡrɪp/",
+          "sentence": "Keep a firm grip on the handrail while walking down.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_148",
+          "term": "Branch",
+          "translation": "Branche",
+          "pronunciation": "/brɑːntʃ/",
+          "sentence": "A bird sat on the highest branch of the tree.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_149",
+          "term": "Wearily",
+          "translation": "Lassement, avec fatigue",
+          "pronunciation": "/ˈwɪə.rə.li/",
+          "sentence": "She sat down wearily on the sofa after a twelve-hour shift.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_150",
+          "term": "Pleading",
+          "translation": "Suppliant",
+          "pronunciation": "/ˈpliː.dɪŋ/",
+          "sentence": "The dog gave her a pleading look for a piece of bread.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_151",
+          "term": "Sullen",
+          "translation": "Maussade, boudeur",
+          "pronunciation": "/ˈsʌl.ən/",
+          "sentence": "The teenager sat in a sullen silence during the family dinner.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_152",
+          "term": "To thwart",
+          "translation": "Contrecarrer, faire obstacle",
+          "pronunciation": "/tʊ θwɔːt/",
+          "sentence": "The security guards managed to thwart the robbery.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_153",
+          "term": "Devious",
+          "translation": "Sourdnois, sournois",
+          "pronunciation": "/ˈdiː.vi.əs/",
+          "sentence": "He came up with a devious plan to win the game by cheating.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_154",
+          "term": "To muddle",
+          "translation": "Pagaille, gâchis / embrouiller",
+          "pronunciation": "/tʊ ˈmʌd.əl/",
+          "sentence": "Try not to muddle the keys, or we will get locked out.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_155",
+          "term": "To disguise",
+          "translation": "Déguiser, dissimuler",
+          "pronunciation": "/tʊ dɪsˈɡaɪz/",
+          "sentence": "He used a wig and glasses to disguise himself.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_156",
+          "term": "Distraught",
+          "translation": "Bouleversé, désemparé",
+          "pronunciation": "/dɪˈstrɔːt/",
+          "sentence": "She was completely distraught when her wallet went missing.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_157",
+          "term": "Wharf",
+          "translation": "Quai, embarcadère",
+          "pronunciation": "/wɔːf/",
+          "sentence": "The fishing boats were tied securely to the wharf.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_158",
+          "term": "Shaggy",
+          "translation": "Hirsute, ébouriffé",
+          "pronunciation": "/ˈʃæɡ.i/",
+          "sentence": "The shaggy dog desperately needed a haircut.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_159",
+          "term": "Slum",
+          "translation": "Bidonville",
+          "pronunciation": "/slʌm/",
+          "sentence": "Government projects aim to rebuild and clean up the slum.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_160",
+          "term": "To widen",
+          "translation": "S'élargir",
+          "pronunciation": "/tʊ ˈwaɪ.dən/",
+          "sentence": "They plan to widen the narrow road to prevent accidents.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_161",
+          "term": "To fiddle",
+          "translation": "Jouer du violon (ou tripatouiller)",
+          "pronunciation": "/tʊ ˈfɪd.əl/",
+          "sentence": "Stop trying to fiddle with the settings; you will break it.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_162",
+          "term": "To fidget",
+          "translation": "Gigoter, tripoter nerveusement",
+          "pronunciation": "/tʊ ˈfɪd.ʒɪt/",
+          "sentence": "Children often fidget when they are bored in class.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_163",
+          "term": "Restless",
+          "translation": "Nerveux, agité",
+          "pronunciation": "/ˈrest.ləs/",
+          "sentence": "He spent a restless night tossing and turning in bed.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_164",
+          "term": "To prod",
+          "translation": "Piquer, inciter",
+          "pronunciation": "/tʊ prɒd/",
+          "sentence": "You may need to prod him a little to make him finish his homework.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_165",
+          "term": "To provoke",
+          "translation": "Provoquer",
+          "pronunciation": "/tʊ prəˈvəʊk/",
+          "sentence": "Do not tease the dog, or you might provoke it to bite.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_166",
+          "term": "Intended",
+          "translation": "Voulu, intentionnel",
+          "pronunciation": "/ɪnˈten.dɪd/",
+          "sentence": "The intended effect of the medicine was to reduce pain.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_167",
+          "term": "Stipend",
+          "translation": "Allocation, bourse d'études",
+          "pronunciation": "/ˈstaɪ.pend/",
+          "sentence": "The PhD student receives a monthly stipend for his research.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_168",
+          "term": "Gleaming",
+          "translation": "Brillant, étincelant",
+          "pronunciation": "/ˈɡliː.mɪŋ/",
+          "sentence": "The kitchen was spotless, with gleaming white countertops.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_169",
+          "term": "Wit",
+          "translation": "Esprit, intelligence, humour",
+          "pronunciation": "/wɪt/",
+          "sentence": "He is known for his quick wit and sharp humor.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_170",
+          "term": "To surge",
+          "translation": "Déferler, monter soudainement",
+          "pronunciation": "/tʊ sɜːdʒ/",
+          "sentence": "A wave of excitement began to surge through the crowd.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_171",
+          "term": "To scurry",
+          "translation": "Se précipiter, détaler",
+          "pronunciation": "/tʊ ˈskʌr.i/",
+          "sentence": "I saw a tiny mouse scurry behind the kitchen cupboard.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_172",
+          "term": "Stealthy",
+          "translation": "Furtif",
+          "pronunciation": "/ˈstel.θi/",
+          "sentence": "The cat made a stealthy approach towards the bird.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_173",
+          "term": "Muffled",
+          "translation": "Étouffé, assourdi",
+          "pronunciation": "/ˈmʌf.əld/",
+          "sentence": "I heard muffled voices speaking through the thick wall.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_174",
+          "term": "To suppress",
+          "translation": "Supprimer, réprimer",
+          "pronunciation": "/tʊ səˈpres/",
+          "sentence": "It was hard for her to suppress her laughter during the exam.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_175",
+          "term": "Avid",
+          "translation": "Avide, passionné",
+          "pronunciation": "/ˈæv.ɪd/",
+          "sentence": "She is an avid reader and buys three new books every week.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_176",
+          "term": "To counsel",
+          "translation": "Conseiller",
+          "pronunciation": "/tʊ ˈkaʊn.səl/",
+          "sentence": "The doctor decided to counsel the patient on healthy habits.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_177",
+          "term": "To part with",
+          "translation": "Se séparer de, quitter",
+          "pronunciation": "/tʊ pɑːt wɪð/",
+          "sentence": "It was very difficult for her to part with her old family letters.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_178",
+          "term": "Cherished",
+          "translation": "Chéri, précieux, adoré",
+          "pronunciation": "/ˈtʃer.ɪʃt/",
+          "sentence": "This old watch is my most cherished possession.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_179",
+          "term": "Newly-wed",
+          "translation": "Jeune marié",
+          "pronunciation": "/ˌnjuː.liˈwed/",
+          "sentence": "The newly-wed couple decided to spend their honeymoon in Italy.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_180",
+          "term": "To mimic",
+          "translation": "Imiter (pour se moquer)",
+          "pronunciation": "/tʊ ˈmɪm.ɪk/",
+          "sentence": "He loves to mimic the way his older brother talks.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_181",
+          "term": "Cowardly",
+          "translation": "Lâche, poltron",
+          "pronunciation": "/ˈkaʊ.əd.li/",
+          "sentence": "Spreading anonymous rumors is a cowardly act.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_182",
+          "term": "Mischievously",
+          "translation": "Malicieusement",
+          "pronunciation": "/ˈmɪs.tʃɪ.vəs.li/",
+          "sentence": "The little girl smiled mischievously before hiding the keys.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_183",
+          "term": "To swagger",
+          "translation": "Se pavaner, plastronner",
+          "pronunciation": "/tʊ ˈswæɡ.ər/",
+          "sentence": "He started to swagger around the room after winning the game.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_184",
+          "term": "Shrill",
+          "translation": "Perçant, aigu (son)",
+          "pronunciation": "/ʃrɪl/",
+          "sentence": "The kettle let out a shrill whistle when the water boiled.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_185",
+          "term": "Wisdom",
+          "translation": "Sagesse",
+          "pronunciation": "/ˈwɪz.dəm/",
+          "sentence": "We should listen to the wisdom of older generations.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_186",
+          "term": "To goad",
+          "translation": "Provoquer, pousser à bout",
+          "pronunciation": "/tʊ ɡəʊd/",
+          "sentence": "He tried to goad his opponent into making a mistake.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_187",
+          "term": "To jeer",
+          "translation": "Railler, huer",
+          "pronunciation": "/tʊ dʒɪər/",
+          "sentence": "The angry crowd began to jeer at the politician.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_188",
+          "term": "Belly",
+          "translation": "Ventre",
+          "pronunciation": "/ˈbel.i/",
+          "sentence": "He laughed so hard that his belly started to ache.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_189",
+          "term": "To nod",
+          "translation": "Hochement de tête",
+          "pronunciation": "/tʊ nɒd/",
+          "sentence": "You just need to nod if you agree with my proposal.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_190",
+          "term": "To reassure",
+          "translation": "Rassurer",
+          "pronunciation": "/tʊ ˌriː.əˈʃʊər/",
+          "sentence": "I did my best to reassure him that everything would be fine.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_191",
+          "term": "To bulge",
+          "translation": "Renflement, bosse, gonfler",
+          "pronunciation": "/tʊ bʌldʒ/",
+          "sentence": "His pockets began to bulge with all the candies he took.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_192",
+          "term": "To placate",
+          "translation": "Apaiser, calmer",
+          "pronunciation": "/tʊ pləˈkeɪt/",
+          "sentence": "The manager tried to placate the angry customer with a refund.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_193",
+          "term": "Wretchedness",
+          "translation": "Misère, détresse",
+          "pronunciation": "/ˈretʃ.ɪd.nəs/",
+          "sentence": "The war left behind a trail of absolute wretchedness.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_194",
+          "term": "Hatred",
+          "translation": "Haine",
+          "pronunciation": "/ˈheɪ.trɪd/",
+          "sentence": "We must work together to fight against hatred and racism.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_195",
+          "term": "To bide",
+          "translation": "Attendre son heure",
+          "pronunciation": "/tʊ baɪd/",
+          "sentence": "You must learn to bide your time and wait for the right moment.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_196",
+          "term": "Foreground",
+          "translation": "Premier plan",
+          "pronunciation": "/ˈfɔː.ɡraʊnd/",
+          "sentence": "The flowers in the foreground of the photo are beautifully sharp.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_197",
+          "term": "Sorrowful",
+          "translation": "Triste, affligé",
+          "pronunciation": "/ˈsɒr.əʊ.fəl/",
+          "sentence": "She gave him a sorrowful look as he waved goodbye.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_198",
+          "term": "To dangle",
+          "translation": "Pendouiller, suspendre",
+          "pronunciation": "/tʊ ˈdæŋ.ɡəl/",
+          "sentence": "I like to sit on the dock and dangle my feet in the water.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_199",
+          "term": "To twitch",
+          "translation": "Contracter, tressaillir",
+          "pronunciation": "/tʊ twɪtʃ/",
+          "sentence": "His left eye started to twitch because of the stress.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_200",
+          "term": "To sweep",
+          "translation": "Balayer, emporter",
+          "pronunciation": "/tʊ swiːp/",
+          "sentence": "The wind was strong enough to sweep the leaves off the street.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_201",
+          "term": "To eavesdrop",
+          "translation": "Écouter aux portes",
+          "pronunciation": "/tʊ ˈiːvz.drɒp/",
+          "sentence": "It is very rude to eavesdrop on other people's private conversations.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_202",
+          "term": "Brat",
+          "translation": "Gamin, sale gosse",
+          "pronunciation": "/bræt/",
+          "sentence": "That spoiled brat keeps screaming because he wants a toy.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_203",
+          "term": "To untangle",
+          "translation": "Démêler",
+          "pronunciation": "/tʊ ʌnˈtæŋ.ɡəl/",
+          "sentence": "It took me twenty minutes to untangle my headphones.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_204",
+          "term": "To relish",
+          "translation": "Savourer, apprécier",
+          "pronunciation": "/tʊ ˈrel.ɪʃ/",
+          "sentence": "I always relish the quiet moments of the early morning.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_205",
+          "term": "Unease",
+          "translation": "Malaise, inquiétude",
+          "pronunciation": "/ʌnˈiːz/",
+          "sentence": "A growing feeling of unease filled the silent room.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_206",
+          "term": "To ease",
+          "translation": "Facilité, aise, soulager",
+          "pronunciation": "/tʊ iːz/",
+          "sentence": "This hot tea will help to ease your sore throat.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_207",
+          "term": "To glide",
+          "translation": "Se glisser, planer",
+          "pronunciation": "/tʊ ɡlaɪd/",
+          "sentence": "The swans seemed to glide effortlessly across the lake.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_208",
+          "term": "To shiver",
+          "translation": "Frissonner, trembler",
+          "pronunciation": "/tʊ ˈʃɪv.ər/",
+          "sentence": "The cold wind made me shiver despite my warm jacket.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_209",
+          "term": "Broadening",
+          "translation": "Élargissement",
+          "pronunciation": "/ˈbrɔː.dən.ɪŋ/",
+          "sentence": "Traveling is excellent for the broadening of one's mind.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_210",
+          "term": "Farewell",
+          "translation": "Adieu",
+          "pronunciation": "/ˌfeərˈwel/",
+          "sentence": "They organized a small farewell party for their colleague.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_211",
+          "term": "Momentous",
+          "translation": "Capital, crucial",
+          "pronunciation": "/məʊˈmen.təs/",
+          "sentence": "Getting married is a momentous decision in anyone's life.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_212",
+          "term": "To prevent",
+          "translation": "Empêcher, éviter",
+          "pronunciation": "/tʊ prɪˈvent/",
+          "sentence": "We must take action to prevent further damage to the environment.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_213",
+          "term": "To beam",
+          "translation": "Rayonner (sourire)",
+          "pronunciation": "/tʊ biːm/",
+          "sentence": "She couldn't help but beam with pride when she won the award.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_214",
+          "term": "Flustered",
+          "translation": "Troublé, agité",
+          "pronunciation": "/ˈflʌs.təd/",
+          "sentence": "He got very flustered when he couldn't find his passport.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_215",
+          "term": "Embassy",
+          "translation": "Ambassade",
+          "pronunciation": "/ˈem.bə.si/",
+          "sentence": "If you lose your passport abroad, go to your embassy.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_216",
+          "term": "A rug",
+          "translation": "Tapis, carpette",
+          "pronunciation": "/ə rʌg/",
+          "sentence": "We placed a soft blue rug under the coffee table.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_217",
+          "term": "Flimsy",
+          "translation": "Fragile, mince",
+          "pronunciation": "/ˈflɪm.zi/",
+          "sentence": "This flimsy plastic table looks like it might break easily.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_218",
+          "term": "Awkwardness",
+          "translation": "Gaucherie, embarras",
+          "pronunciation": "/ˈɔːk.wəd.nəs/",
+          "sentence": "There was a moment of awkwardness when nobody knew what to say.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_219",
+          "term": "Intently",
+          "translation": "Attentivement",
+          "pronunciation": "/ɪnˈtent.li/",
+          "sentence": "The cat watched the little bird intently through the window.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_220",
+          "term": "To encounter",
+          "translation": "Rencontre, affronter",
+          "pronunciation": "/tʊ ɪnˈkaʊn.tər/",
+          "sentence": "We did not expect to encounter any major problems during the trip.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_221",
+          "term": "Humbled",
+          "translation": "Humilié",
+          "pronunciation": "/ˈhʌm.bəld/",
+          "sentence": "He felt deeply humbled by the warm support of his friends.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_222",
+          "term": "To recoil",
+          "translation": "Reculer (de dégoût, peur)",
+          "pronunciation": "/rɪˈkɔɪl/",
+          "sentence": "She couldn't help but recoil when she saw the large spider.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_223",
+          "term": "To despise",
+          "translation": "Mépriser",
+          "pronunciation": "/tʊ dɪˈspaɪz/",
+          "sentence": "Honest people despise those who lie and cheat to succeed.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_224",
+          "term": "Tiresome",
+          "translation": "Fatiguant, assommant",
+          "pronunciation": "/ˈtaɪə.səm/",
+          "sentence": "Dealing with bureaucracy is always a tiresome process.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_225",
+          "term": "Rubble",
+          "translation": "Décombres, gravats",
+          "pronunciation": "/ˈrʌb.əl/",
+          "sentence": "The rescue team searched through the rubble of the collapsed house.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_226",
+          "term": "Boldness",
+          "translation": "Audace, hardiesse",
+          "pronunciation": "/ˈbəʊld.nəs/",
+          "sentence": "I admire her boldness in speaking up against the decision.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_227",
+          "term": "Greed",
+          "translation": "Avidité, cupidité",
+          "pronunciation": "/ɡriːd/",
+          "sentence": "The financial crisis was largely driven by human greed.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_228",
+          "term": "Frantic",
+          "translation": "Frénétique, affolé",
+          "pronunciation": "/ˈfræn.tɪk/",
+          "sentence": "The parents made a frantic search for their lost child.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_229",
+          "term": "To wake",
+          "translation": "Réveiller",
+          "pronunciation": "/tʊ weɪk/",
+          "sentence": "Please try not to wake the baby when you enter the room.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_230",
+          "term": "Cramp",
+          "translation": "Crampe",
+          "pronunciation": "/kræmp/",
+          "sentence": "He got a painful cramp in his leg while swimming.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_231",
+          "term": "Calf",
+          "translation": "Mollet (anatomie)",
+          "pronunciation": "/kɑːf/",
+          "sentence": "Running up the hill made his calf muscles very sore.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_232",
+          "term": "Roomy",
+          "translation": "Spacieux",
+          "pronunciation": "/ˈruː.mi/",
+          "sentence": "The new family car is extremely roomy and comfortable.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_233",
+          "term": "Mishap",
+          "translation": "Mésaventure, contretemps",
+          "pronunciation": "/ˈmɪs.hæp/",
+          "sentence": "Despite a small mishap at the airport, our trip was wonderful.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_234",
+          "term": "To mop",
+          "translation": "Essuyer, éponger",
+          "pronunciation": "/tʊ mɒp/",
+          "sentence": "He had to mop his forehead because of the intense heat.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_235",
+          "term": "Stifling",
+          "translation": "Étouffant, accablant",
+          "pronunciation": "/ˈstaɪ.flɪŋ/",
+          "sentence": "The heat in the unventilated room was absolutely stifling.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_236",
+          "term": "To tease",
+          "translation": "Taquiner, chercher",
+          "pronunciation": "/tʊ tiːz/",
+          "sentence": "It is okay to tease your friends as long as it is friendly.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_237",
+          "term": "To unhinge",
+          "translation": "Briser, détraquer",
+          "pronunciation": "/tʊ ʌnˈhɪndʒ/",
+          "sentence": "The tragic news threatened to unhinge her completely.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_238",
+          "term": "To frown",
+          "translation": "Froncer les sourcils",
+          "pronunciation": "/tʊ fraūn/",
+          "sentence": "He began to frown as he read the confusing email.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_239",
+          "term": "Filthy",
+          "translation": "Très sale, crasseux",
+          "pronunciation": "/ˈfɪl.θi/",
+          "sentence": "Wash your hands immediately, they are absolutely filthy!",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_240",
+          "term": "Scrutiny",
+          "translation": "Examen minutieux, contrôle",
+          "pronunciation": "/ˈskruː.tɪ.ni/",
+          "sentence": "The company's accounts are under close scrutiny by the state.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_241",
+          "term": "Shortage",
+          "translation": "Pénurie, manque",
+          "pronunciation": "/ˈʃɔː.tɪdʒ/",
+          "sentence": "The dry summer caused a severe water shortage in the region.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_242",
+          "term": "To weary",
+          "translation": "Se lasser, fatiguer",
+          "pronunciation": "/tʊ ˈwɪə.ri/",
+          "sentence": "Working long hours without a break will quickly weary you.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_243",
+          "term": "To loathe",
+          "translation": "Détester, exécrer",
+          "pronunciation": "/tʊ ləʊð/",
+          "sentence": "I absolutely loathe having to wake up early on weekends.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_244",
+          "term": "Caring",
+          "translation": "Attentionné, bienveillant",
+          "pronunciation": "/ˈkeər.ɪŋ/",
+          "sentence": "She is a very caring nurse who always listens to her patients.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_245",
+          "term": "To beware",
+          "translation": "Se méfier de, faire attention",
+          "pronunciation": "/tʊ bɪˈweər/",
+          "sentence": "You must beware of slippery roads during the winter.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_246",
+          "term": "Wretched",
+          "translation": "Misérable, lamentable",
+          "pronunciation": "/ˈretʃ.ɪd/",
+          "sentence": "He lived in a wretched little house with no heating.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_247",
+          "term": "To blurt out",
+          "translation": "Lâcher (une information), gaffer",
+          "pronunciation": "/tʊ blɜːt aʊt/",
+          "sentence": "He didn't mean to blurt out the secret, it was an accident.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_248",
+          "term": "To stiffen",
+          "translation": "Raidir, se crisper",
+          "pronunciation": "/tʊ ˈstɪf.ən/",
+          "sentence": "I felt my muscles stiffen as I stepped into the cold water.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_249",
+          "term": "To quiver",
+          "translation": "Trembler, frémir",
+          "pronunciation": "/tʊ ˈkwɪv.ər/",
+          "sentence": "Her chin began to quiver as she tried not to cry.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_250",
+          "term": "Nasty",
+          "translation": "Méchant, désagréable",
+          "pronunciation": "/ˈnɑː.sti/",
+          "sentence": "He has a nasty habit of interrupting people when they speak.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_251",
+          "term": "To dabble",
+          "translation": "S'essayer à, tâtonner",
+          "pronunciation": "/tʊ ˈdæb.əl/",
+          "sentence": "He likes to dabble in painting, but he is not a professional.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_252",
+          "term": "To re-enrol",
+          "translation": "Se réinscrire",
+          "pronunciation": "/tʊ ˌriː.ɪnˈrəʊl/",
+          "sentence": "You need to re-enrol before the end of September.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_253",
+          "term": "Mischief",
+          "translation": "Bêtise, bévue, méfait",
+          "pronunciation": "/ˈmɪs.tʃɪf/",
+          "sentence": "The children are very quiet, they must be up to some mischief.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_254",
+          "term": "Neat",
+          "translation": "Propre, soigné",
+          "pronunciation": "/niːt/",
+          "sentence": "She keeps her bedroom very neat and organized.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_255",
+          "term": "To utter",
+          "translation": "Prononcer, dire",
+          "pronunciation": "/tʊ ˈʌt.ər/",
+          "sentence": "He was so shocked he couldn't utter a single word.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_256",
+          "term": "To thrust",
+          "translation": "Pousser brusquement, enfoncer",
+          "pronunciation": "/tʊ θrʌst/",
+          "sentence": "He decided to thrust his hands into his pockets to keep them warm.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_257",
+          "term": "Disarray",
+          "translation": "Désordre, confusion",
+          "pronunciation": "/ˌdɪs.əˈreɪ/",
+          "sentence": "The sudden storm left the garden in complete disarray.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_258",
+          "term": "Mutely",
+          "translation": "Silencieusement",
+          "pronunciation": "/ˈmjuːt.li/",
+          "sentence": "The dog sat mutely by the door, waiting for its owner.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_259",
+          "term": "Dwelling",
+          "translation": "Logement, demeure",
+          "pronunciation": "/ˈdwel.ɪŋ/",
+          "sentence": "The old village consisted of small stone dwelling houses.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_260",
+          "term": "Gist",
+          "translation": "Essentiel, substance",
+          "pronunciation": "/dʒɪst/",
+          "sentence": "I didn't understand every word, but I got the gist of the story.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_261",
+          "term": "Oddly",
+          "translation": "Curieusement, bizarrement",
+          "pronunciation": "/ˈɒd.li/",
+          "sentence": "Oddly, the front door was unlocked when I arrived home.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_262",
+          "term": "Bare",
+          "translation": "Nu, découvert",
+          "pronunciation": "/beər/",
+          "sentence": "The trees are completely bare during the cold winter months.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_263",
+          "term": "Allowance",
+          "translation": "Argent de poche, allocation",
+          "pronunciation": "/əˈlaʊ.əns/",
+          "sentence": "My parents gave me a weekly allowance when I was a student.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_264",
+          "term": "Cautious",
+          "translation": "Prudent, circonspect",
+          "pronunciation": "/ˈkɔː.ʃəs/",
+          "sentence": "You should be cautious when driving on icy roads.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_265",
+          "term": "Scraping",
+          "translation": "Grattage, raclement",
+          "pronunciation": "/ˈskreɪ.pɪŋ/",
+          "sentence": "I heard the loud scraping of a shovel on the snowy pavement.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_266",
+          "term": "To diligently",
+          "translation": "Diligemment, consciencieusement",
+          "pronunciation": "/tʊ ˈdɪl.ɪ.dʒənt.li/",
+          "sentence": "She worked diligently to complete the project before the deadline.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_267",
+          "term": "Unrequited",
+          "translation": "Non partagé (amour)",
+          "pronunciation": "/ˌʌn.rɪˈkwaɪ.tɪd/",
+          "sentence": "The book tells a sad story of unrequited love between two friends.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_268",
+          "term": "Vicinity",
+          "translation": "Voisinage, environs",
+          "pronunciation": "/rɪˈsɪn.ə.ti/",
+          "sentence": "There is a great bakery in the immediate vicinity of the station.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_269",
+          "term": "To cow",
+          "translation": "Intimider, soumettre",
+          "pronunciation": "/tʊ kaʊ/",
+          "sentence": "The boss tried to cow the workers into accepting the new rules.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_270",
+          "term": "To blow",
+          "translation": "Souffler",
+          "pronunciation": "/tʊ bləʊ/",
+          "sentence": "A strong wind began to blow the dead leaves across the garden.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_271",
+          "term": "Trinket",
+          "translation": "Bibelot, babiole",
+          "pronunciation": "/ˈtrɪŋ.kɪt/",
+          "sentence": "She keeps every little plastic trinket she bought on holiday.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_272",
+          "term": "Grievance",
+          "translation": "Griefs, plaintes",
+          "pronunciation": "/ˈɡriː.vəns/",
+          "sentence": "The union met with the manager to discuss their grievance.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_273",
+          "term": "To fling away",
+          "translation": "Jeter, se débarrasser de",
+          "pronunciation": "/tʊ flɪŋ əˈweɪ/",
+          "sentence": "You shouldn't fling away your money on things you do not need.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_274",
+          "term": "To hatch",
+          "translation": "Sourdre, tramer, éclore",
+          "pronunciation": "/tʊ hætʃ/",
+          "sentence": "The birds are waiting for their eggs to hatch in the nest.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_275",
+          "term": "To probe",
+          "translation": "Sonder, explorer",
+          "pronunciation": "/tʊ prəʊb/",
+          "sentence": "The journalist began to probe into the company's finances.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_276",
+          "term": "Flock",
+          "translation": "Troupeau (moutons/oiseaux)",
+          "pronunciation": "/flɔːk/",
+          "sentence": "A large flock of birds flew across the evening sky.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_277",
+          "term": "To shrug",
+          "translation": "Haussement d'épaules / hausser",
+          "pronunciation": "/tʊ ʃrʌɡ/",
+          "sentence": "If you don't know the answer, you can just shrug your shoulders.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_278",
+          "term": "To repel",
+          "translation": "Répulser, repousser",
+          "pronunciation": "/rɪˈpel/",
+          "sentence": "This special spray will help to repel mosquitoes at night.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_279",
+          "term": "Haughtily",
+          "translation": "hautainement",
+          "pronunciation": "/ˈhɔː.tɪ.li/",
+          "sentence": "She walked past us haughtily without saying hello.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_280",
+          "term": "Rehearsal",
+          "translation": "Répétition (spectacle)",
+          "pronunciation": "/rɪˈhɜː.səl/",
+          "sentence": "The actors have one last rehearsal before the opening night.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_281",
+          "term": "Elation",
+          "translation": "Joie intense, jubilation",
+          "pronunciation": "/iˈleɪ.ʃən/",
+          "sentence": "She felt a sense of elation when she passed her final exam.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_282",
+          "term": "A stab of",
+          "translation": "Élancement, coup de poignard (émotion)",
+          "pronunciation": "/ə stæb ɒv/",
+          "sentence": "He felt a stab of jealousy when he saw his friend's new car.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_283",
+          "term": "A pang of",
+          "translation": "Pincement, élancement (douleur, regret)",
+          "pronunciation": "/ə pæŋ ɒv/",
+          "sentence": "A sudden pang of guilt hit her as she realized her mistake.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_284",
+          "term": "Gurgle",
+          "translation": "Glouglou, gargouillement",
+          "pronunciation": "/ˈɡɜː.ɡəl/",
+          "sentence": "We listened to the gentle gurgle of the small stream in the forest.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_285",
+          "term": "To leak",
+          "translation": "Fuite, fuir / couler",
+          "pronunciation": "/tʊ liːk/",
+          "sentence": "The old pipe began to leak water onto the bathroom floor.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_286",
+          "term": "Bewildering",
+          "translation": "Déroutant, déconcertant",
+          "pronunciation": "/bɪˈwɪl.dər.ɪŋ/",
+          "sentence": "The city center can be bewildering for first-time visitors.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_287",
+          "term": "Dazzling",
+          "translation": "Éblouissant, étincelant",
+          "pronunciation": "/ˈdæz.lɪŋ/",
+          "sentence": "The actress wore a dazzling white dress to the ceremony.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_288",
+          "term": "Willed",
+          "translation": "Voulu, décidé (par la volonté)",
+          "pronunciation": "/wɪld/",
+          "sentence": "She is a strong-willed person who never gives up easily.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_289",
+          "term": "To soar",
+          "translation": "S'envoler, monter en flèche",
+          "pronunciation": "/tʊ sɔːr/",
+          "sentence": "We watched the eagles soar high above the snow-capped mountains.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_290",
+          "term": "To grasp",
+          "translation": "Saisir, comprendre",
+          "pronunciation": "/tʊ ɡrɑːsp/",
+          "sentence": "It took me a moment to grasp the meaning of his poem.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_291",
+          "term": "Banter",
+          "translation": "Badinage, taquinerie",
+          "pronunciation": "/ˈbæn.tər/",
+          "sentence": "The friendly banter between the colleagues made the workday pleasant.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_292",
+          "term": "Distaste",
+          "translation": "Dégoût, répulsion",
+          "pronunciation": "/dɪsˈteɪst/",
+          "sentence": "He looked with obvious distaste at the cold, greasy food.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_293",
+          "term": "Eagerness",
+          "translation": "Enthousiasme, empressement",
+          "pronunciation": "/ˈiː.ɡə.nəs/",
+          "sentence": "The children showed great eagerness to open their birthday presents.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_294",
+          "term": "To usher",
+          "translation": "Introduire, conduire",
+          "pronunciation": "/tʊ ˈʌʃ.ər/",
+          "sentence": "The receptionist arrived to usher the guests into the main hall.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_295",
+          "term": "To smoulder",
+          "translation": "Couver (feu, colère)",
+          "pronunciation": "/tʊ ˈsməʊl.dər/",
+          "sentence": "The embers of the campfire continued to smoulder in the dark.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_296",
+          "term": "To surmise",
+          "translation": "Supposer, conjecturer",
+          "pronunciation": "/tʊ səˈmaɪz/",
+          "sentence": "From his silence, I was able to surmise that he was unhappy.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_297",
+          "term": "Harsh",
+          "translation": "Dure, sévère, rugueux",
+          "pronunciation": "/hɑːʃ/",
+          "sentence": "The winters in the northern regions can be extremely harsh.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_298",
+          "term": "Depletion",
+          "translation": "Épuisement, réduction",
+          "pronunciation": "/dɪˈpliː.ʃən/",
+          "sentence": "The rapid depletion of water resources is a serious problem.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_299",
+          "term": "Haze",
+          "translation": "Brume, voile de chaleur",
+          "pronunciation": "/heɪz/",
+          "sentence": "The mountains were hidden behind a thick summer haze.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_300",
+          "term": "Porch",
+          "translation": "Porche, véranda",
+          "pronunciation": "/pɔːtʃ/",
+          "sentence": "We sat on the front porch to enjoy the cool evening breeze.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_301",
+          "term": "To mourn",
+          "translation": "Pleurer, être en deuil",
+          "pronunciation": "/tʊ mɔːn/",
+          "sentence": "It takes time to mourn the loss of a beloved pet.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_302",
+          "term": "Fraught",
+          "translation": "Rempli de, chargé de",
+          "pronunciation": "/frɔːt/",
+          "sentence": "The negotiations were fraught with difficulties from the start.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_303",
+          "term": "Frail",
+          "translation": "Frêle, fragile",
+          "pronunciation": "/freɪl/",
+          "sentence": "The old man looked very frail after his long illness.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_304",
+          "term": "To nudge",
+          "translation": "Donner un coup de pouce",
+          "pronunciation": "/tʊ nʌdʒ/",
+          "sentence": "She had to nudge her brother to keep him awake during the speech.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_305",
+          "term": "Brisk",
+          "translation": "Vif, animé, frais",
+          "pronunciation": "/brɪsk/",
+          "sentence": "We took a brisk walk in the park to warm up.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_306",
+          "term": "Awning",
+          "translation": "Store, auvent",
+          "pronunciation": "/ˈɔː.nɪŋ/",
+          "sentence": "We stood under the shop awning to shelter from the rain.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_307",
+          "term": "To drip",
+          "translation": "Goutter, dégouliner",
+          "pronunciation": "/tʊ drɪp/",
+          "sentence": "Fix that tap, or it will continue to drip all night.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_308",
+          "term": "Pool",
+          "translation": "Mare, piscine",
+          "pronunciation": "/puːl/",
+          "sentence": "Children love to splash in the small pool of water.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_309",
+          "term": "Shallow",
+          "translation": "Peu profond, superficiel",
+          "pronunciation": "/ˈʃæl.əʊ/",
+          "sentence": "The water in the bay is very shallow, so it is safe for kids.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_310",
+          "term": "Remnant",
+          "translation": "Vestiges, restes",
+          "pronunciation": "/ˈrem.nənt/",
+          "sentence": "We could still see the remnant of the ancient castle wall.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_311",
+          "term": "To wither",
+          "translation": "Flétrir, se dessécher",
+          "pronunciation": "/tʊ ˈwɪð.ər/",
+          "sentence": "Without water, the flowers will quickly wither in the sun.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_312",
+          "term": "To quibble",
+          "translation": "Chicaner, ergoter",
+          "pronunciation": "/tʊ ˈkwɪb.əl/",
+          "sentence": "It is pointless to quibble over such a small amount of money.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_313",
+          "term": "To plunder",
+          "translation": "Piller, pillage",
+          "pronunciation": "/tʊ ˈplʌn.dər/",
+          "sentence": "The soldiers began to plunder the ancient village for gold.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_314",
+          "term": "To screech",
+          "translation": "Pousser un cri perçant",
+          "pronunciation": "/tʊ skriːtʃ/",
+          "sentence": "The car tires began to screech as he hit the brakes.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_315",
+          "term": "To drown",
+          "translation": "Noyade, se noyer",
+          "pronunciation": "/tʊ draʊn/",
+          "sentence": "Be careful near the river so you do not drown.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_316",
+          "term": "Pitiful",
+          "translation": "Pitoyable, misérable",
+          "pronunciation": "/ˈpɪt.i.fəl/",
+          "sentence": "The abandoned puppy made a pitiful sound in the rain.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_317",
+          "term": "Meagre",
+          "translation": "Maigre, piteux",
+          "pronunciation": "/ˈmiː.ɡər/",
+          "sentence": "They survived on a meagre diet of rice and bread.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_318",
+          "term": "Schooling",
+          "translation": "Scolarité, éducation",
+          "pronunciation": "/ˈskuː.lɪŋ/",
+          "sentence": "He received his early schooling in a small rural village.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_319",
+          "term": "Snugly",
+          "translation": "Confortablement, bien au chaud",
+          "pronunciation": "/ˈsnʌɡ.li/",
+          "sentence": "The baby slept snugly inside the warm blanket.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_320",
+          "term": "Unruly",
+          "translation": "Indiscipliné, rebelle",
+          "pronunciation": "/ʌnˈruː.li/",
+          "sentence": "The teacher struggled to manage the unruly class of children.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_321",
+          "term": "Malcontent",
+          "translation": "Mécontent, insatisfait",
+          "pronunciation": "/ˌmæl.kənˈtent/",
+          "sentence": "A malcontent worker tried to start a strike in the factory.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_322",
+          "term": "To disparage",
+          "translation": "Dénigrer, critiquer",
+          "pronunciation": "/tʊ dɪˈspær.ɪdʒ/",
+          "sentence": "You should never disparage the hard work of your teammates.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_323",
+          "term": "To stem from",
+          "translation": "Provenir de, être issu de",
+          "pronunciation": "/tʊ stem frəm/",
+          "sentence": "His lack of confidence seems to stem from his childhood.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_324",
+          "term": "To dwell",
+          "translation": "Habiter, résider",
+          "pronunciation": "/tʊ dwel/",
+          "sentence": "Many rare species dwell deep inside this forest.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_325",
+          "term": "To dwell on something",
+          "translation": "Ressasser, s'attarder sur",
+          "pronunciation": "/tʊ dwel ɒn ˈsʌm.θɪŋ/",
+          "sentence": "Try not to dwell on your past mistakes and focus on the future.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_326",
+          "term": "To overthrow",
+          "translation": "Renverser, destituer",
+          "pronunciation": "/tʊ ˌəʊ.vəˈθrəʊ/",
+          "sentence": "The rebels plotted to overthrow the dictator's regime.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_327",
+          "term": "Soaked",
+          "translation": "Trempé, imbibé",
+          "pronunciation": "/səʊkt/",
+          "sentence": "Take off your soaked coat before you catch a cold.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_328",
+          "term": "Cockerel",
+          "translation": "Coq",
+          "pronunciation": "/ˈkɒk.ər.əl/",
+          "sentence": "The cockerel crows every morning at the break of dawn.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_329",
+          "term": "To loot",
+          "translation": "Piller, saccager",
+          "pronunciation": "/tʊ luːt/",
+          "sentence": "Rioters began to loot shops during the night.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_330",
+          "term": "Daunted",
+          "translation": "Intimidé, découragé",
+          "pronunciation": "/ˈdɔːn.tɪd/",
+          "sentence": "She felt daunted by the sheer size of the task.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        },
+        {
+          "id": "en_331",
+          "term": "To heed",
+          "translation": "Prêter attention à, tenir compte de",
+          "pronunciation": "/tʊ hiːd/",
+          "sentence": "Drivers must heed the warning signs on the highway.",
+          "mastered": false,
+          "source": "Gravel Heart"
+        }
+      ]
+    },
+    "italian": {
+      "name": "Italien",
+      "code": "it",
+      "flag": "🇮🇹",
+      "has_pronunciation": false,
+      "vocabulary": [
+        {
+          "id": "it_1",
+          "term": "Mozzafiato",
+          "translation": "À couper le souffle",
+          "pronunciation": "",
+          "sentence": "La vista dalla cima della montagna era davvero mozzafiato.",
+          "mastered": false,
+          "source": "Iniziale"
+        },
+        {
+          "id": "it_2",
+          "term": "Chiacchierare",
+          "translation": "Bavarder, papoter",
+          "pronunciation": "",
+          "sentence": "Amo chiacchierare con gli amici davanti a un buon caffè.",
+          "mastered": false,
+          "source": "Iniziale"
+        },
+        {
+          "id": "it_3",
+          "term": "Sfumatura",
+          "translation": "Nuance, subtilité",
+          "pronunciation": "",
+          "sentence": "Questo romanzo cattura ogni sfumatura dei sentimenti umani.",
+          "mastered": false,
+          "source": "Iniziale"
+        }
+      ]
+    }
+  }
+}
