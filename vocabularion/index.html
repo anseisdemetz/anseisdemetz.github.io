@@ -480,19 +480,24 @@
 
             filtered.forEach((item, index) => {
                 const itemStatus = item.status || 'unstudied';
-                const rowNum = index + 1; // Dynamic sequential row number starting at 1
+                const rowNum = index + 1;
                 
                 let rowBgClass = "hover:bg-slate-50 transition";
                 if (itemStatus === 'known') rowBgClass = "status-known transition hover:bg-emerald-100/60";
                 if (itemStatus === 'unknown') rowBgClass = "status-unknown transition hover:bg-rose-100/60";
 
+                const escapedTerm = escapeHtml(item.term);
+                const escapedTermJs = escapeJsString(item.term);
+                const escapedTrans = escapeHtml(item.translation);
+                const escapedTransJs = escapeJsString(item.translation);
+
                 const termDisplay = hideTargetTerm 
-                    ? `<span onclick="this.innerText='${escapeHtml(item.term)}'; this.className='font-semibold cursor-default text-indigo-700';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
-                    : `<span>${escapeHtml(item.term)}</span>`;
+                    ? `<span onclick="this.innerHTML='${escapedTermJs}'; this.className='font-semibold cursor-default text-indigo-700';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
+                    : `<span>${escapedTerm}</span>`;
 
                 const transDisplay = hideTranslation
-                    ? `<span onclick="this.innerText='${escapeHtml(item.translation)}'; this.className='text-slate-700 cursor-default';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
-                    : `<span>${escapeHtml(item.translation)}</span>`;
+                    ? `<span onclick="this.innerHTML='${escapedTransJs}'; this.className='text-slate-700 cursor-default';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
+                    : `<span>${escapedTrans}</span>`;
 
                 // 1. Desktop Table Row
                 const tr = document.createElement('tr');
@@ -515,7 +520,7 @@
                     <td class="py-3 px-4 font-semibold ${itemStatus === 'known' ? 'text-slate-600 line-through' : 'text-slate-900'}">
                         <div class="flex items-center space-x-2">
                             ${termDisplay}
-                            <button onclick="speakTerm('${escapeHtml(item.term)}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition p-1" title="Écouter">
+                            <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition p-1" title="Écouter">
                                 <i class="fa-solid fa-volume-high text-xs"></i>
                             </button>
                         </div>
@@ -545,7 +550,7 @@
                             <div class="flex items-center space-x-2">
                                 <span class="font-mono text-xs text-slate-400 font-bold bg-slate-200/60 px-1.5 py-0.5 rounded">#${rowNum}</span>
                                 <span class="font-bold text-base ${itemStatus === 'known' ? 'text-slate-600 line-through' : 'text-slate-900'}">${termDisplay}</span>
-                                <button onclick="speakTerm('${escapeHtml(item.term)}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
+                                <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
                                     <i class="fa-solid fa-volume-high text-sm"></i>
                                 </button>
                             </div>
@@ -766,6 +771,17 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
+        }
+
+        function escapeJsString(str) {
+            if (!str) return '';
+            return str
+                .replace(/\\/g, "\\\\")
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '\\"')
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
         }
     </script>
 </body>
