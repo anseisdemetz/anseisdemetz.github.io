@@ -31,11 +31,11 @@
                 <p class="text-sm text-slate-500 mt-1">Transformez vos simulations en transactions unitaires contrôlées</p>
             </div>
 
-            <!-- ACTIONS RAPIDES -->
+            <!-- ACTIONS RAPIDES : EXPORT CSV -->
             <div class="flex flex-wrap items-center gap-3">
-                <button onclick="ouvrirPopinSelectionSimulation()" class="inline-flex items-center space-x-1.5 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium transition-all shadow-sm">
-                    <i data-lucide="folder-open" class="w-3.5 h-3.5"></i>
-                    <span>Charger une autre simulation</span>
+                <button onclick="exporterTableauCSV()" class="inline-flex items-center space-x-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium transition-all shadow-sm">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Exporter en CSV</span>
                 </button>
             </div>
         </header>
@@ -48,9 +48,6 @@
                 <i data-lucide="file-spreadsheet" class="w-10 h-10 text-slate-400 mx-auto mb-3"></i>
                 <h3 class="text-sm font-bold text-slate-700">Aucune simulation chargée dans l'intégrateur</h3>
                 <p class="text-xs text-slate-400 mt-1 mb-4">Sélectionnez une simulation existante pour générer les lignes de transaction.</p>
-                <button onclick="ouvrirPopinSelectionSimulation()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-all">
-                    Choisir une simulation
-                </button>
             </div>
 
             <div id="integrateur-content" class="space-y-6">
@@ -60,22 +57,26 @@
                     <div class="flex items-center space-x-3">
                         <div class="p-2 bg-slate-900 text-white rounded-lg"><i data-lucide="layers" class="w-5 h-5"></i></div>
                         <div>
-                            <span class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Source d'intégration</span>
+                            <span class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Simulation sélectionnée</span>
                             <h3 class="text-base font-bold text-slate-900" id="titre-simu-chargee">Lot Smartphones Q3</h3>
                         </div>
                     </div>
                     <div class="flex items-center space-x-6 text-xs text-slate-600">
                         <div><span class="text-slate-400">Affilié :</span> <strong id="info-affilie" class="text-slate-800">TechRetail France</strong></div>
-                        <div><span class="text-slate-400">Total lignes unitaires :</span> <strong id="info-total-lignes" class="text-slate-800">42</strong></div>
+                        <div>
+                            <span class="text-slate-400">Total lignes unitaires :</span> <strong id="info-total-lignes" class="text-slate-800">42</strong>
+                            <span class="mx-1 text-slate-300">•</span>
+                            <span class="text-slate-400">Aujourd'hui :</span> <strong id="info-date-aujourdhui" class="text-slate-800">23/07/2026</strong>
+                        </div>
                     </div>
                 </div>
 
-                <!-- OUTIL DE SAISIE RAPIDE EN MASSE -->
+                <!-- OUTIL DE REMPLISSAGE EN MASSE -->
                 <div id="section-saisie-masse" class="bg-blue-50/40 border border-blue-100 rounded-xl p-4">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center space-x-2">
                             <i data-lucide="zap" class="w-4 h-4 text-blue-600"></i>
-                            <h4 class="text-xs font-bold uppercase tracking-wider text-blue-900">Remplissage en masse (Saisie rapide)</h4>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-blue-900">Remplissage en masse</h4>
                         </div>
                         <button onclick="ouvrirPopinImportImei()" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium transition-all shadow-sm flex items-center space-x-1.5">
                             <i data-lucide="barcode" class="w-3.5 h-3.5 text-blue-400"></i>
@@ -86,7 +87,7 @@
                         <div>
                             <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Type d'Homologation</label>
                             <select id="masse-homologation" class="block w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium">
-                                <option value="Complet">Complet</option>
+                                <option value="Fulltest">Fulltest</option>
                                 <option value="Cosmétique">Cosmétique</option>
                             </select>
                         </div>
@@ -134,7 +135,7 @@
                     </button>
                     <button onclick="integrerEtGenererTransactions()" id="btn-integrer-final" class="px-5 py-2 rounded-lg bg-blue-600 text-xs font-semibold text-white hover:bg-blue-700 active:scale-[0.98] transition-all shadow-sm shadow-blue-500/10 flex items-center space-x-1.5">
                         <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-                        <span>Intégrer les produits</span>
+                        <span>Créer les transactions</span>
                     </button>
                 </footer>
 
@@ -186,30 +187,6 @@
         </div>
     </div>
 
-    <!-- POPIN : SÉLECTIONNER UNE SIMULATION -->
-    <div id="popin-selection-simu" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 w-full max-w-md mx-4">
-            <h3 class="text-base font-bold text-slate-900 mb-1">Changer de simulation</h3>
-            <p class="text-xs text-slate-500 mb-4">Choisissez la simulation à charger dans l'outil d'intégration.</p>
-            
-            <div class="space-y-2 mb-6">
-                <button onclick="choisirSimulationEtCharger('Lot Smartphones Q3')" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex justify-between items-center group">
-                    <div>
-                        <strong class="block text-xs font-bold text-slate-800 group-hover:text-blue-900">Lot Smartphones Q3</strong>
-                        <span class="text-[11px] text-slate-400">TechRetail France • 42 articles</span>
-                    </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-blue-600"></i>
-                </button>
-            </div>
-
-            <div class="flex justify-end">
-                <button onclick="fermerPopinSelectionSimulation()" class="px-4 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-600 hover:bg-slate-50">
-                    Annuler
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- ECRAN OVERLAY DE CHARGEMENT / TRANSITION -->
     <div id="loader-overlay" class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-md text-white">
         <div class="w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full animate-spin-custom mb-4"></div>
@@ -219,7 +196,7 @@
 
     <!-- SCRIPT DE FONCTIONNEMENT INTERACTIF -->
     <script>
-        // DONNÉES DE DÉMONSTRATION MISES À JOUR (20 iPhone Grade A, 10 iPhone Grade B, 12 Galaxy Flip Grade C-)
+        // DONNÉES DE DÉMONSTRATION (20 iPhone Grade A, 10 iPhone Grade B, 12 Galaxy Flip Grade C-)
         const simulationsMock = {
             "Lot Smartphones Q3": {
                 affilie: "TechRetail France",
@@ -245,16 +222,6 @@
         };
 
         let simulationCourante = null;
-
-        function choisirSimulationEtCharger(nomSimu) {
-            fermerPopinSelectionSimulation();
-            afficherLoader("Chargement de la simulation...", "Éclatement des lignes de produits unitaires...");
-            
-            setTimeout(() => {
-                chargerSimulationDansIntegrateur(nomSimu);
-                masquerLoader();
-            }, 600);
-        }
 
         // ÉCLATEMENT ET REMPLISSAGE DE LA TABLE INTÉGRATEUR
         function chargerSimulationDansIntegrateur(nomSimu) {
@@ -301,6 +268,13 @@
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-slate-50/80 transition-colors js-ligne-produit";
                     tr.setAttribute('data-produit-clef', produitClef);
+                    tr.setAttribute('data-marque', prod.marque);
+                    tr.setAttribute('data-modele', prod.modele);
+                    tr.setAttribute('data-grade', prod.grade);
+                    tr.setAttribute('data-partenaire', prod.partenaire);
+                    tr.setAttribute('data-prix-partenaire', prod.prix);
+                    tr.setAttribute('data-prix-affilie', prixAffilie);
+                    tr.setAttribute('data-marge-cr', margeCr);
 
                     tr.innerHTML = `
                         <td class="py-3 px-3 align-middle font-mono text-[11px] font-bold text-slate-400 js-cell-transaction">
@@ -325,7 +299,7 @@
                         </td>
                         <td class="py-3 px-3 align-middle">
                             <select class="w-full bg-white border border-slate-200 rounded px-1.5 py-1 text-xs focus:ring-1 focus:ring-blue-500 js-select-homologation">
-                                <option value="Complet" selected>Complet</option>
+                                <option value="Fulltest" selected>Fulltest</option>
                                 <option value="Cosmétique">Cosmétique</option>
                             </select>
                         </td>
@@ -336,7 +310,7 @@
                                 <option value="TVA classique">TVA classique</option>
                             </select>
                         </td>
-                        <td class="py-3 px-3 align-middle text-right font-medium text-slate-500">
+                        <td class="py-3 px-3 align-middle text-right font-medium text-slate-500 js-date-argus">
                             ${simu.dateArgus}
                         </td>
                     `;
@@ -353,13 +327,48 @@
             const btnFinal = document.getElementById('btn-integrer-final');
             btnFinal.disabled = false;
             btnFinal.className = "px-5 py-2 rounded-lg bg-blue-600 text-xs font-semibold text-white hover:bg-blue-700 active:scale-[0.98] transition-all shadow-sm shadow-blue-500/10 flex items-center space-x-1.5";
-            btnFinal.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Intégrer les produits</span>`;
+            btnFinal.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Créer les transactions</span>`;
 
             masserStatutBadge("TEMPORAIRE / BROUILLON", "bg-amber-100 text-amber-800 border-amber-200");
             lucide.createIcons();
         }
 
-        // FONCTIONNALITÉ CREATIVE : GESTION DE L'IMPORTATION ET DISTRIBUTIVITÉ DES IMEI
+        // EXPORTATION CSV
+        function exporterTableauCSV() {
+            const nomSimulation = document.getElementById('titre-simu-chargee').textContent;
+            const affilie = document.getElementById('info-affilie').textContent;
+            
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Simulation;Affilie;No Transaction;Produit;Grade;Partenaire;Prix Partenaire;Prix Affilie;Marge CR;IMEI;Homologation;Type TVA;Date Argus\n";
+
+            document.querySelectorAll('.js-ligne-produit').forEach(row => {
+                const transactionCell = row.querySelector('.js-cell-transaction').textContent.trim();
+                const marque = row.getAttribute('data-marque');
+                const modele = row.getAttribute('data-modele');
+                const grade = row.getAttribute('data-grade');
+                const partenaire = row.getAttribute('data-partenaire');
+                const prixPartenaire = row.getAttribute('data-prix-partenaire');
+                const prixAffilie = row.getAttribute('data-prix-affilie');
+                const margeCr = row.getAttribute('data-marge-cr');
+                const imei = row.querySelector('.js-input-imei').value.trim();
+                const homologation = row.querySelector('.js-select-homologation').value;
+                const typeTva = row.querySelector('.js-select-type-tva').value;
+                const dateArgus = row.querySelector('.js-date-argus').textContent.trim();
+
+                const line = `"${nomSimulation}";"${affilie}";"${transactionCell}";"${marque} ${modele}";"${grade}";"${partenaire}";"${prixPartenaire}";"${prixAffilie}";"${margeCr}";"${imei}";"${homologation}";"${typeTva}";"${dateArgus}"`;
+                csvContent += line + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Export_Integrateur_${nomSimulation.replace(/\s+/g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // GESTION DE L'IMPORTATION ET DISTRIBUTIVITÉ DES IMEI
         function ouvrirPopinImportImei() {
             document.getElementById('popin-import-imei').classList.remove('hidden');
             document.getElementById('textarea-imei-paste').value = '';
@@ -379,7 +388,6 @@
 
         function extraireImeiDepuisTexte(texte) {
             if(!texte) return [];
-            // Découpage selon retours à la ligne, virgules, points-virgules ou espaces
             return texte.split(/[\n\r,;\s]+/).map(item => item.trim()).filter(item => item.length > 0);
         }
 
@@ -413,7 +421,6 @@
 
             const lignesMatching = document.querySelectorAll(`.js-ligne-produit[data-produit-clef="${produitClef}"]`);
             
-            // Distribution dans l'ordre
             lignesMatching.forEach((row, index) => {
                 if(index < imeiListe.length) {
                     const inputImei = row.querySelector('.js-input-imei');
@@ -428,7 +435,7 @@
             if(imeiListe.length < lignesMatching.length) {
                 alert(`${imeiListe.length} IMEI distribués sur les ${lignesMatching.length} lignes disponibles. Il reste des lignes à renseigner.`);
             } else if(imeiListe.length > lignesMatching.length) {
-                alert(`${lignesMatching.length} IMEI distribués avec succès. (${imeiListe.length - lignesMatching.length} IMEI en trop dans votre liste ont été ignorés).`);
+                alert(`${lignesMatching.length} IMEI distribués avec succès. (${imeiListe.length - lignesMatching.length} IMEI en trop ont été ignorés).`);
             } else {
                 alert(`Succès ! Les ${lignesMatching.length} IMEI ont été associés parfaitement.`);
             }
@@ -473,7 +480,7 @@
             });
 
             if(erreurs) {
-                alert("Veuillez renseigner tous les champs obligatoires (IMEI et Type de TVA) avant de procéder à l'intégration.");
+                alert("Veuillez renseigner tous les champs obligatoires (IMEI et Type de TVA) avant de procéder à la création des transactions.");
                 return;
             }
 
@@ -523,14 +530,6 @@
 
         function masquerLoader() {
             document.getElementById('loader-overlay').classList.add('hidden');
-        }
-
-        function ouvrirPopinSelectionSimulation() {
-            document.getElementById('popin-selection-simu').classList.remove('hidden');
-        }
-
-        function fermerPopinSelectionSimulation() {
-            document.getElementById('popin-selection-simu').classList.add('hidden');
         }
 
         // Initialisation automatique au chargement
