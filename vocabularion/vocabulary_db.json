@@ -3295,6 +3295,796 @@
       "has_pronunciation": false,
       "vocabulary": [
         {
+          "id": "italian_1784873276605_li8o",
+          "term": "Profugo (m)",
+          "translation": "Réfugié / Rescapé",
+          "pronunciation": "",
+          "sentence": "Il paese ha accolto ogni profugo che scappava dalla guerra.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_z16h",
+          "term": "Elemosina (f)",
+          "translation": "Aumône",
+          "pronunciation": "",
+          "sentence": "Fare l'elemosina è un gesto di grande generosità.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_86vp",
+          "term": "Sgradevole",
+          "translation": "Désagréable",
+          "pronunciation": "",
+          "sentence": "C'era un odore molto sgradevole nella stanza.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_4huh",
+          "term": "Innocuo",
+          "translation": "Inoffensif",
+          "pronunciation": "",
+          "sentence": "Non avere paura di quel cane, è assolutamente innocuo.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_aptl",
+          "term": "Un vicolo cieco",
+          "translation": "Une impasse",
+          "pronunciation": "",
+          "sentence": "Questa strada è un vicolo cieco, dobbiamo tornare indietro.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_0tyx",
+          "term": "Prendere sul serio",
+          "translation": "Prendre au sérieux",
+          "pronunciation": "",
+          "sentence": "Non puoi scherzare su tutto, ogni tanto devi prendere sul serio le cose.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_6zt5",
+          "term": "Riservatezza (f)",
+          "translation": "Confidentialité / Discrétion",
+          "pronunciation": "",
+          "sentence": "Apprezzo molto la sua riservatezza sulle questioni personali.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_qyd6",
+          "term": "Persino",
+          "translation": "Même / Jusqu'à",
+          "pronunciation": "",
+          "sentence": "Faceva così freddo che ha iniziato persino a nevicare.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_ne1h",
+          "term": "Devo fare colpo sui miei compagni",
+          "translation": "Je dois impressionner mes coéquipiers",
+          "pronunciation": "",
+          "sentence": "Domani darò il massimo, devo fare colpo sui miei compagni.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_uslz",
+          "term": "Schiavitù (f)",
+          "translation": "Esclavage",
+          "pronunciation": "",
+          "sentence": "Molti popoli hanno lotté a lungo per abolire la schiavitù.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873276605_tare",
+          "term": "Assenza (f)",
+          "translation": "Absence",
+          "pronunciation": "",
+          "sentence": "Giustificò la sua assenza dicendo che era malato.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_8lzp",
+          "term": "Sparare",
+          "translation": "Tirer (avec une arme)",
+          "pronunciation": "",
+          "sentence": "Il poliziotto ha dovuto sparare un colpo in aria.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_x9l8",
+          "term": "Malconcio",
+          "translation": "En mauvais état / Mal en point",
+          "pronunciation": "",
+          "sentence": "Ha ritrovato la sua vecchia bicicletta tutta malconcia.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_m1sx",
+          "term": "Spossato",
+          "translation": "Fatigué / Épuisé / Crevé",
+          "pronunciation": "",
+          "sentence": "Dopo quella lunga camminata mi sentivo completamente spossato.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_a2nu",
+          "term": "Panni (m.pl)",
+          "translation": "Vêtements / Habits / Linges",
+          "pronunciation": "",
+          "sentence": "Devo stendere i panni bagnati dopo la lavatrice.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_rbq2",
+          "term": "Spaesato",
+          "translation": "Dépaysé / Désorienté",
+          "pronunciation": "",
+          "sentence": "Mi sono sentito un po' spaesato durante il mio primo giorno a New York.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_e6id",
+          "term": "Sfascio (m)",
+          "translation": "Débâcle / Ruine / Effondrement",
+          "pronunciation": "",
+          "sentence": "Dopo la crisi, la gestione dell'azienda è andata allo sfascio.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_xsz1",
+          "term": "Impalcatura (f)",
+          "translation": "Échafaudage / Armature",
+          "pronunciation": "",
+          "sentence": "Gli operai stanno montando l'impalcatura intorno al palazzo.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_lkop",
+          "term": "Chiodo (m)",
+          "translation": "Clou",
+          "pronunciation": "",
+          "sentence": "Prendi un martello per piantare questo chiodo nel muro.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_d21c",
+          "term": "Gemito (m)",
+          "translation": "Gémissement / Plainte",
+          "pronunciation": "",
+          "sentence": "Si sentiva solo il debole gemito del gatto ferito.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_maij",
+          "term": "Scricchiolare",
+          "translation": "Grincer / Craquer",
+          "pronunciation": "",
+          "sentence": "Sento il pavimento di legno scricchiolare nel silenzio.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_mims",
+          "term": "Impedire",
+          "translation": "Empêcher",
+          "pronunciation": "",
+          "sentence": "Il maltempo potrebbe impedire la partenza dell'aereo.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_zidr",
+          "term": "Sfoggiare",
+          "translation": "Arborer / Étaler / Faire étalage de",
+          "pronunciation": "",
+          "sentence": "Le piace sempre sfoggiare i suoi vestiti nuovi.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_2xzm",
+          "term": "Squarciare",
+          "translation": "Déchirer / Transpercer",
+          "pronunciation": "",
+          "sentence": "Un fulmine è riuscito a squarciare il buio della notte.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_08gt",
+          "term": "Tramonto (m)",
+          "translation": "Coucher de soleil",
+          "pronunciation": "",
+          "sentence": "Abbiamo guardato il tramonto sulla spiaggia.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_1enk",
+          "term": "L'esito della missione",
+          "translation": "Le résultat / L'issue de la mission",
+          "pronunciation": "",
+          "sentence": "Tutti aspettano di conoscere l'esito della missione.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_pmdh",
+          "term": "Coscia (f)",
+          "translation": "Cuisse",
+          "pronunciation": "",
+          "sentence": "Il calciatore ha subito un infortunio alla coscia destra.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_bzx6",
+          "term": "Nuocere",
+          "translation": "Nuire",
+          "pronunciation": "",
+          "sentence": "Il fumo può nuocere gravemente alla salute.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_spu6",
+          "term": "Addestramento (m)",
+          "translation": "Entraînement / Formation / Dressage",
+          "pronunciation": "",
+          "sentence": "Il cane ha completato il suo periodo di addestramento.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_wug2",
+          "term": "Parlare a vanvera",
+          "translation": "Parler à tort et à travers / Dire des bêtises",
+          "pronunciation": "",
+          "sentence": "Smettila di parlare a vanvera e pensa prima di dire qualcosa.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_kv2e",
+          "term": "Dove sbattere la testa",
+          "translation": "Où donner de la tête",
+          "pronunciation": "",
+          "sentence": "Ho così tanti problemi che non so più dove sbattere la testa.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_wy8o",
+          "term": "Squagliare",
+          "translation": "Faire fondre / Liquéfier",
+          "pronunciation": "",
+          "sentence": "Il sole forte ha fatto squagliare tutto il ghiaccio.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_374o",
+          "term": "Indumento (m)",
+          "translation": "Vêtement / Habit",
+          "pronunciation": "",
+          "sentence": "Ricordati di portare un indumento pesante per la sera.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_b0pq",
+          "term": "Assolvere",
+          "translation": "Acquitter / Absoudre",
+          "pronunciation": "",
+          "sentence": "Il giudice ha deciso di assolvere l'imputato per mancanza di prove.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_xhnu",
+          "term": "Mi consegnò una busta",
+          "translation": "Il m'a remis/tendu une enveloppe",
+          "pronunciation": "",
+          "sentence": "Senza dire una parola, mi consegnò una busta gialla.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_c1j9",
+          "term": "Ceffone (m)",
+          "translation": "Gifle / Tarte",
+          "pronunciation": "",
+          "sentence": "Ha preso un brutto ceffone per aver risposto male.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_sul9",
+          "term": "Mentire",
+          "translation": "Mentir",
+          "pronunciation": "",
+          "sentence": "Gli ho chiesto la verità perché sapevo che voleva mentire.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_z5wd",
+          "term": "Nitido",
+          "translation": "Net / Clair / Distinct",
+          "pronunciation": "",
+          "sentence": "Oggi la vista è splendida, il panorama è molto nitido.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_jslk",
+          "term": "Stagliarsi",
+          "translation": "Se détacher / Se dessiner (silhouette)",
+          "pronunciation": "",
+          "sentence": "Le montagne si vedevano stagliarsi contro il cielo della sera.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_ha0r",
+          "term": "La sagoma",
+          "translation": "Silhouette / Profil",
+          "pronunciation": "",
+          "sentence": "Ho visto la sagoma di un uomo dietro la finestra.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_vioz",
+          "term": "Gestire",
+          "translation": "Gérer / Administrer",
+          "pronunciation": "",
+          "sentence": "Non è facile gestire un'azienda così grande.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_1uyk",
+          "term": "Non si è fatto vivo.",
+          "translation": "Il ne s'est pas présenté. / Il n'a pas donné de signes de vie.",
+          "pronunciation": "",
+          "sentence": "Lo abbiamo aspettato tre ore, ma non si è fatto vivo.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_6rpd",
+          "term": "Mietere",
+          "translation": "Récolter / Moissonner",
+          "pronunciation": "",
+          "sentence": "Quel film continua a mietere successi in tutto il mondo.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_nd88",
+          "term": "Un vigliacco",
+          "translation": "Un lâche",
+          "pronunciation": "",
+          "sentence": "È stato un vigliacco a non dire la verità.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_n120",
+          "term": "Squallido",
+          "translation": "Sordide / Morne / Lugubre",
+          "pronunciation": "",
+          "sentence": "Viveva in un appartamento piccolo e squallido.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_cfup",
+          "term": "Piombare",
+          "translation": "Arriver (à l'improviste) / Tomber",
+          "pronunciation": "",
+          "sentence": "Non puoi piombare a casa mia senza preavviso!",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_7a23",
+          "term": "Presidiare",
+          "translation": "Occuper / Surveiller (militaire, police)",
+          "pronunciation": "",
+          "sentence": "Le forze dell'ordine sono andate a presidiare la zona.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_yoe8",
+          "term": "Il chiasso",
+          "translation": "Le bruit / Le vacarme",
+          "pronunciation": "",
+          "sentence": "I bambini fanno troppo chiasso in giardino.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_goki",
+          "term": "Sbarazzarsi (di)",
+          "translation": "Se débarrasser de",
+          "pronunciation": "",
+          "sentence": "Devo assolutamente sbarazzarmi di questi vecchi giornali.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_6r2t",
+          "term": "Stuzzicare",
+          "translation": "Agacer / Taquiner / Stimuler",
+          "pronunciation": "",
+          "sentence": "Smettila di stuzzicare il cane mentre dorme!",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_ryz4",
+          "term": "Sbalordire",
+          "translation": "Abasourdir / Stupéfier",
+          "pronunciation": "",
+          "sentence": "Quel mago riesce sempre a sbalordire il pubblico.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_6jrl",
+          "term": "Calpestare le aiuole",
+          "translation": "Piétiner les parterres de fleurs",
+          "pronunciation": "",
+          "sentence": "È vietato calpestare le aiuole nel parco pubblico.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_yf5f",
+          "term": "Spaziare",
+          "translation": "Errer / S'étendre / S'évader",
+          "pronunciation": "",
+          "sentence": "Il suo sguardo amava spaziare oltre le colline.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_6m3f",
+          "term": "Sbarcare il lunario",
+          "translation": "Joindre les deux bouts",
+          "pronunciation": "",
+          "sentence": "Con quel piccolo stipendio fa fatica a sbarcare il lunario.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_gxbg",
+          "term": "A frugare / Frugare",
+          "translation": "À fouiller / Fouiller",
+          "pronunciation": "",
+          "sentence": "Ha iniziato a frugare nelle tasche alla ricerca delle chiavi.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_tneg",
+          "term": "Fogna (f)",
+          "translation": "Égout",
+          "pronunciation": "",
+          "sentence": "I tecnici stanno riparando i tubi della fogna.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_lhgd",
+          "term": "Straccio (m)",
+          "translation": "Chiffon / Serpillère",
+          "pronunciation": "",
+          "sentence": "Passa uno straccio bagnato sul tavolo, per favore.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_l4s7",
+          "term": "Manicomio (m)",
+          "translation": "Asile psychiatrique",
+          "pronunciation": "",
+          "sentence": "Quella stazione nell'ora di punta sembra un manicomio.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_65fc",
+          "term": "Sbirciare",
+          "translation": "Jeter un coup d'œil / Regarder en cachette",
+          "pronunciation": "",
+          "sentence": "Ha provato a sbirciare le risposte del test.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_5yn3",
+          "term": "Saggio (m / adj)",
+          "translation": "Essai / Sage",
+          "pronunciation": "",
+          "sentence": "Il professore ha scritto un nuovo saggio sulla storia d'Italia. / È un uomo vecchio e saggio.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_16nv",
+          "term": "Nuvoloso",
+          "translation": "Nuageux",
+          "pronunciation": "",
+          "sentence": "Oggi il cielo è nuvoloso ma non credo che pioverà.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_y788",
+          "term": "Astuto",
+          "translation": "Malin / Rusé / Astucieux",
+          "pronunciation": "",
+          "sentence": "Quel ragazzo è molto astuto, trova sempre una solutione.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_0thd",
+          "term": "Spazzare",
+          "translation": "Balayer",
+          "pronunciation": "",
+          "sentence": "Ricordati di spazzare il pavimento della cucina.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_6k9g",
+          "term": "Insorgere",
+          "translation": "S'insurger / Se soulever",
+          "pronunciation": "",
+          "sentence": "I cittadini decisero di insorgere contro l'ingiustizia.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_ceut",
+          "term": "Scatenare",
+          "translation": "Déchaîner",
+          "pronunciation": "",
+          "sentence": "Quella decisione rischia di scatenare una protesta.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_ancl",
+          "term": "Spargere",
+          "translation": "Répandre / Verser",
+          "pronunciation": "",
+          "sentence": "Attento a non spargere il sale sulla tavola.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_r4tz",
+          "term": "Sosta (f)",
+          "translation": "Arrêt / Pause / Halte",
+          "pronunciation": "",
+          "sentence": "Facciamo una breve sosta per bere un caffè.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_eca1",
+          "term": "Imperversare",
+          "translation": "Sévir / Faire rage",
+          "pronunciation": "",
+          "sentence": "La tempesta continua a imperversare sulla costa.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_o4oq",
+          "term": "Calo (m)",
+          "translation": "Baisse / Diminution",
+          "pronunciation": "",
+          "sentence": "Abbiamo registrato un forte calo delle vendite questo mese.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_j1fi",
+          "term": "Siccità (f)",
+          "translation": "Sécheresse",
+          "pronunciation": "",
+          "sentence": "Quest'anno la siccità ha distrutto gran parte dei raccolti.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_eblp",
+          "term": "Carestia (f)",
+          "translation": "Famine / Disette",
+          "pronunciation": "",
+          "sentence": "La guerra ha causato una grave carestia in tutta la regione.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_n11n",
+          "term": "Rilievo (m)",
+          "translation": "Soulagement / Importance",
+          "pronunciation": "",
+          "sentence": "Questa scoperta ha un grande rilievo per la scienza.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_vjjx",
+          "term": "Presepe (m)",
+          "translation": "Crèche",
+          "pronunciation": "",
+          "sentence": "A Natale facciamo sempre l'albero e il presepe.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_8am8",
+          "term": "Il giogo",
+          "translation": "Le joug",
+          "pronunciation": "",
+          "sentence": "Il popolo è finalmente riuscito a liberarsi dal giogo straniero.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_jm5p",
+          "term": "Riecheggiare",
+          "translation": "Résonner, faire écho",
+          "pronunciation": "",
+          "sentence": "La sua voce continuava a riecheggiare nella stanza.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_l58f",
+          "term": "Sfociare",
+          "translation": "Se jeter (dans), déboucher",
+          "pronunciation": "",
+          "sentence": "Il fiume Tevere va a sfociare nel Mar Tirreno.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_9k1c",
+          "term": "Risiedere",
+          "translation": "Résider",
+          "pronunciation": "",
+          "sentence": "Molti artisti preferiscono risiedere in campagna.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180196_rjsj",
+          "term": "Scavare",
+          "translation": "Creuser",
+          "pronunciation": "",
+          "sentence": "I bambini amano scavare buche nella sabbia.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
+          "id": "italian_1784873180195_qtxs",
+          "term": "Merce (f)",
+          "translation": "Marchandise",
+          "pronunciation": "",
+          "sentence": "Questa merce deve essere spedita domani mattina.",
+          "status": "unstudied",
+          "mastered": false,
+          "source": "Import Markdown"
+        },
+        {
           "id": "italian_1784832145726_vhts",
           "term": "Sparare",
           "translation": "Tirer (avec une arme)",
