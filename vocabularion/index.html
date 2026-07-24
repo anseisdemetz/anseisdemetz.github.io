@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VocabApp - Carnet de Vocabulaire</title>
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <!-- SDK Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         [v-cloak] { display: none; }
@@ -42,12 +44,8 @@
 
             <!-- Top Actions -->
             <div class="flex items-center justify-center sm:justify-end space-x-2 w-full sm:w-auto flex-wrap gap-y-2">
-                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
+                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
                     <i class="fa-solid fa-plus"></i> <span>Ajouter du vocabulaire</span>
-                </button>
-
-                <button onclick="exportJSON()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
-                    <i class="fa-solid fa-download"></i> <span>Télécharger (Git)</span>
                 </button>
             </div>
         </div>
@@ -124,17 +122,6 @@
                     <span id="toggle-trans-label">Masquer Français</span>
                 </button>
             </div>
-        </div>
-
-        <!-- Git Instruction Banner -->
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 sm:p-3.5 flex items-center justify-between text-xs text-amber-800">
-            <div class="flex items-center space-x-2">
-                <i class="fa-brands fa-git-alt text-base sm:text-lg text-amber-600 shrink-0"></i>
-                <span><strong>Workflow Git :</strong> Modifiez votre vocabulaire, puis cliquez sur <em>"Télécharger (Git)"</em> pour remplacer <code>vocabulary_db.json</code> localement et faites un <code>git push</code>.</span>
-            </div>
-            <button onclick="this.parentElement.style.display='none'" class="text-amber-500 hover:text-amber-800 ml-2">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
         </div>
 
         <!-- Vocabulary Table / Card List Container -->
@@ -249,6 +236,11 @@
 
     <!-- Application Script -->
     <script>
+        // Supabase Client Config
+        const SUPABASE_URL = 'https://zugowxfbpbpcbqhznaeb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1Z293eGZicGJwY2JxaHpuYWViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4Njg0MjAsImV4cCI6MjEwMDQ0NDQyMH0.TUmghp2tmqWeXoK8x1P_wbC5ARMeMQ3Npw_AwN8dGb4';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         // Global App State
         let db = {
             languages: {
@@ -267,53 +259,23 @@
         // Initialization
         document.addEventListener('DOMContentLoaded', async () => {
             await loadInitialDatabase();
-            renderApp();
         });
 
-        // Load JSON database from local file or localStorage backup
+        // Load vocabulary directly from Supabase
         async function loadInitialDatabase() {
-            const localSaved = localStorage.getItem('vocab_db_cache');
-            if (localSaved) {
-                try {
-                    db = JSON.parse(localSaved);
-                    migrateLegacyStatus();
-                    return;
-                } catch (e) {
-                    console.error("Local cache invalid, fetching default JSON file");
-                }
+            const { data, error } = await supabaseClient.from('vocabulary').select('*');
+            
+            if (error) {
+                console.error("Erreur de chargement Supabase:", error);
+                alert("Impossible de charger le vocabulaire depuis la base de données.");
+                return;
             }
 
-            try {
-                const response = await fetch('vocabulary_db.json');
-                if (response.ok) {
-                    db = await response.json();
-                    migrateLegacyStatus();
-                    saveLocalCache();
-                }
-            } catch (err) {
-                console.warn("Could not load default vocabulary_db.json directly, initializing empty state", err);
-            }
-        }
+            // Populate local memory structure from Supabase
+            db.languages.english.vocabulary = data.filter(item => item.language === 'english');
+            db.languages.italian.vocabulary = data.filter(item => item.language === 'italian');
 
-        // Migrate legacy boolean 'mastered' to string status
-        function migrateLegacyStatus() {
-            ['english', 'italian'].forEach(lang => {
-                if (db.languages[lang] && db.languages[lang].vocabulary) {
-                    db.languages[lang].vocabulary.forEach(item => {
-                        if (item.status === undefined) {
-                            if (item.mastered === true) {
-                                item.status = 'known';
-                            } else {
-                                item.status = 'unstudied';
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-        function saveLocalCache() {
-            localStorage.setItem('vocab_db_cache', JSON.stringify(db));
+            renderApp();
         }
 
         // Switch active language
@@ -586,26 +548,34 @@
         }
 
         // Action Handlers
-        function setStatus(id, newStatus) {
+        async function setStatus(id, newStatus) {
             const item = db.languages[currentLang].vocabulary.find(x => x.id === id);
             if (item) {
-                if (item.status === newStatus) {
-                    item.status = 'unstudied';
-                } else {
-                    item.status = newStatus;
-                }
-                item.mastered = (item.status === 'known');
+                const updatedStatus = (item.status === newStatus) ? 'unstudied' : newStatus;
+                item.status = updatedStatus;
                 
-                saveLocalCache();
                 renderApp();
+
+                const { error } = await supabaseClient
+                    .from('vocabulary')
+                    .update({ status: updatedStatus })
+                    .eq('id', id);
+
+                if (error) console.error("Erreur de mise à jour Supabase:", error);
             }
         }
 
-        function deleteWord(id) {
+        async function deleteWord(id) {
             if (confirm("Voulez-vous vraiment supprimer ce mot de la liste ?")) {
                 db.languages[currentLang].vocabulary = db.languages[currentLang].vocabulary.filter(x => x.id !== id);
-                saveLocalCache();
                 renderApp();
+
+                const { error } = await supabaseClient
+                    .from('vocabulary')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) console.error("Erreur de suppression Supabase:", error);
             }
         }
 
@@ -630,7 +600,7 @@
         }
 
         // Handle Markdown Paste Parsing
-        function handleAddMarkdown(e) {
+        async function handleAddMarkdown(e) {
             e.preventDefault();
             const targetLang = document.getElementById('add-target-lang').value;
             const mdContent = document.getElementById('add-md-input').value;
@@ -638,8 +608,7 @@
             if (!mdContent.trim()) return;
 
             const lines = mdContent.split('\n');
-            let addedCount = 0;
-            let hasPron = false;
+            const newEntries = [];
 
             lines.forEach(line => {
                 line = line.trim();
@@ -655,7 +624,6 @@
                         if (parts.length >= 4) {
                             pronunciation = parts[2].trim();
                             sentence = parts[3].replace(/\*\*/g, '').trim();
-                            hasPron = true;
                         } else {
                             sentence = parts[2].replace(/\*\*/g, '').trim();
                         }
@@ -663,38 +631,42 @@
                         if (sentence === "//") sentence = "";
 
                         if (french && term) {
-                            const newEntry = {
+                            newEntries.push({
                                 id: `${targetLang}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
                                 term: term,
                                 translation: french,
                                 pronunciation: pronunciation,
                                 sentence: sentence,
                                 status: 'unstudied',
-                                mastered: false,
-                                source: "Import Markdown"
-                            };
-                            db.languages[targetLang].vocabulary.unshift(newEntry);
-                            addedCount++;
+                                language: targetLang
+                            });
                         }
                     }
                 }
             });
 
-            if (hasPron) {
-                db.languages[targetLang].has_pronunciation = true;
+            if (newEntries.length > 0) {
+                const { error } = await supabaseClient.from('vocabulary').insert(newEntries);
+
+                if (error) {
+                    console.error("Erreur d'insertion Supabase:", error);
+                    alert("Une erreur s'est produite lors de l'enregistrement dans la base de données.");
+                    return;
+                }
+
+                // Update Local & UI
+                db.languages[targetLang].vocabulary.unshift(...newEntries);
+                currentLang = targetLang;
+                switchLanguage(currentLang);
+
+                closeModal('add-modal');
+                document.getElementById('add-md-input').value = '';
+                alert(`${newEntries.length} mots ajoutés avec succès !`);
             }
-
-            saveLocalCache();
-            currentLang = targetLang;
-            switchLanguage(currentLang);
-
-            closeModal('add-modal');
-            document.getElementById('add-md-input').value = '';
-            alert(`${addedCount} mots ajoutés avec succès !`);
         }
 
         // Handle Single Manual Word Add
-        function handleAddWord(e) {
+        async function handleAddWord(e) {
             e.preventDefault();
             const targetLang = document.getElementById('add-target-lang').value;
             const term = document.getElementById('add-term').value.trim();
@@ -711,29 +683,23 @@
                 pronunciation: targetLang === 'english' ? pronunciation : '',
                 sentence: sentence,
                 status: 'unstudied',
-                mastered: false,
-                source: "Ajout manuel"
+                language: targetLang
             };
 
-            db.languages[targetLang].vocabulary.unshift(newEntry);
-            saveLocalCache();
+            const { error } = await supabaseClient.from('vocabulary').insert([newEntry]);
 
+            if (error) {
+                console.error("Erreur d'insertion Supabase:", error);
+                alert("Erreur lors de l'enregistrement du mot.");
+                return;
+            }
+
+            db.languages[targetLang].vocabulary.unshift(newEntry);
             currentLang = targetLang;
             switchLanguage(currentLang);
 
             closeModal('add-modal');
             document.getElementById('add-word-form').reset();
-        }
-
-        // Export JSON file for Git workflow
-        function exportJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "vocabulary_db.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
         }
 
         // Speech Synthesis API
