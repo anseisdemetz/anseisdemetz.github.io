@@ -51,8 +51,13 @@
             </div>
 
             <!-- Top Actions -->
-            <div class="flex items-center justify-center sm:justify-end space-x-2 w-full sm:w-auto flex-wrap gap-y-2">
-                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
+            <div class="flex items-center justify-center sm:justify-end space-x-2 w-full sm:w-auto flex-wrap gap-2">
+                <!-- Bouton Quiz toujours présent -->
+                <button onclick="startQuiz()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
+                    <i class="fa-solid fa-dice"></i> <span>Quiz Révision</span>
+                </button>
+
+                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
                     <i class="fa-solid fa-plus"></i> <span>Ajouter du vocabulaire</span>
                 </button>
             </div>
@@ -112,18 +117,6 @@
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Quiz Launch Button Bar (Affiche uniquement sur l'onglet 'Je sais') -->
-        <div id="quiz-banner" class="hidden bg-amber-50 border border-amber-200/80 rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm">
-            <div class="flex items-center space-x-2.5 text-amber-900 font-medium">
-                <i class="fa-solid fa-dice text-lg text-amber-600"></i>
-                <span>Mettez vos connaissances à l'épreuve avec un quiz rapide sur vos mots maîtrisés.</span>
-            </div>
-            <button onclick="startQuiz()" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold shadow-sm transition flex items-center justify-center space-x-2 shrink-0">
-                <i class="fa-solid fa-play text-xs"></i>
-                <span>🎲 Lancer un quiz (10 mots)</span>
-            </button>
         </div>
 
         <!-- Visibility Toggle Controls -->
@@ -478,14 +471,6 @@
             document.getElementById('stat-percent').innerText = `${percent}%`;
             document.getElementById('stat-progressbar').style.width = `${percent}%`;
 
-            // Display or hide Quiz launch banner
-            const quizBanner = document.getElementById('quiz-banner');
-            if (filterView === 'known' && known > 0) {
-                quizBanner.classList.remove('hidden');
-            } else {
-                quizBanner.classList.add('hidden');
-            }
-
             // Table header target term label
             document.getElementById('th-term-header').innerText = `Mot / Expression (${db.languages[currentLang].name})`;
 
@@ -683,7 +668,7 @@
             const knownWords = allWords.filter(x => x.status === 'known');
 
             if (knownWords.length === 0) {
-                alert("Aucun mot marqué comme 'JE SAIS' n'est disponible pour le quiz.");
+                alert(`Aucun mot marqué comme "JE SAIS" en ${db.languages[currentLang].name} pour lancer le quiz.`);
                 return;
             }
 
