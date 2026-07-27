@@ -4,23 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VocabApp - Carnet de Vocabulaire</title>
+    
+    <!-- Favicon & Mobile App Config -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 style=%22background-color:%234338ca;%22><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22>🧠</text></svg>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="indigo">
+    <meta name="apple-mobile-web-app-title" content="VocabApp">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script> 
     <!-- SDK Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- 1. Icône pour les onglets du navigateur (Ordinateur & Mobile) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
-
-    <!-- 2. Icône haute définition pour l'écran d'accueil Smartphone (iPhone & Android) -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 style=%22background-color:%234338ca;%22><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22>🧠</text></svg>">
-
-    <!-- 3. Comportement d'application mobile (masque la barre du navigateur) -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="indigo">
-    <meta name="apple-mobile-web-app-title" content="VocabApp">
-
     <style>
         [v-cloak] { display: none; }
         .status-known { background-color: #f0fdf4; }
@@ -55,8 +51,13 @@
             </div>
 
             <!-- Top Actions -->
-            <div class="flex items-center justify-center sm:justify-end space-x-2 w-full sm:w-auto flex-wrap gap-y-2">
-                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
+            <div class="flex items-center justify-center sm:justify-end space-x-2 w-full sm:w-auto flex-wrap gap-2">
+                <!-- Bouton Quiz toujours présent -->
+                <button onclick="startQuiz()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
+                    <i class="fa-solid fa-dice"></i> <span>Quiz Révision</span>
+                </button>
+
+                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
                     <i class="fa-solid fa-plus"></i> <span>Ajouter du vocabulaire</span>
                 </button>
             </div>
@@ -173,6 +174,69 @@
         </div>
     </main>
 
+    <!-- Modal: Quiz Session -->
+    <div id="quiz-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-5 border border-slate-100 relative">
+            
+            <!-- Close Quiz Button -->
+            <button onclick="closeModal('quiz-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Quiz In-Progress View -->
+            <div id="quiz-active-screen" class="space-y-5">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-lg">🎲</span>
+                        <h3 class="text-base font-bold text-slate-800">Session de Révision</h3>
+                    </div>
+                    <span id="quiz-progress-badge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+                        Question 1 / 10
+                    </span>
+                </div>
+
+                <!-- Prompt Card -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-5 text-center space-y-2">
+                    <p id="quiz-direction-label" class="text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                        Quelle est la bonne traduction ?
+                    </p>
+                    <p id="quiz-question-prompt" class="text-xl sm:text-2xl font-bold text-slate-900">
+                        <!-- Prompt Dynamic -->
+                    </p>
+                </div>
+
+                <!-- 4 Options Grid -->
+                <div id="quiz-options-container" class="grid grid-cols-1 gap-2.5">
+                    <!-- Dynamic Buttons -->
+                </div>
+            </div>
+
+            <!-- Quiz Score Result Screen -->
+            <div id="quiz-results-screen" class="hidden text-center space-y-4 py-4">
+                <div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 text-2xl mx-auto border border-emerald-100 shadow-inner">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">Quiz Terminé !</h3>
+                    <p class="text-xs text-slate-500 mt-1">Voici le bilan de votre session de révision :</p>
+                </div>
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 max-w-xs mx-auto">
+                    <span id="quiz-final-score" class="text-3xl font-extrabold text-indigo-600">0/10</span>
+                    <p id="quiz-final-comment" class="text-xs text-slate-500 mt-1 font-medium">--</p>
+                </div>
+                <p class="text-[11px] text-slate-400 italic">Note : Les mots manqués sont automatiquement repassés en "Je ne sais pas".</p>
+                <div class="flex justify-center space-x-2 pt-2">
+                    <button onclick="closeModal('quiz-modal')" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition">
+                        Fermer
+                    </button>
+                    <button onclick="startQuiz()" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold shadow-sm transition">
+                        🔄 Rejouer un quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal: Add New Vocabulary -->
     <div id="add-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-5 sm:p-6 space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
@@ -267,6 +331,12 @@
         // Column Masking State
         let hideTargetTerm = false;
         let hideTranslation = false;
+
+        // Quiz State
+        let quizQuestions = [];
+        let quizCurrentIndex = 0;
+        let quizScore = 0;
+        let quizIsAnswering = false;
 
         // Initialization
         document.addEventListener('DOMContentLoaded', async () => {
@@ -591,7 +661,159 @@
             }
         }
 
-        // Switch between Markdown import and Manual add tabs inside Modal
+        // --- QUIZ LOGIC ---
+
+        function startQuiz() {
+            const allWords = db.languages[currentLang].vocabulary;
+            const knownWords = allWords.filter(x => x.status === 'known');
+
+            if (knownWords.length === 0) {
+                alert(`Aucun mot marqué comme "JE SAIS" en ${db.languages[currentLang].name} pour lancer le quiz.`);
+                return;
+            }
+
+            // Shuffle known words and pick up to 10 items
+            const shuffledKnown = [...knownWords].sort(() => 0.5 - Math.random());
+            const selectedWords = shuffledKnown.slice(0, 10);
+
+            // Generate questions
+            quizQuestions = selectedWords.map(targetWord => {
+                // Direction: 0 = Target -> French, 1 = French -> Target
+                const direction = Math.floor(Math.random() * 2);
+
+                // Get 3 random distinct distractors from ALL words in the same language
+                const distractorsPool = allWords.filter(x => x.id !== targetWord.id);
+                const shuffledPool = [...distractorsPool].sort(() => 0.5 - Math.random());
+                const distractors = shuffledPool.slice(0, 3);
+
+                // Prepare 4 choices
+                let choices = [];
+
+                if (direction === 0) {
+                    // Prompt in Target Lang, choices in French
+                    choices = [
+                        { text: targetWord.translation, isCorrect: true },
+                        ...distractors.map(d => ({ text: d.translation, isCorrect: false }))
+                    ];
+                } else {
+                    // Prompt in French, choices in Target Lang
+                    choices = [
+                        { text: targetWord.term, isCorrect: true },
+                        ...distractors.map(d => ({ text: d.term, isCorrect: false }))
+                    ];
+                }
+
+                // Shuffle choices
+                choices.sort(() => 0.5 - Math.random());
+
+                return {
+                    targetWord,
+                    direction,
+                    prompt: direction === 0 ? targetWord.term : targetWord.translation,
+                    choices
+                };
+            });
+
+            quizCurrentIndex = 0;
+            quizScore = 0;
+            quizIsAnswering = false;
+
+            document.getElementById('quiz-active-screen').classList.remove('hidden');
+            document.getElementById('quiz-results-screen').classList.add('hidden');
+            openModal('quiz-modal');
+
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            quizIsAnswering = false;
+            const currentQ = quizQuestions[quizCurrentIndex];
+
+            document.getElementById('quiz-progress-badge').innerText = `Question ${quizCurrentIndex + 1} / ${quizQuestions.length}`;
+            document.getElementById('quiz-direction-label').innerText = currentQ.direction === 0 
+                ? `Traduction de :` 
+                : `Expression en ${db.languages[currentLang].name} :`;
+            document.getElementById('quiz-question-prompt').innerText = currentQ.prompt;
+
+            const container = document.getElementById('quiz-options-container');
+            container.innerHTML = '';
+
+            currentQ.choices.forEach((choice, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 text-xs sm:text-sm font-semibold transition text-left flex items-center justify-between shadow-sm";
+                btn.innerHTML = `
+                    <span>${escapeHtml(choice.text)}</span>
+                    <i class="fa-regular fa-circle text-slate-300 text-sm"></i>
+                `;
+                btn.onclick = () => handleQuizAnswer(idx, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        async function handleQuizAnswer(choiceIdx, btnElement) {
+            if (quizIsAnswering) return;
+            quizIsAnswering = true;
+
+            const currentQ = quizQuestions[quizCurrentIndex];
+            const selectedChoice = currentQ.choices[choiceIdx];
+            const container = document.getElementById('quiz-options-container');
+            const allButtons = container.children;
+
+            if (selectedChoice.isCorrect) {
+                quizScore++;
+                btnElement.className = "w-full p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-xs sm:text-sm font-bold transition text-left flex items-center justify-between shadow-sm";
+                btnElement.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-base";
+            } else {
+                // Incorrect choice: downgrade status in Supabase to 'unknown'
+                btnElement.className = "w-full p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-900 text-xs sm:text-sm font-bold transition text-left flex items-center justify-between shadow-sm";
+                btnElement.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-600 text-base";
+
+                // Highlight the correct answer
+                currentQ.choices.forEach((c, i) => {
+                    if (c.isCorrect) {
+                        allButtons[i].className = "w-full p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-xs sm:text-sm font-bold transition text-left flex items-center justify-between shadow-sm";
+                        allButtons[i].querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-base";
+                    }
+                });
+
+                // Automatically set status to 'unknown'
+                await setStatus(currentQ.targetWord.id, 'unknown');
+            }
+
+            // Short pause before next question or results
+            setTimeout(() => {
+                quizCurrentIndex++;
+                if (quizCurrentIndex < quizQuestions.length) {
+                    renderQuizQuestion();
+                } else {
+                    showQuizResults();
+                }
+            }, 1200);
+        }
+
+        function showQuizResults() {
+            document.getElementById('quiz-active-screen').classList.add('hidden');
+            document.getElementById('quiz-results-screen').classList.remove('hidden');
+
+            const total = quizQuestions.length;
+            document.getElementById('quiz-final-score').innerText = `${quizScore} / ${total}`;
+
+            const comment = document.getElementById('quiz-final-comment');
+            const ratio = quizScore / total;
+
+            if (ratio === 1) {
+                comment.innerText = "🎉 Sans faute ! Vos connaissances sont parfaites.";
+            } else if (ratio >= 0.7) {
+                comment.innerText = "👏 Très bon score ! Continuez ainsi.";
+            } else if (ratio >= 0.5) {
+                comment.innerText = "👍 Pas mal, mais quelques révisions s'imposent.";
+            } else {
+                comment.innerText = "💪 Courage ! Les mots manqués sont revenus en révision.";
+            }
+        }
+
+        // --- MODAL UTILS ---
+
         function switchAddTab(tab) {
             const btnMd = document.getElementById('tab-btn-md');
             const btnManual = document.getElementById('tab-btn-manual');
@@ -611,7 +833,6 @@
             }
         }
 
-        // Handle Markdown Paste Parsing
         async function handleAddMarkdown(e) {
             e.preventDefault();
             const targetLang = document.getElementById('add-target-lang').value;
@@ -666,7 +887,6 @@
                     return;
                 }
 
-                // Update Local & UI
                 db.languages[targetLang].vocabulary.unshift(...newEntries);
                 currentLang = targetLang;
                 switchLanguage(currentLang);
@@ -677,7 +897,6 @@
             }
         }
 
-        // Handle Single Manual Word Add
         async function handleAddWord(e) {
             e.preventDefault();
             const targetLang = document.getElementById('add-target-lang').value;
@@ -714,7 +933,6 @@
             document.getElementById('add-word-form').reset();
         }
 
-        // Speech Synthesis API
         function speakTerm(text, langCode) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -724,11 +942,12 @@
             }
         }
 
-        // Modal Helpers
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
-            document.getElementById('add-target-lang').value = currentLang;
-            toggleAddPronunciationField();
+            if (id === 'add-modal') {
+                document.getElementById('add-target-lang').value = currentLang;
+                toggleAddPronunciationField();
+            }
         }
 
         function closeModal(id) {
