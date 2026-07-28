@@ -52,7 +52,6 @@
 
             <!-- Top Actions -->
             <div class="flex items-center justify-center sm:justify-end space-x-2 w-full sm:w-auto flex-wrap gap-2">
-                <!-- Bouton Quiz toujours présent -->
                 <button onclick="startQuiz()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
                     <i class="fa-solid fa-dice"></i> <span>Quiz Révision</span>
                 </button>
@@ -177,13 +176,10 @@
     <!-- Modal: Quiz Session -->
     <div id="quiz-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-5 border border-slate-100 relative">
-            
-            <!-- Close Quiz Button -->
             <button onclick="closeModal('quiz-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
 
-            <!-- Quiz In-Progress View -->
             <div id="quiz-active-screen" class="space-y-5">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                     <div class="flex items-center space-x-2">
@@ -195,7 +191,6 @@
                     </span>
                 </div>
 
-                <!-- Prompt Card -->
                 <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-5 text-center space-y-2">
                     <p id="quiz-direction-label" class="text-xs uppercase tracking-wider text-slate-400 font-semibold">
                         Quelle est la bonne traduction ?
@@ -205,13 +200,11 @@
                     </p>
                 </div>
 
-                <!-- 4 Options Grid -->
                 <div id="quiz-options-container" class="grid grid-cols-1 gap-2.5">
                     <!-- Dynamic Buttons -->
                 </div>
             </div>
 
-            <!-- Quiz Score Result Screen -->
             <div id="quiz-results-screen" class="hidden text-center space-y-4 py-4">
                 <div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 text-2xl mx-auto border border-emerald-100 shadow-inner">
                     <i class="fa-solid fa-trophy"></i>
@@ -239,7 +232,7 @@
 
     <!-- Modal: Add New Vocabulary -->
     <div id="add-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-5 sm:p-6 space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-xl max-w-xl w-full p-5 sm:p-6 space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <h3 class="text-base sm:text-lg font-bold text-slate-800">Ajouter du vocabulaire</h3>
                 <button onclick="closeModal('add-modal')" class="text-slate-400 hover:text-slate-600">
@@ -249,7 +242,10 @@
 
             <!-- Modal Tab Selector -->
             <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-semibold">
-                <button id="tab-btn-md" onclick="switchAddTab('markdown')" class="flex-1 py-2 rounded-lg bg-white text-indigo-900 shadow-sm transition text-center">
+                <button id="tab-btn-ai" onclick="switchAddTab('ai')" class="flex-1 py-2 rounded-lg bg-white text-indigo-900 shadow-sm transition text-center">
+                    ✨ Saisie rapide (IA Gemini)
+                </button>
+                <button id="tab-btn-md" onclick="switchAddTab('markdown')" class="flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center">
                     📋 Coller du Markdown
                 </button>
                 <button id="tab-btn-manual" onclick="switchAddTab('manual')" class="flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center">
@@ -257,21 +253,64 @@
                 </button>
             </div>
 
-            <!-- Common Language Selector -->
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Langue de destination</label>
-                <select id="add-target-lang" onchange="toggleAddPronunciationField()" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option value="english">🇬🇧 Anglais</option>
-                    <option value="italian">🇮🇹 Italien</option>
-                </select>
+            <!-- Form 1: AI Auto Generator -->
+            <div id="add-ai-form" class="space-y-4 text-xs sm:text-sm">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Clé API Google Gemini</label>
+                    <input type="password" id="gemini-api-key" placeholder="Collez votre clé API (AI Studio)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Liste de mots bruts (Anglais OU Italien)</label>
+                    <textarea id="ai-raw-words" rows="4" placeholder="To yield&#10;Relentless&#10;Gloom" class="w-full font-mono text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
+                    <p class="text-[11px] text-slate-400 mt-1">L'IA détecte automatiquement s'il s'agit d'anglais ou d'italien.</p>
+                </div>
+
+                <button type="button" onclick="generateWithGemini()" id="btn-generate-ai" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-sm transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Générer la prévisualisation</span>
+                </button>
+
+                <!-- Zone de prévisualisation interprétée -->
+                <div id="ai-preview-container" class="hidden space-y-3 pt-3 border-t border-slate-100">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700 flex items-center space-x-1.5">
+                            <span>Langue détectée :</span>
+                            <span id="detected-lang-badge" class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[11px]">--</span>
+                        </span>
+                        <span class="text-[11px] text-emerald-600 font-semibold"><i class="fa-solid fa-check"></i> Tableau validé</span>
+                    </div>
+
+                    <!-- Rendus du Tableau HTML interprété -->
+                    <div id="ai-preview-table" class="overflow-x-auto max-h-48 border border-slate-200 rounded-lg bg-slate-50 p-2 text-xs">
+                        <!-- Dynamic rendered table -->
+                    </div>
+
+                    <!-- Code Markdown éditable sous-jacent -->
+                    <details class="text-[11px] text-slate-500">
+                        <summary class="cursor-pointer font-medium hover:text-slate-800">Voir / Modifier le code Markdown brut</summary>
+                        <textarea id="ai-markdown-output" rows="4" class="w-full font-mono text-xs bg-slate-100 border border-slate-200 rounded-lg p-2 mt-2 focus:outline-none"></textarea>
+                    </details>
+
+                    <button type="button" onclick="importAIVocabulary()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg shadow-sm transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-file-import"></i>
+                        <span>Valider et importer dans Supabase</span>
+                    </button>
+                </div>
             </div>
 
-            <!-- Form 1: Markdown Import -->
-            <form id="add-md-form" onsubmit="handleAddMarkdown(event)" class="space-y-3.5 text-xs sm:text-sm">
+            <!-- Form 2: Markdown Import -->
+            <form id="add-md-form" onsubmit="handleAddMarkdown(event)" class="hidden space-y-3.5 text-xs sm:text-sm">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Langue de destination</label>
+                    <select id="add-target-lang-md" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="english">🇬🇧 Anglais</option>
+                        <option value="italian">🇮🇹 Italien</option>
+                    </select>
+                </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Collez le(s) tableau(x) Markdown brut(s)</label>
                     <textarea id="add-md-input" rows="8" required placeholder="| Français | Italien | Phrase d'exemple |&#10;| :--- | :--- | :--- |&#10;| Ouvrir tout grand | Spalancare | Non spalancare la finestra |" class="w-full font-mono text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
-                    <p class="text-[11px] text-slate-400 mt-1">L'application détecte automatiquement le format à 3 ou 4 colonnes.</p>
                 </div>
 
                 <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
@@ -280,8 +319,16 @@
                 </div>
             </form>
 
-            <!-- Form 2: Manual Single Item -->
+            <!-- Form 3: Manual Single Item -->
             <form id="add-word-form" onsubmit="handleAddWord(event)" class="hidden space-y-3.5 text-xs sm:text-sm">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Langue de destination</label>
+                    <select id="add-target-lang-manual" onchange="toggleAddPronunciationField()" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="english">🇬🇧 Anglais</option>
+                        <option value="italian">🇮🇹 Italien</option>
+                    </select>
+                </div>
+
                 <div>
                     <label class="block font-semibold text-slate-600 mb-1">Mot / Expression</label>
                     <input type="text" id="add-term" placeholder="ex: To yield, Sfumatura" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -338,8 +385,17 @@
         let quizScore = 0;
         let quizIsAnswering = false;
 
+        // AI Detected Language State
+        let detectedLanguageForImport = 'english';
+
         // Initialization
         document.addEventListener('DOMContentLoaded', async () => {
+            // Load saved Gemini API Key if available
+            const savedApiKey = localStorage.getItem('gemini_api_key');
+            if (savedApiKey) {
+                document.getElementById('gemini-api-key').value = savedApiKey;
+            }
+
             await loadInitialDatabase();
         });
 
@@ -353,7 +409,6 @@
                 return;
             }
 
-            // Populate local memory structure from Supabase
             db.languages.english.vocabulary = data.filter(item => item.language === 'english');
             db.languages.italian.vocabulary = data.filter(item => item.language === 'italian');
 
@@ -403,7 +458,6 @@
             renderTable();
         }
 
-        // Toggle Masking Actions
         function toggleTermVisibility() {
             hideTargetTerm = !hideTargetTerm;
             updateMaskingControls();
@@ -449,13 +503,11 @@
         }
 
         function renderApp() {
-            // Update badges
             const enCount = db.languages.english.vocabulary.length;
             const itCount = db.languages.italian.vocabulary.length;
             document.getElementById('badge-count-english').innerText = enCount;
             document.getElementById('badge-count-italian').innerText = itCount;
 
-            // Update stats
             const currentList = db.languages[currentLang].vocabulary;
             const total = currentList.length;
             const known = currentList.filter(item => item.status === 'known').length;
@@ -471,10 +523,8 @@
             document.getElementById('stat-percent').innerText = `${percent}%`;
             document.getElementById('stat-progressbar').style.width = `${percent}%`;
 
-            // Table header target term label
             document.getElementById('th-term-header').innerText = `Mot / Expression (${db.languages[currentLang].name})`;
 
-            // Pronunciation column visibility
             const thPron = document.getElementById('th-pronunciation');
             if (db.languages[currentLang].has_pronunciation) {
                 thPron.style.display = '';
@@ -497,7 +547,6 @@
             tbody.innerHTML = '';
             mobileList.innerHTML = '';
 
-            // Filter logic
             const filtered = list.filter(item => {
                 const itemStatus = item.status || 'unstudied';
 
@@ -543,7 +592,6 @@
                     ? `<span onclick="this.innerHTML='${escapedTransJs}'; this.className='text-slate-700 cursor-default';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
                     : `<span>${escapedTrans}</span>`;
 
-                // 1. Desktop Table Row
                 const tr = document.createElement('tr');
                 tr.className = rowBgClass;
 
@@ -584,7 +632,6 @@
                 `;
                 tbody.appendChild(tr);
 
-                // 2. Mobile Card Item
                 const card = document.createElement('div');
                 card.className = `p-4 space-y-3 ${rowBgClass}`;
 
@@ -629,7 +676,6 @@
             });
         }
 
-        // Action Handlers
         async function setStatus(id, newStatus) {
             const item = db.languages[currentLang].vocabulary.find(x => x.id === id);
             if (item) {
@@ -661,6 +707,174 @@
             }
         }
 
+        // --- GEMINI AI INTEGRATION ---
+
+        async function generateWithGemini() {
+            const apiKey = document.getElementById('gemini-api-key').value.trim();
+            const rawWords = document.getElementById('ai-raw-words').value.trim();
+            const btn = document.getElementById('btn-generate-ai');
+
+            if (!apiKey) {
+                alert("Veuillez saisir votre clé API Gemini.");
+                return;
+            }
+
+            if (!rawWords) {
+                alert("Veuillez coller au moins un mot de vocabulaire.");
+                return;
+            }
+
+            // Save Key in localStorage for convenience
+            localStorage.setItem('gemini_api_key', apiKey);
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Analyse par l'IA en cours...</span>`;
+
+            const prompt = `Tu es un assistant linguistique expert. Analyse la liste de mots suivante :
+"${rawWords}"
+
+Instructions strictes :
+1. Détermine la langue dominante de la liste : soit "english", soit "italian".
+2. Génère un tableau Markdown valide avec les colonnes suivantes :
+   - Pour l'ANGLAIS (4 colonnes) : | Français | Anglais | Prononciation | Phrase d'exemple |
+   - Pour l'ITALIEN (3 colonnes) : | Français | Italien | Phrase d'exemple |
+3. Fournis une traduction française précise, la prononciation IPA si anglais, et une phrase d'exemple naturelle.
+4. Tu dois répondre EXCLUSIVEMENT au format JSON structuré avec la forme :
+{
+  "language": "english" ou "italian",
+  "markdown": "tableau markdown complet ici"
+}`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
+
+                const resultJson = JSON.parse(data.candidates[0].content.parts[0].text);
+                
+                detectedLanguageForImport = resultJson.language;
+                const markdownText = resultJson.markdown;
+
+                // Render Preview
+                document.getElementById('detected-lang-badge').innerText = detectedLanguageForImport === 'english' ? '🇬🇧 Anglais' : '🇮🇹 Italien';
+                document.getElementById('ai-markdown-output').value = markdownText;
+                
+                // Render HTML Table from Markdown text
+                renderParsedPreviewTable(markdownText);
+
+                document.getElementById('ai-preview-container').classList.remove('hidden');
+
+            } catch (err) {
+                console.error("Erreur Gemini:", err);
+                alert("Erreur lors de la génération avec l'IA: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer la prévisualisation</span>`;
+            }
+        }
+
+        function renderParsedPreviewTable(mdText) {
+            const container = document.getElementById('ai-preview-table');
+            const lines = mdText.split('\n').map(l => l.trim()).filter(l => l.startsWith('|') && !l.includes(':---'));
+
+            if (lines.length === 0) {
+                container.innerHTML = `<p class="text-rose-500">Erreur de format de tableau Markdown.</p>`;
+                return;
+            }
+
+            let html = `<table class="w-full text-left border-collapse"><thead><tr class="bg-slate-200 font-bold">`;
+            
+            // Header
+            const headers = lines[0].split('|').map(p => p.trim()).filter((p, i, a) => i > 0 && i < a.length - 1);
+            headers.forEach(h => html += `<th class="p-1 border">${escapeHtml(h)}</th>`);
+            html += `</tr></thead><tbody>`;
+
+            // Rows
+            for (let i = 1; i < lines.length; i++) {
+                const cells = lines[i].split('|').map(p => p.trim()).filter((p, idx, a) => idx > 0 && idx < a.length - 1);
+                if (cells.length >= 3) {
+                    html += `<tr class="hover:bg-slate-100">`;
+                    cells.forEach(c => html += `<td class="p-1 border">${escapeHtml(c.replace(/\*\*/g, ''))}</td>`);
+                    html += `</tr>`;
+                }
+            }
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        async function importAIVocabulary() {
+            const mdContent = document.getElementById('ai-markdown-output').value;
+            const targetLang = detectedLanguageForImport;
+
+            if (!mdContent.trim()) return;
+
+            const lines = mdContent.split('\n');
+            const newEntries = [];
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('|') && !line.includes(':---') && !line.toLowerCase().includes('français')) {
+                    const parts = line.split('|').map(p => p.trim()).filter((p, idx, arr) => idx > 0 && idx < arr.length - 1);
+                    
+                    if (parts.length >= 3) {
+                        const french = parts[0].replace(/\*\*/g, '').trim();
+                        const term = parts[1].replace(/\*\*/g, '').trim();
+                        let pronunciation = "";
+                        let sentence = "";
+
+                        if (parts.length >= 4) {
+                            pronunciation = parts[2].trim();
+                            sentence = parts[3].replace(/\*\*/g, '').trim();
+                        } else {
+                            sentence = parts[2].replace(/\*\*/g, '').trim();
+                        }
+
+                        if (sentence === "//") sentence = "";
+
+                        if (french && term) {
+                            newEntries.push({
+                                id: `${targetLang}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+                                term: term,
+                                translation: french,
+                                pronunciation: pronunciation,
+                                sentence: sentence,
+                                status: 'unstudied',
+                                language: targetLang
+                            });
+                        }
+                    }
+                }
+            });
+
+            if (newEntries.length > 0) {
+                const { error } = await supabaseClient.from('vocabulary').insert(newEntries);
+
+                if (error) {
+                    console.error("Erreur d'insertion Supabase:", error);
+                    alert("Erreur lors de l'enregistrement dans la base de données.");
+                    return;
+                }
+
+                db.languages[targetLang].vocabulary.unshift(...newEntries);
+                currentLang = targetLang;
+                switchLanguage(currentLang);
+
+                closeModal('add-modal');
+                document.getElementById('ai-raw-words').value = '';
+                document.getElementById('ai-preview-container').classList.add('hidden');
+                alert(`${newEntries.length} mots importés avec succès en ${targetLang === 'english' ? 'Anglais' : 'Italien'} !`);
+            }
+        }
+
         // --- QUIZ LOGIC ---
 
         function startQuiz() {
@@ -672,38 +886,30 @@
                 return;
             }
 
-            // Shuffle known words and pick up to 10 items
             const shuffledKnown = [...knownWords].sort(() => 0.5 - Math.random());
             const selectedWords = shuffledKnown.slice(0, 10);
 
-            // Generate questions
             quizQuestions = selectedWords.map(targetWord => {
-                // Direction: 0 = Target -> French, 1 = French -> Target
                 const direction = Math.floor(Math.random() * 2);
 
-                // Get 3 random distinct distractors from ALL words in the same language
                 const distractorsPool = allWords.filter(x => x.id !== targetWord.id);
                 const shuffledPool = [...distractorsPool].sort(() => 0.5 - Math.random());
                 const distractors = shuffledPool.slice(0, 3);
 
-                // Prepare 4 choices
                 let choices = [];
 
                 if (direction === 0) {
-                    // Prompt in Target Lang, choices in French
                     choices = [
                         { text: targetWord.translation, isCorrect: true },
                         ...distractors.map(d => ({ text: d.translation, isCorrect: false }))
                     ];
                 } else {
-                    // Prompt in French, choices in Target Lang
                     choices = [
                         { text: targetWord.term, isCorrect: true },
                         ...distractors.map(d => ({ text: d.term, isCorrect: false }))
                     ];
                 }
 
-                // Shuffle choices
                 choices.sort(() => 0.5 - Math.random());
 
                 return {
@@ -764,11 +970,9 @@
                 btnElement.className = "w-full p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-xs sm:text-sm font-bold transition text-left flex items-center justify-between shadow-sm";
                 btnElement.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-base";
             } else {
-                // Incorrect choice: downgrade status in Supabase to 'unknown'
                 btnElement.className = "w-full p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-900 text-xs sm:text-sm font-bold transition text-left flex items-center justify-between shadow-sm";
                 btnElement.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-600 text-base";
 
-                // Highlight the correct answer
                 currentQ.choices.forEach((c, i) => {
                     if (c.isCorrect) {
                         allButtons[i].className = "w-full p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-xs sm:text-sm font-bold transition text-left flex items-center justify-between shadow-sm";
@@ -776,11 +980,9 @@
                     }
                 });
 
-                // Automatically set status to 'unknown'
                 await setStatus(currentQ.targetWord.id, 'unknown');
             }
 
-            // Short pause before next question or results
             setTimeout(() => {
                 quizCurrentIndex++;
                 if (quizCurrentIndex < quizQuestions.length) {
@@ -815,27 +1017,32 @@
         // --- MODAL UTILS ---
 
         function switchAddTab(tab) {
+            const btnAi = document.getElementById('tab-btn-ai');
             const btnMd = document.getElementById('tab-btn-md');
             const btnManual = document.getElementById('tab-btn-manual');
+            
+            const formAi = document.getElementById('add-ai-form');
             const formMd = document.getElementById('add-md-form');
             const formManual = document.getElementById('add-word-form');
 
-            if (tab === 'markdown') {
+            [btnAi, btnMd, btnManual].forEach(b => b.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center");
+            [formAi, formMd, formManual].forEach(f => f.classList.add('hidden'));
+
+            if (tab === 'ai') {
+                btnAi.className = "flex-1 py-2 rounded-lg bg-white text-indigo-900 shadow-sm transition text-center";
+                formAi.classList.remove('hidden');
+            } else if (tab === 'markdown') {
                 btnMd.className = "flex-1 py-2 rounded-lg bg-white text-indigo-900 shadow-sm transition text-center";
-                btnManual.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center";
                 formMd.classList.remove('hidden');
-                formManual.classList.add('hidden');
             } else {
                 btnManual.className = "flex-1 py-2 rounded-lg bg-white text-indigo-900 shadow-sm transition text-center";
-                btnMd.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center";
                 formManual.classList.remove('hidden');
-                formMd.classList.add('hidden');
             }
         }
 
         async function handleAddMarkdown(e) {
             e.preventDefault();
-            const targetLang = document.getElementById('add-target-lang').value;
+            const targetLang = document.getElementById('add-target-lang-md').value;
             const mdContent = document.getElementById('add-md-input').value;
 
             if (!mdContent.trim()) return;
@@ -899,7 +1106,7 @@
 
         async function handleAddWord(e) {
             e.preventDefault();
-            const targetLang = document.getElementById('add-target-lang').value;
+            const targetLang = document.getElementById('add-target-lang-manual').value;
             const term = document.getElementById('add-term').value.trim();
             const translation = document.getElementById('add-translation').value.trim();
             const pronunciation = document.getElementById('add-pronunciation').value.trim();
@@ -945,7 +1152,6 @@
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
             if (id === 'add-modal') {
-                document.getElementById('add-target-lang').value = currentLang;
                 toggleAddPronunciationField();
             }
         }
@@ -955,7 +1161,7 @@
         }
 
         function toggleAddPronunciationField() {
-            const lang = document.getElementById('add-target-lang').value;
+            const lang = document.getElementById('add-target-lang-manual').value;
             const field = document.getElementById('field-pronunciation');
             field.style.display = lang === 'english' ? 'block' : 'none';
         }
