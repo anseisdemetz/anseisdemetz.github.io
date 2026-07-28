@@ -6,8 +6,8 @@
     <title>VocabApp - Carnet de Vocabulaire</title>
     
     <!-- Favicon & Mobile App Config -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 style=%22background-color:%234338ca;%22><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22>🧠</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 style=%22background-color:%234338ca;%22><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22>📖</text></svg>">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="indigo">
     <meta name="apple-mobile-web-app-title" content="VocabApp">
@@ -150,6 +150,7 @@
                             <th class="py-3.5 px-4">Traduction (Français)</th>
                             <th id="th-pronunciation" class="py-3.5 px-4">Prononciation</th>
                             <th class="py-3.5 px-4">Exemple d'utilisation</th>
+                            <th class="py-3.5 px-3 w-16 text-center">Score</th>
                             <th class="py-3.5 px-4 w-12 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -191,10 +192,12 @@
                     </span>
                 </div>
 
+                <!-- Prompt Card -->
                 <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-5 text-center space-y-2">
-                    <p id="quiz-direction-label" class="text-xs uppercase tracking-wider text-slate-400 font-semibold">
-                        Quelle est la bonne traduction ?
-                    </p>
+                    <div class="flex justify-between items-center text-xs text-slate-400 font-semibold uppercase tracking-wider">
+                        <span id="quiz-direction-label">Quelle est la bonne traduction ?</span>
+                        <span id="quiz-word-score-badge" class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded-full font-mono font-bold">Score: 1/10</span>
+                    </div>
                     <p id="quiz-question-prompt" class="text-xl sm:text-2xl font-bold text-slate-900">
                         <!-- Prompt Dynamic -->
                     </p>
@@ -217,7 +220,7 @@
                     <span id="quiz-final-score" class="text-3xl font-extrabold text-indigo-600">0/10</span>
                     <p id="quiz-final-comment" class="text-xs text-slate-500 mt-1 font-medium">--</p>
                 </div>
-                <p class="text-[11px] text-slate-400 italic">Note : Les mots manqués sont automatiquement repassés en "Je ne sais pas".</p>
+                <p class="text-[11px] text-slate-400 italic">Note : Les scores des mots ont été ajustés dans votre BDD Supabase.</p>
                 <div class="flex justify-center space-x-2 pt-2">
                     <button onclick="closeModal('quiz-modal')" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition">
                         Fermer
@@ -271,7 +274,6 @@
                     <span>Générer la prévisualisation</span>
                 </button>
 
-                <!-- Zone de prévisualisation interprétée -->
                 <div id="ai-preview-container" class="hidden space-y-3 pt-3 border-t border-slate-100">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-slate-700 flex items-center space-x-1.5">
@@ -281,12 +283,9 @@
                         <span class="text-[11px] text-emerald-600 font-semibold"><i class="fa-solid fa-check"></i> Tableau validé</span>
                     </div>
 
-                    <!-- Rendus du Tableau HTML interprété -->
                     <div id="ai-preview-table" class="overflow-x-auto max-h-48 border border-slate-200 rounded-lg bg-slate-50 p-2 text-xs">
-                        <!-- Dynamic rendered table -->
                     </div>
 
-                    <!-- Code Markdown éditable sous-jacent -->
                     <details class="text-[11px] text-slate-500">
                         <summary class="cursor-pointer font-medium hover:text-slate-800">Voir / Modifier le code Markdown brut</summary>
                         <textarea id="ai-markdown-output" rows="4" class="w-full font-mono text-xs bg-slate-100 border border-slate-200 rounded-lg p-2 mt-2 focus:outline-none"></textarea>
@@ -390,7 +389,6 @@
 
         // Initialization
         document.addEventListener('DOMContentLoaded', async () => {
-            // Load saved Gemini API Key if available
             const savedApiKey = localStorage.getItem('gemini_api_key');
             if (savedApiKey) {
                 document.getElementById('gemini-api-key').value = savedApiKey;
@@ -409,13 +407,19 @@
                 return;
             }
 
+            // Ensure every item has a default score of 1 if undefined
+            data.forEach(item => {
+                if (item.score === undefined || item.score === null) {
+                    item.score = 1;
+                }
+            });
+
             db.languages.english.vocabulary = data.filter(item => item.language === 'english');
             db.languages.italian.vocabulary = data.filter(item => item.language === 'italian');
 
             renderApp();
         }
 
-        // Switch active language
         function switchLanguage(lang) {
             currentLang = lang;
             
@@ -574,6 +578,7 @@
             filtered.forEach((item, index) => {
                 const itemStatus = item.status || 'unstudied';
                 const rowNum = index + 1;
+                const score = item.score || 1;
                 
                 let rowBgClass = "hover:bg-slate-50 transition";
                 if (itemStatus === 'known') rowBgClass = "status-known transition hover:bg-emerald-100/60";
@@ -624,6 +629,11 @@
                     <td class="py-3 px-4 text-slate-600 italic text-xs leading-relaxed max-w-xs sm:max-w-md">
                         ${item.sentence ? `"${escapeHtml(item.sentence)}"` : '<span class="text-slate-300">-</span>'}
                     </td>
+                    <td class="py-3 px-3 text-center">
+                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold font-mono ${score >= 8 ? 'bg-emerald-100 text-emerald-800' : score >= 4 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">
+                            ${score}/10
+                        </span>
+                    </td>
                     <td class="py-3 px-4 text-right">
                         <button onclick="deleteWord('${item.id}')" class="text-slate-300 hover:text-rose-500 transition p-1" title="Supprimer">
                             <i class="fa-solid fa-trash-can"></i>
@@ -644,6 +654,7 @@
                                 <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
                                     <i class="fa-solid fa-volume-high text-sm"></i>
                                 </button>
+                                <span class="text-[10px] font-bold font-mono px-1.5 py-0.5 rounded ${score >= 8 ? 'bg-emerald-100 text-emerald-800' : score >= 4 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">${score}/10</span>
                             </div>
                             ${hasPron && item.pronunciation ? `<p class="text-xs font-mono text-slate-500 mt-0.5">${escapeHtml(item.pronunciation)}</p>` : ''}
                         </div>
@@ -676,17 +687,24 @@
             });
         }
 
-        async function setStatus(id, newStatus) {
+        async function setStatus(id, newStatus, newScore = null) {
             const item = db.languages[currentLang].vocabulary.find(x => x.id === id);
             if (item) {
-                const updatedStatus = (item.status === newStatus) ? 'unstudied' : newStatus;
+                const updatedStatus = (item.status === newStatus && newScore === null) ? 'unstudied' : newStatus;
                 item.status = updatedStatus;
                 
+                if (newScore !== null) {
+                    item.score = newScore;
+                }
+
                 renderApp();
+
+                const updatePayload = { status: updatedStatus };
+                if (newScore !== null) updatePayload.score = newScore;
 
                 const { error } = await supabaseClient
                     .from('vocabulary')
-                    .update({ status: updatedStatus })
+                    .update(updatePayload)
                     .eq('id', id);
 
                 if (error) console.error("Erreur de mise à jour Supabase:", error);
@@ -709,28 +727,27 @@
 
         // --- GEMINI AI INTEGRATION ---
 
-async function generateWithGemini() {
-    const apiKey = document.getElementById('gemini-api-key').value.trim();
-    const rawWords = document.getElementById('ai-raw-words').value.trim();
-    const btn = document.getElementById('btn-generate-ai');
+        async function generateWithGemini() {
+            const apiKey = document.getElementById('gemini-api-key').value.trim();
+            const rawWords = document.getElementById('ai-raw-words').value.trim();
+            const btn = document.getElementById('btn-generate-ai');
 
-    if (!apiKey) {
-        alert("Veuillez saisir votre clé API Gemini.");
-        return;
-    }
+            if (!apiKey) {
+                alert("Veuillez saisir votre clé API Gemini.");
+                return;
+            }
 
-    if (!rawWords) {
-        alert("Veuillez coller au moins un mot de vocabulaire.");
-        return;
-    }
+            if (!rawWords) {
+                alert("Veuillez coller au moins un mot de vocabulaire.");
+                return;
+            }
 
-    localStorage.setItem('gemini_api_key', apiKey);
+            localStorage.setItem('gemini_api_key', apiKey);
 
-    btn.disabled = true;
-    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Filtrage pédagogique (Oxford / De Mauro)...</span>`;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Filtrage pédagogique (Oxford / De Mauro)...</span>`;
 
-    // Prompt pédagogique double référence (Oxford pour l'Anglais, De Mauro pour l'Italien)
-    const prompt = `Tu es un professeur de langues expert. Analyse cette liste brute de mots et d'expressions :
+            const prompt = `Tu es un professeur de langues expert. Analyse cette liste brute de mots et d'expressions :
 "${rawWords}"
 
 INSTRUCTIONS PEDAGOGIQUES STRICTES :
@@ -753,95 +770,92 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
   "rejected_notes": "Explication des mots rejetés (ou 'Aucun mot rejeté' si tout est conservé)"
 }`;
 
-    const modelsToTry = [
-        'gemini-2.5-flash',
-        'gemini-1.5-flash-latest',
-        'gemini-1.5-flash',
-        'gemini-1.5-pro'
-    ];
+            const modelsToTry = [
+                'gemini-2.5-flash',
+                'gemini-1.5-flash-latest',
+                'gemini-1.5-flash',
+                'gemini-1.5-pro'
+            ];
 
-    let success = false;
-    let lastErrorMessage = "";
+            let success = false;
+            let lastErrorMessage = "";
 
-    for (const model of modelsToTry) {
-        try {
-            let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: { responseMimeType: "application/json" }
-                })
-            });
+            for (const model of modelsToTry) {
+                try {
+                    let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            generationConfig: { responseMimeType: "application/json" }
+                        })
+                    });
 
-            if (response.status === 429) {
-                await new Promise(res => setTimeout(res, 2000));
-                response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        generationConfig: { responseMimeType: "application/json" }
-                    })
-                });
+                    if (response.status === 429) {
+                        await new Promise(res => setTimeout(res, 2000));
+                        response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: prompt }] }],
+                                generationConfig: { responseMimeType: "application/json" }
+                            })
+                        });
+                    }
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        lastErrorMessage = data.error.message;
+                        console.warn(`Modèle ${model} indisponible (${data.error.message}), tentative avec le suivant...`);
+                        continue;
+                    }
+
+                    const resultJson = JSON.parse(data.candidates[0].content.parts[0].text);
+                    
+                    detectedLanguageForImport = resultJson.language;
+                    const markdownText = resultJson.markdown;
+                    const rejectedNotes = resultJson.rejected_notes || "";
+
+                    const langLabel = detectedLanguageForImport === 'english' ? '🇬🇧 Anglais (Filtré Oxford)' : '🇮🇹 Italien (Filtré De Mauro)';
+                    document.getElementById('detected-lang-badge').innerText = langLabel;
+                    document.getElementById('ai-markdown-output').value = markdownText;
+                    
+                    renderParsedPreviewTable(markdownText);
+
+                    let notesContainer = document.getElementById('ai-rejected-notes');
+                    if (!notesContainer) {
+                        notesContainer = document.createElement('div');
+                        notesContainer.id = 'ai-rejected-notes';
+                        notesContainer.className = "p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 space-y-1 mt-2";
+                        document.getElementById('ai-preview-container').insertBefore(notesContainer, document.getElementById('ai-preview-container').lastElementChild);
+                    }
+
+                    if (rejectedNotes && !rejectedNotes.toLowerCase().includes('aucun mot')) {
+                        notesContainer.innerHTML = `<strong>⚠️ Mots écartés (C2 / Jargon) :</strong><p class="mt-1 text-slate-700 whitespace-pre-line">${escapeHtml(rejectedNotes)}</p>`;
+                        notesContainer.classList.remove('hidden');
+                    } else {
+                        notesContainer.classList.add('hidden');
+                    }
+
+                    document.getElementById('ai-preview-container').classList.remove('hidden');
+
+                    success = true;
+                    break;
+
+                } catch (err) {
+                    lastErrorMessage = err.message;
+                    console.warn(`Erreur réseau avec ${model}:`, err);
+                }
             }
 
-            const data = await response.json();
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer la prévisualisation</span>`;
 
-            if (data.error) {
-                lastErrorMessage = data.error.message;
-                console.warn(`Modèle ${model} indisponible (${data.error.message}), tentative avec le suivant...`);
-                continue;
+            if (!success) {
+                alert("Erreur lors de la génération. Détail : " + lastErrorMessage);
             }
-
-            const resultJson = JSON.parse(data.candidates[0].content.parts[0].text);
-            
-            detectedLanguageForImport = resultJson.language;
-            const markdownText = resultJson.markdown;
-            const rejectedNotes = resultJson.rejected_notes || "";
-
-            // Mise à jour des badges d'information
-            const langLabel = detectedLanguageForImport === 'english' ? '🇬🇧 Anglais (Filtré Oxford)' : '🇮🇹 Italien (Filtré De Mauro)';
-            document.getElementById('detected-lang-badge').innerText = langLabel;
-            document.getElementById('ai-markdown-output').value = markdownText;
-            
-            // Rendu de la prévisualisation du tableau
-            renderParsedPreviewTable(markdownText);
-
-            // Gestion du bloc explicatif des mots hors-périmètre
-            let notesContainer = document.getElementById('ai-rejected-notes');
-            if (!notesContainer) {
-                notesContainer = document.createElement('div');
-                notesContainer.id = 'ai-rejected-notes';
-                notesContainer.className = "p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 space-y-1 mt-2";
-                document.getElementById('ai-preview-container').insertBefore(notesContainer, document.getElementById('ai-preview-container').lastElementChild);
-            }
-
-            if (rejectedNotes && !rejectedNotes.toLowerCase().includes('aucun mot')) {
-                notesContainer.innerHTML = `<strong>⚠️ Mots écartés (C2 / Jargon) :</strong><p class="mt-1 text-slate-700 whitespace-pre-line">${escapeHtml(rejectedNotes)}</p>`;
-                notesContainer.classList.remove('hidden');
-            } else {
-                notesContainer.classList.add('hidden');
-            }
-
-            document.getElementById('ai-preview-container').classList.remove('hidden');
-
-            success = true;
-            break;
-
-        } catch (err) {
-            lastErrorMessage = err.message;
-            console.warn(`Erreur réseau avec ${model}:`, err);
         }
-    }
-
-    btn.disabled = false;
-    btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer la prévisualisation</span>`;
-
-    if (!success) {
-        alert("Erreur lors de la génération. Détail : " + lastErrorMessage);
-    }
-}
 
         function renderParsedPreviewTable(mdText) {
             const container = document.getElementById('ai-preview-table');
@@ -854,12 +868,10 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
 
             let html = `<table class="w-full text-left border-collapse"><thead><tr class="bg-slate-200 font-bold">`;
             
-            // Header
             const headers = lines[0].split('|').map(p => p.trim()).filter((p, i, a) => i > 0 && i < a.length - 1);
             headers.forEach(h => html += `<th class="p-1 border">${escapeHtml(h)}</th>`);
             html += `</tr></thead><tbody>`;
 
-            // Rows
             for (let i = 1; i < lines.length; i++) {
                 const cells = lines[i].split('|').map(p => p.trim()).filter((p, idx, a) => idx > 0 && idx < a.length - 1);
                 if (cells.length >= 3) {
@@ -910,6 +922,7 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
                                 pronunciation: pronunciation,
                                 sentence: sentence,
                                 status: 'unstudied',
+                                score: 1,
                                 language: targetLang
                             });
                         }
@@ -937,7 +950,7 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
             }
         }
 
-        // --- QUIZ LOGIC ---
+        // --- QUIZ LOGIC (AVEC ADAPTATION PAR SCORE 1-3 / 4-7 / 8-10) ---
 
         function startQuiz() {
             const allWords = db.languages[currentLang].vocabulary;
@@ -948,8 +961,31 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
                 return;
             }
 
-            const shuffledKnown = [...knownWords].sort(() => 0.5 - Math.random());
-            const selectedWords = shuffledKnown.slice(0, 10);
+            // Repartition des mots par tranche de score (défaut = score 1)
+            const lowTier = knownWords.filter(x => (x.score || 1) >= 1 && (x.score || 1) <= 3);
+            const midTier = knownWords.filter(x => (x.score || 1) >= 4 && (x.score || 1) <= 7);
+            const highTier = knownWords.filter(x => (x.score || 1) >= 8 && (x.score || 1) <= 10);
+
+            // Fonction auxiliaire pour mélanger et prélever N éléments
+            const pickRandom = (arr, count) => [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
+
+            // Objectif : 5 mots (1-3), 3 mots (4-7), 2 mots (8-10)
+            let selectedLow = pickRandom(lowTier, 5);
+            let selectedMid = pickRandom(midTier, 3);
+            let selectedHigh = pickRandom(highTier, 2);
+
+            let selectedWords = [...selectedLow, ...selectedMid, ...selectedHigh];
+
+            // Si le quota de 10 n'est pas atteint (tranches incomplètes), compléter avec les mots restants
+            if (selectedWords.length < 10 && selectedWords.length < knownWords.length) {
+                const selectedIds = new Set(selectedWords.map(w => w.id));
+                const remainingWords = knownWords.filter(w => !selectedIds.has(w.id));
+                const needed = Math.min(10 - selectedWords.length, remainingWords.length);
+                selectedWords = [...selectedWords, ...pickRandom(remainingWords, needed)];
+            }
+
+            // Mélanger l'ordre final des questions
+            selectedWords.sort(() => 0.5 - Math.random());
 
             quizQuestions = selectedWords.map(targetWord => {
                 const direction = Math.floor(Math.random() * 2);
@@ -996,12 +1032,14 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
         function renderQuizQuestion() {
             quizIsAnswering = false;
             const currentQ = quizQuestions[quizCurrentIndex];
+            const wordScore = currentQ.targetWord.score || 1;
 
             document.getElementById('quiz-progress-badge').innerText = `Question ${quizCurrentIndex + 1} / ${quizQuestions.length}`;
             document.getElementById('quiz-direction-label').innerText = currentQ.direction === 0 
                 ? `Traduction de :` 
                 : `Expression en ${db.languages[currentLang].name} :`;
             document.getElementById('quiz-question-prompt').innerText = currentQ.prompt;
+            document.getElementById('quiz-word-score-badge').innerText = `Score mot : ${wordScore}/10`;
 
             const container = document.getElementById('quiz-options-container');
             container.innerHTML = '';
@@ -1026,11 +1064,17 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
             const selectedChoice = currentQ.choices[choiceIdx];
             const container = document.getElementById('quiz-options-container');
             const allButtons = container.children;
+            const currentScore = currentQ.targetWord.score || 1;
 
             if (selectedChoice.isCorrect) {
                 quizScore++;
                 btnElement.className = "w-full p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-xs sm:text-sm font-bold transition text-left flex items-center justify-between shadow-sm";
                 btnElement.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-base";
+
+                // Augmenter le score du mot (+1, max 10)
+                const newScore = Math.min(10, currentScore + 1);
+                await setStatus(currentQ.targetWord.id, 'known', newScore);
+
             } else {
                 btnElement.className = "w-full p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-900 text-xs sm:text-sm font-bold transition text-left flex items-center justify-between shadow-sm";
                 btnElement.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-600 text-base";
@@ -1042,7 +1086,9 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
                     }
                 });
 
-                await setStatus(currentQ.targetWord.id, 'unknown');
+                // Diminuer le score du mot (-2, min 1) et repasser en "unknown"
+                const newScore = Math.max(1, currentScore - 2);
+                await setStatus(currentQ.targetWord.id, 'unknown', newScore);
             }
 
             setTimeout(() => {
@@ -1066,11 +1112,11 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
             const ratio = quizScore / total;
 
             if (ratio === 1) {
-                comment.innerText = "🎉 Sans faute ! Vos connaissances sont parfaites.";
+                comment.innerText = "🎉 Sans faute ! Vos connaissances augmentent le score de vos mots !";
             } else if (ratio >= 0.7) {
-                comment.innerText = "👏 Très bon score ! Continuez ainsi.";
+                comment.innerText = "👏 Très bon score ! Vos mots révisés progressent.";
             } else if (ratio >= 0.5) {
-                comment.innerText = "👍 Pas mal, mais quelques révisions s'imposent.";
+                comment.innerText = "👍 Pas mal ! Les mots manqués repassent en révision active.";
             } else {
                 comment.innerText = "💪 Courage ! Les mots manqués sont revenus en révision.";
             }
@@ -1140,6 +1186,7 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
                                 pronunciation: pronunciation,
                                 sentence: sentence,
                                 status: 'unstudied',
+                                score: 1,
                                 language: targetLang
                             });
                         }
@@ -1183,6 +1230,7 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
                 pronunciation: targetLang === 'english' ? pronunciation : '',
                 sentence: sentence,
                 status: 'unstudied',
+                score: 1,
                 language: targetLang
             };
 
