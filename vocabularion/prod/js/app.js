@@ -139,6 +139,8 @@ function renderApp() {
 
     updateMaskingControls();
     renderTable();
+
+    initDailyFocus();
 }
 
 function renderTable() {
@@ -444,4 +446,101 @@ function openModal(id) {
 
 function closeModal(id) {
     document.getElementById(id).classList.add('hidden');
+}
+
+// Variable globale pour le lot du jour
+let dailyFocusWords = [];
+
+// Initialisation du lot du jour
+function initDailyFocus() {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const savedData = localStorage.getItem(`daily_focus_${currentLang}`);
+    
+    if (savedData) {
+        const parsed = JSON.parse(savedData);
+        // Si c'est le même jour, on réutilise le même lot
+        if (parsed.date === todayStr && parsed.words && parsed.words.length > 0) {
+            dailyFocusWords = parsed.words;
+            renderDailyFocus();
+            return;
+        }
+    }
+    
+    // Sinon, on génère un nouveau lot
+    generateDailyFocus(false);
+}
+
+// Génération aléatoire de 5 mots (Pas appris + Je ne sais pas)
+function generateDailyFocus(forceNew = false) {
+    const allWords = db.languages[currentLang].vocabulary;
+    const eligibleWords = allWords.filter(x => x.status === 'unstudied' || x.status === 'unknown');
+
+    if (eligibleWords.length === 0) {
+        dailyFocusWords = [];
+        renderDailyFocus();
+        return;
+    }
+
+    // Tirage au sort de 5 mots max
+    const shuffled = [...eligibleWords].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 5);
+
+    dailyFocusWords = selected.map(w => w.id);
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    localStorage.setItem(`daily_focus_${currentLang}`, JSON.stringify({
+        date: todayStr,
+        words: dailyFocusWords
+    }));
+
+    renderDailyFocus();
+}
+
+// Affichage des cartes compactes du lot du jour
+function renderDailyFocus() {
+    const container = document.getElementById('daily-focus-list');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const allWords = db.languages[currentLang].vocabulary;
+    const currentFocusItems = dailyFocusWords
+        .map(id => allWords.find(w => w.id === id))
+        .filter(Boolean);
+
+    if (currentFocusItems.length === 0) {
+        container.innerHTML = `<p class="text-xs text-indigo-200 col-span-full italic py-1">Aucun mot à réviser disponible dans cette langue.</p>`;
+        return;
+    }
+
+    currentFocusItems.forEach((item) => {
+        const isKnown = item.status === 'known';
+        const card = document.createElement('div');
+        card.className = `p-2.5 rounded-xl border text-xs flex flex-col justify-between space-y-2 transition ${isKnown ? 'bg-indigo-950/40 border-emerald-500/50 opacity-60' : 'bg-indigo-950/70 border-indigo-600/60'}`;
+
+        const escapedTermJs = escapeJsString(item.term);
+        const escapedTransJs = escapeJsString(item.translation);
+
+        card.innerHTML = `
+            <div>
+                <div class="flex justify-between items-start gap-1 mb-1">
+                    <span class="font-bold text-white text-sm ${isKnown ? 'line-through text-indigo-300' : ''}">${escapeHtml(item.term)}</span>
+                    <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-indigo-300 hover:text-white p-0.5">
+                        <i class="fa-solid fa-volume-high text-[11px]"></i>
+                    </button>
+                </div>
+                <div onclick="this.innerText='${escapedTransJs}'" class="text-indigo-200 text-[11px] cursor-pointer hover:text-white transition select-none">
+                    🙈 Voir traduction
+                </div>
+            </div>
+
+            <div class="pt-1 border-t border-indigo-800/80 flex justify-between items-center">
+                <button onclick="setStatus('${item.id}', 'known'); renderDailyFocus();" class="w-full py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-300 font-semibold text-[10px] border border-emerald-500/30 flex items-center justify-center space-x-1 transition">
+                    <i class="fa-solid fa-check text-[9px]"></i>
+                    <span>${isKnown ? 'ACQUIS' : 'JE SAIS'}</span>
+                </button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
 }
