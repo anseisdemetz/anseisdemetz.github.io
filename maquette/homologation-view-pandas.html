@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Tableau Homologation API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #1a252f;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        /* Formulaire de configuration */
+        .config-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            flex: 1;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 13px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .actions-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        /* Boutons */
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .btn-primary {
+            background-color: #27ae60;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #219653;
+        }
+        .btn-export {
+            background-color: #2980b9;
+            color: #ffffff;
+        }
+        .btn-export:hover {
+            background-color: #1f6391;
+        }
+        
+        /* Status */
+        .status {
+            background-color: #e8f4fd;
+            border: 1px solid #b6e0fe;
+            color: #004085;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Tableau */
+        .table-container {
+            overflow-x: auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+            min-width: 1800px;
+        }
+        th, td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e1e4e8;
+            border-right: 1px solid #f0f0f0;
+        }
+        th {
+            background-color: #2c3e50;
+            color: #ffffff;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        tr:hover { background-color: #f8f9fa; }
+        tr:nth-child(even) { background-color: #fafbfc; }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .badge-true {
+            background-color: #d4edda;
+            color: #155724;
+            cursor: pointer;
+            border: 1px solid #c3e6cb;
+        }
+        .badge-true:hover {
+            background-color: #c3e6cb;
+            text-decoration: underline;
+        }
+        .badge-false { background-color: #f8d7da; color: #721c24; }
+        .empty-cell { color: #aaa; font-style: italic; }
+
+        /* Styles Modale */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.65);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-container {
+            background-color: #fff;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 900px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .modal-header {
+            padding: 15px 20px;
+            background-color: #2c3e50;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        .proof-img-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 220px;
+        }
+        .proof-img-card img {
+            max-width: 200px;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        .proof-img-card span {
+            font-size: 11px;
+            color: #666;
+            margin-top: 6px;
+            word-break: break-all;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Extraction Homologation API</h1>
+
+<!-- Panneau de configuration -->
+<div class="config-card">
+    <div class="form-group">
+        <label for="apiUrl">URL de l'API (ex: https://domaine.com/Homologation) :</label>
+        <input type="text" id="apiUrl" value="" placeholder="https://votre-domaine-api.com/Homologation">
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="autologin">AUTOLOGIN :</label>
+            <input type="text" id="autologin" value="" placeholder="Entrez votre jeton autologin">
+        </div>
+
+        <div class="form-group">
+            <label for="dateFrom">Date de début (YYYY-MM-DD) :</label>
+            <input type="date" id="dateFrom" value="">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="pdvList">PDV (Liste des code_pos séparés par virgules, espaces ou saut de ligne) :</label>
+        <textarea id="pdvList" placeholder="Exemple: POS001, POS002, POS003"></textarea>
+    </div>
+
+    <div class="actions-bar">
+        <button id="btnExecute" class="btn btn-primary" onclick="processAll()">Exécuter</button>
+        <button id="btnExport" class="btn btn-export" onclick="exportTableToCSV()">Export CSV</button>
+    </div>
+</div>
+
+<div id="status" class="status">Prêt. Configurez les champs ci-dessus puis cliquez sur "Exécuter".</div>
+
+<div class="table-container">
+    <table id="resultTable">
+        <thead>
+            <tr>
+                <th>Code POS</th>
+                <th>n° transaction</th>
+                <th>n° session</th>
+                <th>Grade initial</th>
+                <th>Grade final</th>
+                <th>Combinaison initiale</th>
+                <th>Combinaison finale</th>
+                <th>Litige</th>
+                <th>Preuve photo</th>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Produit</th>
+                <th>IMEI</th>
+                <th>date création</th>
+                <th>date réception</th>
+                <th>date homologation</th>
+                <th>date dispatch</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Lignes dynamiques -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Structure de la Modale -->
+<div id="proofModal" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 id="modalTitle">Preuves photos</h3>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div id="modalBody" class="modal-body">
+            <!-- Les images seront injectées ici -->
+        </div>
+    </div>
+</div>
+
+<script>
+    function getValueByPath(obj, path) {
+        return path.split('->').reduce((acc, part) => {
+            const key = part.trim();
+            return (acc && acc[key] !== undefined) ? acc[key] : null;
+        }, obj);
+    }
+
+    function formatLitigations(litigations) {
+        if (!litigations || !Array.isArray(litigations) || litigations.length === 0) return "-";
+        return litigations.map(lit => {
+            const code = lit.code !== undefined ? lit.code : '';
+            const label = lit.label_fr !== undefined ? lit.label_fr : '';
+            if (code && label) return `${code} - ${label}`;
+            return code || label || '';
+        }).filter(Boolean).join(' ; ');
+    }
+
+    function isNotEmpty(value) {
+        if (value === undefined || value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        if (Array.isArray(value) && value.length === 0) return false;
+        if (typeof value === 'object' && Object.keys(value).length === 0) return false;
+        return true;
+    }
+
+    function renderCell(val) {
+        if (val === null || val === undefined || val === '') {
+            return '<span class="empty-cell">-</span>';
+        }
+        return String(val);
+    }
+
+    function renderProofCell(hasProofs, codePos, labelProduct) {
+        if (hasProofs === true) {
+            return `<span class="badge badge-true" onclick="openProofModal('${codePos}', '${labelProduct}')" title="Cliquez pour afficher les images">Voir les photos (Oui)</span>`;
+        } else if (hasProofs === false) {
+            return `<span class="badge badge-false">Non</span>`;
+        }
+        return '<span class="empty-cell">-</span>';
+    }
+
+    function addRowToTable(codePos, item) {
+        const tbody = document.querySelector('#resultTable tbody');
+        const tr = document.createElement('tr');
+
+        const labelProduct = getValueByPath(item, 'transaction -> label_product');
+        const pandasSessionId = getValueByPath(item, 'transaction -> pandas_session_id');
+        
+        const initialCondition = getValueByPath(item, 'conditions -> initial -> condition');
+        const finalCondition = getValueByPath(item, 'conditions -> final -> condition');
+        const initialCombination = getValueByPath(item, 'conditions -> initial -> combination');
+        const finalCombination = getValueByPath(item, 'conditions -> final -> combination');
+        
+        const litigationsFormatted = formatLitigations(getValueByPath(item, 'litigations'));
+        const hasProofs = getValueByPath(item, 'has_proofs');
+        
+        const brand = getValueByPath(item, 'product -> brand');
+        const model = getValueByPath(item, 'product -> model');
+        const name = getValueByPath(item, 'product -> name');
+        const imei = getValueByPath(item, 'product -> imei');
+        
+        const dateCreated = getValueByPath(item, 'dates -> created');
+        const dateReception = getValueByPath(item, 'dates -> reception');
+        const dateHomologation = getValueByPath(item, 'dates -> homologation');
+        const dateDispatch = getValueByPath(item, 'dates -> dispatch');
+
+        tr.innerHTML = `
+            <td><strong>${codePos}</strong></td>
+            <td>${renderCell(labelProduct)}</td>
+            <td>${renderCell(pandasSessionId)}</td>
+            <td>${renderCell(initialCondition)}</td>
+            <td>${renderCell(finalCondition)}</td>
+            <td>${renderCell(initialCombination)}</td>
+            <td>${renderCell(finalCombination)}</td>
+            <td>${renderCell(litigationsFormatted)}</td>
+            <td>${renderProofCell(hasProofs, codePos, labelProduct)}</td>
+            <td>${renderCell(brand)}</td>
+            <td>${renderCell(model)}</td>
+            <td>${renderCell(name)}</td>
+            <td>${renderCell(imei)}</td>
+            <td>${renderCell(dateCreated)}</td>
+            <td>${renderCell(dateReception)}</td>
+            <td>${renderCell(dateHomologation)}</td>
+            <td>${renderCell(dateDispatch)}</td>
+        `;
+
+        tbody.appendChild(tr);
+    }
+
+    async function processAll() {
+        const baseUrl = document.getElementById('apiUrl').value.trim();
+        const autologin = document.getElementById('autologin').value.trim();
+        const dateFrom = document.getElementById('dateFrom').value.trim();
+        const rawPdv = document.getElementById('pdvList').value;
+        const statusEl = document.getElementById('status');
+        const tbody = document.querySelector('#resultTable tbody');
+
+        if (!baseUrl) {
+            alert('Veuillez renseigner l\'URL de l\'API.');
+            return;
+        }
+
+        const codePosList = rawPdv
+            .split(/[\n,\s]+/)
+            .map(code => code.trim())
+            .filter(code => code.length > 0);
+
+        if (codePosList.length === 0) {
+            alert('Veuillez renseigner au moins un code POS.');
+            return;
+        }
+
+        tbody.innerHTML = '';
+        
+        const total = codePosList.length;
+        let validItemsCount = 0;
+        
+        document.getElementById('btnExecute').disabled = true;
+        
+        for (let i = 0; i < total; i++) {
+            const codePos = codePosList[i];
+            statusEl.textContent = `Traitement : ${i + 1} / ${total} (Lignes ajoutées : ${validItemsCount})`;
+            
+            const separator = baseUrl.includes('?') ? '&' : '?';
+            let requestUrl = `${baseUrl}${separator}autologin=${encodeURIComponent(autologin)}&code_pos=${encodeURIComponent(codePos)}`;
+            
+            if (dateFrom) {
+                requestUrl += `&date_from=${encodeURIComponent(dateFrom)}`;
+            }
+
+            try {
+                const response = await fetch(requestUrl);
+                const json = await response.json();
+
+                if (json && isNotEmpty(json.response)) {
+                    const items = Array.isArray(json.response) ? json.response : [json.response];
+                    
+                    items.forEach(item => {
+                        addRowToTable(codePos, item);
+                        validItemsCount++;
+                    });
+                }
+            } catch (err) {
+                // Ignore les erreurs réseau
+            }
+        }
+        
+        statusEl.textContent = `Traitement terminé (${total} POS vérifiés). Nombre total de lignes affichées : ${validItemsCount}`;
+        document.getElementById('btnExecute').disabled = false;
+    }
+
+    // Gestion de la modale d'affichage des photos de preuve
+    async function openProofModal(codePos, labelProduct) {
+        const baseUrl = document.getElementById('apiUrl').value.trim();
+        const autologin = document.getElementById('autologin').value.trim();
+        const modal = document.getElementById('proofModal');
+        const modalBody = document.getElementById('modalBody');
+        const modalTitle = document.getElementById('modalTitle');
+
+        modalTitle.textContent = `Preuves photos - ${labelProduct} (POS: ${codePos})`;
+        modalBody.innerHTML = '<p style="color:#666;">Chargement des images...</p>';
+        modal.style.display = 'flex';
+
+        let proofsUrl = baseUrl;
+        if (proofsUrl.endsWith('/Homologation')) {
+            proofsUrl += '/proofs';
+        } else if (proofsUrl.endsWith('/Homologation/')) {
+            proofsUrl += 'proofs';
+        } else if (!proofsUrl.includes('/proofs')) {
+            proofsUrl += '/proofs';
+        }
+
+        const separator = proofsUrl.includes('?') ? '&' : '?';
+        const requestUrl = `${proofsUrl}${separator}autologin=${encodeURIComponent(autologin)}&code_pos=${encodeURIComponent(codePos)}&transaction=${encodeURIComponent(labelProduct)}`;
+
+        try {
+            const response = await fetch(requestUrl);
+            const json = await response.json();
+
+            modalBody.innerHTML = '';
+
+            const proofs = getValueByPath(json, 'response -> proofs');
+
+            if (proofs && Array.isArray(proofs) && proofs.length > 0) {
+                proofs.forEach(proof => {
+                    const card = document.createElement('div');
+                    card.className = 'proof-img-card';
+
+                    const base64Src = proof.base64 ? (proof.base64.startsWith('data:image') ? proof.base64 : `data:image/jpeg;base64,${proof.base64}`) : '';
+                    
+                    if (base64Src) {
+                        card.innerHTML = `
+                            <img src="${base64Src}" alt="${proof.filename || 'Preuve photo'}" />
+                            <span>${proof.filename || ''}</span>
+                        `;
+                    } else {
+                        card.innerHTML = `<span style="color:#999; padding:20px;">Image indisponible</span><span>${proof.filename || ''}</span>`;
+                    }
+                    modalBody.appendChild(card);
+                });
+            } else {
+                modalBody.innerHTML = '<p style="color:#999;">Aucune preuve photo trouvée pour cette transaction.</p>';
+            }
+        } catch (err) {
+            modalBody.innerHTML = `<p style="color:#ff5555;">Erreur lors du chargement des preuves : ${err.message}</p>`;
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('proofModal').style.display = 'none';
+    }
+
+    function closeModalOnOverlay(event) {
+        if (event.target.id === 'proofModal') {
+            closeModal();
+        }
+    }
+
+    function exportTableToCSV() {
+        const table = document.getElementById('resultTable');
+        const rows = Array.from(table.querySelectorAll('tr'));
+        
+        if (rows.length <= 1 || rows[1].querySelectorAll('td').length === 0) {
+            alert('Le tableau est vide. Veuillez d\'abord exécuter la recherche.');
+            return;
+        }
+
+        const csvContent = rows.map(row => {
+            const cells = Array.from(row.querySelectorAll('th, td'));
+            return cells.map(cell => {
+                let text = cell.innerText || cell.textContent || '';
+                text = text.replace(/"/g, '""');
+                return `"${text.trim()}"`;
+            }).join(';');
+        }).join('\r\n');
+
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `export_homologation_${new Date().toISOString().slice(0, 10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+</body>
+</html>
