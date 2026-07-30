@@ -1,4 +1,4 @@
-// Supabase Client Config
+// Supabase Client Config PROD VOCABULARION
 const SUPABASE_URL = 'https://zugowxfbpbpcbqhznaeb.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1Z293eGZicGJwY2JxaHpuYWViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4Njg0MjAsImV4cCI6MjEwMDQ0NDQyMH0.TUmghp2tmqWeXoK8x1P_wbC5ARMeMQ3Npw_AwN8dGb4';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

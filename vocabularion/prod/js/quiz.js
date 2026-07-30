@@ -12,9 +12,29 @@ function startQuiz() {
         return;
     }
 
-    const lowTier = knownWords.filter(x => (x.score || 1) >= 1 && (x.score || 1) <= 3);
-    const midTier = knownWords.filter(x => (x.score || 1) >= 4 && (x.score || 1) <= 7);
-    const highTier = knownWords.filter(x => (x.score || 1) >= 8 && (x.score || 1) <= 10);
+    // --- GESTION DES MOTS DÉJÀ VUS AUJOURD'HUI ---
+    const todayStr = new Date().toISOString().split('T')[0];
+    const storageKey = `quiz_seen_${currentLang}`;
+    let seenData = JSON.parse(localStorage.getItem(storageKey) || '{}');
+
+    // Réinitialisation si la date a changé
+    if (seenData.date !== todayStr) {
+        seenData = { date: todayStr, ids: [] };
+    }
+
+    // Filtrer pour ne garder que les mots NON ENCORE VUS aujourd'hui
+    let availableKnown = knownWords.filter(w => !seenData.ids.includes(w.id));
+
+    // Si on a épuisé presque tous les mots "Je sais", on réinitialise l'historique de la journée pour continuer à réviser
+    if (availableKnown.length < 5) {
+        seenData.ids = [];
+        availableKnown = [...knownWords];
+    }
+
+    // --- SÉLECTION PAR TRANCHES DE SCORE (SUR LES MOTS DISPONIBLES) ---
+    const lowTier = availableKnown.filter(x => (x.score || 1) >= 1 && (x.score || 1) <= 3);
+    const midTier = availableKnown.filter(x => (x.score || 1) >= 4 && (x.score || 1) <= 7);
+    const highTier = availableKnown.filter(x => (x.score || 1) >= 8 && (x.score || 1) <= 10);
 
     const pickRandom = (arr, count) => [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
 
@@ -24,13 +44,23 @@ function startQuiz() {
 
     let selectedWords = [...selectedLow, ...selectedMid, ...selectedHigh];
 
-    if (selectedWords.length < 10 && selectedWords.length < knownWords.length) {
+    // Rattrapage si une tranche manque de mots : on complète avec le reste des mots disponibles non vus
+    if (selectedWords.length < 10 && selectedWords.length < availableKnown.length) {
         const selectedIds = new Set(selectedWords.map(w => w.id));
-        const remainingWords = knownWords.filter(w => !selectedIds.has(w.id));
-        const needed = Math.min(10 - selectedWords.length, remainingWords.length);
-        selectedWords = [...selectedWords, ...pickRandom(remainingWords, needed)];
+        const remainingAvailable = availableKnown.filter(w => !selectedIds.has(w.id));
+        const needed = Math.min(10 - selectedWords.length, remainingAvailable.length);
+        selectedWords = [...selectedWords, ...pickRandom(remainingAvailable, needed)];
     }
 
+    // Enregistrer les mots sélectionnés dans l'historique des mots vus aujourd'hui
+    selectedWords.forEach(w => {
+        if (!seenData.ids.includes(w.id)) {
+            seenData.ids.push(w.id);
+        }
+    });
+    localStorage.setItem(storageKey, JSON.stringify(seenData));
+
+    // --- CONSTITUTION DU QUIZ ---
     selectedWords.sort(() => 0.5 - Math.random());
 
     quizQuestions = selectedWords.map(targetWord => {
