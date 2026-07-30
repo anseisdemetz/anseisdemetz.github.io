@@ -1,6 +1,6 @@
 // Supabase Client Config
 const SUPABASE_URL = 'https://okqpskyzteuhwochesbv.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1Z293eGZicGJwY2JxaHpuYWViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4Njg0MjAsImV4cCI6MjEwMDQ0NDQyMH0.TUmghp2tmqWeXoK8x1P_wbC5ARMeMQ3Npw_AwN8dGb4';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rcXBza3l6dGV1aHdvY2hlc2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzOTI2MDEsImV4cCI6MjEwMDk2ODYwMX0.AHxjCrvXKpccziqOo17-FgOm7uJo7WiVuUxrrsG_eWE';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Global App State
