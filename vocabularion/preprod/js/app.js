@@ -497,6 +497,7 @@ function generateDailyFocus(forceNew = false) {
 }
 
 // Affichage des cartes compactes du lot du jour
+// Affichage des cartes compactes du lot du jour (Version avec phrase d'illustration)
 function renderDailyFocus() {
     const container = document.getElementById('daily-focus-list');
     if (!container) return;
@@ -516,26 +517,37 @@ function renderDailyFocus() {
     currentFocusItems.forEach((item) => {
         const isKnown = item.status === 'known';
         const card = document.createElement('div');
-        card.className = `p-2.5 rounded-xl border text-xs flex flex-col justify-between space-y-2 transition ${isKnown ? 'bg-indigo-950/40 border-emerald-500/50 opacity-60' : 'bg-indigo-950/70 border-indigo-600/60'}`;
+        card.className = `p-3 rounded-xl border text-xs flex flex-col justify-between space-y-2.5 transition ${isKnown ? 'bg-indigo-950/40 border-emerald-500/50 opacity-60' : 'bg-indigo-950/70 border-indigo-600/60'}`;
 
         const escapedTermJs = escapeJsString(item.term);
         const escapedTransJs = escapeJsString(item.translation);
 
         card.innerHTML = `
-            <div>
-                <div class="flex justify-between items-start gap-1 mb-1">
+            <div class="space-y-1.5">
+                <!-- Terme & Prononciation -->
+                <div class="flex justify-between items-start gap-1">
                     <span class="font-bold text-white text-sm ${isKnown ? 'line-through text-indigo-300' : ''}">${escapeHtml(item.term)}</span>
-                    <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-indigo-300 hover:text-white p-0.5">
+                    <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-indigo-300 hover:text-white p-0.5" title="Écouter">
                         <i class="fa-solid fa-volume-high text-[11px]"></i>
                     </button>
                 </div>
-                <div onclick="this.innerText='${escapedTransJs}'" class="text-indigo-200 text-[11px] cursor-pointer hover:text-white transition select-none">
+
+                <!-- Traduction masquée / révélée -->
+                <div onclick="this.innerText='${escapedTransJs}'" class="text-indigo-200 text-[11px] cursor-pointer hover:text-white transition select-none font-medium">
                     🙈 Voir traduction
                 </div>
+
+                <!-- Phrase d'exemple en situation -->
+                ${item.sentence ? `
+                    <div class="text-[11px] italic text-indigo-100 bg-indigo-900/50 p-2 rounded-lg border border-indigo-700/50 leading-relaxed mt-1">
+                        "${escapeHtml(item.sentence)}"
+                    </div>
+                ` : ''}
             </div>
 
-            <div class="pt-1 border-t border-indigo-800/80 flex justify-between items-center">
-                <button onclick="setStatus('${item.id}', 'known'); renderDailyFocus();" class="w-full py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-300 font-semibold text-[10px] border border-emerald-500/30 flex items-center justify-center space-x-1 transition">
+            <!-- Bouton JE SAIS -->
+            <div class="pt-2 border-t border-indigo-800/80 flex justify-between items-center">
+                <button onclick="setStatus('${item.id}', 'known'); renderDailyFocus();" class="w-full py-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-300 font-semibold text-[10px] border border-emerald-500/30 flex items-center justify-center space-x-1 transition">
                     <i class="fa-solid fa-check text-[9px]"></i>
                     <span>${isKnown ? 'ACQUIS' : 'JE SAIS'}</span>
                 </button>
