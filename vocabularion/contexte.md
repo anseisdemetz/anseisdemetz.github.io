@@ -51,7 +51,8 @@ Voici la fiche technique complète et l'architecture actuelle de l'application :
    - Sélection par tranche de score : **5 mots** (score 1-3), **3 mots** (score 4-7), **2 mots** (score 8-10). Rattrapage automatique si une tranche est incomplète.
    - Les mots du jours sont enregistrés en Local et sont éclus des prochains quiz de la journée. Le localStore est réinitialisé dans 2 cas : si le tirage au sort manque de mot et le lendemain matin.
    - **Ajustement des scores :** Bonne réponse = Score +1 (max 10) | Mauvaise réponse = Score -2 (min 1) + Repasse en statut `'unknown'`.
-   - **Les 5 mots du jour** : le système affiche 5 mots à apprendre chaque jour au statut 'unstudied' ou 'unknown'. Ces mots sont enregistrés pour toute la journée. Je peux afficher la traduction en français et je peut les marquer 'known'
+3. **Apprendre 5 mots par jours :**   
+   - le système affiche 5 mots à apprendre chaque jour au statut 'unstudied' ou 'unknown'. Ces mots sont enregistrés pour toute la journée. L'outil affiche le mot dans la langue à apprendre ainsi que la phrase d'illustration. Le système offre l'accès à la prononciation audio et la possibilité d'afficher la traduction française. 
 
 ---
 Confirme-moi que tu as bien assimilé le contexte de l'application et nous pourrons commencer à travailler sur les nouvelles évolutions.
