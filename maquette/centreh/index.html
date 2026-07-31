@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codes d'Homologation</title>
+    <title>Plateforme d'Homologation - Pre-check</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -14,7 +14,7 @@
         <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold text-sky-400">Plateforme d'Homologation</h1>
-                <p class="text-sm text-slate-400">Liste des codes de Pré-diagnostic</p>
+                <p class="text-sm text-slate-400">Étape de contrôle préliminaire</p>
             </div>
             <button id="reloadBtn" class="bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 px-3 py-1.5 rounded-md text-xs font-mono transition">
                 🔄 Recharger
@@ -22,30 +22,41 @@
         </header>
 
         <!-- Zone d'affichage principal -->
-        <main class="space-y-4">
+        <main class="space-y-6">
             
-            <!-- Message de chargement / Erreur -->
+            <!-- Message de statut -->
             <div id="statusMessage" class="p-4 rounded-lg bg-slate-800 border border-slate-700 text-center text-sm text-slate-300">
                 Chargement des codes en cours...
             </div>
 
-            <!-- Bloc Pré-diagnostic -->
-            <section id="preDiagBlock" class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md hidden">
+            <!-- Bloc Pre-check -->
+            <section id="preCheckBlock" class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md hidden">
                 <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
-                    <h2 class="text-lg font-semibold text-slate-200"># Pré-diagnostic</h2>
+                    <h2 class="text-lg font-semibold text-slate-200"># Pre-check</h2>
                     <span id="counterBadge" class="text-xs bg-slate-700 text-sky-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
                 </div>
 
-                <!-- Liste des codes -->
-                <div id="codesList" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
-                    <!-- Généré dynamiquement -->
-                </div>
+                <!-- Formulaire contenant la liste et le bouton d'envoi -->
+                <form id="preCheckForm" class="space-y-4">
+                    <!-- Liste des codes générée dynamiquement -->
+                    <div id="codesList" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                        <!-- Généré en JS -->
+                    </div>
+
+                    <!-- Pied du bloc avec bouton Envoyer -->
+                    <div class="pt-4 border-t border-slate-700 flex justify-end">
+                        <button type="submit" id="sendBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2 rounded-md transition duration-150 shadow">
+                            Envoyer
+                        </button>
+                    </div>
+                </form>
             </section>
 
-            <!-- Console de Debug JSON -->
+            <!-- Console Log API (Résultat Brut) -->
             <section class="bg-slate-950 p-4 rounded-lg border border-slate-800 font-mono text-xs shadow-inner">
-                <div class="text-slate-500 border-b border-slate-800 pb-2 mb-2 flex justify-between">
-                    <span>// Réponse API Brute (JSON)</span>
+                <div class="text-slate-500 border-b border-slate-800 pb-2 mb-2 flex justify-between items-center">
+                    <span>// Console Sortie (JSON)</span>
+                    <button id="clearConsoleBtn" class="hover:text-slate-200 transition text-xs">Vider</button>
                 </div>
                 <pre id="consoleOutput" class="text-emerald-400 overflow-x-auto max-h-48 leading-relaxed">// Attente des données...</pre>
             </section>
