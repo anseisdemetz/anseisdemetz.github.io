@@ -2,57 +2,71 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Test CORS - ProductPreCheck</title>
+    <title>Test CORS - API Codes d'homologation</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-white p-8">
 
     <div class="max-w-2xl mx-auto space-y-4">
-        <h1 class="text-xl font-bold text-sky-400">Test CORS : productPreCheck</h1>
-        <p class="text-sm text-slate-400">Clique sur le bouton pour tester la requête POST avec l'en-tête Authorization.</p>
+        <h1 class="text-xl font-bold text-sky-400">Test CORS : Diagnostic / Codes</h1>
+        <p class="text-sm text-slate-400">
+            Test de récupération des codes via le proxy CORS et l'en-tête <code class="bg-slate-800 px-1.5 py-0.5 rounded text-sky-300">X-AUTH-CR</code>.
+        </p>
 
-        <button id="testBtn" class="bg-sky-600 hover:bg-sky-500 font-medium px-4 py-2 rounded transition">
-            Tester l'endpoint productPreCheck
+        <button id="testCodesBtn" class="bg-sky-600 hover:bg-sky-500 font-medium px-5 py-2.5 rounded transition text-sm flex items-center gap-2">
+            <span>Tester l'appel API</span>
         </button>
 
-        <div class="bg-slate-950 p-4 rounded border border-slate-800 font-mono text-xs">
-            <span class="text-slate-500 block mb-2">// Résultat du test :</span>
-            <pre id="output" class="text-emerald-400 whitespace-pre-wrap">En attente du test...</pre>
+        <div class="bg-slate-950 p-4 rounded border border-slate-800 font-mono text-xs mt-4 shadow-inner">
+            <span class="text-slate-500 block mb-2">// Statut et réponse JSON :</span>
+            <pre id="output" class="text-slate-400 whitespace-pre-wrap">Cliquer sur le bouton pour lancer le test...</pre>
         </div>
     </div>
 
-    <!-- Configuration locale pour le test -->
+    <!-- Configuration globale -->
     <script src="config.js"></script>
 
     <script>
-        document.getElementById("testBtn").addEventListener("click", async () => {
-            const output = document.getElementById("output");
-            output.textContent = "Test en cours...";
+        const testBtn = document.getElementById("testCodesBtn");
+        const output = document.getElementById("output");
+
+        testBtn.addEventListener("click", async () => {
+            output.textContent = "Requête en cours...";
             output.className = "text-amber-400 whitespace-pre-wrap";
+            testBtn.disabled = true;
+            testBtn.style.opacity = "0.6";
+
+            // Utilisation du proxy CORS pour contourner le blocage Preflight du navigateur
+            const targetUrl = "https://corsproxy.io/?" + encodeURIComponent(CONFIG.CODES_API_URL);
 
             try {
-                const response = await fetch(CONFIG.CODES_API_URL, {
-                    method: "POST",
+                const response = await fetch(targetUrl, {
+                    method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${CONFIG.CODES_API_TOKEN}`
-                    },
-                    body: JSON.stringify({
-                        transaction_id: fakeTransactionId,
-                        pre_check_answers: [
-                            { code: 401, value: true }
-                        ]
-                    })
+                        "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                    }
                 });
 
-                const data = await response.json().catch(() => ({ status: response.status }));
-                
-                output.className = "text-emerald-400 whitespace-pre-wrap";
-                output.textContent = `SUCCESS (HTTP ${response.status}) !\nLe serveur accepte l'en-tête Authorization.\n\nRéponse du serveur :\n` + JSON.stringify(data, null, 2);
+                const data = await response.json().catch(() => ({ 
+                    error: "Impossible de parser le JSON",
+                    status: response.status 
+                }));
+
+                if (response.ok) {
+                    output.className = "text-emerald-400 whitespace-pre-wrap";
+                    output.textContent = `SUCCESS (HTTP ${response.status}) !\n\nRéponse du serveur :\n` + JSON.stringify(data, null, 2);
+                } else {
+                    output.className = "text-rose-400 whitespace-pre-wrap";
+                    output.textContent = `ERREUR HTTP (${response.status}) !\n\nRéponse du serveur :\n` + JSON.stringify(data, null, 2);
+                }
 
             } catch (error) {
                 output.className = "text-rose-400 whitespace-pre-wrap";
-                output.textContent = `ÉCHEC CORS / RÉSEAU !\n\nMessage : ${error.message}\n\nOuvre la console du navigateur (F12) pour voir les détails de l'erreur CORS.`;
+                output.textContent = `ÉCHEC RÉSEAU / CORS !\n\nMessage : ${error.message}`;
+            } finally {
+                testBtn.disabled = false;
+                testBtn.style.opacity = "1";
             }
         });
     </script>
