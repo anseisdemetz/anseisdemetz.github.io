@@ -31,8 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const data = await fetchCodes();
             
+            // Si la réponse est un tableau ou contient une clé data (selon la structure API)
+            const codesArray = Array.isArray(data) ? data : (data.codes || data.data || []);
+
             // Filtrer uniquement les éléments avec steps.pre_check === true
-            filteredCodes = data.filter(item => item.steps && item.steps.pre_check === true);
+            filteredCodes = codesArray.filter(item => item.steps && item.steps.pre_check === true);
             
             if (filteredCodes.length === 0) {
                 showError("Aucun code trouvé avec un pré-diagnostic requis (pre_check = true).");
@@ -41,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 renderCodesList(filteredCodes);
                 preDiagBlock.classList.remove("hidden");
             }
+
+            // Log de la liste récupérée dans la console HTML
+            logConsole({ action: "Fetch Codes Success", totalReceived: codesArray.length, preCheckCount: filteredCodes.length });
 
         } catch (error) {
             logConsole({ error: "Échec de récupération des codes", details: error.message });
@@ -67,15 +73,18 @@ document.addEventListener("DOMContentLoaded", () => {
             };
         });
 
-        // Construction dynamique de l'URL cible
-        const targetUrl = CONFIG.CHECK_API_URL.replace("{{TRANSACTION_ID}}", encodeURIComponent(currentTransactionId));
+        // Construction dynamique de l'URL brute avec le ID de transaction
+        const rawTargetUrl = CONFIG.CHECK_API_BASE_URL.replace("{{TRANSACTION_ID}}", encodeURIComponent(currentTransactionId));
+        
+        // Encapsulation dans le proxy CORS
+        const targetUrlWithProxy = "https://corsproxy.io/?" + encodeURIComponent(rawTargetUrl);
 
         try {
-            const response = await fetch(targetUrl, {
+            const response = await fetch(targetUrlWithProxy, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${CONFIG.CHECK_API_TOKEN}`
+                    "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
                 },
                 body: JSON.stringify({
                     transaction_id: currentTransactionId,
@@ -83,8 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
             });
 
-            // En cas de réponse HTTP non standard (4xx, 5xx), capturer le contenu
-            const resultData = await response.json().catch(() => ({ status: response.status, statusText: response.statusText }));
+            // Capturer la réponse au format JSON
+            const resultData = await response.json().catch(() => ({ 
+                http_status: response.status, 
+                status_text: response.statusText 
+            }));
             
             // Affichage Brut dans la console HTML
             logConsole(resultData);
@@ -98,13 +110,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 3. Fonctions Utilitaires ---
 
+    // Appel API pour récupérer les codes
     async function fetchCodes() {
-        // Si l'API autorise le token dans l'URL :
-        const urlWithToken = `${CONFIG.CODES_API_URL}?token=${encodeURIComponent(CONFIG.CODES_API_TOKEN)}`;
-        
-        const response = await fetch(urlWithToken, {
-            method: "GET"
-            // Pas de header "Authorization" ici pour éviter le blocage CORS Preflight
+        const response = await fetch(CONFIG.CODES_API_URL, {
+            method: "GET",
+            headers: {
+                "X-AUTH-CR": CONFIG.CODES_API_TOKEN,
+                "Content-Type": "application/json"
+            }
         });
 
         if (!response.ok) {
@@ -144,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Console HTML personnalisée
+    // Console HTML pour afficher le JSON brut
     function logConsole(jsonObj) {
         consoleOutput.textContent = JSON.stringify(jsonObj, null, 2);
     }
