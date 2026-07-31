@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let filteredCodes = [];
 
-    // Chargement initial
     loadCodes();
 
     reloadBtn.addEventListener("click", () => {
@@ -21,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
         consoleOutput.textContent = "// Console vidée.";
     });
 
-    // --- 1. Chargement et filtrage des codes ---
     async function loadCodes() {
         showStatus("Chargement des codes d'homologation...", "info");
         preCheckBlock.classList.add("hidden");
@@ -40,37 +38,43 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error(`Erreur HTTP: ${response.status}`);
             }
 
-            let rawData = await response.json();
+            let responseData = await response.json();
 
-            // Gestion de l'encapsulation Proxy éventuelle
-            if (rawData && typeof rawData.contents === 'string') {
-                try { rawData = JSON.parse(rawData.contents); } catch (e) {}
-            } else if (rawData && rawData.contents && Array.isArray(rawData.contents)) {
-                rawData = rawData.contents;
+            // 1. DÉSENCAPSULATION DU PROXY (corsproxy.io)
+            // Si la réponse du proxy contient une clé 'contents' sous forme de String JSON
+            if (responseData && typeof responseData.contents === 'string') {
+                try {
+                    responseData = JSON.parse(responseData.contents);
+                } catch (e) {
+                    console.error("Erreur parsing contents:", e);
+                }
+            } else if (responseData && responseData.contents && (Array.isArray(responseData.contents) || typeof responseData.contents === 'object')) {
+                responseData = responseData.contents;
             }
 
-            // Log du JSON reçu
-            consoleOutput.textContent = JSON.stringify(rawData, null, 2);
+            // Affichage du JSON propre dans la console
+            consoleOutput.textContent = JSON.stringify(responseData, null, 2);
 
-            // Extraction robuste du tableau
+            // 2. EXTRACTION DU TABLEAU
             let codesArray = [];
-            if (Array.isArray(rawData)) {
-                codesArray = rawData;
-            } else if (rawData && Array.isArray(rawData.data)) {
-                codesArray = rawData.data;
-            } else if (rawData && Array.isArray(rawData.codes)) {
-                codesArray = rawData.codes;
-            } else if (rawData && typeof rawData === 'object') {
-                codesArray = Object.values(rawData);
+            if (Array.isArray(responseData)) {
+                codesArray = responseData;
+            } else if (responseData && Array.isArray(responseData.data)) {
+                codesArray = responseData.data;
+            } else if (responseData && Array.isArray(responseData.codes)) {
+                codesArray = responseData.codes;
+            } else if (responseData && typeof responseData === 'object') {
+                codesArray = Object.values(responseData);
             }
 
-            // Filtrage : pre_check === true
+            // 3. FILTRAGE STRICT : steps.pre_check === true
             filteredCodes = codesArray.filter(item => {
-                return item && item.steps && (item.steps.pre_check === true || item.steps.pre_check === "true");
+                if (!item || !item.steps) return false;
+                return item.steps.pre_check === true || item.steps.pre_check === "true" || item.steps.pre_check === 1;
             });
 
             if (filteredCodes.length === 0) {
-                showStatus(`Aucun code trouvé avec steps.pre_check = true.`, "warning");
+                showStatus(`Aucun code trouvé avec steps.pre_check = true (Sur ${codesArray.length} éléments scannés).`, "warning");
             } else {
                 hideStatus();
                 renderCodes(filteredCodes);
@@ -83,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- 2. Rendu IHM des codes ---
     function renderCodes(codes) {
         codesList.innerHTML = "";
         counterBadge.textContent = `${codes.length} code(s)`;
@@ -95,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.className = "flex items-center justify-between p-3 bg-slate-900/80 rounded border border-slate-700/80 hover:border-slate-600 transition";
             
             // Format : {{ code }} - {{ libellé FR }}
-            // Boutons radio sans l'attribut checked (aucun sélectionné par défaut)
+            // Boutons radio Oui/Non non cochés
             card.innerHTML = `
                 <span class="font-mono text-sm text-sky-300 font-medium pr-4">
                     ${item.code} - ${escapeHtml(labelFr)}
@@ -115,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 3. Soumission du formulaire Pre-check ---
+    // Soumission du formulaire Pre-check
     preCheckForm.addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -128,14 +131,12 @@ document.addEventListener("DOMContentLoaded", () => {
             };
         });
 
-        // Affichage des choix enregistrés dans la console JSON
         consoleOutput.textContent = JSON.stringify({
             action: "Pre-check submitted",
             answers: results
         }, null, 2);
     });
 
-    // Utilitaires
     function showStatus(text, type) {
         statusMessage.textContent = text;
         statusMessage.classList.remove("hidden", "text-red-400", "text-amber-400", "text-slate-300");
