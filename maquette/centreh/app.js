@@ -98,14 +98,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 3. Fonctions Utilitaires ---
 
-    // Appel API pour récupérer les codes
     async function fetchCodes() {
-        const response = await fetch(CONFIG.CODES_API_URL, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${CONFIG.CODES_API_TOKEN}`,
-                "Content-Type": "application/json"
-            }
+        // Si l'API autorise le token dans l'URL :
+        const urlWithToken = `${CONFIG.CODES_API_URL}?token=${encodeURIComponent(CONFIG.CODES_API_TOKEN)}`;
+        
+        const response = await fetch(urlWithToken, {
+            method: "GET"
+            // Pas de header "Authorization" ici pour éviter le blocage CORS Preflight
         });
 
         if (!response.ok) {
