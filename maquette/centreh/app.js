@@ -5,14 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const transactionInput = document.getElementById("transactionInput");
     const codesList = document.getElementById("codesList");
     const counterBadge = document.getElementById("counterBadge");
-    const sendBtn = document.getElementById("sendBtn");
     const consoleOutput = document.getElementById("consoleOutput");
     const clearConsoleBtn = document.getElementById("clearConsoleBtn");
     const reloadBtn = document.getElementById("reloadBtn");
 
     let filteredCodes = [];
 
-    // Lancement
+    // Lancement automatique
     loadCodes();
 
     if (reloadBtn) reloadBtn.addEventListener("click", () => loadCodes());
@@ -37,16 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let responseData = await response.json();
 
-            // Désencapsulation proxy
+            // Désencapsulation du proxy CORS (corsproxy.io)
             if (responseData && typeof responseData.contents === 'string') {
                 try { responseData = JSON.parse(responseData.contents); } catch (e) {}
             } else if (responseData && responseData.contents) {
                 responseData = responseData.contents;
             }
 
-            consoleOutput.textContent = JSON.stringify(responseData, null, 2);
-
-            // Extraction tableau
+            // Extraction du tableau
             let codesArray = [];
             if (Array.isArray(responseData)) {
                 codesArray = responseData;
@@ -68,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 hideStatus();
                 renderCodes(filteredCodes);
                 preCheckBlock.classList.remove("hidden");
+                consoleOutput.textContent = "// Codes chargés. Sélectionner 'Oui' ou 'Non' puis valider pour générer le JSON Postman.";
             }
 
         } catch (error) {
@@ -76,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- 2. Rendu IHM ---
+    // --- 2. Rendu IHM avec "Non" coché par défaut ---
     function renderCodes(codes) {
         codesList.innerHTML = "";
         counterBadge.textContent = `${codes.length} code(s)`;
@@ -86,17 +84,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const card = document.createElement("div");
             card.className = "flex items-center justify-between p-3 bg-slate-900/80 rounded border border-slate-700/80 hover:border-slate-600 transition";
+            
+            // L'option Non est cochée par défaut via l'attribut checked
             card.innerHTML = `
                 <span class="font-mono text-sm text-sky-300 font-medium pr-4">
                     ${item.code} - ${escapeHtml(labelFr)}
                 </span>
                 <div class="flex items-center gap-4 text-sm shrink-0">
                     <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="code_${item.code}" value="true" required class="w-4 h-4 text-sky-600 bg-slate-800 border-slate-600 focus:ring-sky-500">
+                        <input type="radio" name="code_${item.code}" value="true" class="w-4 h-4 text-sky-600 bg-slate-800 border-slate-600 focus:ring-sky-500">
                         <span class="text-slate-200">Oui</span>
                     </label>
                     <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="code_${item.code}" value="false" class="w-4 h-4 text-rose-600 bg-slate-800 border-slate-600 focus:ring-rose-500">
+                        <input type="radio" name="code_${item.code}" value="false" checked class="w-4 h-4 text-rose-600 bg-slate-800 border-slate-600 focus:ring-rose-500">
                         <span class="text-slate-200">Non</span>
                     </label>
                 </div>
@@ -105,9 +105,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 3. Soumission et Envoi vers l'API productPreCheck ---
+    // --- 3. Génération du Body JSON au clic sur le bouton ---
     if (preCheckForm) {
-        preCheckForm.addEventListener("submit", async (e) => {
+        preCheckForm.addEventListener("submit", (e) => {
             e.preventDefault();
 
             const txNum = transactionInput.value.trim();
@@ -116,10 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            setBtnLoading(true);
-            consoleOutput.textContent = "// Envoi des données vers l'API...";
-
-            // Construction de l'objet Key:Value ("code": boolean)
+            // Construction du dictionnaire Key:Value ("code": boolean)
             const formData = new FormData(preCheckForm);
             const productCheckObject = {};
 
@@ -128,54 +125,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 productCheckObject[String(item.code)] = (val === "true");
             });
 
+            // Format du Payload exact demandé
             const payload = {
                 product_check: productCheckObject
             };
 
-            // Construction de l'URL brute : {{DOMAIN}}/Transaction/{{numero_transaction}}/productPreCheck
-            const rawTargetUrl = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
-            
-            // Passage par le Proxy CORS
-            const targetUrlWithProxy = "https://corsproxy.io/?" + encodeURIComponent(rawTargetUrl);
+            // URL ciblée pour information
+            const targetUrl = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
 
-            try {
-                const response = await fetch(targetUrlWithProxy, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                let responseData = await response.json().catch(() => ({
-                    http_status: response.status,
-                    status_text: response.statusText
-                }));
-
-                // Désencapsulation proxy si nécessaire
-                if (responseData && typeof responseData.contents === 'string') {
-                    try { responseData = JSON.parse(responseData.contents); } catch (e) {}
-                }
-
-                // Affichage BRUT dans la console de la page
-                consoleOutput.textContent = JSON.stringify(responseData, null, 2);
-
-            } catch (error) {
-                consoleOutput.textContent = `// ERREUR LORS DE L'ENVOI:\n${error.message}`;
-            } finally {
-                setBtnLoading(false);
-            }
+            // Affichage dans la console
+            consoleOutput.textContent = `// URL cible pour Postman (POST) :\n// ${targetUrl}\n\n// Body JSON à coller dans Postman :\n` + JSON.stringify(payload, null, 2);
         });
     }
 
     // Utilitaires
-    function setBtnLoading(isLoading) {
-        sendBtn.disabled = isLoading;
-        sendBtn.style.opacity = isLoading ? "0.6" : "1";
-        sendBtn.textContent = isLoading ? "Envoi en cours..." : "Envoyer";
-    }
-
     function showStatus(text, type) {
         statusMessage.textContent = text;
         statusMessage.classList.remove("hidden", "text-red-400", "text-amber-400", "text-slate-300");
