@@ -3,6 +3,16 @@ let quizCurrentIndex = 0;
 let quizScore = 0;
 let quizIsAnswering = false;
 
+// Conversion Score (1-10) -> Numéro de Boîte Leitner (1-5)
+function getLeitnerBox(score) {
+    const s = score || 1;
+    if (s <= 2) return 1;
+    if (s <= 4) return 2;
+    if (s <= 6) return 3;
+    if (s <= 8) return 4;
+    return 5;
+}
+
 function startQuiz() {
     const allWords = db.languages[currentLang].vocabulary;
     const knownWords = allWords.filter(x => x.status === 'known');
@@ -12,47 +22,44 @@ function startQuiz() {
         return;
     }
 
-    // --- GESTION DES MOTS DÉJÀ VUS AUJOURD'HUI ---
+    // 1. Filtrer les mots déjà révisés aujourd'hui (mémoire quotidienne)
     const todayStr = new Date().toISOString().split('T')[0];
     const storageKey = `quiz_seen_${currentLang}`;
     let seenData = JSON.parse(localStorage.getItem(storageKey) || '{}');
 
-    // Réinitialisation si la date a changé
     if (seenData.date !== todayStr) {
         seenData = { date: todayStr, ids: [] };
     }
 
-    // Filtrer pour ne garder que les mots NON ENCORE VUS aujourd'hui
     let availableKnown = knownWords.filter(w => !seenData.ids.includes(w.id));
 
-    // Si on a épuisé presque tous les mots "Je sais", on réinitialise l'historique de la journée pour continuer à réviser
+    // Si le réservoir de mots non vus est épuisé, on réinitialise l'historique de la journée
     if (availableKnown.length < 5) {
         seenData.ids = [];
         availableKnown = [...knownWords];
     }
 
-    // --- SÉLECTION PAR TRANCHES DE SCORE (SUR LES MOTS DISPONIBLES) ---
-    const lowTier = availableKnown.filter(x => (x.score || 1) >= 1 && (x.score || 1) <= 3);
-    const midTier = availableKnown.filter(x => (x.score || 1) >= 4 && (x.score || 1) <= 7);
-    const highTier = availableKnown.filter(x => (x.score || 1) >= 8 && (x.score || 1) <= 10);
+    // 2. Classer les mots disponibles par Boîtes de Leitner (1 à 5)
+    const boxes = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+    availableKnown.forEach(word => {
+        const boxNum = getLeitnerBox(word.score);
+        boxes[boxNum].push(word);
+    });
 
+    // 3. Sélection prioritaire des 10 mots (Boîte 1 d'abord, puis 2, 3...)
+    let selectedWords = [];
     const pickRandom = (arr, count) => [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
 
-    let selectedLow = pickRandom(lowTier, 5);
-    let selectedMid = pickRandom(midTier, 3);
-    let selectedHigh = pickRandom(highTier, 2);
-
-    let selectedWords = [...selectedLow, ...selectedMid, ...selectedHigh];
-
-    // Rattrapage si une tranche manque de mots : on complète avec le reste des mots disponibles non vus
-    if (selectedWords.length < 10 && selectedWords.length < availableKnown.length) {
-        const selectedIds = new Set(selectedWords.map(w => w.id));
-        const remainingAvailable = availableKnown.filter(w => !selectedIds.has(w.id));
-        const needed = Math.min(10 - selectedWords.length, remainingAvailable.length);
-        selectedWords = [...selectedWords, ...pickRandom(remainingAvailable, needed)];
+    for (let b = 1; b <= 5; b++) {
+        if (selectedWords.length >= 10) break;
+        const needed = 10 - selectedWords.length;
+        if (boxes[b].length > 0) {
+            const picked = pickRandom(boxes[b], needed);
+            selectedWords.push(...picked);
+        }
     }
 
-    // Enregistrer les mots sélectionnés dans l'historique des mots vus aujourd'hui
+    // Sauvegarder les mots sélectionnés dans l'historique du jour
     selectedWords.forEach(w => {
         if (!seenData.ids.includes(w.id)) {
             seenData.ids.push(w.id);
@@ -60,7 +67,7 @@ function startQuiz() {
     });
     localStorage.setItem(storageKey, JSON.stringify(seenData));
 
-    // --- CONSTITUTION DU QUIZ ---
+    // 4. Mélanger l'ordre des questions dans le quiz
     selectedWords.sort(() => 0.5 - Math.random());
 
     quizQuestions = selectedWords.map(targetWord => {
@@ -109,13 +116,27 @@ function renderQuizQuestion() {
     quizIsAnswering = false;
     const currentQ = quizQuestions[quizCurrentIndex];
     const wordScore = currentQ.targetWord.score || 1;
+    const boxNum = getLeitnerBox(wordScore);
 
+    // --- NOUVEAU : Récupérer le nombre de mots uniques révisés aujourd'hui ---
+    const todayStr = new Date().toISOString().split('T')[0];
+    const storageKey = `quiz_seen_${currentLang}`;
+    const seenData = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    const totalSeenToday = (seenData.date === todayStr && seenData.ids) ? seenData.ids.length : 0;
+
+    // Mise à jour du titre de la modale avec le compteur unique du jour
+    const modalTitle = document.querySelector('#quiz-modal h3');
+    if (modalTitle) {
+        modalTitle.innerText = `Session de Révision (${totalSeenToday} mot${totalSeenToday > 1 ? 's' : ''} révisé${totalSeenToday > 1 ? 's' : ''} aujourd'hui)`;
+    }
+
+    // Badges habituels de la question
     document.getElementById('quiz-progress-badge').innerText = `Question ${quizCurrentIndex + 1} / ${quizQuestions.length}`;
     document.getElementById('quiz-direction-label').innerText = currentQ.direction === 0 
         ? `Traduction de :` 
         : `Expression en ${db.languages[currentLang].name} :`;
     document.getElementById('quiz-question-prompt').innerText = currentQ.prompt;
-    document.getElementById('quiz-word-score-badge').innerText = `Score mot : ${wordScore}/10`;
+    document.getElementById('quiz-word-score-badge').innerText = `📦 Boîte ${boxNum}/5 (Score: ${wordScore})`;
 
     const container = document.getElementById('quiz-options-container');
     container.innerHTML = '';
@@ -147,6 +168,7 @@ async function handleQuizAnswer(choiceIdx, btnElement) {
         btnElement.className = "w-full p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-xs sm:text-sm font-bold transition text-left flex items-center justify-between shadow-sm";
         btnElement.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-base";
 
+        // Progression : +1 au score (max 10)
         const newScore = Math.min(10, currentScore + 1);
         await setStatus(currentQ.targetWord.id, 'known', newScore);
 
@@ -161,7 +183,8 @@ async function handleQuizAnswer(choiceIdx, btnElement) {
             }
         });
 
-        const newScore = Math.max(1, currentScore - 2);
+        // Chute Leitner : Retour direct en Boîte 1 (Score 1) et statut 'unknown'
+        const newScore = 1;
         await setStatus(currentQ.targetWord.id, 'unknown', newScore);
     }
 
@@ -186,12 +209,12 @@ function showQuizResults() {
     const ratio = quizScore / total;
 
     if (ratio === 1) {
-        comment.innerText = "🎉 Sans faute ! Vos connaissances augmentent le score de vos mots !";
+        comment.innerText = "🎉 Parfait ! Vos mots montent dans les boîtes de Leitner.";
     } else if (ratio >= 0.7) {
-        comment.innerText = "👏 Très bon score ! Vos mots révisés progressent.";
+        comment.innerText = "👏 Très bon score ! Les mots maîtrisés progressent.";
     } else if (ratio >= 0.5) {
-        comment.innerText = "👍 Pas mal ! Les mots manqués repassent en révision active.";
+        comment.innerText = "👍 Pas mal ! Les erreurs retombent en Boîte 1 pour consolidation.";
     } else {
-        comment.innerText = "💪 Courage ! Les mots manqués sont revenus en révision.";
+        comment.innerText = "💪 Courage ! Les mots manqués sont revenus en Boîte 1.";
     }
 }
