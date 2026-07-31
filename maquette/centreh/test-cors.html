@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test CORS - ProductPreCheck</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white p-8">
+
+    <div class="max-w-2xl mx-auto space-y-4">
+        <h1 class="text-xl font-bold text-sky-400">Test CORS : productPreCheck</h1>
+        <p class="text-sm text-slate-400">Clique sur le bouton pour tester la requête POST avec l'en-tête Authorization.</p>
+
+        <button id="testBtn" class="bg-sky-600 hover:bg-sky-500 font-medium px-4 py-2 rounded transition">
+            Tester l'endpoint productPreCheck
+        </button>
+
+        <div class="bg-slate-950 p-4 rounded border border-slate-800 font-mono text-xs">
+            <span class="text-slate-500 block mb-2">// Résultat du test :</span>
+            <pre id="output" class="text-emerald-400 whitespace-pre-wrap">En attente du test...</pre>
+        </div>
+    </div>
+
+    <!-- Configuration locale pour le test -->
+    <script src="config.js"></script>
+
+    <script>
+        document.getElementById("testBtn").addEventListener("click", async () => {
+            const output = document.getElementById("output");
+            output.textContent = "Test en cours...";
+            output.className = "text-amber-400 whitespace-pre-wrap";
+
+            // Remplace par un numéro de transaction de test
+            const fakeTransactionId = "TX-TEST-123"; 
+            
+            // Construction de l'URL cible
+            const targetUrl = CONFIG.CHECK_API_URL.replace("{{TRANSACTION_ID}}", encodeURIComponent(fakeTransactionId));
+
+            try {
+                const response = await fetch(targetUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${CONFIG.CHECK_API_TOKEN}`
+                    },
+                    body: JSON.stringify({
+                        transaction_id: fakeTransactionId,
+                        pre_check_answers: [
+                            { code: 401, value: true }
+                        ]
+                    })
+                });
+
+                const data = await response.json().catch(() => ({ status: response.status }));
+                
+                output.className = "text-emerald-400 whitespace-pre-wrap";
+                output.textContent = `SUCCESS (HTTP ${response.status}) !\nLe serveur accepte l'en-tête Authorization.\n\nRéponse du serveur :\n` + JSON.stringify(data, null, 2);
+
+            } catch (error) {
+                output.className = "text-rose-400 whitespace-pre-wrap";
+                output.textContent = `ÉCHEC CORS / RÉSEAU !\n\nMessage : ${error.message}\n\nOuvre la console du navigateur (F12) pour voir les détails de l'erreur CORS.`;
+            }
+        });
+    </script>
+</body>
+</html>
