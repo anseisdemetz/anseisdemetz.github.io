@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const consoleOutput = document.getElementById("consoleOutput");
     const reloadBtn = document.getElementById("reloadBtn");
 
-    // Lancer le chargement dès l'ouverture de la page
     loadCodes();
 
     reloadBtn.addEventListener("click", () => {
@@ -31,23 +30,41 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error(`Erreur HTTP: ${response.status}`);
             }
 
-            const rawData = await response.json();
-            
-            // Log brut du JSON reçu
-            consoleOutput.textContent = JSON.stringify(rawData, null, 2);
+            let rawData = await response.json();
 
-            // Gestion si la réponse est directement un tableau ou encapsulée dans une propriété
-            const codesArray = Array.isArray(rawData) ? rawData : (rawData.codes || rawData.data || []);
-
-            if (!Array.isArray(codesArray)) {
-                throw new Error("Format de réponse inattendu : impossible de trouver la liste des codes.");
+            // Si corsproxy.io encapsule la réponse dans une clé "contents" sous forme de string JSON
+            if (rawData && typeof rawData.contents === 'string') {
+                try {
+                    rawData = JSON.parse(rawData.contents);
+                } catch (e) {
+                    console.error("Erreur de parsing contents Proxy", e);
+                }
+            } else if (rawData && rawData.contents && Array.isArray(rawData.contents)) {
+                rawData = rawData.contents;
             }
 
-            // Filtrer uniquement steps.pre_check === true
-            const filteredCodes = codesArray.filter(item => item.steps && item.steps.pre_check === true);
+            // Affichage du JSON nettoyé dans la console HTML
+            consoleOutput.textContent = JSON.stringify(rawData, null, 2);
+
+            // Extraction robuste du tableau d'objets
+            let codesArray = [];
+            if (Array.isArray(rawData)) {
+                codesArray = rawData;
+            } else if (rawData && Array.isArray(rawData.data)) {
+                codesArray = rawData.data;
+            } else if (rawData && Array.isArray(rawData.codes)) {
+                codesArray = rawData.codes;
+            } else if (rawData && typeof rawData === 'object') {
+                codesArray = Object.values(rawData);
+            }
+
+            // Filtrage strict basé sur la structure exacte de votre JSON : item.steps.pre_check === true
+            const filteredCodes = codesArray.filter(item => {
+                return item && item.steps && (item.steps.pre_check === true || item.steps.pre_check === "true");
+            });
 
             if (filteredCodes.length === 0) {
-                showStatus("Aucun code trouvé avec steps.pre_check = true.", "warning");
+                showStatus(`Aucun code trouvé avec steps.pre_check = true (${codesArray.length} éléments scannés).`, "warning");
             } else {
                 hideStatus();
                 renderCodes(filteredCodes);
@@ -65,8 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
         counterBadge.textContent = `${codes.length} code(s)`;
 
         codes.forEach(item => {
-            const labelFr = item.label && item.label.fr ? item.label.fr : "Libellé FR non disponible";
-            
+            // Lecture exacte du libellé FR : item.label.fr
+            const labelFr = (item.label && item.label.fr) ? item.label.fr : "Libellé non disponible";
+
             const card = document.createElement("div");
             card.className = "flex items-center justify-between p-3 bg-slate-900/80 rounded border border-slate-700/80 hover:border-slate-600 transition";
             card.innerHTML = `
@@ -106,6 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function escapeHtml(str) {
-        return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
+        return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
     }
 });
