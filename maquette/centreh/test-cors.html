@@ -2,38 +2,68 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Test CORS - ProductPreCheck</title>
+    <title>Test CORS - X-AUTH-CR Header</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-white p-8">
 
     <div class="max-w-2xl mx-auto space-y-4">
-        <h1 class="text-xl font-bold text-sky-400">Test CORS : productPreCheck</h1>
-        <p class="text-sm text-slate-400">Clique sur le bouton pour tester la requête POST avec l'en-tête Authorization.</p>
+        <h1 class="text-xl font-bold text-sky-400">Test CORS avec X-AUTH-CR</h1>
+        <p class="text-sm text-slate-400">Test de validation des endpoints avec l'en-tête personnalisé <code class="bg-slate-800 px-1 py-0.5 rounded text-sky-300">X-AUTH-CR</code>.</p>
 
-        <button id="testBtn" class="bg-sky-600 hover:bg-sky-500 font-medium px-4 py-2 rounded transition">
-            Tester l'endpoint productPreCheck
-        </button>
+        <div class="flex gap-3 pt-2">
+            <button id="testCodesBtn" class="bg-sky-600 hover:bg-sky-500 font-medium px-4 py-2 rounded transition text-sm">
+                1. Test GET /Diagnostic/codes
+            </button>
 
-        <div class="bg-slate-950 p-4 rounded border border-slate-800 font-mono text-xs">
+            <button id="testCheckBtn" class="bg-emerald-600 hover:bg-emerald-500 font-medium px-4 py-2 rounded transition text-sm">
+                2. Test POST /productPreCheck
+            </button>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded border border-slate-800 font-mono text-xs mt-4">
             <span class="text-slate-500 block mb-2">// Résultat du test :</span>
-            <pre id="output" class="text-emerald-400 whitespace-pre-wrap">En attente du test...</pre>
+            <pre id="output" class="text-emerald-400 whitespace-pre-wrap">En attente d'un test...</pre>
         </div>
     </div>
 
-    <!-- Configuration locale pour le test -->
+    <!-- Configuration globale -->
     <script src="config.js"></script>
 
     <script>
-        document.getElementById("testBtn").addEventListener("click", async () => {
-            const output = document.getElementById("output");
-            output.textContent = "Test en cours...";
+        const output = document.getElementById("output");
+
+        // --- 1. Test GET /Diagnostic/codes ---
+        document.getElementById("testCodesBtn").addEventListener("click", async () => {
+            output.textContent = "Test GET /Diagnostic/codes en cours...";
             output.className = "text-amber-400 whitespace-pre-wrap";
 
-            // Remplace par un numéro de transaction de test
+            try {
+                const response = await fetch(CONFIG.CODES_API_URL, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                    }
+                });
+
+                const data = await response.json().catch(() => ({ status: response.status }));
+                
+                output.className = "text-emerald-400 whitespace-pre-wrap";
+                output.textContent = `SUCCESS GET Codes (HTTP ${response.status}) !\n\nRéponse du serveur :\n` + JSON.stringify(data, null, 2);
+
+            } catch (error) {
+                output.className = "text-rose-400 whitespace-pre-wrap";
+                output.textContent = `ÉCHEC CORS / RÉSEAU sur GET Codes !\n\nMessage : ${error.message}\n\nConsultez la console F12 pour vérifier si X-AUTH-CR est autorisé par le serveur.`;
+            }
+        });
+
+        // --- 2. Test POST productPreCheck ---
+        document.getElementById("testCheckBtn").addEventListener("click", async () => {
+            output.textContent = "Test POST productPreCheck en cours...";
+            output.className = "text-amber-400 whitespace-pre-wrap";
+
             const fakeTransactionId = "GRA0003895353"; 
-            
-            // Construction de l'URL cible
             const targetUrl = CONFIG.CHECK_API_URL.replace("{{TRANSACTION_ID}}", encodeURIComponent(fakeTransactionId));
 
             try {
@@ -41,7 +71,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${CONFIG.CHECK_API_TOKEN}`
+                        "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
                     },
                     body: JSON.stringify({
                         transaction_id: fakeTransactionId,
@@ -54,11 +84,11 @@
                 const data = await response.json().catch(() => ({ status: response.status }));
                 
                 output.className = "text-emerald-400 whitespace-pre-wrap";
-                output.textContent = `SUCCESS (HTTP ${response.status}) !\nLe serveur accepte l'en-tête Authorization.\n\nRéponse du serveur :\n` + JSON.stringify(data, null, 2);
+                output.textContent = `SUCCESS POST productPreCheck (HTTP ${response.status}) !\n\nRéponse du serveur :\n` + JSON.stringify(data, null, 2);
 
             } catch (error) {
                 output.className = "text-rose-400 whitespace-pre-wrap";
-                output.textContent = `ÉCHEC CORS / RÉSEAU !\n\nMessage : ${error.message}\n\nOuvre la console du navigateur (F12) pour voir les détails de l'erreur CORS.`;
+                output.textContent = `ÉCHEC CORS / RÉSEAU sur POST productPreCheck !\n\nMessage : ${error.message}\n\nConsultez la console F12 pour vérifier si X-AUTH-CR est autorisé par le serveur.`;
             }
         });
     </script>
