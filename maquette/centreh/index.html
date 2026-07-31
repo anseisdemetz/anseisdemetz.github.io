@@ -3,69 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plateforme d'Homologation</title>
+    <title>Codes d'Homologation</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="h-full text-slate-100 flex flex-col justify-between">
 
-    <div class="max-w-4xl w-full mx-auto p-6 space-y-6">
+    <div class="max-w-3xl w-full mx-auto p-6 space-y-6">
         <!-- Header -->
-        <header class="border-b border-slate-700 pb-4">
-            <h1 class="text-2xl font-bold text-sky-400">Plateforme d'Homologation</h1>
-            <p class="text-sm text-slate-400">Étape 1 : Saisie et Pré-diagnostic</p>
+        <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-sky-400">Plateforme d'Homologation</h1>
+                <p class="text-sm text-slate-400">Liste des codes de Pré-diagnostic</p>
+            </div>
+            <button id="reloadBtn" class="bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 px-3 py-1.5 rounded-md text-xs font-mono transition">
+                🔄 Recharger
+            </button>
         </header>
 
-        <!-- Formulaire principal -->
-        <main class="space-y-6">
-            <!-- Étape 1 : Saisie de la transaction -->
-            <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md">
-                <label for="transactionInput" class="block text-sm font-medium text-slate-300 mb-2">
-                    Numéro de transaction
-                </label>
-                <div class="flex gap-3">
-                    <input type="text" id="transactionInput" placeholder="Ex: TX-987654" 
-                           class="flex-1 bg-slate-900 border border-slate-600 rounded-md px-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition">
-                    <button id="validateBtn" 
-                            class="bg-sky-600 hover:bg-sky-500 text-white font-medium px-6 py-2 rounded-md transition duration-150 flex items-center justify-center min-w-[120px]">
-                        <span>Valider</span>
-                    </button>
-                </div>
-                <p id="errorMessage" class="text-red-400 text-xs mt-2 hidden"></p>
-            </section>
+        <!-- Zone d'affichage principal -->
+        <main class="space-y-4">
+            
+            <!-- Message de chargement / Erreur -->
+            <div id="statusMessage" class="p-4 rounded-lg bg-slate-800 border border-slate-700 text-center text-sm text-slate-300">
+                Chargement des codes en cours...
+            </div>
 
-            <!-- Étape 2 : Bloc Pré-diagnostic (Masqué par défaut) -->
+            <!-- Bloc Pré-diagnostic -->
             <section id="preDiagBlock" class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md hidden">
                 <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
                     <h2 class="text-lg font-semibold text-slate-200"># Pré-diagnostic</h2>
                     <span id="counterBadge" class="text-xs bg-slate-700 text-sky-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
                 </div>
 
-                <form id="preDiagForm" class="space-y-4">
-                    <!-- Liste dynamique des codes d'homologation -->
-                    <div id="codesList" class="space-y-3 max-h-96 overflow-y-auto pr-2">
-                        <!-- Généré en JS -->
-                    </div>
-
-                    <div class="pt-4 border-t border-slate-700 flex justify-end">
-                        <button type="submit" id="sendBtn" 
-                                class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2 rounded-md transition duration-150 flex items-center justify-center">
-                            Envoyer le pré-diagnostic
-                        </button>
-                    </div>
-                </form>
+                <!-- Liste des codes -->
+                <div id="codesList" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                    <!-- Généré dynamiquement -->
+                </div>
             </section>
 
-            <!-- Console Log API (Résultat Brut) -->
-            <section class="bg-slate-950 p-4 rounded-lg border border-slate-800 font-mono text-sm space-y-2 shadow-inner">
-                <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-800 pb-2">
-                    <span class="flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                        Console Sortie API (JSON)
-                    </span>
-                    <button id="clearConsoleBtn" class="hover:text-slate-200 transition text-xs">Vider</button>
+            <!-- Console de Debug JSON -->
+            <section class="bg-slate-950 p-4 rounded-lg border border-slate-800 font-mono text-xs shadow-inner">
+                <div class="text-slate-500 border-b border-slate-800 pb-2 mb-2 flex justify-between">
+                    <span>// Réponse API Brute (JSON)</span>
                 </div>
-                <pre id="consoleOutput" class="text-emerald-400 overflow-x-auto p-2 min-h-[100px] max-h-[300px] text-xs leading-relaxed">// Attente d'une action pour afficher la réponse de l'API...</pre>
+                <pre id="consoleOutput" class="text-emerald-400 overflow-x-auto max-h-48 leading-relaxed">// Attente des données...</pre>
             </section>
         </main>
     </div>

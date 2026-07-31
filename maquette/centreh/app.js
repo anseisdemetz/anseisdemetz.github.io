@@ -1,190 +1,111 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Éléments DOM
-    const transactionInput = document.getElementById("transactionInput");
-    const validateBtn = document.getElementById("validateBtn");
-    const errorMessage = document.getElementById("errorMessage");
-    
+    const statusMessage = document.getElementById("statusMessage");
     const preDiagBlock = document.getElementById("preDiagBlock");
     const codesList = document.getElementById("codesList");
     const counterBadge = document.getElementById("counterBadge");
-    const preDiagForm = document.getElementById("preDiagForm");
-    
     const consoleOutput = document.getElementById("consoleOutput");
-    const clearConsoleBtn = document.getElementById("clearConsoleBtn");
+    const reloadBtn = document.getElementById("reloadBtn");
 
-    let currentTransactionId = "";
-    let filteredCodes = [];
+    // Lancer le chargement dès l'ouverture de la page
+    loadCodes();
 
-    // --- 1. Validation de la Transaction & Chargement des Codes ---
-    validateBtn.addEventListener("click", async () => {
-        const txValue = transactionInput.value.trim();
-        
-        if (!txValue) {
-            showError("Veuillez saisir un numéro de transaction valide.");
-            return;
-        }
+    reloadBtn.addEventListener("click", () => {
+        loadCodes();
+    });
 
-        hideError();
-        currentTransactionId = txValue;
-        setBtnLoading(validateBtn, true, "Chargement...");
+    async function loadCodes() {
+        showStatus("Chargement des codes d'homologation...", "info");
+        preDiagBlock.classList.add("hidden");
+        consoleOutput.textContent = "// Requête en cours...";
 
         try {
-            const data = await fetchCodes();
-            
-            // Si la réponse est un tableau ou contient une clé data (selon la structure API)
-            const codesArray = Array.isArray(data) ? data : (data.codes || data.data || []);
+            const response = await fetch(CONFIG.CODES_API_URL, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                }
+            });
 
-            // Filtrer uniquement les éléments avec steps.pre_check === true
-            filteredCodes = codesArray.filter(item => item.steps && item.steps.pre_check === true);
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+
+            const rawData = await response.json();
             
+            // Log brut du JSON reçu
+            consoleOutput.textContent = JSON.stringify(rawData, null, 2);
+
+            // Gestion si la réponse est directement un tableau ou encapsulée dans une propriété
+            const codesArray = Array.isArray(rawData) ? rawData : (rawData.codes || rawData.data || []);
+
+            if (!Array.isArray(codesArray)) {
+                throw new Error("Format de réponse inattendu : impossible de trouver la liste des codes.");
+            }
+
+            // Filtrer uniquement steps.pre_check === true
+            const filteredCodes = codesArray.filter(item => item.steps && item.steps.pre_check === true);
+
             if (filteredCodes.length === 0) {
-                showError("Aucun code trouvé avec un pré-diagnostic requis (pre_check = true).");
-                preDiagBlock.classList.add("hidden");
+                showStatus("Aucun code trouvé avec steps.pre_check = true.", "warning");
             } else {
-                renderCodesList(filteredCodes);
+                hideStatus();
+                renderCodes(filteredCodes);
                 preDiagBlock.classList.remove("hidden");
             }
 
-            // Log de la liste récupérée dans la console HTML
-            logConsole({ action: "Fetch Codes Success", totalReceived: codesArray.length, preCheckCount: filteredCodes.length });
-
         } catch (error) {
-            logConsole({ error: "Échec de récupération des codes", details: error.message });
-            showError("Erreur lors de la récupération des codes d'homologation.");
-        } finally {
-            setBtnLoading(validateBtn, false, "Valider");
+            consoleOutput.textContent = `// ERREUR:\n${error.message}`;
+            showStatus(`Erreur de chargement : ${error.message}`, "error");
         }
-    });
-
-    // --- 2. Envoi du Formulaire de Pre-Diagnostic ---
-    preDiagForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        
-        const sendBtn = document.getElementById("sendBtn");
-        setBtnLoading(sendBtn, true, "Envoi...");
-
-        // Formater les réponses Oui / Non
-        const formData = new FormData(preDiagForm);
-        const payload = filteredCodes.map(codeObj => {
-            const answerValue = formData.get(`code_${codeObj.code}`);
-            return {
-                code: codeObj.code,
-                value: answerValue === "true" ? true : (answerValue === "false" ? false : null)
-            };
-        });
-
-        // Construction dynamique de l'URL brute avec le ID de transaction
-        const rawTargetUrl = CONFIG.CHECK_API_BASE_URL.replace("{{TRANSACTION_ID}}", encodeURIComponent(currentTransactionId));
-        
-        // Encapsulation dans le proxy CORS
-        const targetUrlWithProxy = "https://corsproxy.io/?" + encodeURIComponent(rawTargetUrl);
-
-        try {
-            const response = await fetch(targetUrlWithProxy, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
-                },
-                body: JSON.stringify({
-                    transaction_id: currentTransactionId,
-                    pre_check_answers: payload
-                })
-            });
-
-            // Capturer la réponse au format JSON
-            const resultData = await response.json().catch(() => ({ 
-                http_status: response.status, 
-                status_text: response.statusText 
-            }));
-            
-            // Affichage Brut dans la console HTML
-            logConsole(resultData);
-
-        } catch (error) {
-            logConsole({ error: "Erreur lors de l'envoi API", message: error.message });
-        } finally {
-            setBtnLoading(sendBtn, false, "Envoyer le pré-diagnostic");
-        }
-    });
-
-    // --- 3. Fonctions Utilitaires ---
-
-    // Appel API pour récupérer les codes
-    async function fetchCodes() {
-        const response = await fetch(CONFIG.CODES_API_URL, {
-            method: "GET",
-            headers: {
-                "X-AUTH-CR": CONFIG.CODES_API_TOKEN,
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP Error: ${response.status}`);
-        }
-
-        return await response.json();
     }
 
-    // Affichage des éléments filtrés dans l'IHM
-    function renderCodesList(codes) {
+    function renderCodes(codes) {
         codesList.innerHTML = "";
         counterBadge.textContent = `${codes.length} code(s)`;
 
         codes.forEach(item => {
-            const labelFr = item.label && item.label.fr ? item.label.fr : "Libellé non défini";
-            const rowHtml = `
-                <div class="flex items-center justify-between p-3 bg-slate-900/60 rounded border border-slate-700/60 hover:border-slate-600 transition">
-                    <span class="font-mono text-sm text-sky-300 font-medium">
-                        ${item.code} - ${escapeHtml(labelFr)}
-                    </span>
-                    <div class="flex items-center gap-4 text-sm">
-                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                            <input type="radio" name="code_${item.code}" value="true" required 
-                                   class="w-4 h-4 text-sky-600 bg-slate-800 border-slate-600 focus:ring-sky-500">
-                            <span class="text-slate-200">Oui</span>
-                        </label>
-                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                            <input type="radio" name="code_${item.code}" value="false" 
-                                   class="w-4 h-4 text-rose-600 bg-slate-800 border-slate-600 focus:ring-rose-500">
-                            <span class="text-slate-200">Non</span>
-                        </label>
-                    </div>
+            const labelFr = item.label && item.label.fr ? item.label.fr : "Libellé FR non disponible";
+            
+            const card = document.createElement("div");
+            card.className = "flex items-center justify-between p-3 bg-slate-900/80 rounded border border-slate-700/80 hover:border-slate-600 transition";
+            card.innerHTML = `
+                <span class="font-mono text-sm text-sky-300 font-medium">
+                    ${item.code} - ${escapeHtml(labelFr)}
+                </span>
+                <div class="flex items-center gap-4 text-sm">
+                    <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="code_${item.code}" value="true" class="w-4 h-4 text-sky-600 bg-slate-800 border-slate-600 focus:ring-sky-500">
+                        <span class="text-slate-200">Oui</span>
+                    </label>
+                    <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="code_${item.code}" value="false" class="w-4 h-4 text-rose-600 bg-slate-800 border-slate-600 focus:ring-rose-500">
+                        <span class="text-slate-200">Non</span>
+                    </label>
                 </div>
             `;
-            codesList.insertAdjacentHTML("beforeend", rowHtml);
+            codesList.appendChild(card);
         });
     }
 
-    // Console HTML pour afficher le JSON brut
-    function logConsole(jsonObj) {
-        consoleOutput.textContent = JSON.stringify(jsonObj, null, 2);
+    function showStatus(text, type) {
+        statusMessage.textContent = text;
+        statusMessage.classList.remove("hidden", "text-red-400", "text-amber-400", "text-slate-300");
+
+        if (type === "error") {
+            statusMessage.classList.add("text-red-400");
+        } else if (type === "warning") {
+            statusMessage.classList.add("text-amber-400");
+        } else {
+            statusMessage.classList.add("text-slate-300");
+        }
     }
 
-    clearConsoleBtn.addEventListener("click", () => {
-        consoleOutput.textContent = "// Console vidée.";
-    });
-
-    function showError(msg) {
-        errorMessage.textContent = msg;
-        errorMessage.classList.remove("hidden");
-    }
-
-    function hideError() {
-        errorMessage.textContent = "";
-        errorMessage.classList.add("hidden");
-    }
-
-    function setBtnLoading(btn, isLoading, text) {
-        btn.disabled = isLoading;
-        btn.style.opacity = isLoading ? "0.7" : "1";
-        btn.textContent = text;
+    function hideStatus() {
+        statusMessage.classList.add("hidden");
     }
 
     function escapeHtml(str) {
-        return str.replace(/[&<>"']/g, function(m) {
-            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-        });
+        return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
     }
 });
