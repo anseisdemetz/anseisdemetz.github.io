@@ -30,18 +30,12 @@
             output.textContent = "Test en cours...";
             output.className = "text-amber-400 whitespace-pre-wrap";
 
-            // Remplace par un numéro de transaction de test
-            const fakeTransactionId = "GRA0003895353"; 
-            
-            // Construction de l'URL cible
-            const targetUrl = CONFIG.CHECK_API_URL.replace("{{TRANSACTION_ID}}", encodeURIComponent(fakeTransactionId));
-
             try {
-                const response = await fetch(targetUrl, {
+                const response = await fetch(CONFIG.CODES_API_URL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${CONFIG.CHECK_API_TOKEN}`
+                        "Authorization": `Bearer ${CONFIG.CODES_API_TOKEN}`
                     },
                     body: JSON.stringify({
                         transaction_id: fakeTransactionId,
