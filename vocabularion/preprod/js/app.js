@@ -1,15 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.value = '';
-    }
-
-    // Appel de la vraie fonction de chargement du Front-Office
-    if (typeof loadVocabulary === 'function') {
-        loadVocabulary();
-    } else if (typeof initApp === 'function') {
-        initApp();
-    }
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadInitialDatabase();
 });
 
 async function loadInitialDatabase() {
