@@ -1,7 +1,7 @@
 // --- CONFIGURATION SUPABASE (PREPROD) ---
 // Utilise l'URL et la clé ANON de votre projet Supabase
-const SUPABASE_URL = 'https://VOTRE_PROJET_SUPABASE.supabase.co';
-const SUPABASE_ANON_KEY = 'VOTRE_CLE_ANON_SUPABASE';
+const SUPABASE_URL = 'https://okqpskyzteuhwochesbv.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rcXBza3l6dGV1aHdvY2hlc2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzOTI2MDEsImV4cCI6MjEwMDk2ODYwMX0.AHxjCrvXKpccziqOo17-FgOm7uJo7WiVuUxrrsG_eWE';
 
 // Nom de la table ciblée en préproduction
 const VOCAB_TABLE = 'vocabulary_preprod';
