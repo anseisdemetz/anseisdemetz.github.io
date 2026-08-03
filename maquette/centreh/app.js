@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
             data = data.contents;
         }
 
-        // Clé corrigée : results -> current -> imei
+        // Extraction imei : results -> current -> imei
         const imei = data?.results?.current?.imei;
         
         return imei !== undefined && imei !== null ? imei : "";
@@ -202,7 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 sendBtn.classList.add("opacity-50", "cursor-not-allowed");
             }
 
-            // Masquer le bloc check en cas de nouvelle soumission pre-check
             checkBlock.classList.add("hidden");
 
             try {
@@ -210,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 consoleOutput.textContent = `// Récupération de l'IMEI pour la transaction ${txNum}...`;
                 const imeiValue = await fetchImei(txNum);
 
-                // Étape 2 : Construction du payload
+                // Étape 2 : Construction du payload Pre-Check
                 const formData = new FormData(preCheckForm);
                 const productCheckObject = {};
 
@@ -224,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     imei: imeiValue
                 };
 
-                // Étape 3 : Requête POST vers productPreCheck
+                // Étape 3 : Envoi POST vers productPreCheck
                 const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
                 const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetEndpoint);
 
@@ -248,20 +247,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     responseData = await response.text();
                 }
 
-                // Désencapsulation proxy CORS
                 if (responseData && typeof responseData.contents === 'string') {
                     try { responseData = JSON.parse(responseData.contents); } catch (e) {}
                 }
 
-                // Affichage réponse API
-                const statusInfo = `// Statut HTTP : ${response.status} ${response.statusText}\n`;
+                const statusInfo = `// Statut HTTP Pre-Check : ${response.status} ${response.statusText}\n`;
                 const formattedBody = typeof responseData === 'object' 
                     ? JSON.stringify(responseData, null, 2) 
                     : responseData;
 
-                consoleOutput.textContent = statusInfo + `// Réponse de l'API :\n` + formattedBody;
+                consoleOutput.textContent = statusInfo + `// Réponse de l'API Pre-Check :\n` + formattedBody;
 
-                // Condition d'affichage du bloc # Check
+                // Si status === "to_check", on démasque l'interface # Check
                 const status = responseData?.results?.status;
                 if (status === "to_check") {
                     checkBlock.classList.remove("hidden");
@@ -279,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 5. Traitement du Check (Étape suivante) ---
+    // --- 5. Traitement du Check ---
     if (checkForm) {
         checkForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -296,6 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             try {
+                // Construction du product_check dynamique à partir des radios du formulaire Check
                 const formData = new FormData(checkForm);
                 const productCheckObject = {};
 
@@ -304,9 +302,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     productCheckObject[String(item.code)] = (val === "true");
                 });
 
-                // Clés fixes d'effacement spécifiées dans la définition Check
+                // Ajout des clés fixes d'effacement
                 productCheckObject["401"] = true;
-                productCheckObject["402"] = txNum; // Utilisation dynamique du numéro de transaction
+                productCheckObject["402"] = txNum;
 
                 const payload = {
                     product_check: productCheckObject
@@ -374,7 +372,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
     }
 });
-
 
 
 
