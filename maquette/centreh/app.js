@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const consoleOutput = document.getElementById("consoleOutput");
     const clearConsoleBtn = document.getElementById("clearConsoleBtn");
     const reloadBtn = document.getElementById("reloadBtn");
+    const sendBtn = document.getElementById("sendBtn");
 
     // Liste des codes autorisés
     const ALLOWED_CODES = [
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (reloadBtn) reloadBtn.addEventListener("click", () => loadCodes());
     if (clearConsoleBtn) clearConsoleBtn.addEventListener("click", () => consoleOutput.textContent = "// Console vidée.");
 
-    // --- 1. Chargement et filtrage par liste de codes ---
+    // --- 1. Chargement des codes ---
     async function loadCodes() {
         showStatus("Chargement des codes d'homologation...", "info");
         preCheckBlock.classList.add("hidden");
@@ -68,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            // Filtrage : vérification de la présence du code dans ALLOWED_CODES (sans vérifier steps.pre_check)
+            // Filtrage selon la liste ALLOWED_CODES
             filteredCodes = codesArray.filter(item => item && ALLOWED_CODES.includes(String(item.code)));
 
             if (filteredCodes.length === 0) {
@@ -77,16 +78,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 hideStatus();
                 renderCodes(filteredCodes);
                 preCheckBlock.classList.remove("hidden");
-                consoleOutput.textContent = "// Codes chargés. Sélectionner 'Oui' ou 'Non' puis valider pour générer le JSON Postman.";
+                consoleOutput.textContent = "// Codes chargés. Renseignez la transaction, cochez les éléments et cliquez sur Valider.";
             }
 
         } catch (error) {
-            consoleOutput.textContent = `// ERREUR:\n${error.message}`;
+            consoleOutput.textContent = `// ERREUR CHARGEMENT CODES:\n${error.message}`;
             showStatus(`Erreur lors de la récupération : ${error.message}`, "error");
         }
     }
 
-    // --- 2. Rendu IHM avec "Non" coché par défaut ---
+    // --- 2. Rendu IHM ---
     function renderCodes(codes) {
         codesList.innerHTML = "";
         counterBadge.textContent = `${codes.length} code(s)`;
@@ -116,9 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 3. Génération du Body JSON ---
+    // --- 3. Envoi effectif de la requête API ---
     if (preCheckForm) {
-        preCheckForm.addEventListener("submit", (e) => {
+        preCheckForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
             const txNum = transactionInput.value.trim();
@@ -127,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // Construction du payload
             const formData = new FormData(preCheckForm);
             const productCheckObject = {};
 
@@ -139,12 +141,61 @@ document.addEventListener("DOMContentLoaded", () => {
                 product_check: productCheckObject
             };
 
-            const targetUrl = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
+            // Construction de l'URL cible (passage par le proxy CORS si nécessaire)
+            const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
+            const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetEndpoint);
 
-            consoleOutput.textContent = `// URL cible pour Postman (POST) :\n// ${targetUrl}\n\n// Body JSON à coller dans Postman :\n` + JSON.stringify(payload, null, 2);
+            // Mise à jour de l'IHM pendant la requête
+            consoleOutput.textContent = `// Envoi de la requête POST vers :\n// ${targetEndpoint} ...`;
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.classList.add("opacity-50", "cursor-not-allowed");
+            }
+
+            try {
+                const response = await fetch(proxyUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                let responseData;
+                const contentType = response.headers.get("content-type");
+
+                if (contentType && contentType.includes("application/json")) {
+                    responseData = await response.json();
+                } else {
+                    responseData = await response.text();
+                }
+
+                // Dé-encapsulation si corsproxy renvoie un string wrapper
+                if (responseData && typeof responseData.contents === 'string') {
+                    try { responseData = JSON.parse(responseData.contents); } catch (e) {}
+                }
+
+                // Affichage dans la console UI
+                const statusInfo = `// Statut HTTP : ${response.status} ${response.statusText}\n`;
+                const formattedBody = typeof responseData === 'object' 
+                    ? JSON.stringify(responseData, null, 2) 
+                    : responseData;
+
+                consoleOutput.textContent = statusInfo + `// Réponse de l'API :\n` + formattedBody;
+
+            } catch (error) {
+                consoleOutput.textContent = `// ERREUR LORS DE L'ENVOI DE LA REQUÊTE :\n${error.message}`;
+            } finally {
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                    sendBtn.classList.remove("opacity-50", "cursor-not-allowed");
+                }
+            }
         });
     }
 
+    // Utilitaires
     function showStatus(text, type) {
         statusMessage.textContent = text;
         statusMessage.classList.remove("hidden", "text-red-400", "text-amber-400", "text-slate-300");
