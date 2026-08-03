@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const reloadBtn = document.getElementById("reloadBtn");
     const sendBtn = document.getElementById("sendBtn");
 
-    // Liste des codes autorisés
+    // Liste des codes autorisés avec structure par sections
     const ALLOWED_CODES = [
         "5020", // IMEI différent
         "5010", // Modèle différent
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "5080", // Absence câble
         "5100"  // Absence chargeur
     ];
-    
+
     let filteredCodes = [];
 
     // Lancement automatique
@@ -148,8 +148,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            // Filtrage selon la liste ALLOWED_CODES
-            filteredCodes = codesArray.filter(item => item && ALLOWED_CODES.includes(String(item.code)));
+            // Filtrage et alignement selon l'ordre strict de ALLOWED_CODES
+            const codesMap = new Map();
+            codesArray.forEach(item => {
+                if (item && item.code) {
+                    codesMap.set(String(item.code), item);
+                }
+            });
+
+            filteredCodes = ALLOWED_CODES
+                .filter(code => codesMap.has(code))
+                .map(code => codesMap.get(code));
 
             if (filteredCodes.length === 0) {
                 showStatus(`Aucun code correspondant à la liste n'a été trouvé.`, "warning");
@@ -166,7 +175,39 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- 2. Rendu IHM ---
+    // --- 2. Récupération de l'IMEI de la transaction ---
+    async function fetchImei(txNum) {
+        const infoEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/info`;
+        const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(infoEndpoint);
+
+        const response = await fetch(proxyUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Impossible de récupérer les informations de la transaction (Statut ${response.status})`);
+        }
+
+        let data = await response.json();
+
+        // Désencapsulation proxy CORS
+        if (data && typeof data.contents === 'string') {
+            try { data = JSON.parse(data.contents); } catch (e) {}
+        } else if (data && data.contents) {
+            data = data.contents;
+        }
+
+        // Extraction imei : resultats -> current -> imei
+        const imei = data?.resultats?.current?.imei;
+        
+        return imei !== undefined && imei !== null ? imei : "";
+    }
+
+    // --- 3. Rendu IHM ---
     function renderCodes(codes) {
         codesList.innerHTML = "";
         counterBadge.textContent = `${codes.length} code(s)`;
@@ -196,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 3. Envoi effectif de la requête API ---
+    // --- 4. Envoi effectif de la requête API ---
     if (preCheckForm) {
         preCheckForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -207,31 +248,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Construction du payload
-            const formData = new FormData(preCheckForm);
-            const productCheckObject = {};
-
-            filteredCodes.forEach(item => {
-                const val = formData.get(`code_${item.code}`);
-                productCheckObject[String(item.code)] = (val === "true");
-            });
-
-            const payload = {
-                product_check: productCheckObject
-            };
-
-            // Construction de l'URL cible (passage par le proxy CORS si nécessaire)
-            const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
-            const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetEndpoint);
-
-            // Mise à jour de l'IHM pendant la requête
-            consoleOutput.textContent = `// Envoi de la requête POST vers :\n// ${targetEndpoint} ...`;
             if (sendBtn) {
                 sendBtn.disabled = true;
                 sendBtn.classList.add("opacity-50", "cursor-not-allowed");
             }
 
             try {
+                // Étape 1 : Récupération de l'IMEI
+                consoleOutput.textContent = `// Récupération de l'IMEI pour la transaction ${txNum}...`;
+                const imeiValue = await fetchImei(txNum);
+
+                // Étape 2 : Construction du payload avec product_check + imei
+                const formData = new FormData(preCheckForm);
+                const productCheckObject = {};
+
+                filteredCodes.forEach(item => {
+                    const val = formData.get(`code_${item.code}`);
+                    productCheckObject[String(item.code)] = (val === "true");
+                });
+
+                const payload = {
+                    product_check: productCheckObject,
+                    imei: imeiValue
+                };
+
+                // Étape 3 : Envoi du productPreCheck
+                const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
+                const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetEndpoint);
+
+                consoleOutput.textContent = `// Envoi du productPreCheck vers :\n// ${targetEndpoint}\n\n// Payload en cours d'envoi :\n${JSON.stringify(payload, null, 2)}`;
+
                 const response = await fetch(proxyUrl, {
                     method: "POST",
                     headers: {
@@ -250,12 +296,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     responseData = await response.text();
                 }
 
-                // Dé-encapsulation si corsproxy renvoie un string wrapper
+                // Désencapsulation proxy CORS
                 if (responseData && typeof responseData.contents === 'string') {
                     try { responseData = JSON.parse(responseData.contents); } catch (e) {}
                 }
 
-                // Affichage dans la console UI
+                // Formatage du résultat
                 const statusInfo = `// Statut HTTP : ${response.status} ${response.statusText}\n`;
                 const formattedBody = typeof responseData === 'object' 
                     ? JSON.stringify(responseData, null, 2) 
@@ -264,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 consoleOutput.textContent = statusInfo + `// Réponse de l'API :\n` + formattedBody;
 
             } catch (error) {
-                consoleOutput.textContent = `// ERREUR LORS DE L'ENVOI DE LA REQUÊTE :\n${error.message}`;
+                consoleOutput.textContent = `// ERREUR :\n${error.message}`;
             } finally {
                 if (sendBtn) {
                     sendBtn.disabled = false;
