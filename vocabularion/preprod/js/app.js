@@ -1,10 +1,12 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const savedApiKey = localStorage.getItem('gemini_api_key');
-    if (savedApiKey) {
-        document.getElementById('gemini-api-key').value = savedApiKey;
+document.addEventListener('DOMContentLoaded', () => {
+    // Restaurer la recherche si le champ existe
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.value = '';
     }
 
-    await loadInitialDatabase();
+    // Charger les données depuis Supabase
+    loadData();
 });
 
 async function loadInitialDatabase() {
