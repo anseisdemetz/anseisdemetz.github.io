@@ -1,12 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Restaurer la recherche si le champ existe
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
         searchInput.value = '';
     }
 
-    // Charger les données depuis Supabase
-    loadData();
+    // Appel de la vraie fonction de chargement du Front-Office
+    if (typeof loadVocabulary === 'function') {
+        loadVocabulary();
+    } else if (typeof initApp === 'function') {
+        initApp();
+    }
 });
 
 async function loadInitialDatabase() {
