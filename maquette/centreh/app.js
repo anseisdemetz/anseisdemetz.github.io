@@ -12,17 +12,94 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Liste des codes autorisés
     const ALLOWED_CODES = [
-        "999",
-        "1000", "1050", "1060", "1070", "1080", "1090",
-        "1100", "1110", "1120", "1130", "1150", "1170",
-        "2010", "2020", "2029", "2030", "2031", "2032", "2033", "2034", "2035", "2036",
-        "2037", "2038", "2039", "2040", "2041", "2050", "2060", "2061",
-        "2062", "2063", "2070", "2071", "2072", "2080", "2090", "2091",
-        "2101", "2111", "2112", "2121", "2123", "2124", "2125",
-        "3010", "3020", "3301", "3320", "3321", "3341", "3342", "3343", "3344", "3345", "3346", "3348", "3357",
-        "3405", "3406", "3407",
-        "5010", "5020", "5030", "5040", "5041", "5060", "5070", "5080", "5100", "5110"
-    ]
+        "5020", // IMEI différent
+        "5010", // Modèle différent
+        "5030", // Capacité différente
+
+        // CODES DE BLOCAGE + QUARANTAINE => forçage prix 0€
+        "1050", // Contrefaçon
+        "1060", // Réception non conforme. Objet autre que le produit attendu
+        "1070", // Produit factice
+        "1080", // Jailbreak
+        "1090", // Blocage Flotte MDM
+        "1100", // Blocage Compte Google / iOS
+        "1110", // Produit géolocalisé - FMIP
+        "1130", // GSMA
+        "1150", // Blocage compte MARQUE de l'appareil
+
+        // COMMUNS A TOUTES LES CATEGORIES
+        "999",  // IMEI inaccessible
+        "1000", // Produit DEEE Batterie gonflée
+        "1120", // Logiciel non conforme
+        "3010", // Le produit ne s'allume pas
+        "3020", // Connecteur de charge ne fonctionne pas
+
+        // MOBILE, TABLETTE, SMARTWATCH
+        "2010", // ECRAN - micro rayures
+        "2020", // ECRAN - rayures
+        "2030", // ECRAN - cassé
+        "2031", // ECRAN - fissuré
+        "2032", // ECRAN - éclats
+        "2033", // ECRAN - chocs
+        "2034", // ECRAN - dalle tactile HS
+        "2035", // ECRAN - tâche noire
+        "2036", // ECRAN - rémanences
+        "2029", // ECRAN - rémanences LÉGÉRÈRES
+        "2037", // ECRAN - brûlé
+        "2038", // ECRAN - pixels défectueux > 3 pixels
+        "2039", // ECRAN - rétroéclairage HS
+        "2041", // ECRAN - décollé
+        "3301", // ECRAN - non fonctionnel, écran noir
+        "2040", // CONTOURS - micro rayures
+        "2050", // CONTOURS - rayures
+        "2060", // CONTOURS - cassé
+        "2061", // CONTOURS - fissuré
+        "2062", // CONTOURS - éclats
+        "2063", // CONTOURS - chocs
+        "2070", // CONTOURS - pièces - vis manquantes
+        "2071", // CONTOURS - cache manquant
+        "2072", // CONTOURS - Tiroir SIM manquant
+        "2080", // CONTOURS - oxydé
+        "2090", // CONTOURS - déformé, tordu
+        "2091", // CONTOURS - charnière défectueuse
+        "2101", // ARRIERE - micro rayures
+        "2111", // ARRIERE - rayures
+        "2112", // ARRIERE - Lentille APN - Rayure(s) / Abimée - Cassée
+        "2121", // ARRIERE - cassé
+        "2122", // ARRIERE - fissures
+        "2123", // ARRIERE - éclats
+        "2124", // ARRIERE - chocs
+        "2125", // ARRIERE - décollé
+        "5041", // Sceau de garantie cassé ou absent...
+
+        // SMARTWATCH
+        "1170", // Jumelage toujours actif
+        "5110", // Bracelet d'origine non présent
+        "3320", // Chargeur d'origine non fonctionnel
+        "3321", // Bracelet d'origine non fonctionnel
+
+        // CONSOLES
+        "5060", // CONSOLES - absence manette(s)
+        "5070", // CONSOLE SALON - absence bloc alimentation
+        "3341", // CONSOLE PORTABLE - ECRAN micro rayures
+        "3342", // CONSOLE PORTABLE - ECRAN rayures
+        "3343", // CONSOLE PORTABLE - ECRAN cassé
+        "3344", // CONSOLE PORTABLE - STATION ACCUEIL micro rayures
+        "3345", // CONSOLE PORTABLE - STATION ACCUEIL rayures
+        "3346", // CONSOLE PORTABLE - STATION ACCUEIL cassé
+
+        // ECOUTEURS - ENCEINTES CONNECTEES
+        "3357", // Boitier de charge non présent
+        "3405", // Micro-rayure(s)
+        "3406", // Rayure(s)
+        "3407", // Produit cassé
+
+        // COMMUN CONSOLES ET ECOUTEURS CASQUES ENCEINTES
+        "3348", // Absence station acceuil
+        "5040", // Sceau de garantie cassé ou absent...
+        "5080", // Absence câble
+        "5100"  // Absence chargeur
+    ];
     
     let filteredCodes = [];
 
