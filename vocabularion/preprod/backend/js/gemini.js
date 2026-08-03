@@ -1,14 +1,3 @@
-let detectedLanguageForImport = 'english';
-
-// Au chargement, remplir automatiquement la clé API si présente en mémoire
-document.addEventListener('DOMContentLoaded', () => {
-    const savedKey = localStorage.getItem('gemini_api_key');
-    const inputKey = document.getElementById('gemini-api-key');
-    if (savedKey && inputKey) {
-        inputKey.value = savedKey;
-    }
-});
-
 async function generateWithGemini() {
     const apiKey = document.getElementById('gemini-api-key').value.trim();
     const rawWords = document.getElementById('ai-raw-words').value.trim();
@@ -24,7 +13,6 @@ async function generateWithGemini() {
         return;
     }
 
-    // Sauvegarde automatique de la clé API dans le navigateur
     localStorage.setItem('gemini_api_key', apiKey);
 
     btn.disabled = true;
@@ -52,7 +40,6 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
   "rejected_notes": "Explication des mots rejetés (ou 'Aucun mot rejeté' si tout est conservé)"
 }`;
 
-    // Cascading des modèles en cas d'erreur ou d'indisponibilité
     const modelsToTry = [
         'gemini-2.5-flash',
         'gemini-1.5-flash-latest',
@@ -74,7 +61,6 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
                 })
             });
 
-            // Gestion de la limite de fréquence (429)
             if (response.status === 429) {
                 await new Promise(res => setTimeout(res, 2000));
                 response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
@@ -107,7 +93,6 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
             
             renderParsedPreviewTable(markdownText);
 
-            // Gestion de l'affichage des notes de rejet
             let notesContainer = document.getElementById('ai-rejected-notes');
             if (!notesContainer) {
                 notesContainer = document.createElement('div');
@@ -135,7 +120,7 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
     }
 
     btn.disabled = false;
-    btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer et analyser</span>`;
+    btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer la prévisualisation</span>`;
 
     if (!success) {
         alert("Erreur lors de la génération. Détail : " + lastErrorMessage);
@@ -147,21 +132,21 @@ function renderParsedPreviewTable(mdText) {
     const lines = mdText.split('\n').map(l => l.trim()).filter(l => l.startsWith('|') && !l.includes(':---'));
 
     if (lines.length === 0) {
-        container.innerHTML = `<p class="text-rose-500 font-semibold p-2">Erreur de format de tableau Markdown.</p>`;
+        container.innerHTML = `<p class="text-rose-500">Erreur de format de tableau Markdown.</p>`;
         return;
     }
 
-    let html = `<table class="w-full text-left border-collapse text-xs"><thead><tr class="bg-slate-200 font-bold text-slate-700">`;
+    let html = `<table class="w-full text-left border-collapse"><thead><tr class="bg-slate-200 font-bold">`;
     
     const headers = lines[0].split('|').map(p => p.trim()).filter((p, i, a) => i > 0 && i < a.length - 1);
-    headers.forEach(h => html += `<th class="p-2 border border-slate-300">${escapeHtml(h)}</th>`);
+    headers.forEach(h => html += `<th class="p-1 border">${escapeHtml(h)}</th>`);
     html += `</tr></thead><tbody>`;
 
     for (let i = 1; i < lines.length; i++) {
         const cells = lines[i].split('|').map(p => p.trim()).filter((p, idx, a) => idx > 0 && idx < a.length - 1);
         if (cells.length >= 2) {
-            html += `<tr class="hover:bg-slate-50">`;
-            cells.forEach(c => html += `<td class="p-2 border border-slate-200">${escapeHtml(c.replace(/\*\*/g, ''))}</td>`);
+            html += `<tr class="hover:bg-slate-100">`;
+            cells.forEach(c => html += `<td class="p-1 border">${escapeHtml(c.replace(/\*\*/g, ''))}</td>`);
             html += `</tr>`;
         }
     }
@@ -193,14 +178,13 @@ async function importAIVocabulary() {
 
                 if (french && term) {
                     newEntries.push({
-                        id: 'vocab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                        id: `${targetLang}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
                         term: term,
                         translation: french,
                         sentence: sentence,
                         status: 'unstudied',
                         score: 1,
-                        language: targetLang,
-                        created_at: new Date().toISOString()
+                        language: targetLang
                     });
                 }
             }
@@ -208,8 +192,7 @@ async function importAIVocabulary() {
     });
 
     if (newEntries.length > 0) {
-        // Envoi vers Supabase (table VOCAB_TABLE défini dans config.js)
-        const { error } = await supabaseClient.from(VOCAB_TABLE).insert(newEntries);
+        const { error } = await supabaseClient.from('vocabulary').insert(newEntries);
 
         if (error) {
             console.error("Erreur d'insertion Supabase:", error);
@@ -217,20 +200,13 @@ async function importAIVocabulary() {
             return;
         }
 
-        // Mise à jour de la structure mémoire du Back-Office
         db.languages[targetLang].vocabulary.unshift(...newEntries);
-        
-        // Basculement automatique d'onglet vers la langue importée
-        if (currentLang !== targetLang) {
-            switchLanguage(targetLang);
-        } else {
-            updateBadges();
-            renderBackendTable();
-            if (typeof updateCharts === 'function') updateCharts();
-        }
+        currentLang = targetLang;
+        switchLanguage(currentLang);
 
         closeModal('add-modal');
         document.getElementById('ai-raw-words').value = '';
         document.getElementById('ai-preview-container').classList.add('hidden');
+        alert(`${newEntries.length} mots importés avec succès en ${targetLang === 'english' ? 'Anglais' : 'Italien'} !`);
     }
 }
