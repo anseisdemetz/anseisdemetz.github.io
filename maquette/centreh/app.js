@@ -201,8 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
             data = data.contents;
         }
 
-        // Extraction imei : resultats -> current -> imei
-        const imei = data?.resultats?.current?.imei;
+        // Extraction imei : results -> current -> imei
+        const imei = data?.results?.current?.imei;
         
         return imei !== undefined && imei !== null ? imei : "";
     }
