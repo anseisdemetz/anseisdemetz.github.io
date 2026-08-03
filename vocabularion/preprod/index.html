@@ -52,12 +52,8 @@
 
             <!-- Top Actions -->
             <div class="flex items-center justify-center sm:justify-end space-x-2 w-full sm:w-auto flex-wrap gap-2">
-                <button onclick="startQuiz()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
+                <button onclick="startQuiz()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
                     <i class="fa-solid fa-dice"></i> <span>Quiz Révision</span>
-                </button>
-
-                <button onclick="openModal('add-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
-                    <i class="fa-solid fa-plus"></i> <span>Ajouter du vocabulaire</span>
                 </button>
             </div>
         </div>
@@ -171,8 +167,6 @@
                             <th id="th-term-header" class="py-3.5 px-4">Mot / Expression</th>
                             <th class="py-3.5 px-4">Traduction (Français)</th>
                             <th class="py-3.5 px-4">Exemple d'utilisation</th>
-                            <th class="py-3.5 px-3 w-16 text-center">Score</th>
-                            <th class="py-3.5 px-4 w-12 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="vocab-table-body" class="divide-y divide-slate-100 text-sm">
@@ -254,127 +248,8 @@
         </div>
     </div>
 
-    <!-- Modal: Add New Vocabulary -->
-    <div id="add-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl max-w-xl w-full p-5 sm:p-6 space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 class="text-base sm:text-lg font-bold text-slate-800">Ajouter du vocabulaire</h3>
-                <button onclick="closeModal('add-modal')" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <!-- Modal Tab Selector -->
-            <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-semibold">
-                <button id="tab-btn-ai" onclick="switchAddTab('ai')" class="flex-1 py-2 rounded-lg bg-white text-indigo-900 shadow-sm transition text-center">
-                    ✨ Saisie rapide (IA Gemini)
-                </button>
-                <button id="tab-btn-md" onclick="switchAddTab('markdown')" class="flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center">
-                    📋 Coller du Markdown
-                </button>
-                <button id="tab-btn-manual" onclick="switchAddTab('manual')" class="flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center">
-                    ✏️ Ajout manuel
-                </button>
-            </div>
-
-            <!-- Form 1: AI Auto Generator -->
-            <div id="add-ai-form" class="space-y-4 text-xs sm:text-sm">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Clé API Google Gemini</label>
-                    <input type="password" id="gemini-api-key" placeholder="Collez votre clé API (AI Studio)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Liste de mots bruts (Anglais OU Italien)</label>
-                    <textarea id="ai-raw-words" rows="4" placeholder="To yield&#10;Relentless&#10;Gloom" class="w-full font-mono text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
-                    <p class="text-[11px] text-slate-400 mt-1">L'IA détecte automatiquement s'il s'agit d'anglais ou d'italien.</p>
-                </div>
-
-                <button type="button" onclick="generateWithGemini()" id="btn-generate-ai" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-sm transition flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    <span>Générer la prévisualisation</span>
-                </button>
-
-                <div id="ai-preview-container" class="hidden space-y-3 pt-3 border-t border-slate-100">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-slate-700 flex items-center space-x-1.5">
-                            <span>Langue détectée :</span>
-                            <span id="detected-lang-badge" class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[11px]">--</span>
-                        </span>
-                        <span class="text-[11px] text-emerald-600 font-semibold"><i class="fa-solid fa-check"></i> Tableau validé</span>
-                    </div>
-
-                    <div id="ai-preview-table" class="overflow-x-auto max-h-48 border border-slate-200 rounded-lg bg-slate-50 p-2 text-xs">
-                    </div>
-
-                    <details class="text-[11px] text-slate-500">
-                        <summary class="cursor-pointer font-medium hover:text-slate-800">Voir / Modifier le code Markdown brut</summary>
-                        <textarea id="ai-markdown-output" rows="4" class="w-full font-mono text-xs bg-slate-100 border border-slate-200 rounded-lg p-2 mt-2 focus:outline-none"></textarea>
-                    </details>
-
-                    <button type="button" onclick="importAIVocabulary()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg shadow-sm transition flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-file-import"></i>
-                        <span>Valider et importer dans Supabase</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Form 2: Markdown Import -->
-            <form id="add-md-form" onsubmit="handleAddMarkdown(event)" class="hidden space-y-3.5 text-xs sm:text-sm">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Langue de destination</label>
-                    <select id="add-target-lang-md" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="english">🇬🇧 Anglais</option>
-                        <option value="italian">🇮🇹 Italien</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Collez le(s) tableau(x) Markdown brut(s)</label>
-                    <textarea id="add-md-input" rows="8" required placeholder="| Français | Italien | Phrase d'exemple |&#10;| :--- | :--- | :--- |&#10;| Ouvrir tout grand | Spalancare | Non spalancare la finestra |" class="w-full font-mono text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
-                </div>
-
-                <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
-                    <button type="button" onclick="closeModal('add-modal')" class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-medium">Annuler</button>
-                    <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-sm">Importer les mots</button>
-                </div>
-            </form>
-
-            <!-- Form 3: Manual Single Item -->
-            <form id="add-word-form" onsubmit="handleAddWord(event)" class="hidden space-y-3.5 text-xs sm:text-sm">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Langue de destination</label>
-                    <select id="add-target-lang-manual" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="english">🇬🇧 Anglais</option>
-                        <option value="italian">🇮🇹 Italien</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block font-semibold text-slate-600 mb-1">Mot / Expression</label>
-                    <input type="text" id="add-term" placeholder="ex: To yield, Sfumatura" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-
-                <div>
-                    <label class="block font-semibold text-slate-600 mb-1">Traduction en Français</label>
-                    <input type="text" id="add-translation" placeholder="ex: Céder, Nuance" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-
-                <div>
-                    <label class="block font-semibold text-slate-600 mb-1">Phrase d'utilisation dans son contexte</label>
-                    <textarea id="add-sentence" rows="3" placeholder="ex: The driver yielded the right of way." class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                </div>
-
-                <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
-                    <button type="button" onclick="closeModal('add-modal')" class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-medium">Annuler</button>
-                    <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-sm">Enregistrer le mot</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Chargement ordonné des scripts découpés -->
+    <!-- Scripts Front-Office (gemini.js retiré) -->
     <script src="js/config.js"></script>
-    <script src="js/gemini.js"></script>
     <script src="js/quiz.js"></script>
     <script src="js/app.js"></script>
 </body>
