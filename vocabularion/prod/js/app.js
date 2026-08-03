@@ -139,8 +139,12 @@ function renderApp() {
 
     updateMaskingControls();
     renderTable();
-
     initDailyFocus();
+
+    // Mettre à jour le décompte de mots révisés sur le bouton qui lance le quiz
+    if (typeof updateQuizHeaderButton === 'function') {
+        updateQuizHeaderButton();
+    }
 }
 
 function renderTable() {
