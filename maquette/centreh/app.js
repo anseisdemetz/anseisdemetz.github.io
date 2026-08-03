@@ -9,6 +9,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const clearConsoleBtn = document.getElementById("clearConsoleBtn");
     const reloadBtn = document.getElementById("reloadBtn");
 
+    // Liste des codes autorisés
+    const ALLOWED_CODES = [
+        "5020", "5010", "5030", "1050", "1060", "1070", "1080", "1090", "1100", 
+        "1110", "1130", "1150", "999", "1000", "1120", "3010", "3020", "2010", 
+        "2020", "2030", "2031", "2032", "2033", "2034", "2035", "2036", "2029", 
+        "2037", "2038", "2039", "2041", "3301", "2040", "2050", "2060", "2061", 
+        "2062", "2063", "2070", "2072", "2080", "2090", "2091", "2101", "2111", 
+        "2112", "2121", "2123", "2124", "2125", "5041", "1170", "5110", "3320", 
+        "3321", "5060", "5070", "3341", "3342", "3343", "3344", "3345", "3346", 
+        "3357", "3405", "3406", "3407", "3348", "5040", "5080", "5100"
+    ];
+
     let filteredCodes = [];
 
     // Lancement automatique
@@ -17,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (reloadBtn) reloadBtn.addEventListener("click", () => loadCodes());
     if (clearConsoleBtn) clearConsoleBtn.addEventListener("click", () => consoleOutput.textContent = "// Console vidée.");
 
-    // --- 1. Chargement des codes ---
+    // --- 1. Chargement et filtrage par liste de codes ---
     async function loadCodes() {
         showStatus("Chargement des codes d'homologation...", "info");
         preCheckBlock.classList.add("hidden");
@@ -36,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let responseData = await response.json();
 
-            // Désencapsulation du proxy CORS (corsproxy.io)
+            // Désencapsulation du proxy CORS
             if (responseData && typeof responseData.contents === 'string') {
                 try { responseData = JSON.parse(responseData.contents); } catch (e) {}
             } else if (responseData && responseData.contents) {
@@ -56,11 +68,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            // Filtrage : pre_check === true
-            filteredCodes = codesArray.filter(item => item && item.steps && (item.steps.pre_check === true || item.steps.pre_check === "true" || item.steps.pre_check === 1));
+            // Filtrage : vérification de la présence du code dans ALLOWED_CODES (sans vérifier steps.pre_check)
+            filteredCodes = codesArray.filter(item => item && ALLOWED_CODES.includes(String(item.code)));
 
             if (filteredCodes.length === 0) {
-                showStatus(`Aucun code trouvé avec steps.pre_check = true.`, "warning");
+                showStatus(`Aucun code correspondant à la liste n'a été trouvé.`, "warning");
             } else {
                 hideStatus();
                 renderCodes(filteredCodes);
@@ -85,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.createElement("div");
             card.className = "flex items-center justify-between p-3 bg-slate-900/80 rounded border border-slate-700/80 hover:border-slate-600 transition";
             
-            // L'option Non est cochée par défaut via l'attribut checked
             card.innerHTML = `
                 <span class="font-mono text-sm text-sky-300 font-medium pr-4">
                     ${item.code} - ${escapeHtml(labelFr)}
@@ -105,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 3. Génération du Body JSON au clic sur le bouton ---
+    // --- 3. Génération du Body JSON ---
     if (preCheckForm) {
         preCheckForm.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -116,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Construction du dictionnaire Key:Value ("code": boolean)
             const formData = new FormData(preCheckForm);
             const productCheckObject = {};
 
@@ -125,20 +135,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 productCheckObject[String(item.code)] = (val === "true");
             });
 
-            // Format du Payload exact demandé
             const payload = {
                 product_check: productCheckObject
             };
 
-            // URL ciblée pour information
             const targetUrl = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
 
-            // Affichage dans la console
             consoleOutput.textContent = `// URL cible pour Postman (POST) :\n// ${targetUrl}\n\n// Body JSON à coller dans Postman :\n` + JSON.stringify(payload, null, 2);
         });
     }
 
-    // Utilitaires
     function showStatus(text, type) {
         statusMessage.textContent = text;
         statusMessage.classList.remove("hidden", "text-red-400", "text-amber-400", "text-slate-300");
