@@ -1,181 +1,236 @@
-// --- GESTION DE L'IA GEMINI ---
+let detectedLanguageForImport = 'english';
+
+// Au chargement, remplir automatiquement la clé API si présente en mémoire
+document.addEventListener('DOMContentLoaded', () => {
+    const savedKey = localStorage.getItem('gemini_api_key');
+    const inputKey = document.getElementById('gemini-api-key');
+    if (savedKey && inputKey) {
+        inputKey.value = savedKey;
+    }
+});
 
 async function generateWithGemini() {
     const apiKey = document.getElementById('gemini-api-key').value.trim();
     const rawWords = document.getElementById('ai-raw-words').value.trim();
     const btn = document.getElementById('btn-generate-ai');
-    
-    // On se base sur la langue actuellement sélectionnée dans l'onglet principal du Back-Office
-    const langName = db.languages[currentLang].name; 
 
     if (!apiKey) {
-        alert("Veuillez saisir votre clé API Google Gemini.");
+        alert("Veuillez saisir votre clé API Gemini.");
         return;
     }
+
     if (!rawWords) {
-        alert("Veuillez saisir au moins un mot à analyser.");
+        alert("Veuillez coller au moins un mot de vocabulaire.");
         return;
     }
 
-    // État de chargement du bouton
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Analyse en cours...</span>';
+    // Sauvegarde automatique de la clé API dans le navigateur
+    localStorage.setItem('gemini_api_key', apiKey);
+
     btn.disabled = true;
+    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Filtrage pédagogique (Oxford / De Mauro)...</span>`;
 
-    try {
-        // Prompt optimisé pour garantir un tableau propre et adapté à la langue cible
-        const prompt = `Tu es un professeur de langue expert.
-        Voici une liste de mots ou expressions bruts :
-        ${rawWords}
+    const prompt = `Tu es un professeur de langues expert. Analyse cette liste brute de mots et d'expressions :
+"${rawWords}"
 
-        La langue d'apprentissage cible est : ${langName}.
-        
-        Tâche :
-        Pour chaque mot, génère :
-        1. La traduction exacte en français.
-        2. Le mot ou l'expression correctement orthographié en ${langName}.
-        3. Une courte phrase d'exemple naturelle en ${langName} pour illustrer le mot.
+INSTRUCTIONS PEDAGOGIQUES STRICTES :
+1. DÉTECTION : Détermine la langue dominante de la liste : "english" ou "italian".
+2. FILTRAGE STRICT :
+   - Si ANGLAIS : Filtre la liste en te basant STRICTEMENT sur le lexique d'Oxford (niveaux CEFR A1, A2, B1, B2, C1). Élimine les mots trop avancés (C2) ou le jargon trop spécifique.
+   - Si ITALIEN : Filtre la liste en te basant STRICTEMENT sur le lexique de Tullio De Mauro (niveaux CEFR A1, A2, B1, B2, C1). Élimine les mots trop avancés (C2) ou le jargon trop spécifique.
+3. STRUCTURE DU TABLEAU MARKDOWN (3 colonnes exactes) :
+   - Colonne 1 : "Français" (traduction précise du mot ou de l'expression)
+   - Colonne 2 : "Anglais" ou "Italien" (le mot ou l'expression en gras, sous sa forme infinitive pour les verbes, au masculin singulier pour les noms et adjectifs)
+   - Colonne 3 : "Phrase d'exemple" (phrase simple, naturelle, mettant le mot en valeur en gras)
 
-        Format exigé :
-        Retourne STRICTEMENT et UNIQUEMENT un tableau Markdown à 3 colonnes exactes :
-        | Français | Cible | Phrase |
-        Ne mets aucun texte avant ou après le tableau.`;
+4. MOTS REJETÉS : Pour les mots non retenus (C2, jargon ou trop rares), fournis une courte définition/explication en français dans un bloc de texte.
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        });
+Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette structure exacte :
+{
+  "language": "english" ou "italian",
+  "markdown": "tableau markdown à 3 colonnes pour les mots retenus",
+  "rejected_notes": "Explication des mots rejetés (ou 'Aucun mot rejeté' si tout est conservé)"
+}`;
 
-        if (!response.ok) {
-            throw new Error(`Erreur API Gemini : ${response.status}`);
-        }
+    // Cascading des modèles en cas d'erreur ou d'indisponibilité
+    const modelsToTry = [
+        'gemini-2.5-flash',
+        'gemini-1.5-flash-latest',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro'
+    ];
 
-        const data = await response.json();
-        const mdText = data.candidates[0].content.parts[0].text;
+    let success = false;
+    let lastErrorMessage = "";
 
-        // Remplir les champs de prévisualisation
-        document.getElementById('ai-markdown-output').value = mdText;
-        document.getElementById('detected-lang-badge').innerText = langName;
-        
-        // Convertir le Markdown en tableau HTML de prévisualisation
-        parseAndPreviewAI(mdText);
-
-        // Afficher la zone de prévisualisation
-        document.getElementById('ai-preview-container').classList.remove('hidden');
-
-    } catch (err) {
-        console.error(err);
-        alert("Erreur lors de la génération avec Gemini. Vérifiez que votre clé API est valide.");
-    } finally {
-        // Rétablir l'état normal du bouton
-        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer et analyser</span>';
-        btn.disabled = false;
-    }
-}
-
-// Transforme le Markdown reçu en un tableau HTML lisible et le stocke en mémoire
-function parseAndPreviewAI(mdText) {
-    const lines = mdText.split('\n').map(l => l.trim()).filter(l => l.length > 0 && l.includes('|'));
-    pendingAIVocabulary = [];
-    
-    let html = `
-        <table class="w-full text-left border-collapse text-[11px]">
-            <thead>
-                <tr class="bg-slate-200/50 border-b border-slate-200 text-slate-600">
-                    <th class="p-2 font-bold w-1/4">Français</th>
-                    <th class="p-2 font-bold w-1/4">Cible</th>
-                    <th class="p-2 font-bold w-1/2">Phrase d'exemple</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-    `;
-
-    lines.forEach(line => {
-        // Ignorer l'en-tête du tableau Markdown et les lignes vides
-        if (line.includes('---') || line.toLowerCase().includes('français')) return;
-        
-        const parts = line.split('|').map(p => p.trim()).filter(p => p.length > 0);
-        
-        if (parts.length >= 3) {
-            const fr = parts[0];
-            const term = parts[1];
-            const sentence = parts[2];
-            
-            // Stockage dans la variable globale (déclarée dans config.js)
-            pendingAIVocabulary.push({
-                term: term,
-                translation: fr,
-                sentence: sentence
+    for (const model of modelsToTry) {
+        try {
+            let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseMimeType: "application/json" }
+                })
             });
 
-            html += `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-2">${escapeHtml(fr)}</td>
-                    <td class="p-2 font-bold text-indigo-900">${escapeHtml(term)}</td>
-                    <td class="p-2 italic text-slate-600">${escapeHtml(sentence)}</td>
-                </tr>
-            `;
+            // Gestion de la limite de fréquence (429)
+            if (response.status === 429) {
+                await new Promise(res => setTimeout(res, 2000));
+                response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+            }
+
+            const data = await response.json();
+
+            if (data.error) {
+                lastErrorMessage = data.error.message;
+                console.warn(`Modèle ${model} indisponible (${data.error.message}), tentative avec le suivant...`);
+                continue;
+            }
+
+            const resultJson = JSON.parse(data.candidates[0].content.parts[0].text);
+            
+            detectedLanguageForImport = resultJson.language;
+            const markdownText = resultJson.markdown;
+            const rejectedNotes = resultJson.rejected_notes || "";
+
+            const langLabel = detectedLanguageForImport === 'english' ? '🇬🇧 Anglais (Filtré Oxford)' : '🇮🇹 Italien (Filtré De Mauro)';
+            document.getElementById('detected-lang-badge').innerText = langLabel;
+            document.getElementById('ai-markdown-output').value = markdownText;
+            
+            renderParsedPreviewTable(markdownText);
+
+            // Gestion de l'affichage des notes de rejet
+            let notesContainer = document.getElementById('ai-rejected-notes');
+            if (!notesContainer) {
+                notesContainer = document.createElement('div');
+                notesContainer.id = 'ai-rejected-notes';
+                notesContainer.className = "p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 space-y-1 mt-2";
+                document.getElementById('ai-preview-container').insertBefore(notesContainer, document.getElementById('ai-preview-container').lastElementChild);
+            }
+
+            if (rejectedNotes && !rejectedNotes.toLowerCase().includes('aucun mot')) {
+                notesContainer.innerHTML = `<strong>⚠️ Mots écartés (C2 / Jargon) :</strong><p class="mt-1 text-slate-700 whitespace-pre-line">${escapeHtml(rejectedNotes)}</p>`;
+                notesContainer.classList.remove('hidden');
+            } else {
+                notesContainer.classList.add('hidden');
+            }
+
+            document.getElementById('ai-preview-container').classList.remove('hidden');
+
+            success = true;
+            break;
+
+        } catch (err) {
+            lastErrorMessage = err.message;
+            console.warn(`Erreur réseau avec ${model}:`, err);
         }
-    });
-    
-    html += '</tbody></table>';
-    document.getElementById('ai-preview-table').innerHTML = html;
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer et analyser</span>`;
+
+    if (!success) {
+        alert("Erreur lors de la génération. Détail : " + lastErrorMessage);
+    }
 }
 
-// Enregistre les données validées vers Supabase
-async function importAIVocabulary() {
-    if (!pendingAIVocabulary || pendingAIVocabulary.length === 0) {
-        alert("Aucun mot n'a pu être analysé pour l'importation.");
+function renderParsedPreviewTable(mdText) {
+    const container = document.getElementById('ai-preview-table');
+    const lines = mdText.split('\n').map(l => l.trim()).filter(l => l.startsWith('|') && !l.includes(':---'));
+
+    if (lines.length === 0) {
+        container.innerHTML = `<p class="text-rose-500 font-semibold p-2">Erreur de format de tableau Markdown.</p>`;
         return;
     }
 
-    // Préparation des objets finaux pour la BDD
-    const newItems = pendingAIVocabulary.map(item => ({
-        id: 'vocab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-        term: item.term,
-        translation: item.translation,
-        sentence: item.sentence,
-        status: 'unstudied',
-        score: 1,
-        language: currentLang, // Utilise la langue du Back-Office active
-        created_at: new Date().toISOString()
-    }));
+    let html = `<table class="w-full text-left border-collapse text-xs"><thead><tr class="bg-slate-200 font-bold text-slate-700">`;
+    
+    const headers = lines[0].split('|').map(p => p.trim()).filter((p, i, a) => i > 0 && i < a.length - 1);
+    headers.forEach(h => html += `<th class="p-2 border border-slate-300">${escapeHtml(h)}</th>`);
+    html += `</tr></thead><tbody>`;
 
-    const btn = document.querySelector('#ai-preview-container button');
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Enregistrement...</span>';
-    btn.disabled = true;
+    for (let i = 1; i < lines.length; i++) {
+        const cells = lines[i].split('|').map(p => p.trim()).filter((p, idx, a) => idx > 0 && idx < a.length - 1);
+        if (cells.length >= 2) {
+            html += `<tr class="hover:bg-slate-50">`;
+            cells.forEach(c => html += `<td class="p-2 border border-slate-200">${escapeHtml(c.replace(/\*\*/g, ''))}</td>`);
+            html += `</tr>`;
+        }
+    }
 
-    try {
-        // Insertion par lot dans Supabase
-        const { error } = await supabaseClient
-            .from(VOCAB_TABLE)
-            .insert(newItems);
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+}
 
-        if (error) throw error;
+async function importAIVocabulary() {
+    const mdContent = document.getElementById('ai-markdown-output').value;
+    const targetLang = detectedLanguageForImport;
 
-        // Mise à jour de l'affichage local du tableau
-        newItems.forEach(item => db.languages[currentLang].vocabulary.unshift(item));
+    if (!mdContent.trim()) return;
 
-        // Nettoyage de l'interface
-        document.getElementById('ai-raw-words').value = '';
-        document.getElementById('ai-preview-container').classList.add('hidden');
-        pendingAIVocabulary = null;
-        
-        closeModal('add-modal');
-        updateBadges();
-        renderBackendTable();
-        
-        if (typeof updateCharts === 'function') {
-            updateCharts();
+    const lines = mdContent.split('\n');
+    const newEntries = [];
+
+    lines.forEach(line => {
+        line = line.trim();
+        if (line.startsWith('|') && !line.includes(':---') && !line.toLowerCase().includes('français')) {
+            const parts = line.split('|').map(p => p.trim()).filter((p, idx, arr) => idx > 0 && idx < arr.length - 1);
+            
+            if (parts.length >= 2) {
+                const french = parts[0].replace(/\*\*/g, '').trim();
+                const term = parts[1].replace(/\*\*/g, '').trim();
+                let sentence = parts.length >= 3 ? parts[2].replace(/\*\*/g, '').trim() : "";
+
+                if (sentence === "//") sentence = "";
+
+                if (french && term) {
+                    newEntries.push({
+                        id: 'vocab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                        term: term,
+                        translation: french,
+                        sentence: sentence,
+                        status: 'unstudied',
+                        score: 1,
+                        language: targetLang,
+                        created_at: new Date().toISOString()
+                    });
+                }
+            }
+        }
+    });
+
+    if (newEntries.length > 0) {
+        // Envoi vers Supabase (table VOCAB_TABLE défini dans config.js)
+        const { error } = await supabaseClient.from(VOCAB_TABLE).insert(newEntries);
+
+        if (error) {
+            console.error("Erreur d'insertion Supabase:", error);
+            alert("Erreur lors de l'enregistrement dans la base de données.");
+            return;
         }
 
-    } catch (err) {
-        console.error("Erreur d'import IA :", err);
-        alert("Erreur lors de l'enregistrement dans la base de données.");
-    } finally {
-        btn.innerHTML = '<i class="fa-solid fa-file-import"></i> <span>Enregistrer dans Supabase</span>';
-        btn.disabled = false;
+        // Mise à jour de la structure mémoire du Back-Office
+        db.languages[targetLang].vocabulary.unshift(...newEntries);
+        
+        // Basculement automatique d'onglet vers la langue importée
+        if (currentLang !== targetLang) {
+            switchLanguage(targetLang);
+        } else {
+            updateBadges();
+            renderBackendTable();
+            if (typeof updateCharts === 'function') updateCharts();
+        }
+
+        closeModal('add-modal');
+        document.getElementById('ai-raw-words').value = '';
+        document.getElementById('ai-preview-container').classList.add('hidden');
     }
 }
