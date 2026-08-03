@@ -41,9 +41,12 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
 }`;
 
     const modelsToTry = [
-        'gemini-2.5-flash',
         'gemini-2.0-flash',
-        'gemini-1.5-flash'
+        'gemini-1.5-flash',
+        'gemini-2.5-flash',
+        'gemini-1.5-flash-latest',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro'
     ];
 
     let success = false;
