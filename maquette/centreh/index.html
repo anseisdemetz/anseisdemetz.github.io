@@ -59,6 +59,28 @@
                 </form>
             </section>
 
+            <!-- Bloc Check (Affiche si status === "to_check") -->
+            <section id="checkBlock" class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md hidden">
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
+                    <h2 class="text-lg font-semibold text-emerald-400"># Check</h2>
+                    <span id="checkCounterBadge" class="text-xs bg-slate-700 text-emerald-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
+                </div>
+
+                <form id="checkForm" class="space-y-4">
+                    <!-- Liste des codes d'homologation Check -->
+                    <div id="checkCodesList" class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                        <!-- Généré en JS -->
+                    </div>
+
+                    <!-- Bouton de validation Check -->
+                    <div class="pt-4 border-t border-slate-700 flex justify-end">
+                        <button type="submit" id="sendCheckBtn" class="bg-sky-600 hover:bg-sky-500 text-white font-medium px-6 py-2 rounded-md transition duration-150 shadow">
+                            Valider le Check
+                        </button>
+                    </div>
+                </form>
+            </section>            
+
             <!-- Console Log API (Résultat Brut) -->
             <section class="bg-slate-950 p-4 rounded-lg border border-slate-800 font-mono text-xs shadow-inner">
                 <div class="text-slate-500 border-b border-slate-800 pb-2 mb-2 flex justify-between items-center">

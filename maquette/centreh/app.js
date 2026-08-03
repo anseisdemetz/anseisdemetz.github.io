@@ -1,107 +1,50 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Éléments UI Pre-check
     const statusMessage = document.getElementById("statusMessage");
     const preCheckBlock = document.getElementById("preCheckBlock");
     const preCheckForm = document.getElementById("preCheckForm");
     const transactionInput = document.getElementById("transactionInput");
     const codesList = document.getElementById("codesList");
     const counterBadge = document.getElementById("counterBadge");
+    
+    // Éléments UI Check
+    const checkBlock = document.getElementById("checkBlock");
+    const checkForm = document.getElementById("checkForm");
+    const checkCodesList = document.getElementById("checkCodesList");
+    const checkCounterBadge = document.getElementById("checkCounterBadge");
+    const sendCheckBtn = document.getElementById("sendCheckBtn");
+
+    // Éléments globaux UI
     const consoleOutput = document.getElementById("consoleOutput");
     const clearConsoleBtn = document.getElementById("clearConsoleBtn");
     const reloadBtn = document.getElementById("reloadBtn");
     const sendBtn = document.getElementById("sendBtn");
 
-    // Liste des codes autorisés avec structure par sections
-    const ALLOWED_CODES = [
-        "5020", // IMEI différent
-        "5010", // Modèle différent
-        "5030", // Capacité différente
-
-        // CODES DE BLOCAGE + QUARANTAINE => forçage prix 0€
-        "1050", // Contrefaçon
-        "1060", // Réception non conforme. Objet autre que le produit attendu
-        "1070", // Produit factice
-        "1080", // Jailbreak
-        "1090", // Blocage Flotte MDM
-        "1100", // Blocage Compte Google / iOS
-        "1110", // Produit géolocalisé - FMIP
-        "1130", // GSMA
-        "1150", // Blocage compte MARQUE de l'appareil
-
-        // COMMUNS A TOUTES LES CATEGORIES
-        "999",  // IMEI inaccessible
-        "1000", // Produit DEEE Batterie gonflée
-        "1120", // Logiciel non conforme
-        "3010", // Le produit ne s'allume pas
-        "3020", // Connecteur de charge ne fonctionne pas
-
-        // MOBILE, TABLETTE, SMARTWATCH
-        "2010", // ECRAN - micro rayures
-        "2020", // ECRAN - rayures
-        "2030", // ECRAN - cassé
-        "2031", // ECRAN - fissuré
-        "2032", // ECRAN - éclats
-        "2033", // ECRAN - chocs
-        "2034", // ECRAN - dalle tactile HS
-        "2035", // ECRAN - tâche noire
-        "2036", // ECRAN - rémanences
-        "2029", // ECRAN - rémanences LÉGÉRÈRES
-        "2037", // ECRAN - brûlé
-        "2038", // ECRAN - pixels défectueux > 3 pixels
-        "2039", // ECRAN - rétroéclairage HS
-        "2041", // ECRAN - décollé
-        "3301", // ECRAN - non fonctionnel, écran noir
-        "2040", // CONTOURS - micro rayures
-        "2050", // CONTOURS - rayures
-        "2060", // CONTOURS - cassé
-        "2061", // CONTOURS - fissuré
-        "2062", // CONTOURS - éclats
-        "2063", // CONTOURS - chocs
-        "2070", // CONTOURS - pièces - vis manquantes
-        "2071", // CONTOURS - cache manquant
-        "2072", // CONTOURS - Tiroir SIM manquant
-        "2080", // CONTOURS - oxydé
-        "2090", // CONTOURS - déformé, tordu
-        "2091", // CONTOURS - charnière défectueuse
-        "2101", // ARRIERE - micro rayures
-        "2111", // ARRIERE - rayures
-        "2112", // ARRIERE - Lentille APN - Rayure(s) / Abimée - Cassée
-        "2121", // ARRIERE - cassé
-        "2122", // ARRIERE - fissures
-        "2123", // ARRIERE - éclats
-        "2124", // ARRIERE - chocs
-        "2125", // ARRIERE - décollé
-        "5041", // Sceau de garantie cassé ou absent...
-
-        // SMARTWATCH
-        "1170", // Jumelage toujours actif
-        "5110", // Bracelet d'origine non présent
-        "3320", // Chargeur d'origine non fonctionnel
-        "3321", // Bracelet d'origine non fonctionnel
-
-        // CONSOLES
-        "5060", // CONSOLES - absence manette(s)
-        "5070", // CONSOLE SALON - absence bloc alimentation
-        "3341", // CONSOLE PORTABLE - ECRAN micro rayures
-        "3342", // CONSOLE PORTABLE - ECRAN rayures
-        "3343", // CONSOLE PORTABLE - ECRAN cassé
-        "3344", // CONSOLE PORTABLE - STATION ACCUEIL micro rayures
-        "3345", // CONSOLE PORTABLE - STATION ACCUEIL rayures
-        "3346", // CONSOLE PORTABLE - STATION ACCUEIL cassé
-
-        // ECOUTEURS - ENCEINTES CONNECTEES
-        "3357", // Boitier de charge non présent
-        "3405", // Micro-rayure(s)
-        "3406", // Rayure(s)
-        "3407", // Produit cassé
-
-        // COMMUN CONSOLES ET ECOUTEURS CASQUES ENCEINTES
-        "3348", // Absence station acceuil
-        "5040", // Sceau de garantie cassé ou absent...
-        "5080", // Absence câble
-        "5100"  // Absence chargeur
+    // Liste des codes autorisés pour Pre-check
+    const ALLOWED_PRECHECK_CODES = [
+        "5020", "5010", "5030", "1050", "1060", "1070", "1080", "1090", 
+        "1100", "1110", "1130", "1150", "999", "1000", "1120", "3010", "3020",
+        "2010", "2020", "2030", "2031", "2032", "2033", "2034", "2035", "2036", 
+        "2029", "2037", "2038", "2039", "2041", "3301", "2040", "2050", "2060", 
+        "2061", "2062", "2063", "2070", "2071", "2072", "2080", "2090", "2091", 
+        "2101", "2111", "2112", "2121", "2122", "2123", "2124", "2125", "5041", 
+        "1170", "5110", "3320", "3321", "5060", "5070", "3341", "3342", "3343", 
+        "3344", "3345", "3346", "3357", "3405", "3406", "3407", "3348", "5040", 
+        "5080", "5100"
     ];
 
-    let filteredCodes = [];
+    // Liste des codes autorisés pour Check
+    const ALLOWED_CHECK_CODES = [
+        "3030", "3040", "3050", "3060", "3091", "3110", "3120", "3130", 
+        "3140", "3150", "3160", "3170", "3180", "3190", "3200", "3210", 
+        "3220", "3230", "3240", "3250", "3260", "3280", "3290", "3300", 
+        "3092", "3323", "3324", "3325", "3326", "3327", "3328", "3329", 
+        "3347", "3351", "3408", "3090", "3100", "3340", "3411"
+    ];
+
+    let rawApiCodes = [];
+    let filteredPreCheckCodes = [];
+    let filteredCheckCodes = [];
 
     // Lancement automatique
     loadCodes();
@@ -109,10 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (reloadBtn) reloadBtn.addEventListener("click", () => loadCodes());
     if (clearConsoleBtn) clearConsoleBtn.addEventListener("click", () => consoleOutput.textContent = "// Console vidée.");
 
-    // --- 1. Chargement des codes ---
+    // --- 1. Chargement de l'ensemble des codes API ---
     async function loadCodes() {
         showStatus("Chargement des codes d'homologation...", "info");
         preCheckBlock.classList.add("hidden");
+        checkBlock.classList.add("hidden");
         consoleOutput.textContent = "// Requête en cours vers l'API...";
 
         try {
@@ -136,35 +80,40 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Extraction du tableau
-            let codesArray = [];
             if (Array.isArray(responseData)) {
-                codesArray = responseData;
+                rawApiCodes = responseData;
             } else if (responseData && typeof responseData === 'object') {
                 for (const key in responseData) {
                     if (Array.isArray(responseData[key])) {
-                        codesArray = responseData[key];
+                        rawApiCodes = responseData[key];
                         break;
                     }
                 }
             }
 
-            // Filtrage et alignement selon l'ordre strict de ALLOWED_CODES
+            // Indexation rapide des codes API
             const codesMap = new Map();
-            codesArray.forEach(item => {
+            rawApiCodes.forEach(item => {
                 if (item && item.code) {
                     codesMap.set(String(item.code), item);
                 }
             });
 
-            filteredCodes = ALLOWED_CODES
+            // Filtrage des deux listes
+            filteredPreCheckCodes = ALLOWED_PRECHECK_CODES
                 .filter(code => codesMap.has(code))
                 .map(code => codesMap.get(code));
 
-            if (filteredCodes.length === 0) {
+            filteredCheckCodes = ALLOWED_CHECK_CODES
+                .filter(code => codesMap.has(code))
+                .map(code => codesMap.get(code));
+
+            if (filteredPreCheckCodes.length === 0) {
                 showStatus(`Aucun code correspondant à la liste n'a été trouvé.`, "warning");
             } else {
                 hideStatus();
-                renderCodes(filteredCodes);
+                renderCodes(filteredPreCheckCodes, codesList, counterBadge, "precheck");
+                renderCodes(filteredCheckCodes, checkCodesList, checkCounterBadge, "check");
                 preCheckBlock.classList.remove("hidden");
                 consoleOutput.textContent = "// Codes chargés. Renseignez la transaction, cochez les éléments et cliquez sur Valider.";
             }
@@ -201,16 +150,16 @@ document.addEventListener("DOMContentLoaded", () => {
             data = data.contents;
         }
 
-        // Extraction imei : results -> current -> imei
+        // Clé corrigée : results -> current -> imei
         const imei = data?.results?.current?.imei;
         
         return imei !== undefined && imei !== null ? imei : "";
     }
 
-    // --- 3. Rendu IHM ---
-    function renderCodes(codes) {
-        codesList.innerHTML = "";
-        counterBadge.textContent = `${codes.length} code(s)`;
+    // --- 3. Génération dynamique de l'IHM ---
+    function renderCodes(codes, containerElement, badgeElement, prefix) {
+        containerElement.innerHTML = "";
+        badgeElement.textContent = `${codes.length} code(s)`;
 
         codes.forEach(item => {
             const labelFr = (item.label && item.label.fr) ? item.label.fr : "Libellé FR non disponible";
@@ -224,20 +173,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 </span>
                 <div class="flex items-center gap-4 text-sm shrink-0">
                     <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="code_${item.code}" value="true" class="w-4 h-4 text-sky-600 bg-slate-800 border-slate-600 focus:ring-sky-500">
+                        <input type="radio" name="${prefix}_code_${item.code}" value="true" class="w-4 h-4 text-sky-600 bg-slate-800 border-slate-600 focus:ring-sky-500">
                         <span class="text-slate-200">Oui</span>
                     </label>
                     <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="code_${item.code}" value="false" checked class="w-4 h-4 text-rose-600 bg-slate-800 border-slate-600 focus:ring-rose-500">
+                        <input type="radio" name="${prefix}_code_${item.code}" value="false" checked class="w-4 h-4 text-rose-600 bg-slate-800 border-slate-600 focus:ring-rose-500">
                         <span class="text-slate-200">Non</span>
                     </label>
                 </div>
             `;
-            codesList.appendChild(card);
+            containerElement.appendChild(card);
         });
     }
 
-    // --- 4. Envoi effectif de la requête API ---
+    // --- 4. Traitement du Pre-Check ---
     if (preCheckForm) {
         preCheckForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -253,17 +202,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 sendBtn.classList.add("opacity-50", "cursor-not-allowed");
             }
 
+            // Masquer le bloc check en cas de nouvelle soumission pre-check
+            checkBlock.classList.add("hidden");
+
             try {
                 // Étape 1 : Récupération de l'IMEI
                 consoleOutput.textContent = `// Récupération de l'IMEI pour la transaction ${txNum}...`;
                 const imeiValue = await fetchImei(txNum);
 
-                // Étape 2 : Construction du payload avec product_check + imei
+                // Étape 2 : Construction du payload
                 const formData = new FormData(preCheckForm);
                 const productCheckObject = {};
 
-                filteredCodes.forEach(item => {
-                    const val = formData.get(`code_${item.code}`);
+                filteredPreCheckCodes.forEach(item => {
+                    const val = formData.get(`precheck_code_${item.code}`);
                     productCheckObject[String(item.code)] = (val === "true");
                 });
 
@@ -272,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     imei: imeiValue
                 };
 
-                // Étape 3 : Envoi de la requête POST vers productPreCheck
+                // Étape 3 : Requête POST vers productPreCheck
                 const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
                 const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetEndpoint);
 
@@ -296,12 +248,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     responseData = await response.text();
                 }
 
-                // Désencapsulation proxy CORS si nécessaire
+                // Désencapsulation proxy CORS
                 if (responseData && typeof responseData.contents === 'string') {
                     try { responseData = JSON.parse(responseData.contents); } catch (e) {}
                 }
 
-                // Formatage du retour dans la console UI
+                // Affichage réponse API
                 const statusInfo = `// Statut HTTP : ${response.status} ${response.statusText}\n`;
                 const formattedBody = typeof responseData === 'object' 
                     ? JSON.stringify(responseData, null, 2) 
@@ -309,12 +261,97 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 consoleOutput.textContent = statusInfo + `// Réponse de l'API :\n` + formattedBody;
 
+                // Condition d'affichage du bloc # Check
+                const status = responseData?.results?.status;
+                if (status === "to_check") {
+                    checkBlock.classList.remove("hidden");
+                    checkBlock.scrollIntoView({ behavior: "smooth" });
+                }
+
             } catch (error) {
-                consoleOutput.textContent = `// ERREUR :\n${error.message}`;
+                consoleOutput.textContent = `// ERREUR PRE-CHECK :\n${error.message}`;
             } finally {
                 if (sendBtn) {
                     sendBtn.disabled = false;
                     sendBtn.classList.remove("opacity-50", "cursor-not-allowed");
+                }
+            }
+        });
+    }
+
+    // --- 5. Traitement du Check (Étape suivante) ---
+    if (checkForm) {
+        checkForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const txNum = transactionInput.value.trim();
+            if (!txNum) {
+                alert("Numéro de transaction manquant.");
+                return;
+            }
+
+            if (sendCheckBtn) {
+                sendCheckBtn.disabled = true;
+                sendCheckBtn.classList.add("opacity-50", "cursor-not-allowed");
+            }
+
+            try {
+                const formData = new FormData(checkForm);
+                const productCheckObject = {};
+
+                filteredCheckCodes.forEach(item => {
+                    const val = formData.get(`check_code_${item.code}`);
+                    productCheckObject[String(item.code)] = (val === "true");
+                });
+
+                // Clés fixes d'effacement spécifiées dans la définition Check
+                productCheckObject["401"] = true;
+                productCheckObject["402"] = txNum; // Utilisation dynamique du numéro de transaction
+
+                const payload = {
+                    product_check: productCheckObject
+                };
+
+                const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productCheck`;
+                const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetEndpoint);
+
+                consoleOutput.textContent = `// Envoi du productCheck vers :\n// ${targetEndpoint}\n\n// Payload transmis :\n${JSON.stringify(payload, null, 2)}`;
+
+                const response = await fetch(proxyUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                let responseData;
+                const contentType = response.headers.get("content-type");
+
+                if (contentType && contentType.includes("application/json")) {
+                    responseData = await response.json();
+                } else {
+                    responseData = await response.text();
+                }
+
+                if (responseData && typeof responseData.contents === 'string') {
+                    try { responseData = JSON.parse(responseData.contents); } catch (e) {}
+                }
+
+                const statusInfo = `// Statut HTTP Check : ${response.status} ${response.statusText}\n`;
+                const formattedBody = typeof responseData === 'object' 
+                    ? JSON.stringify(responseData, null, 2) 
+                    : responseData;
+
+                consoleOutput.textContent = statusInfo + `// Réponse de l'API Check :\n` + formattedBody;
+
+            } catch (error) {
+                consoleOutput.textContent = `// ERREUR CHECK :\n${error.message}`;
+            } finally {
+                if (sendCheckBtn) {
+                    sendCheckBtn.disabled = false;
+                    sendCheckBtn.classList.remove("opacity-50", "cursor-not-allowed");
                 }
             }
         });
@@ -337,3 +374,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
     }
 });
+
+
+
+
+/*
+
+=> réponse de l'api pre-check
+
+// Statut HTTP : 200 
+// Réponse de l'API :
+{
+  "result_code": "OK",
+  "message": "",
+  "results_count": 3,
+  "results": {
+    "status": "to_check",
+    "proof_is_required": false,
+    "litigations_proofs": []
+  }
+}
+
+*/
