@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 hideStatus();
                 renderCodes(filteredCodes);
                 preCheckBlock.classList.remove("hidden");
-                consoleOutput.textContent = "// Codes chargés. Renseignez la transaction, cochez les éléments et cliquez sur Valider.";
+                consoleOutput.textContent = "// Codes chargés. Renseignez la transaction, cochez les éléments et cliquez sur Valider pour prévisualiser le Body.";
             }
 
         } catch (error) {
@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 4. Envoi effectif de la requête API ---
+    // --- 4. Prévisualisation du Body JSON ---
     if (preCheckForm) {
         preCheckForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -272,42 +272,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     imei: imeiValue
                 };
 
-                // Étape 3 : Envoi du productPreCheck
+                // Étape 3 : Affichage du payload prévisualisé sans l'envoyer
                 const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
-                const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetEndpoint);
 
-                consoleOutput.textContent = `// Envoi du productPreCheck vers :\n// ${targetEndpoint}\n\n// Payload en cours d'envoi :\n${JSON.stringify(payload, null, 2)}`;
-
-                const response = await fetch(proxyUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                let responseData;
-                const contentType = response.headers.get("content-type");
-
-                if (contentType && contentType.includes("application/json")) {
-                    responseData = await response.json();
-                } else {
-                    responseData = await response.text();
-                }
-
-                // Désencapsulation proxy CORS
-                if (responseData && typeof responseData.contents === 'string') {
-                    try { responseData = JSON.parse(responseData.contents); } catch (e) {}
-                }
-
-                // Formatage du résultat
-                const statusInfo = `// Statut HTTP : ${response.status} ${response.statusText}\n`;
-                const formattedBody = typeof responseData === 'object' 
-                    ? JSON.stringify(responseData, null, 2) 
-                    : responseData;
-
-                consoleOutput.textContent = statusInfo + `// Réponse de l'API :\n` + formattedBody;
+                consoleOutput.textContent = `// URL cible POST :\n// ${targetEndpoint}\n\n// BODY JSON PREPARE (NON ENVOYE) :\n` + JSON.stringify(payload, null, 2);
 
             } catch (error) {
                 consoleOutput.textContent = `// ERREUR :\n${error.message}`;
