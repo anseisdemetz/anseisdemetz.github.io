@@ -1,9 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const savedApiKey = localStorage.getItem('gemini_api_key');
-    if (savedApiKey) {
-        document.getElementById('gemini-api-key').value = savedApiKey;
-    }
-
     await loadInitialDatabase();
 });
 
