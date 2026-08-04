@@ -77,7 +77,8 @@
 
     <script>
         const TOKEN = "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY";
-        const TARGET_URL = `https://preprod-moby-api.comparecycle.com/Catalog/getProducts?token=${TOKEN}`;
+        // const TARGET_URL = `https://preprod-moby-api.comparecycle.com/Catalog/getProducts?token=${TOKEN}`;
+        const TARGET_URL = `https://preprod-moby-api.comparecycle.com/Catalog/getProducts`;
         const PROXY_URL = "https://corsproxy.io/?" + encodeURIComponent(TARGET_URL);
 
         let catalogProducts = [];
@@ -88,12 +89,13 @@
             const statusDiv = document.getElementById('statusMessage');
             
             try {
-                let response = await fetch(PROXY_URL);
-                if (!response.ok) {
-                    response = await fetch(TARGET_URL, {
-                        headers: { "Authorization": `Bearer ${TOKEN}` }
-                    });
-                }
+                const response = await fetch(TARGET_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": TOKEN
+                    }
+                });
 
                 const data = await response.json();
                 
