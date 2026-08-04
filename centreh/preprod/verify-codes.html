@@ -9,12 +9,12 @@
 </head>
 <body class="h-full text-slate-100 flex flex-col justify-between">
 
-    <div class="max-w-4xl w-full mx-auto p-6 space-y-6">
+    <div class="max-w-5xl w-full mx-auto p-6 space-y-6">
         <!-- Header -->
         <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold text-sky-400">Référentiel des Codes</h1>
-                <p class="text-sm text-slate-400">Visualisation des étapes Pre-check et Check</p>
+                <p class="text-sm text-slate-400">Visualisation et filtrage des étapes Pre-check et Check</p>
             </div>
             <button id="reloadBtn" class="bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 px-3 py-1.5 rounded-md text-xs font-mono transition flex items-center gap-2">
                 🔄 Recharger les codes
@@ -31,25 +31,37 @@
             <div id="contentBlocks" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
                 
                 <!-- Bloc Pre-check -->
-                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col">
-                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700 shrink-0">
+                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col space-y-4">
+                    <div class="flex justify-between items-center pb-2 border-b border-slate-700 shrink-0">
                         <h2 class="text-lg font-semibold text-sky-400"># Pre-check</h2>
                         <span id="preCheckBadge" class="text-xs bg-slate-700 text-sky-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
                     </div>
 
-                    <div id="preCheckList" class="space-y-2 max-h-[600px] overflow-y-auto pr-2 flex-1">
+                    <!-- Champ de recherche multiple Pre-check -->
+                    <div class="shrink-0">
+                        <input type="text" id="preCheckSearch" placeholder="Filtrer par codes (ex: 5020, 1050 3010)..." 
+                               class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono">
+                    </div>
+
+                    <div id="preCheckList" class="space-y-2 max-h-[550px] overflow-y-auto pr-2 flex-1">
                         <!-- Code - Libellé générés en JS -->
                     </div>
                 </section>
 
                 <!-- Bloc Check -->
-                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col">
-                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700 shrink-0">
+                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col space-y-4">
+                    <div class="flex justify-between items-center pb-2 border-b border-slate-700 shrink-0">
                         <h2 class="text-lg font-semibold text-emerald-400"># Check</h2>
                         <span id="checkBadge" class="text-xs bg-slate-700 text-emerald-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
                     </div>
 
-                    <div id="checkList" class="space-y-2 max-h-[600px] overflow-y-auto pr-2 flex-1">
+                    <!-- Champ de recherche multiple Check -->
+                    <div class="shrink-0">
+                        <input type="text" id="checkSearch" placeholder="Filtrer par codes (ex: 3030, 3040 3060)..." 
+                               class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono">
+                    </div>
+
+                    <div id="checkList" class="space-y-2 max-h-[550px] overflow-y-auto pr-2 flex-1">
                         <!-- Code - Libellé générés en JS -->
                     </div>
                 </section>
@@ -58,24 +70,35 @@
         </main>
     </div>
 
-    <!-- Script de configuration (ou variables directement intégrées) -->
+    <!-- Script de configuration -->
     <script src="config.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const statusMessage = document.getElementById("statusMessage");
             const contentBlocks = document.getElementById("contentBlocks");
+            
             const preCheckList = document.getElementById("preCheckList");
             const checkList = document.getElementById("checkList");
             const preCheckBadge = document.getElementById("preCheckBadge");
             const checkBadge = document.getElementById("checkBadge");
             const reloadBtn = document.getElementById("reloadBtn");
 
-            // Chargement au lancement
+            const preCheckSearch = document.getElementById("preCheckSearch");
+            const checkSearch = document.getElementById("checkSearch");
+
+            let rawPreCheckCodes = [];
+            let rawCheckCodes = [];
+
+            // Chargement initial
             loadAndDisplayCodes();
 
             if (reloadBtn) {
                 reloadBtn.addEventListener("click", () => loadAndDisplayCodes());
             }
+
+            // Écouteurs sur les champs de recherche multiple
+            preCheckSearch.addEventListener("input", () => filterAndRender("precheck"));
+            checkSearch.addEventListener("input", () => filterAndRender("check"));
 
             async function loadAndDisplayCodes() {
                 showStatus("Récupération des codes d'homologation...", "info");
@@ -114,13 +137,13 @@
                         }
                     }
 
-                    // Filtrage selon la présence des clés dans steps
-                    const preCheckCodes = codesArray.filter(item => isTrue(item?.steps?.pre_check));
-                    const checkCodes = codesArray.filter(item => isTrue(item?.steps?.check));
+                    // Stockage des listes d'origines (filtrées par pre_check / check = true)
+                    rawPreCheckCodes = codesArray.filter(item => isTrue(item?.steps?.pre_check));
+                    rawCheckCodes = codesArray.filter(item => isTrue(item?.steps?.check));
 
-                    // Rendu UI
-                    renderList(preCheckCodes, preCheckList, preCheckBadge, "sky");
-                    renderList(checkCodes, checkList, checkBadge, "emerald");
+                    // Premier rendu
+                    filterAndRender("precheck");
+                    filterAndRender("check");
 
                     hideStatus();
                     contentBlocks.classList.remove("hidden");
@@ -130,12 +153,43 @@
                 }
             }
 
+            // Fonction de filtrage dynamique selon la recherche par saisie multiple
+            function filterAndRender(type) {
+                if (type === "precheck") {
+                    const searchTerms = extractCodesFromInput(preCheckSearch.value);
+                    const filtered = filterCodesByList(rawPreCheckCodes, searchTerms);
+                    renderList(filtered, preCheckList, preCheckBadge, "sky");
+                } else {
+                    const searchTerms = extractCodesFromInput(checkSearch.value);
+                    const filtered = filterCodesByList(rawCheckCodes, searchTerms);
+                    renderList(filtered, checkList, checkBadge, "emerald");
+                }
+            }
+
+            // Découpe la saisie utilisateur par virgule ou espaces
+            function extractCodesFromInput(inputValue) {
+                return inputValue
+                    .split(/[\s,]+/)
+                    .map(term => term.trim())
+                    .filter(term => term.length > 0);
+            }
+
+            // Filtre les éléments dont le code correspond à l'un des termes recherchés
+            function filterCodesByList(codesList, searchTerms) {
+                if (searchTerms.length === 0) return codesList;
+                return codesList.filter(item => {
+                    const itemCode = String(item?.code || "").toLowerCase();
+                    return searchTerms.some(term => itemCode.includes(term.toLowerCase()));
+                });
+            }
+
+            // Rendu HTML
             function renderList(codes, container, badge, colorScheme) {
                 container.innerHTML = "";
                 badge.textContent = `${codes.length} code(s)`;
 
                 if (codes.length === 0) {
-                    container.innerHTML = `<div class="text-xs text-slate-500 italic p-3">Aucun code trouvé.</div>`;
+                    container.innerHTML = `<div class="text-xs text-slate-500 italic p-3">Aucun code correspondant.</div>`;
                     return;
                 }
 
