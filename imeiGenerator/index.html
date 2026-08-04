@@ -77,7 +77,7 @@
 
     <script>
         const TOKEN = "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY";
-        const TARGET_URL = `https://preprod-moby-api.comparecycle.com/Catalog/getProducts?token=${TOKEN}`;
+        const TARGET_URL = `https://preprod-moby-api.comparecycle.com/Catalog/getProducts`;
         const PROXY_URL = "https://corsproxy.io/?" + encodeURIComponent(TARGET_URL);
 
         async function loadProductsData() {
@@ -86,7 +86,11 @@
             try {
                 // En GET, corsproxy.io fonctionne sans renvoyer d'erreur 413
                 const response = await fetch(PROXY_URL, {
-                    method: "GET"
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": TOKEN
+                    }
                 });
 
                 if (!response.ok) {
