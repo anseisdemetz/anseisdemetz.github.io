@@ -2,25 +2,25 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Générateur IMEI - CompareCycle API</title>
+    <title>Générateur IMEI - Mobiles uniquement</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; max-width: 900px; color: #333; }
         .filter-section { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        select, input[type="text"] { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; flex: 1; min-width: 180px; }
+        select, input[type="text"] { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; flex: 1; min-width: 200px; }
         .card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-top: 15px; background: #fafafa; }
         .results-list { border: 1px solid #ccc; border-radius: 4px; max-height: 250px; overflow-y: auto; margin-top: 10px; }
         .product-item { padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .product-item:hover { background-color: #eef5ff; }
-        .badge { background: #007bff; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; }
-        button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
-        button:hover { background: #218838; }
+        .badge { background: #28a745; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+        button:hover { background: #0056b3; }
         button:disabled { background: #6c757d; cursor: not-allowed; }
         .tac-tag { display: inline-block; background: #e2e3e5; padding: 4px 8px; margin: 2px; border-radius: 4px; font-family: monospace; }
         .status-msg { padding: 10px; border-radius: 4px; margin-bottom: 15px; font-weight: bold; }
-        .status-loading { background-color: #e2f0d9; color: #385723; }
-        .status-error { background-color: #fce4d6; color: #c65911; }
+        .status-loading { background-color: #fff3cd; color: #856404; }
+        .status-error { background-color: #f8d7da; color: #721c24; }
         
-        /* Bloc Console Intégré */
+        /* Terminal Console */
         .page-console {
             background-color: #1e1e1e;
             color: #4af626;
@@ -39,22 +39,18 @@
 </head>
 <body>
 
-    <h2>Recherche Produits & Générateur d'IMEI (API Live)</h2>
+    <h2>Recherche Mobiles & Générateur d'IMEI</h2>
 
-    <!-- Indicateur de statut de chargement API -->
-    <div id="statusMessage" class="status-msg status-loading">Connexion à l'API CompareCycle...</div>
+    <!-- Statut de préchargement des données API -->
+    <div id="statusMessage" class="status-msg status-loading">Chargement et filtrage des produits Mobiles depuis l'API...</div>
 
-    <!-- Filtres -->
+    <!-- Filtres (Marque uniquement + Recherche modèle) -->
     <div class="filter-section">
-        <select id="typeFilter" onchange="applyFilters()" disabled>
-            <option value="">-- Toutes les Catégories --</option>
-        </select>
-
         <select id="manufacturerFilter" onchange="applyFilters()" disabled>
-            <option value="">-- Toutes les Marques --</option>
+            <option value="">-- Toutes les Marques (Mobiles) --</option>
         </select>
 
-        <input type="text" id="searchInput" placeholder="Rechercher par modèle..." onkeyup="applyFilters()" disabled>
+        <input type="text" id="searchInput" placeholder="Rechercher un modèle de mobile..." onkeyup="applyFilters()" disabled>
     </div>
 
     <!-- Résultats (Max 15) -->
@@ -64,7 +60,7 @@
     <!-- Fiche du produit sélectionné -->
     <div id="productDetailCard" class="card" style="display: none;">
         <h3 id="prodModel"></h3>
-        <p><strong>Catégorie :</strong> <span id="prodType"></span> | <strong>Marque :</strong> <span id="prodBrand"></span></p>
+        <p><strong>Marque :</strong> <span id="prodBrand"></span> | <strong>Type :</strong> <span id="prodType"></span></p>
         
         <div>
             <strong>TACs associés à ce produit :</strong>
@@ -75,23 +71,24 @@
 
         <button onclick="generateAndLogIMEIs()">Générer les IMEI</button>
 
-        <!-- Console Intégrée -->
+        <!-- Console UI -->
         <div id="pageConsole" class="page-console" style="display: none;"></div>
     </div>
 
     <script>
-        // Configuration demandée avec Proxy CORS
         const CONFIG = {
-            // CHECK_API_DOMAIN: "https://preprod-moby-api.comparecycle.com/Catalog/getProducts",
             CHECK_API_DOMAIN: "https://corsproxy.io/?" + encodeURIComponent("https://preprod-moby-api.comparecycle.com/Catalog/getProducts"),
             CHECK_API_TOKEN: "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY"
         };
 
-        let rawProductsData = [];
+        // Types assimilés à la catégorie "Mobile"
+        const MOBILE_TYPES = ["mobile", "smartphone", "téléphone", "telephone"];
+
+        let mobileProducts = [];
         let selectedProduct = null;
 
-        // 1. Chargement des données depuis l'API au démarrage
-        async function fetchProductsFromAPI() {
+        // 1. Préchargement complet des données depuis l'API
+        async function preloadProductsAPI() {
             const statusDiv = document.getElementById('statusMessage');
             try {
                 const response = await fetch(CONFIG.CHECK_API_DOMAIN, {
@@ -103,51 +100,58 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Erreur HTTP ${response.status}`);
+                    throw new Error(`Erreur HTTP : ${response.status}`);
                 }
 
                 const data = await response.json();
-                
-                // Adaptation selon que l'API renvoie un tableau direct ou un objet enveloppé (ex: data.products)
-                rawProductsData = Array.isArray(data) ? data : (data.products || data.data || []);
+                const rawList = Array.isArray(data) ? data : (data.products || data.data || []);
 
-                statusDiv.className = 'status-msg status-loading';
+                // Filtrage direct au chargement :
+                // 1. Uniquement type "Mobile" (Mobile, Smartphone, etc.)
+                // 2. Exclusion des produits avec is_imei_required === "no"
+                mobileProducts = rawList.filter(p => {
+                    const productType = (p.type || "").toLowerCase().trim();
+                    const isMobileCategory = MOBILE_TYPES.includes(productType);
+                    const isImeiRequired = String(p.is_imei_required).toLowerCase() !== "no";
+
+                    return isMobileCategory && isImeiRequired;
+                });
+
                 statusDiv.style.backgroundColor = '#d4edda';
                 statusDiv.style.color = '#155724';
-                statusDiv.innerText = `${rawProductsData.length} produits chargés depuis l'API.`;
+                statusDiv.innerText = `${mobileProducts.length} mobiles préchargés avec succès.`;
 
-                // Activation des filtres et initialisation
+                populateManufacturerDropdown();
                 enableUI();
-                populateDropdowns();
                 applyFilters();
 
             } catch (error) {
-                console.error("Erreur API :", error);
+                console.error("Erreur de chargement API:", error);
                 statusDiv.className = 'status-msg status-error';
-                statusDiv.innerText = `Échec du chargement API : ${error.message}`;
+                statusDiv.innerText = `Erreur lors du chargement des données : ${error.message}`;
             }
         }
 
-        // 2. Activation des éléments UI
+        // 2. Remplissage du menu déroulant Marque (Uniquement les marques de Mobiles)
+        function populateManufacturerDropdown() {
+            const brandSelect = document.getElementById('manufacturerFilter');
+            brandSelect.innerHTML = '<option value="">-- Toutes les Marques (Mobiles) --</option>';
+
+            // Extraction des marques uniques de la liste filtrée
+            const mobileBrands = [...new Set(mobileProducts.map(p => p.manufacturer).filter(Boolean))].sort();
+
+            mobileBrands.forEach(brand => {
+                brandSelect.add(new Option(brand, brand));
+            });
+        }
+
+        // 3. Activation des contrôles utilisateur
         function enableUI() {
-            document.getElementById('typeFilter').disabled = false;
             document.getElementById('manufacturerFilter').disabled = false;
             document.getElementById('searchInput').disabled = false;
         }
 
-        // 3. Remplissage automatique des menus déroulants avec les données réelles
-        function populateDropdowns() {
-            const types = [...new Set(rawProductsData.map(p => p.type).filter(Boolean))].sort();
-            const manufacturers = [...new Set(rawProductsData.map(p => p.manufacturer).filter(Boolean))].sort();
-
-            const typeSelect = document.getElementById('typeFilter');
-            types.forEach(t => typeSelect.add(new Option(t, t)));
-
-            const brandSelect = document.getElementById('manufacturerFilter');
-            manufacturers.forEach(m => brandSelect.add(new Option(m, m)));
-        }
-
-        // 4. Algorithme de Luhn pour le calcul de la clé de contrôle
+        // 4. Algorithme de Luhn
         function calculateLuhnCheckDigit(first14) {
             let sum = 0;
             for (let i = 0; i < 14; i++) {
@@ -161,7 +165,7 @@
             return (10 - (sum % 10)) % 10;
         }
 
-        // 5. Génération d'un IMEI valide
+        // 5. Générateur d'IMEI à partir du TAC
         function createSingleIMEI(tac) {
             let cleanTac = String(tac).padStart(8, '0').slice(0, 8);
             let snr = Math.floor(100000 + Math.random() * 900000).toString();
@@ -170,33 +174,29 @@
             return first14 + checkDigit;
         }
 
-        // 6. Application des filtres et affichage des 15 premiers résultats
+        // 6. Application des filtres de recherche
         function applyFilters() {
-            const selectedType = document.getElementById('typeFilter').value;
             const selectedBrand = document.getElementById('manufacturerFilter').value;
             const searchQuery = document.getElementById('searchInput').value.toLowerCase();
 
-            const filtered = rawProductsData.filter(p => {
-                // Exclusion explicite de is_imei_required === "no"
-                const isImeiRequired = String(p.is_imei_required).toLowerCase() !== "no";
-                const matchType = !selectedType || p.type === selectedType;
+            const filtered = mobileProducts.filter(p => {
                 const matchBrand = !selectedBrand || p.manufacturer === selectedBrand;
                 const modelName = p.model || p.product || "";
                 const matchQuery = !searchQuery || modelName.toLowerCase().includes(searchQuery);
 
-                return isImeiRequired && matchType && matchBrand && matchQuery;
+                return matchBrand && matchQuery;
             });
 
             renderResults(filtered.slice(0, 15), filtered.length);
         }
 
-        // 7. Rendu des résultats
+        // 7. Rendu des 15 premiers résultats
         function renderResults(products, totalCount) {
             const resultsDiv = document.getElementById('searchResults');
             const countDiv = document.getElementById('resultsCount');
             resultsDiv.innerHTML = '';
 
-            countDiv.innerText = `${products.length} résultat(s) affiché(s) sur ${totalCount} trouvé(s) (Max 15).`;
+            countDiv.innerText = `${products.length} résultat(s) affiché(s) sur ${totalCount} disponible(s) (Max 15).`;
 
             if (products.length === 0) {
                 resultsDiv.style.display = 'none';
@@ -208,7 +208,7 @@
                 item.className = 'product-item';
                 item.innerHTML = `
                     <span><strong>${p.manufacturer || 'N/A'}</strong> - ${p.model || p.product}</span>
-                    <span class="badge">${p.type || 'N/A'}</span>
+                    <span class="badge">${p.type}</span>
                 `;
                 item.onclick = () => selectProduct(p);
                 resultsDiv.appendChild(item);
@@ -217,18 +217,17 @@
             resultsDiv.style.display = 'block';
         }
 
-        // 8. Sélection d'un produit
+        // 8. Sélection d'un produit et affichage des TACs
         function selectProduct(product) {
             selectedProduct = product;
             
             document.getElementById('prodModel').innerText = product.model || product.product;
-            document.getElementById('prodType').innerText = product.type || 'Non spécifié';
-            document.getElementById('prodBrand').innerText = product.manufacturer || 'Non spécifié';
+            document.getElementById('prodBrand').innerText = product.manufacturer || 'N/A';
+            document.getElementById('prodType').innerText = product.type || 'N/A';
 
             const tacContainer = document.getElementById('tacList');
             let tacs = product.tac;
 
-            // Gestion si `tac` vient sous forme de chaîne ou de tableau
             if (typeof tacs === 'string') {
                 try { tacs = JSON.parse(tacs); } catch(e) { tacs = [tacs]; }
             }
@@ -236,14 +235,14 @@
             if (Array.isArray(tacs) && tacs.length > 0) {
                 tacContainer.innerHTML = tacs.map(t => `<span class="tac-tag">${t}</span>`).join(' ');
             } else {
-                tacContainer.innerHTML = `<em>Aucun TAC fourni pour ce produit dans l'API.</em>`;
+                tacContainer.innerHTML = `<em>Aucun TAC fourni pour ce produit.</em>`;
             }
 
             document.getElementById('pageConsole').style.display = 'none';
             document.getElementById('productDetailCard').style.display = 'block';
         }
 
-        // 9. Génération et affichage dans la console UI
+        // 9. Génération et écriture dans la console UI
         function generateAndLogIMEIs() {
             if (!selectedProduct) return;
 
@@ -252,7 +251,7 @@
                 try { tacs = JSON.parse(tacs); } catch(e) { tacs = [tacs]; }
             }
 
-            // Fallback si aucun TAC dans les données API
+            // Fallback si le tableau de TAC est vide
             if (!Array.isArray(tacs) || tacs.length === 0) {
                 tacs = ["01234567"]; 
             }
@@ -282,8 +281,8 @@
             consoleBox.scrollTop = consoleBox.scrollHeight;
         }
 
-        // Lancement au chargement de la page
-        window.onload = fetchProductsFromAPI;
+        // Démarrage automatique au chargement
+        window.onload = preloadProductsAPI;
     </script>
 </body>
 </html>
