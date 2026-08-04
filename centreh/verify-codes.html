@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-900">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification des Codes d'Homologation</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-full text-slate-100 flex flex-col justify-between">
+
+    <div class="max-w-4xl w-full mx-auto p-6 space-y-6">
+        <!-- Header -->
+        <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-sky-400">Référentiel des Codes</h1>
+                <p class="text-sm text-slate-400">Visualisation des étapes Pre-check et Check</p>
+            </div>
+            <button id="reloadBtn" class="bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 px-3 py-1.5 rounded-md text-xs font-mono transition flex items-center gap-2">
+                🔄 Recharger les codes
+            </button>
+        </header>
+
+        <main class="space-y-6">
+            
+            <!-- Message de statut / chargement -->
+            <div id="statusMessage" class="p-4 rounded-lg bg-slate-800 border border-slate-700 text-center text-sm text-slate-300">
+                Chargement des codes en cours...
+            </div>
+
+            <div id="contentBlocks" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
+                
+                <!-- Bloc Pre-check -->
+                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700 shrink-0">
+                        <h2 class="text-lg font-semibold text-sky-400"># Pre-check</h2>
+                        <span id="preCheckBadge" class="text-xs bg-slate-700 text-sky-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
+                    </div>
+
+                    <div id="preCheckList" class="space-y-2 max-h-[600px] overflow-y-auto pr-2 flex-1">
+                        <!-- Code - Libellé générés en JS -->
+                    </div>
+                </section>
+
+                <!-- Bloc Check -->
+                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700 shrink-0">
+                        <h2 class="text-lg font-semibold text-emerald-400"># Check</h2>
+                        <span id="checkBadge" class="text-xs bg-slate-700 text-emerald-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
+                    </div>
+
+                    <div id="checkList" class="space-y-2 max-h-[600px] overflow-y-auto pr-2 flex-1">
+                        <!-- Code - Libellé générés en JS -->
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Script de configuration (ou variables directement intégrées) -->
+    <script src="config.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const statusMessage = document.getElementById("statusMessage");
+            const contentBlocks = document.getElementById("contentBlocks");
+            const preCheckList = document.getElementById("preCheckList");
+            const checkList = document.getElementById("checkList");
+            const preCheckBadge = document.getElementById("preCheckBadge");
+            const checkBadge = document.getElementById("checkBadge");
+            const reloadBtn = document.getElementById("reloadBtn");
+
+            // Chargement au lancement
+            loadAndDisplayCodes();
+
+            if (reloadBtn) {
+                reloadBtn.addEventListener("click", () => loadAndDisplayCodes());
+            }
+
+            async function loadAndDisplayCodes() {
+                showStatus("Récupération des codes d'homologation...", "info");
+                contentBlocks.classList.add("hidden");
+
+                try {
+                    const response = await fetch(CONFIG.CODES_API_URL, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                        }
+                    });
+
+                    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+
+                    let responseData = await response.json();
+
+                    // Désencapsulation proxy CORS
+                    if (responseData && typeof responseData.contents === 'string') {
+                        try { responseData = JSON.parse(responseData.contents); } catch (e) {}
+                    } else if (responseData && responseData.contents) {
+                        responseData = responseData.contents;
+                    }
+
+                    // Extraction du tableau
+                    let codesArray = [];
+                    if (Array.isArray(responseData)) {
+                        codesArray = responseData;
+                    } else if (responseData && typeof responseData === 'object') {
+                        for (const key in responseData) {
+                            if (Array.isArray(responseData[key])) {
+                                codesArray = responseData[key];
+                                break;
+                            }
+                        }
+                    }
+
+                    // Filtrage selon la présence des clés dans steps
+                    const preCheckCodes = codesArray.filter(item => isTrue(item?.steps?.pre_check));
+                    const checkCodes = codesArray.filter(item => isTrue(item?.steps?.check));
+
+                    // Rendu UI
+                    renderList(preCheckCodes, preCheckList, preCheckBadge, "sky");
+                    renderList(checkCodes, checkList, checkBadge, "emerald");
+
+                    hideStatus();
+                    contentBlocks.classList.remove("hidden");
+
+                } catch (error) {
+                    showStatus(`Erreur lors du chargement des codes : ${error.message}`, "error");
+                }
+            }
+
+            function renderList(codes, container, badge, colorScheme) {
+                container.innerHTML = "";
+                badge.textContent = `${codes.length} code(s)`;
+
+                if (codes.length === 0) {
+                    container.innerHTML = `<div class="text-xs text-slate-500 italic p-3">Aucun code trouvé.</div>`;
+                    return;
+                }
+
+                const textColorClass = colorScheme === "sky" ? "text-sky-300" : "text-emerald-300";
+
+                codes.forEach(item => {
+                    const codeVal = item.code || "N/A";
+                    const labelFr = (item.label && item.label.fr) ? item.label.fr : "Libellé FR non disponible";
+
+                    const card = document.createElement("div");
+                    card.className = "p-2.5 bg-slate-900/80 rounded border border-slate-700/60 flex items-start gap-2 text-sm";
+                    
+                    card.innerHTML = `
+                        <span class="font-mono font-bold ${textColorClass} shrink-0">${escapeHtml(String(codeVal))}</span>
+                        <span class="text-slate-400 font-mono shrink-0">-</span>
+                        <span class="text-slate-200">${escapeHtml(labelFr)}</span>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            function isTrue(value) {
+                return value === true || value === "true" || value === 1;
+            }
+
+            function showStatus(text, type) {
+                statusMessage.textContent = text;
+                statusMessage.classList.remove("hidden", "text-red-400", "text-amber-400", "text-slate-300");
+                if (type === "error") statusMessage.classList.add("text-red-400");
+                else if (type === "warning") statusMessage.classList.add("text-amber-400");
+                else statusMessage.classList.add("text-slate-300");
+            }
+
+            function hideStatus() {
+                statusMessage.classList.add("hidden");
+            }
+
+            function escapeHtml(str) {
+                return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
+            }
+        });
+    </script>
+</body>
+</html>
