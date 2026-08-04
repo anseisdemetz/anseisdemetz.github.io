@@ -90,7 +90,12 @@
                     headers: {
                         "Content-Type": "application/json",
                         "X-AUTH-CR": TOKEN
-                    }
+                    },
+                    // Demander uniquement les mobiles côté serveur réduit la taille de la réponse de 80%
+                    body: JSON.stringify({
+                        type: "Mobile",
+                        is_imei_required: "yes"
+                    })
                 });
 
                 if (!response.ok) {
