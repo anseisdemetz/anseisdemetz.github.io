@@ -77,40 +77,32 @@
 
     <script>
         const TOKEN = "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY";
-        // const TARGET_URL = `https://preprod-moby-api.comparecycle.com/Catalog/getProducts?token=${TOKEN}`;
-        const TARGET_URL = `https://preprod-moby-api.comparecycle.com/Catalog/getProducts`;
+        const TARGET_URL = `https://preprod-moby-api.comparecycle.com/Catalog/getProducts?token=${TOKEN}`;
         const PROXY_URL = "https://corsproxy.io/?" + encodeURIComponent(TARGET_URL);
 
-        let catalogProducts = [];
-        let selectedProduct = null;
-
-        // 1. Préchargement et traitement depuis results
         async function loadProductsData() {
             const statusDiv = document.getElementById('statusMessage');
             
             try {
+                // En GET, corsproxy.io fonctionne sans renvoyer d'erreur 413
                 const response = await fetch(PROXY_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-AUTH-CR": TOKEN
-                    }
+                    method: "GET"
                 });
 
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
+
                 const data = await response.json();
-                
-                // Récupération de la liste dans data.results
                 const rawList = data.results || (Array.isArray(data) ? data : []);
 
                 if (!rawList || rawList.length === 0) {
                     throw new Error("Aucune donnée 'results' trouvée dans la réponse API.");
                 }
 
-                // Filtrage strict : type === "Mobile" et is_imei_required !== "no"
                 catalogProducts = rawList.filter(item => {
                     const isMobileType = item.type === "Mobile";
                     const isImeiRequired = String(item.is_imei_required).toLowerCase() !== "no";
-
                     return isMobileType && isImeiRequired;
                 });
 
