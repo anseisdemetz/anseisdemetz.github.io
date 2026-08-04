@@ -2,13 +2,13 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Générateur d'IMEI - Fichier JSON Local</title>
+    <title>Générateur d'IMEI - Produits Mobiles avec TAC</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; max-width: 900px; color: #333; }
         .filter-section { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         select, input[type="text"] { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; flex: 1; min-width: 200px; }
         .card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-top: 15px; background: #fafafa; }
-        .results-list { border: 1px solid #ccc; border-radius: 4px; max-height: 250px; overflow-y: auto; margin-top: 10px; }
+        .results-list { border: 1px solid #ccc; border-radius: 4px; max-height: 400px; overflow-y: auto; margin-top: 10px; }
         .product-item { padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .product-item:hover { background-color: #eef5ff; }
         .badge { background: #007bff; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; }
@@ -41,7 +41,7 @@
 </head>
 <body>
 
-    <h2>Générateur d'IMEI - Produits Mobiles (Fichier JSON)</h2>
+    <h2>Générateur d'IMEI - Produits Mobiles</h2>
 
     <div id="statusMessage" class="status-msg status-loading">Chargement du fichier response.json...</div>
 
@@ -99,14 +99,13 @@
                 processData(data);
 
             } catch (err) {
-                console.warn("Échec du fetch automatique (probablement restriction file://) :", err);
+                console.warn("Échec du fetch automatique :", err);
                 statusDiv.className = 'status-msg status-error';
                 statusDiv.innerHTML = `⚠️ Impossible de charger 'response.json' automatiquement. Veuillez choisir le fichier ci-dessous :`;
                 document.getElementById('filePickerContainer').style.display = 'block';
             }
         }
 
-        // Gestionnaire pour l'import manuel du fichier
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -123,11 +122,9 @@
             reader.readAsText(file);
         }
 
-        // 2. Traitement et filtrage strict des données
+        // 2. Traitement des données et filtrages stricts
         function processData(data) {
             const statusDiv = document.getElementById('statusMessage');
-            
-            // Extraction de results
             const rawList = data.results || (Array.isArray(data) ? data : []);
 
             if (!rawList || rawList.length === 0) {
@@ -136,23 +133,29 @@
                 return;
             }
 
-            // Filtrage strict : type === "Mobile" et is_imei_required !== "no"
+            // Filtrage :
+            // 1. type === "Mobile"
+            // 2. is_imei_required !== "no"
+            // 3. Présence obligatoire d'au moins un TAC dans le tableau Tac / tac
             catalogProducts = rawList.filter(item => {
                 const isMobileType = item.type === "Mobile";
                 const isImeiRequired = String(item.is_imei_required).toLowerCase() !== "no";
+                
+                const tacs = item.Tac || item.tac;
+                const hasTac = Array.isArray(tacs) && tacs.length > 0;
 
-                return isMobileType && isImeiRequired;
+                return isMobileType && isImeiRequired && hasTac;
             });
 
             statusDiv.className = 'status-msg status-success';
-            statusDiv.innerText = `${catalogProducts.length} produit(s) de type "Mobile" chargé(s) depuis response.json.`;
+            statusDiv.innerText = `${catalogProducts.length} produit(s) "Mobile" avec TAC chargé(s) depuis response.json.`;
 
             populateBrandDropdown();
             enableInputs();
             applyFilters();
         }
 
-        // 3. Remplissage des marques (results -> manufacturer)
+        // 3. Remplissage des marques
         function populateBrandDropdown() {
             const brandSelect = document.getElementById('manufacturerFilter');
             brandSelect.innerHTML = '<option value="">-- Toutes les Marques --</option>';
@@ -191,7 +194,7 @@
             return first14 + checkDigit;
         }
 
-        // 5. Filtrage
+        // 5. Filtrage et affichage de la totalité des résultats (sans limite de 15)
         function applyFilters() {
             const selectedBrand = document.getElementById('manufacturerFilter').value;
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -204,15 +207,15 @@
                 return matchBrand && matchQuery;
             });
 
-            renderList(filtered.slice(0, 15), filtered.length);
+            renderList(filtered);
         }
 
-        function renderList(products, totalCount) {
+        function renderList(products) {
             const resultsDiv = document.getElementById('searchResults');
             const countDiv = document.getElementById('resultsCount');
             resultsDiv.innerHTML = '';
 
-            countDiv.innerText = `${products.length} produit(s) affiché(s) sur ${totalCount} trouvé(s) (Max 15).`;
+            countDiv.innerText = `${products.length} produit(s) affiché(s).`;
 
             if (products.length === 0) {
                 resultsDiv.style.display = 'none';
@@ -233,7 +236,7 @@
             resultsDiv.style.display = 'block';
         }
 
-        // 6. Sélection d'un produit et lecture des TACs (results -> Tac / tac)
+        // 6. Sélection d'un produit
         function selectProduct(product) {
             selectedProduct = product;
             
@@ -244,27 +247,19 @@
             const tacContainer = document.getElementById('tacList');
             let tacs = product.Tac || product.tac || [];
 
-            if (Array.isArray(tacs) && tacs.length > 0) {
-                tacContainer.innerHTML = tacs.map(t => `<span class="tac-tag">${t}</span>`).join(' ');
-            } else {
-                tacContainer.innerHTML = `<em>Aucun TAC disponible dans le tableau pour ce produit.</em>`;
-            }
+            tacContainer.innerHTML = tacs.map(t => `<span class="tac-tag">${t}</span>`).join(' ');
 
             document.getElementById('pageConsole').style.display = 'none';
             document.getElementById('productDetailCard').style.display = 'block';
         }
 
-        // 7. Génération des IMEIs
+        // 7. Génération des 5 IMEIs
         function generateAndLogIMEIs() {
             if (!selectedProduct) return;
 
             let tacs = selectedProduct.Tac || selectedProduct.tac || [];
-
-            if (!Array.isArray(tacs) || tacs.length === 0) {
-                tacs = ["01234567"];
-            }
-
             const imeis = [];
+
             for (let i = 0; i < 5; i++) {
                 const tacToUse = tacs[i % tacs.length];
                 imeis.push(createSingleIMEI(tacToUse));
