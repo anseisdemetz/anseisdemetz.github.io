@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#4f46e5">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="30Pages/Jour">
+  <meta name="apple-mobile-web-app-title" content="30Pages/J">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
   <link rel="manifest" href="data:application/manifest+json,{
     &quot;name&quot;: &quot;Challenge Lecture 30 Pages&quot;,
@@ -29,7 +29,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-100 min-h-screen text-gray-800 pb-10">
+<body class="bg-gray-100 min-h-screen text-gray-800 pb-10 select-none overflow-x-hidden">
 
   <!-- Entête -->
   <header class="bg-indigo-600 text-white p-4 shadow-md sticky top-0 z-20 flex justify-between items-center">
@@ -43,15 +43,17 @@
   </header>
 
   <!-- Filtre des mois -->
-  <nav class="bg-white border-b px-4 py-3 flex space-x-2 overflow-x-auto text-sm sticky top-[60px] z-10 shadow-sm" id="month-tabs"></nav>
+  <nav class="bg-white border-b px-4 py-3 flex space-x-2 overflow-x-auto text-sm sticky top-[60px] z-10 shadow-sm scroll-smooth" id="month-tabs"></nav>
 
-  <!-- Grille du calendrier -->
+  <!-- Grille du calendrier avec zone de swipe -->
   <main class="max-w-md mx-auto p-4">
-    <div id="calendar-grid" class="grid grid-cols-7 gap-2 text-center"></div>
+    <div id="calendar-container" class="touch-pan-y">
+      <div id="calendar-grid" class="grid grid-cols-7 gap-2 text-center transition-transform duration-200 ease-out"></div>
+    </div>
   </main>
 
   <!-- Modal d'édition du jour -->
-  <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-30">
+  <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-30 select-text">
     <div class="bg-white w-full max-w-sm rounded-xl p-5 shadow-xl space-y-4">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 id="modal-date" class="font-bold text-gray-700">Détails du jour</h3>
@@ -110,18 +112,45 @@
     let daysData = {};
     let selectedDateStr = null;
     let currentStatus = null;
+    let currentMonthIndex = 0;
 
-    const startDate = new Date('2026-07-01');
-    const endDate = new Date('2027-06-30');
+    const monthsList = [
+      { key: '2026-07', label: 'Juil 26' },
+      { key: '2026-08', label: 'Août 26' },
+      { key: '2026-09', label: 'Sept 26' },
+      { key: '2026-10', label: 'Oct 26' },
+      { key: '2026-11', label: 'Nov 26' },
+      { key: '2026-12', label: 'Déc 26' },
+      { key: '2027-01', label: 'Janv 27' },
+      { key: '2027-02', label: 'Fév 27' },
+      { key: '2027-03', label: 'Mars 27' },
+      { key: '2027-04', label: 'Avr 27' },
+      { key: '2027-05', label: 'Mai 27' },
+      { key: '2027-06', label: 'Juin 27' }
+    ];
 
-    // Initialisation
+    // Calcul de la date d'aujourd'hui au format YYYY-MM-DD
+    const today = new Date();
+    const todayYear = today.getFullYear();
+    const todayMonth = String(today.getMonth() + 1).padStart(2, '0');
+    const todayDateStr = `${todayYear}-${todayMonth}-${String(today.getDate()).padStart(2, '0')}`;
+    const todayMonthKey = `${todayYear}-${todayMonth}`;
+
     async function init() {
+      // Déterminer le mois courant au démarrage
+      const initialIdx = monthsList.findIndex(m => m.key === todayMonthKey);
+      if (initialIdx !== -1) {
+        currentMonthIndex = initialIdx;
+      } else {
+        currentMonthIndex = 0; // Défaut sur juillet 2026 si hors période
+      }
+
       renderTabs();
       await fetchSupabaseData();
-      renderCalendar('2026-07');
+      selectMonth(currentMonthIndex, false);
+      setupSwipeEvents();
     }
 
-    // Récupération des données Supabase
     async function fetchSupabaseData() {
       const { data, error } = await supabaseClient.from('challenge_reader').select('*');
       if (!error && data) {
@@ -135,32 +164,41 @@
       }
     }
 
-    // Rendu des onglets de mois
     function renderTabs() {
-      const monthNames = ["Juil 26", "Août 26", "Sept 26", "Oct 26", "Nov 26", "Déc 26", "Janv 27", "Fév 27", "Mars 27", "Avr 27", "Mai 27", "Juin 27"];
       const container = document.getElementById('month-tabs');
       container.innerHTML = '';
       
-      let curr = new Date(startDate);
-      monthNames.forEach((name, idx) => {
-        const year = curr.getFullYear();
-        const month = String(curr.getMonth() + 1).padStart(2, '0');
-        const key = `${year}-${month}`;
-
+      monthsList.forEach((m, idx) => {
         const btn = document.createElement('button');
-        btn.className = `px-3 py-1 rounded-full whitespace-nowrap text-xs font-medium border ${idx === 0 ? 'bg-indigo-600 text-white' : 'bg-gray-50 text-gray-600'}`;
-        btn.innerText = name;
-        btn.onclick = () => {
-          document.querySelectorAll('#month-tabs button').forEach(b => b.className = 'px-3 py-1 rounded-full whitespace-nowrap text-xs font-medium border bg-gray-50 text-gray-600');
-          btn.className = 'px-3 py-1 rounded-full whitespace-nowrap text-xs font-medium border bg-indigo-600 text-white';
-          renderCalendar(key);
-        };
+        btn.id = `tab-${idx}`;
+        btn.className = `px-3 py-1 rounded-full whitespace-nowrap text-xs font-medium border transition-colors ${idx === currentMonthIndex ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-600 border-gray-200'}`;
+        btn.innerText = m.label;
+        btn.onclick = () => selectMonth(idx);
         container.appendChild(btn);
-        curr.setMonth(curr.getMonth() + 1);
       });
     }
 
-    // Rendu de la grille mensuelle
+    function selectMonth(index, scrollTab = true) {
+      currentMonthIndex = index;
+
+      // Mise à jour des onglets
+      monthsList.forEach((_, idx) => {
+        const btn = document.getElementById(`tab-${idx}`);
+        if (btn) {
+          if (idx === currentMonthIndex) {
+            btn.className = 'px-3 py-1 rounded-full whitespace-nowrap text-xs font-medium border bg-indigo-600 text-white border-indigo-600';
+            if (scrollTab) {
+              btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+          } else {
+            btn.className = 'px-3 py-1 rounded-full whitespace-nowrap text-xs font-medium border bg-gray-50 text-gray-600 border-gray-200';
+          }
+        }
+      });
+
+      renderCalendar(monthsList[currentMonthIndex].key);
+    }
+
     function renderCalendar(yearMonth) {
       const grid = document.getElementById('calendar-grid');
       grid.innerHTML = '';
@@ -171,9 +209,14 @@
       for (let d = 1; d <= daysInMonth; d++) {
         const dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
         const dayData = daysData[dateStr] || {};
+        const isToday = (dateStr === todayDateStr);
 
         const cell = document.createElement('div');
-        cell.className = "bg-white p-2 rounded-lg border shadow-sm flex flex-col justify-between items-center h-20 cursor-pointer hover:border-indigo-400 relative";
+        
+        // Style spécifique si c'est la date du jour (bordure indigo plus épaisse + fond teinté)
+        const todayStyle = isToday ? 'ring-2 ring-indigo-500 bg-indigo-50/60 font-semibold' : 'bg-white';
+
+        cell.className = `${todayStyle} p-2 rounded-lg border shadow-sm flex flex-col justify-between items-center h-20 cursor-pointer hover:border-indigo-400 relative transition-all`;
         cell.onclick = () => openModal(dateStr);
 
         let statusIcon = '';
@@ -185,12 +228,55 @@
         if (dayData.book_end) bookBraces += '}';
 
         cell.innerHTML = `
-          <div class="text-xs font-bold text-gray-400 w-full text-left">${d}</div>
+          <div class="text-xs font-bold ${isToday ? 'text-indigo-600' : 'text-gray-400'} w-full text-left flex justify-between items-center">
+            <span>${d}</span>
+            ${isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>' : ''}
+          </div>
           <div class="my-auto">${statusIcon}</div>
-          ${bookBraces ? `<div class="text-xs font-bold text-indigo-600 bg-indigo-50 px-1 rounded truncate max-w-full" title="${dayData.book_title || ''}">${bookBraces}</div>` : ''}
+          ${bookBraces ? `<div class="text-xs font-bold text-indigo-600 bg-indigo-100 px-1 rounded truncate max-w-full">${bookBraces}</div>` : ''}
         `;
         grid.appendChild(cell);
       }
+    }
+
+    // Gestion de la navigation par Swipe (Pouce)
+    function setupSwipeEvents() {
+      const container = document.getElementById('calendar-container');
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+
+      container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+      }, { passive: true });
+
+      container.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const touchEndY = e.changedTouches[0].screenY;
+
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+
+        // Détection de swipe horizontal (avec tolérance verticale)
+        if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+          if (diffX < 0) {
+            // Swipe Droite -> Gauche (Suivant)
+            if (currentMonthIndex < monthsList.length - 1) {
+              selectMonth(currentMonthIndex + 1);
+            } else {
+              // Si dernier mois atteint -> boucle vers le premier
+              selectMonth(0);
+            }
+          } else {
+            // Swipe Gauche -> Droite (Précédent)
+            if (currentMonthIndex > 0) {
+              selectMonth(currentMonthIndex - 1);
+            }
+            // Si premier mois -> ne fait rien (reste sur le 1er mois)
+          }
+        }
+      }, { passive: true });
     }
 
     function openModal(dateStr) {
@@ -243,8 +329,7 @@
       if (!error) {
         closeModal();
         await fetchSupabaseData();
-        const activeMonth = selectedDateStr.substring(0, 7);
-        renderCalendar(activeMonth);
+        renderCalendar(monthsList[currentMonthIndex].key);
       } else {
         alert("Erreur d'enregistrement : " + error.message);
       }
