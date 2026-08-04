@@ -31,21 +31,39 @@
 </head>
 <body class="bg-gray-100 min-h-screen text-gray-800 pb-10 select-none overflow-x-hidden">
 
-  <!-- Entête -->
-  <header class="bg-indigo-600 text-white p-4 shadow-md sticky top-0 z-20 flex justify-between items-center">
-    <div>
-      <h1 class="font-bold text-lg">📚 Challenge 30 Pages / Jour</h1>
-      <p class="text-xs text-indigo-200">1er Juil. 2026 – 30 Juin 2027</p>
+  <!-- Entête avec Statistiques Avancées -->
+  <header class="bg-indigo-600 text-white p-3 shadow-md sticky top-0 z-20">
+    <div class="flex justify-between items-center mb-2">
+      <div>
+        <h1 class="font-bold text-base leading-tight">📚 Challenge 30 P/Jour</h1>
+        <p class="text-[10px] text-indigo-200">1er Juil. 2026 – 30 Juin 2027</p>
+      </div>
+      <div class="text-right">
+        <span class="text-xs bg-indigo-700 px-2.5 py-1 rounded-full font-bold inline-block">
+          <span id="stat-days">0</span>/365 jours
+        </span>
+      </div>
     </div>
-    <div id="stats" class="text-right text-xs bg-indigo-700 px-3 py-1.5 rounded-lg">
-      <div>Progression: <span id="stat-count" class="font-bold">0</span>/365</div>
+
+    <!-- Barre d'outils statistiques -->
+    <div class="grid grid-cols-2 gap-2 text-[11px] bg-indigo-700/60 p-2 rounded-lg border border-indigo-500/40">
+      <div>
+        <div class="text-indigo-200">Pages théoriques: <span id="stat-theo-pages" class="font-bold text-white">0</span></div>
+        <div class="text-indigo-200">Pages terminées: <span id="stat-real-pages" class="font-bold text-white">0</span></div>
+      </div>
+      <div class="border-l border-indigo-500/40 pl-2">
+        <div class="text-indigo-200">Livres lus: <span id="stat-books-total" class="font-bold text-white">0</span></div>
+        <div class="text-[10px] text-indigo-100 truncate mt-0.5" id="stat-books-lang">
+          FR: 0 | IT: 0 | EN: 0
+        </div>
+      </div>
     </div>
   </header>
 
   <!-- Filtre des mois -->
-  <nav class="bg-white border-b px-4 py-3 flex space-x-2 overflow-x-auto text-sm sticky top-[60px] z-10 shadow-sm scroll-smooth" id="month-tabs"></nav>
+  <nav class="bg-white border-b px-4 py-2.5 flex space-x-2 overflow-x-auto text-sm sticky top-[108px] z-10 shadow-sm scroll-smooth" id="month-tabs"></nav>
 
-  <!-- Grille du calendrier avec zone de swipe -->
+  <!-- Grille du calendrier -->
   <main class="max-w-md mx-auto p-4">
     <div id="calendar-container" class="touch-pan-y">
       <div id="calendar-grid" class="grid grid-cols-7 gap-2 text-center transition-transform duration-200 ease-out"></div>
@@ -88,12 +106,16 @@
         <div class="space-y-2">
           <input type="text" id="input-title" placeholder="Titre du livre" class="w-full text-sm border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
           <input type="text" id="input-author" placeholder="Auteur" class="w-full text-sm border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
-          <select id="input-language" class="w-full text-sm border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
-            <option value="">Sélectionner la langue</option>
-            <option value="Français">Français</option>
-            <option value="Italien">Italien</option>
-            <option value="Anglais">Anglais</option>
-          </select>
+          
+          <div class="grid grid-cols-2 gap-2">
+            <select id="input-language" class="w-full text-sm border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
+              <option value="">Langue</option>
+              <option value="Français">Français</option>
+              <option value="Italien">Italien</option>
+              <option value="Anglais">Anglais</option>
+            </select>
+            <input type="number" id="input-pages" placeholder="Nb de pages" min="1" class="w-full text-sm border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
+          </div>
         </div>
       </div>
 
@@ -129,7 +151,6 @@
       { key: '2027-06', label: 'Juin 27' }
     ];
 
-    // Calcul de la date d'aujourd'hui au format YYYY-MM-DD
     const today = new Date();
     const todayYear = today.getFullYear();
     const todayMonth = String(today.getMonth() + 1).padStart(2, '0');
@@ -137,13 +158,8 @@
     const todayMonthKey = `${todayYear}-${todayMonth}`;
 
     async function init() {
-      // Déterminer le mois courant au démarrage
       const initialIdx = monthsList.findIndex(m => m.key === todayMonthKey);
-      if (initialIdx !== -1) {
-        currentMonthIndex = initialIdx;
-      } else {
-        currentMonthIndex = 0; // Défaut sur juillet 2026 si hors période
-      }
+      currentMonthIndex = (initialIdx !== -1) ? initialIdx : 0;
 
       renderTabs();
       await fetchSupabaseData();
@@ -155,12 +171,39 @@
       const { data, error } = await supabaseClient.from('challenge_reader').select('*');
       if (!error && data) {
         daysData = {};
+        
         let successCount = 0;
+        let realPagesTotal = 0;
+        const langCounts = { 'Français': 0, 'Italien': 0, 'Anglais': 0, 'Autre': 0 };
+        let finishedBooksCount = 0;
+
         data.forEach(row => {
           daysData[row.day_date] = row;
-          if (row.status === 'success') successCount++;
+          
+          if (row.status === 'success') {
+            successCount++;
+          }
+
+          // Décompte si le livre est terminé `}`
+          if (row.book_end) {
+            finishedBooksCount++;
+            if (row.book_pages) {
+              realPagesTotal += parseInt(row.book_pages, 10);
+            }
+            if (row.book_language && langCounts.hasOwnProperty(row.book_language)) {
+              langCounts[row.book_language]++;
+            } else if (row.book_language) {
+              langCounts['Autre']++;
+            }
+          }
         });
-        document.getElementById('stat-count').innerText = successCount;
+
+        // Mise à jour des statistiques
+        document.getElementById('stat-days').innerText = successCount;
+        document.getElementById('stat-theo-pages').innerText = (successCount * 30).toLocaleString('fr-FR');
+        document.getElementById('stat-real-pages').innerText = realPagesTotal.toLocaleString('fr-FR');
+        document.getElementById('stat-books-total').innerText = finishedBooksCount;
+        document.getElementById('stat-books-lang').innerText = `FR: ${langCounts['Français']} | IT: ${langCounts['Italien']} | EN: ${langCounts['Anglais']}`;
       }
     }
 
@@ -181,7 +224,6 @@
     function selectMonth(index, scrollTab = true) {
       currentMonthIndex = index;
 
-      // Mise à jour des onglets
       monthsList.forEach((_, idx) => {
         const btn = document.getElementById(`tab-${idx}`);
         if (btn) {
@@ -212,8 +254,6 @@
         const isToday = (dateStr === todayDateStr);
 
         const cell = document.createElement('div');
-        
-        // Style spécifique si c'est la date du jour (bordure indigo plus épaisse + fond teinté)
         const todayStyle = isToday ? 'ring-2 ring-indigo-500 bg-indigo-50/60 font-semibold' : 'bg-white';
 
         cell.className = `${todayStyle} p-2 rounded-lg border shadow-sm flex flex-col justify-between items-center h-20 cursor-pointer hover:border-indigo-400 relative transition-all`;
@@ -239,12 +279,10 @@
       }
     }
 
-    // Gestion de la navigation par Swipe (Pouce)
     function setupSwipeEvents() {
       const container = document.getElementById('calendar-container');
       let touchStartX = 0;
       let touchStartY = 0;
-      let touchEndX = 0;
 
       container.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
@@ -252,28 +290,23 @@
       }, { passive: true });
 
       container.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
+        const touchEndX = e.changedTouches[0].screenX;
         const touchEndY = e.changedTouches[0].screenY;
 
         const diffX = touchEndX - touchStartX;
         const diffY = touchEndY - touchStartY;
 
-        // Détection de swipe horizontal (avec tolérance verticale)
         if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
           if (diffX < 0) {
-            // Swipe Droite -> Gauche (Suivant)
             if (currentMonthIndex < monthsList.length - 1) {
               selectMonth(currentMonthIndex + 1);
             } else {
-              // Si dernier mois atteint -> boucle vers le premier
               selectMonth(0);
             }
           } else {
-            // Swipe Gauche -> Droite (Précédent)
             if (currentMonthIndex > 0) {
               selectMonth(currentMonthIndex - 1);
             }
-            // Si premier mois -> ne fait rien (reste sur le 1er mois)
           }
         }
       }, { passive: true });
@@ -292,6 +325,7 @@
       document.getElementById('input-title').value = data.book_title || '';
       document.getElementById('input-author').value = data.book_author || '';
       document.getElementById('input-language').value = data.book_language || '';
+      document.getElementById('input-pages').value = data.book_pages || '';
 
       document.getElementById('modal').classList.remove('hidden');
       document.getElementById('modal').classList.add('flex');
@@ -313,6 +347,8 @@
     }
 
     async function saveDayData() {
+      const pagesVal = document.getElementById('input-pages').value;
+
       const payload = {
         day_date: selectedDateStr,
         status: currentStatus,
@@ -321,6 +357,7 @@
         book_title: document.getElementById('input-title').value || null,
         book_author: document.getElementById('input-author').value || null,
         book_language: document.getElementById('input-language').value || null,
+        book_pages: pagesVal ? parseInt(pagesVal, 10) : null,
         updated_at: new Date().toISOString()
       };
 
