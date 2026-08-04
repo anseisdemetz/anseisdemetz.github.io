@@ -28,6 +28,11 @@
   <!-- Tailwind CSS & Supabase JS SDK -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Chargement du SDK Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Fichier de configuration séparé -->
+  <script src="config.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen text-gray-800 pb-10 select-none overflow-x-hidden">
 
@@ -126,9 +131,10 @@
   </div>
 
   <script>
-    // Configuration Supabase
-    const SUPABASE_URL = "https://okqpskyzteuhwochesbv.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rcXBza3l6dGV1aHdvY2hlc2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzOTI2MDEsImV4cCI6MjEwMDk2ODYwMX0.AHxjCrvXKpccziqOo17-FgOm7uJo7WiVuUxrrsG_eWE";
+    // Par la récupération dynamique depuis APP_CONFIG :
+    const SUPABASE_URL = window.APP_CONFIG.supabaseUrl;
+    const SUPABASE_KEY = window.APP_CONFIG.supabaseKey;
+
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let daysData = {};
