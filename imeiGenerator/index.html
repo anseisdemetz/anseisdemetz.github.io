@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Générateur d'IMEI Produit</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; max-width: 800px; }
+        .card { border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        input[type="text"] { width: 100%; padding: 10px; box-sizing: border-box; margin-bottom: 10px; }
+        button { padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        ul { background: #f8f9fa; padding: 15px; border-radius: 4px; list-style-type: square; }
+        .product-item { padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; }
+        .product-item:hover { background: #e9ecef; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h2>Recherche de produit & Générateur d'IMEI</h2>
+
+    <!-- 1. Recherche -->
+    <input type="text" id="searchInput" placeholder="Rechercher un modèle (ex: iPad 2)..." onkeyup="searchProducts()">
+    <div id="searchResults"></div>
+
+    <!-- 2. Détails du produit sélectionné -->
+    <div id="selectedProductCard" class="card" style="display:none;">
+        <h3 id="prodTitle"></h3>
+        <p><strong>Fabricant :</strong> <span id="prodBrand"></span></p>
+        <p><strong>Type :</strong> <span id="prodType"></span></p>
+        
+        <button onclick="processIMEIGeneration()">Extraire TAC & Générer 5 IMEI</button>
+
+        <div id="imeiContainer" style="margin-top: 15px;"></div>
+    </div>
+
+    <script>
+        // Configuration fournie
+        const CONFIG = {
+            CHECK_API_DOMAIN: "https://preprod-moby-api.comparecycle.com/Catalog/getProducts",
+            CHECK_API_TOKEN: "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY"
+        };
+
+        // Exemple de données (remplacez ou alimentez cette liste selon votre source)
+        const productsData = [
+            {
+                "idproduct": 252,
+                "model": "iPad 2 Wi-Fi 16Go",
+                "idmanufacturer": 4,
+                "idproduct_type": 2,
+                "is_imei_required": "no",
+                "image": "http://preprod-static.comparecycle.com/images/11/23122e052cb42aabb731a23d7e1cfea4780fabca.png",
+                "type": "Tablette",
+                "manufacturer": "Apple",
+                "tac": ["01234567", "35875205"], // TAC d'exemple si vide
+                "product": "iPad 2 Wi-Fi 16Go",
+                "idmodel": 249,
+                "is_ios_lock": "yes"
+            }
+        ];
+
+        let selectedProduct = null;
+
+        // 1. Algorithme de Luhn pour le calcul de la clé de contrôle IMEI (15ème chiffre)
+        function calculateLuhnCheckDigit(first14Digits) {
+            let sum = 0;
+            for (let i = 0; i < 14; i++) {
+                let digit = parseInt(first14Digits.charAt(i), 10);
+                // On multiplie par 2 une position sur deux (index impair 1, 3, 5...)
+                if (i % 2 !== 0) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+            }
+            return (10 - (sum % 10)) % 10;
+        }
+
+        // 2. Génération d'un IMEI valide à partir d'un TAC (8 chiffres)
+        function generateIMEIFromTAC(tac) {
+            // Nettoyage du TAC
+            let baseTac = String(tac).padStart(8, '0').slice(0, 8);
+            
+            // Génération du Serial Number (SNR) aléatoire de 6 chiffres
+            let snr = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            // 14 premiers chiffres (TAC + SNR)
+            let first14 = baseTac + snr;
+            
+            // Clé de contrôle Luhn (CD)
+            let checkDigit = calculateLuhnCheckDigit(first14);
+            
+            return first14 + checkDigit;
+        }
+
+        // 3. Recherche de produit dans la liste
+        function searchProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const resultsDiv = document.getElementById('searchResults');
+            resultsDiv.innerHTML = '';
+
+            if (query.trim() === '') return;
+
+            const matches = productsData.filter(p => p.model.toLowerCase().includes(query));
+
+            matches.forEach(prod => {
+                const item = document.createElement('div');
+                item.className = 'product-item';
+                item.innerText = `${prod.manufacturer} - ${prod.model}`;
+                item.onclick = () => selectProduct(prod);
+                resultsDiv.appendChild(item);
+            });
+        }
+
+        // 4. Sélection d'un produit
+        function selectProduct(product) {
+            selectedProduct = product;
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('searchInput').value = product.model;
+            document.getElementById('prodTitle').innerText = product.model;
+            document.getElementById('prodBrand').innerText = product.manufacturer;
+            document.getElementById('prodType').innerText = product.type;
+            document.getElementById('imeiContainer').innerHTML = '';
+            document.getElementById('selectedProductCard').style.display = 'block';
+        }
+
+        // 5. Récupération des TACs et génération des 5 IMEIs
+        async function processIMEIGeneration() {
+            if (!selectedProduct) return;
+
+            let tacs = selectedProduct.tac;
+
+            // Optionnel : Appel API si la propriété TAC locale est vide
+            if (!tacs || tacs.length === 0) {
+                try {
+                    const response = await fetch(`${CONFIG.CHECK_API_DOMAIN}?idproduct=${selectedProduct.idproduct}`, {
+                        headers: { "Authorization": `Bearer ${CONFIG.CHECK_API_TOKEN}` }
+                    });
+                    const data = await response.json();
+                    tacs = data.tac || [];
+                } catch (err) {
+                    console.warn("Impossible de contacter l'API, utilisation d'un TAC fallback.");
+                    tacs = ["35301406"]; // Fallback si appel API échoue
+                }
+            }
+
+            const container = document.getElementById('imeiContainer');
+            
+            if (!tacs || tacs.length === 0) {
+                container.innerHTML = `<p class="error">Aucun TAC trouvé pour ce produit.</p>`;
+                return;
+            }
+
+            // Génération des 5 IMEIs en piochant dans les TACs disponibles
+            let imeis = [];
+            for (let i = 0; i < 5; i++) {
+                // Sélectionne un TAC (soit le premier, soit en alternance si plusieurs)
+                let selectedTac = tacs[i % tacs.length]; 
+                imeis.push(generateIMEIFromTAC(selectedTac));
+            }
+
+            // Affichage
+            container.innerHTML = `
+                <h4>5 IMEIs Générés (Base TAC: ${tacs.join(', ')}) :</h4>
+                <ul>
+                    ${imeis.map(imei => `<li><code>${imei}</code></li>`).join('')}
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
