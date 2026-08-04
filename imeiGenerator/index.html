@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Générateur d'IMEI - Catalogue Mobile</title>
+    <title>Générateur d'IMEI - Fichier JSON Local</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; max-width: 900px; color: #333; }
         .filter-section { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
@@ -41,9 +41,15 @@
 </head>
 <body>
 
-    <h2>Générateur d'IMEI - Produits Mobiles</h2>
+    <h2>Générateur d'IMEI - Produits Mobiles (Fichier JSON)</h2>
 
-    <div id="statusMessage" class="status-msg status-loading">Chargement des données depuis l'API...</div>
+    <div id="statusMessage" class="status-msg status-loading">Chargement du fichier response.json...</div>
+
+    <!-- Fallback si ouvert sans serveur local (file://) -->
+    <div id="filePickerContainer" style="display: none; margin-bottom: 15px;">
+        <label for="fileInput"><strong>Sélectionnez manuellement le fichier response.json :</strong> </label>
+        <input type="file" id="fileInput" accept=".json" onchange="handleFileSelect(event)">
+    </div>
 
     <!-- Filtres -->
     <div class="filter-section">
@@ -76,60 +82,77 @@
     </div>
 
     <script>
-        const TOKEN = "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY";
-        const TARGET_URL = `https://preprod-moby-api.comparecycle.com/Catalog/getProducts`;
-        const PROXY_URL = "https://corsproxy.io/?" + encodeURIComponent(TARGET_URL);
+        let catalogProducts = [];
+        let selectedProduct = null;
 
-        async function loadProductsData() {
+        // 1. Chargement du fichier response.json
+        async function loadLocalJson() {
             const statusDiv = document.getElementById('statusMessage');
             
             try {
-                // En GET, corsproxy.io fonctionne sans renvoyer d'erreur 413
-                const response = await fetch(PROXY_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-AUTH-CR": TOKEN
-                    },
-                    // Demander uniquement les mobiles côté serveur réduit la taille de la réponse de 80%
-                    body: JSON.stringify({
-                        type: "Mobile",
-                        is_imei_required: "yes"
-                    })
-                });
-
+                const response = await fetch('./response.json');
                 if (!response.ok) {
-                    throw new Error(`Erreur HTTP : ${response.status}`);
+                    throw new Error(`Fichier introuvable ou erreur de lecture (HTTP ${response.status})`);
                 }
 
                 const data = await response.json();
-                const rawList = data.results || (Array.isArray(data) ? data : []);
-
-                if (!rawList || rawList.length === 0) {
-                    throw new Error("Aucune donnée 'results' trouvée dans la réponse API.");
-                }
-
-                catalogProducts = rawList.filter(item => {
-                    const isMobileType = item.type === "Mobile";
-                    const isImeiRequired = String(item.is_imei_required).toLowerCase() !== "no";
-                    return isMobileType && isImeiRequired;
-                });
-
-                statusDiv.className = 'status-msg status-success';
-                statusDiv.innerText = `${catalogProducts.length} produit(s) de type "Mobile" chargé(s).`;
-
-                populateBrandDropdown();
-                enableInputs();
-                applyFilters();
+                processData(data);
 
             } catch (err) {
-                console.error("Erreur API :", err);
+                console.warn("Échec du fetch automatique (probablement restriction file://) :", err);
                 statusDiv.className = 'status-msg status-error';
-                statusDiv.innerHTML = `⚠️ Erreur : <strong>${err.message}</strong>`;
+                statusDiv.innerHTML = `⚠️ Impossible de charger 'response.json' automatiquement. Veuillez choisir le fichier ci-dessous :`;
+                document.getElementById('filePickerContainer').style.display = 'block';
             }
         }
 
-        // 2. Remplissage de la liste des marques depuis results->manufacturer
+        // Gestionnaire pour l'import manuel du fichier
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    processData(data);
+                } catch (err) {
+                    alert("Le fichier sélectionné n'est pas un JSON valide.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // 2. Traitement et filtrage strict des données
+        function processData(data) {
+            const statusDiv = document.getElementById('statusMessage');
+            
+            // Extraction de results
+            const rawList = data.results || (Array.isArray(data) ? data : []);
+
+            if (!rawList || rawList.length === 0) {
+                statusDiv.className = 'status-msg status-error';
+                statusDiv.innerText = "Aucune donnée 'results' trouvée dans le fichier JSON.";
+                return;
+            }
+
+            // Filtrage strict : type === "Mobile" et is_imei_required !== "no"
+            catalogProducts = rawList.filter(item => {
+                const isMobileType = item.type === "Mobile";
+                const isImeiRequired = String(item.is_imei_required).toLowerCase() !== "no";
+
+                return isMobileType && isImeiRequired;
+            });
+
+            statusDiv.className = 'status-msg status-success';
+            statusDiv.innerText = `${catalogProducts.length} produit(s) de type "Mobile" chargé(s) depuis response.json.`;
+
+            populateBrandDropdown();
+            enableInputs();
+            applyFilters();
+        }
+
+        // 3. Remplissage des marques (results -> manufacturer)
         function populateBrandDropdown() {
             const brandSelect = document.getElementById('manufacturerFilter');
             brandSelect.innerHTML = '<option value="">-- Toutes les Marques --</option>';
@@ -146,7 +169,7 @@
             document.getElementById('searchInput').disabled = false;
         }
 
-        // 3. Algorithme de Luhn pour l'IMEI
+        // 4. Algorithme de Luhn
         function calculateLuhnCheckDigit(first14) {
             let sum = 0;
             for (let i = 0; i < 14; i++) {
@@ -168,7 +191,7 @@
             return first14 + checkDigit;
         }
 
-        // 4. Filtrage par Marque (manufacturer) et Produit (product)
+        // 5. Filtrage
         function applyFilters() {
             const selectedBrand = document.getElementById('manufacturerFilter').value;
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -210,7 +233,7 @@
             resultsDiv.style.display = 'block';
         }
 
-        // 5. Sélection d'un produit et lecture du tableau results->tac / results->Tac
+        // 6. Sélection d'un produit et lecture des TACs (results -> Tac / tac)
         function selectProduct(product) {
             selectedProduct = product;
             
@@ -219,8 +242,6 @@
             document.getElementById('prodType').innerText = product.type;
 
             const tacContainer = document.getElementById('tacList');
-            
-            // Support de results->Tac ou results->tac
             let tacs = product.Tac || product.tac || [];
 
             if (Array.isArray(tacs) && tacs.length > 0) {
@@ -233,14 +254,14 @@
             document.getElementById('productDetailCard').style.display = 'block';
         }
 
-        // 6. Génération de 5 IMEIs dans la console UI
+        // 7. Génération des IMEIs
         function generateAndLogIMEIs() {
             if (!selectedProduct) return;
 
             let tacs = selectedProduct.Tac || selectedProduct.tac || [];
 
             if (!Array.isArray(tacs) || tacs.length === 0) {
-                tacs = ["01234567"]; // Fallback si le tableau de TAC est vide
+                tacs = ["01234567"];
             }
 
             const imeis = [];
@@ -268,7 +289,7 @@
             consoleBox.scrollTop = consoleBox.scrollHeight;
         }
 
-        window.onload = loadProductsData;
+        window.onload = loadLocalJson;
     </script>
 </body>
 </html>
