@@ -2,72 +2,126 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Générateur d'IMEI Produit</title>
+    <title>Sélecteur de Produit & Générateur d'IMEI</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; max-width: 800px; }
-        .card { border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-top: 15px; }
-        input[type="text"] { width: 100%; padding: 10px; box-sizing: border-box; margin-bottom: 10px; }
-        button { padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        ul { background: #f8f9fa; padding: 15px; border-radius: 4px; list-style-type: square; }
-        .product-item { padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; }
-        .product-item:hover { background: #e9ecef; }
-        .error { color: red; font-weight: bold; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; max-width: 900px; color: #333; }
+        .filter-section { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        select, input[type="text"] { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; flex: 1; min-width: 180px; }
+        .card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-top: 15px; background: #fafafa; }
+        .results-list { border: 1px solid #ccc; border-radius: 4px; max-height: 250px; overflow-y: auto; margin-top: 10px; }
+        .product-item { padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .product-item:hover { background-color: #eef5ff; }
+        .badge { background: #007bff; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; }
+        button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+        button:hover { background: #218838; }
+        .tac-tag { display: inline-block; background: #e2e3e5; padding: 4px 8px; margin: 2px; border-radius: 4px; font-family: monospace; }
+        .console-notice { margin-top: 10px; font-size: 0.9em; color: #6c757d; font-style: italic; }
     </style>
 </head>
 <body>
 
-    <h2>Recherche de produit & Générateur d'IMEI</h2>
+    <h2>Recherche Produits & Générateur d'IMEI</h2>
 
-    <!-- 1. Recherche -->
-    <input type="text" id="searchInput" placeholder="Rechercher un modèle (ex: iPad 2)..." onkeyup="searchProducts()">
-    <div id="searchResults"></div>
+    <!-- Filtres -->
+    <div class="filter-section">
+        <select id="typeFilter" onchange="applyFilters()">
+            <option value="">-- Toutes les Catégories --</option>
+        </select>
 
-    <!-- 2. Détails du produit sélectionné -->
-    <div id="selectedProductCard" class="card" style="display:none;">
-        <h3 id="prodTitle"></h3>
-        <p><strong>Fabricant :</strong> <span id="prodBrand"></span></p>
-        <p><strong>Type :</strong> <span id="prodType"></span></p>
+        <select id="manufacturerFilter" onchange="applyFilters()">
+            <option value="">-- Toutes les Marques --</option>
+        </select>
+
+        <input type="text" id="searchInput" placeholder="Rechercher par modèle..." onkeyup="applyFilters()">
+    </div>
+
+    <!-- Résultats (Max 15) -->
+    <div id="resultsCount" style="font-size: 0.9em; color: #555;"></div>
+    <div id="searchResults" class="results-list" style="display: none;"></div>
+
+    <!-- Fiche du produit sélectionné -->
+    <div id="productDetailCard" class="card" style="display: none;">
+        <h3 id="prodModel"></h3>
+        <p><strong>Catégorie :</strong> <span id="prodType"></span> | <strong>Marque :</strong> <span id="prodBrand"></span></p>
         
-        <button onclick="processIMEIGeneration()">Extraire TAC & Générer 5 IMEI</button>
+        <div>
+            <strong>TACs associés à ce produit :</strong>
+            <div id="tacList" style="margin-top: 5px;"></div>
+        </div>
 
-        <div id="imeiContainer" style="margin-top: 15px;"></div>
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+
+        <button onclick="generateAndLogIMEIs()">Générer les IMEI (Console)</button>
+        <div class="console-notice">💡 Les 5 IMEIs valides seront affichés dans la console de votre navigateur (F12).</div>
     </div>
 
     <script>
-        // Configuration fournie
         const CONFIG = {
             CHECK_API_DOMAIN: "https://preprod-moby-api.comparecycle.com/Catalog/getProducts",
             CHECK_API_TOKEN: "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY"
         };
 
-        // Exemple de données (remplacez ou alimentez cette liste selon votre source)
+        // Données d'exemple (enrichies pour illustrer le filtrage)
         const productsData = [
             {
                 "idproduct": 252,
                 "model": "iPad 2 Wi-Fi 16Go",
                 "idmanufacturer": 4,
                 "idproduct_type": 2,
-                "is_imei_required": "no",
-                "image": "http://preprod-static.comparecycle.com/images/11/23122e052cb42aabb731a23d7e1cfea4780fabca.png",
+                "is_imei_required": "yes", // Modifié à "yes" pour apparaître
                 "type": "Tablette",
                 "manufacturer": "Apple",
-                "tac": ["01234567", "35875205"], // TAC d'exemple si vide
-                "product": "iPad 2 Wi-Fi 16Go",
-                "idmodel": 249,
-                "is_ios_lock": "yes"
+                "tac": ["01234567", "35875205"],
+                "product": "iPad 2 Wi-Fi 16Go"
+            },
+            {
+                "idproduct": 253,
+                "model": "iPhone 13 128Go",
+                "is_imei_required": "yes",
+                "type": "Smartphone",
+                "manufacturer": "Apple",
+                "tac": ["35301406", "35301407"]
+            },
+            {
+                "idproduct": 254,
+                "model": "Galaxy S21 5G",
+                "is_imei_required": "yes",
+                "type": "Smartphone",
+                "manufacturer": "Samsung",
+                "tac": ["35281211"]
+            },
+            {
+                "idproduct": 255,
+                "model": "MacBook Air M1",
+                "is_imei_required": "no", // Sera ÉLIMINÉ automatiquement
+                "type": "Ordinateur",
+                "manufacturer": "Apple",
+                "tac": []
             }
         ];
 
         let selectedProduct = null;
 
-        // 1. Algorithme de Luhn pour le calcul de la clé de contrôle IMEI (15ème chiffre)
-        function calculateLuhnCheckDigit(first14Digits) {
+        // Init : Remplissage automatique des menus déroulants de filtres
+        function initFilters() {
+            const types = [...new Set(productsData.map(p => p.type))];
+            const manufacturers = [...new Set(productsData.map(p => p.manufacturer))];
+
+            const typeSelect = document.getElementById('typeFilter');
+            types.forEach(t => typeSelect.add(new Option(t, t)));
+
+            const brandSelect = document.getElementById('manufacturerFilter');
+            manufacturers.forEach(m => brandSelect.add(new Option(m, m)));
+
+            applyFilters();
+        }
+
+        // Algorithme de Luhn pour calculer la clé de contrôle (15ème chiffre de l'IMEI)
+        function calculateLuhnCheckDigit(first14) {
             let sum = 0;
             for (let i = 0; i < 14; i++) {
-                let digit = parseInt(first14Digits.charAt(i), 10);
-                // On multiplie par 2 une position sur deux (index impair 1, 3, 5...)
-                if (i % 2 !== 0) {
+                let digit = parseInt(first14.charAt(i), 10);
+                if (i % 2 !== 0) { // Positions impaires (1-indexed : 2, 4, 6...)
                     digit *= 2;
                     if (digit > 9) digit -= 9;
                 }
@@ -76,97 +130,115 @@
             return (10 - (sum % 10)) % 10;
         }
 
-        // 2. Génération d'un IMEI valide à partir d'un TAC (8 chiffres)
-        function generateIMEIFromTAC(tac) {
-            // Nettoyage du TAC
-            let baseTac = String(tac).padStart(8, '0').slice(0, 8);
-            
-            // Génération du Serial Number (SNR) aléatoire de 6 chiffres
-            let snr = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            // 14 premiers chiffres (TAC + SNR)
-            let first14 = baseTac + snr;
-            
-            // Clé de contrôle Luhn (CD)
+        // Génère 1 IMEI valide à partir d'un TAC
+        function createSingleIMEI(tac) {
+            let cleanTac = String(tac).padStart(8, '0').slice(0, 8);
+            let snr = Math.floor(100000 + Math.random() * 900000).toString(); // SNR à 6 chiffres
+            let first14 = cleanTac + snr;
             let checkDigit = calculateLuhnCheckDigit(first14);
-            
             return first14 + checkDigit;
         }
 
-        // 3. Recherche de produit dans la liste
-        function searchProducts() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
+        // Application des filtres & affichage des 15 premiers résultats
+        function applyFilters() {
+            const selectedType = document.getElementById('typeFilter').value;
+            const selectedBrand = document.getElementById('manufacturerFilter').value;
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+            // Filtrage : Exclusion stricte de is_imei_required === "no"
+            const filtered = productsData.filter(p => {
+                const isImeiRequired = String(p.is_imei_required).toLowerCase() !== "no";
+                const matchType = !selectedType || p.type === selectedType;
+                const matchBrand = !selectedBrand || p.manufacturer === selectedBrand;
+                const matchQuery = !searchQuery || p.model.toLowerCase().includes(searchQuery);
+
+                return isImeiRequired && matchType && matchBrand && matchQuery;
+            });
+
+            // Limitation aux 15 premiers résultats
+            const top15 = filtered.slice(0, 15);
+
+            renderResults(top15, filtered.length);
+        }
+
+        // Rendu de la liste
+        function renderResults(products, totalCount) {
             const resultsDiv = document.getElementById('searchResults');
+            const countDiv = document.getElementById('resultsCount');
             resultsDiv.innerHTML = '';
 
-            if (query.trim() === '') return;
+            countDiv.innerText = `${products.length} résultat(s) affiché(s) sur ${totalCount} trouvé(s) (Max 15).`;
 
-            const matches = productsData.filter(p => p.model.toLowerCase().includes(query));
+            if (products.length === 0) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
 
-            matches.forEach(prod => {
+            products.forEach(p => {
                 const item = document.createElement('div');
                 item.className = 'product-item';
-                item.innerText = `${prod.manufacturer} - ${prod.model}`;
-                item.onclick = () => selectProduct(prod);
+                item.innerHTML = `
+                    <span><strong>${p.manufacturer}</strong> - ${p.model}</span>
+                    <span class="badge">${p.type}</span>
+                `;
+                item.onclick = () => selectProduct(p);
                 resultsDiv.appendChild(item);
             });
+
+            resultsDiv.style.display = 'block';
         }
 
-        // 4. Sélection d'un produit
+        // Sélection d'un produit et affichage de ses TACs
         function selectProduct(product) {
             selectedProduct = product;
-            document.getElementById('searchResults').innerHTML = '';
-            document.getElementById('searchInput').value = product.model;
-            document.getElementById('prodTitle').innerText = product.model;
-            document.getElementById('prodBrand').innerText = product.manufacturer;
+            
+            document.getElementById('prodModel').innerText = product.model;
             document.getElementById('prodType').innerText = product.type;
-            document.getElementById('imeiContainer').innerHTML = '';
-            document.getElementById('selectedProductCard').style.display = 'block';
+            document.getElementById('prodBrand').innerText = product.manufacturer;
+
+            // Rendu des TACs
+            const tacContainer = document.getElementById('tacList');
+            if (product.tac && product.tac.length > 0) {
+                tacContainer.innerHTML = product.tac.map(t => `<span class="tac-tag">${t}</span>`).join(' ');
+            } else {
+                tacContainer.innerHTML = `<em>Aucun TAC local disponible (Appel API requis).</em>`;
+            }
+
+            document.getElementById('productDetailCard').style.display = 'block';
         }
 
-        // 5. Récupération des TACs et génération des 5 IMEIs
-        async function processIMEIGeneration() {
+        // Action du bouton : Générer et logger 5 IMEIs dans la console
+        function generateAndLogIMEIs() {
             if (!selectedProduct) return;
 
             let tacs = selectedProduct.tac;
 
-            // Optionnel : Appel API si la propriété TAC locale est vide
+            // TAC de secours si le tableau est vide
             if (!tacs || tacs.length === 0) {
-                try {
-                    const response = await fetch(`${CONFIG.CHECK_API_DOMAIN}?idproduct=${selectedProduct.idproduct}`, {
-                        headers: { "Authorization": `Bearer ${CONFIG.CHECK_API_TOKEN}` }
-                    });
-                    const data = await response.json();
-                    tacs = data.tac || [];
-                } catch (err) {
-                    console.warn("Impossible de contacter l'API, utilisation d'un TAC fallback.");
-                    tacs = ["35301406"]; // Fallback si appel API échoue
-                }
+                tacs = ["01234567"]; 
             }
 
-            const container = document.getElementById('imeiContainer');
-            
-            if (!tacs || tacs.length === 0) {
-                container.innerHTML = `<p class="error">Aucun TAC trouvé pour ce produit.</p>`;
-                return;
-            }
-
-            // Génération des 5 IMEIs en piochant dans les TACs disponibles
-            let imeis = [];
+            const imeis = [];
             for (let i = 0; i < 5; i++) {
-                // Sélectionne un TAC (soit le premier, soit en alternance si plusieurs)
-                let selectedTac = tacs[i % tacs.length]; 
-                imeis.push(generateIMEIFromTAC(selectedTac));
+                // Utilisation alternée si plusieurs TACs
+                const tacToUse = tacs[i % tacs.length];
+                imeis.push(createSingleIMEI(tacToUse));
             }
 
-            // Affichage
-            container.innerHTML = `
-                <h4>5 IMEIs Générés (Base TAC: ${tacs.join(', ')}) :</h4>
-                <ul>
-                    ${imeis.map(imei => `<li><code>${imei}</code></li>`).join('')}
-                </ul>
-            `;
+            // --- SORTIE CONSOLE ---
+            console.group(`--- IMEIs Générés pour : ${selectedProduct.manufacturer} ${selectedProduct.model} ---`);
+            console.log(`TAC(s) utilisé(s) :`, tacs);
+            console.log(`Liste des 5 IMEIs valides :`);
+            imeis.forEach((imei, index) => {
+                console.log(`  ${index + 1}. ${imei}`);
+            });
+            console.groupEnd();
+
+            alert(`5 IMEIs ont été générés avec succès !\nOuvrez la console de votre navigateur (F12) pour les consulter.`);
         }
+
+        // Initialisation au chargement de la page
+        window.onload = initFilters;
     </script>
 </body>
 </html>
