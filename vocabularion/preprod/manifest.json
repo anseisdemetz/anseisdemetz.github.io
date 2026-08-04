@@ -1,0 +1,18 @@
+{
+  "name": "VocabApp - Vocabulaire",
+  "short_name": "VocabApp",
+  "description": "Gestionnaire de vocabulaire et révision quotidienne",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#4338ca",
+  "theme_color": "#4338ca",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 style=%22background-color:%234338ca;%22><text x=%2250%%22 y=%2255%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22>🧠</text></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
