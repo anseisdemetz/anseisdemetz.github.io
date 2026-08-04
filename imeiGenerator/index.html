@@ -15,7 +15,22 @@
         button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
         button:hover { background: #218838; }
         .tac-tag { display: inline-block; background: #e2e3e5; padding: 4px 8px; margin: 2px; border-radius: 4px; font-family: monospace; }
-        .console-notice { margin-top: 10px; font-size: 0.9em; color: #6c757d; font-style: italic; }
+        
+        /* Style du bloc console intégré */
+        .page-console {
+            background-color: #1e1e1e;
+            color: #4af626;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px #000;
+        }
+        .page-console .log-header { color: #569cd6; font-weight: bold; margin-bottom: 5px; }
+        .page-console .log-item { margin-left: 15px; color: #dcdcdc; }
+        .page-console .log-time { color: #808080; font-size: 0.85em; }
     </style>
 </head>
 <body>
@@ -51,8 +66,10 @@
 
         <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
 
-        <button onclick="generateAndLogIMEIs()">Générer les IMEI (Console)</button>
-        <div class="console-notice">💡 Les 5 IMEIs valides seront affichés dans la console de votre navigateur (F12).</div>
+        <button onclick="generateAndLogIMEIs()">Générer les IMEI</button>
+
+        <!-- Console Intégrée dans la Page -->
+        <div id="pageConsole" class="page-console" style="display: none;"></div>
     </div>
 
     <script>
@@ -61,14 +78,13 @@
             CHECK_API_TOKEN: "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY"
         };
 
-        // Données d'exemple (enrichies pour illustrer le filtrage)
         const productsData = [
             {
                 "idproduct": 252,
                 "model": "iPad 2 Wi-Fi 16Go",
                 "idmanufacturer": 4,
                 "idproduct_type": 2,
-                "is_imei_required": "yes", // Modifié à "yes" pour apparaître
+                "is_imei_required": "yes",
                 "type": "Tablette",
                 "manufacturer": "Apple",
                 "tac": ["01234567", "35875205"],
@@ -93,7 +109,7 @@
             {
                 "idproduct": 255,
                 "model": "MacBook Air M1",
-                "is_imei_required": "no", // Sera ÉLIMINÉ automatiquement
+                "is_imei_required": "no", // Filtré / Éliminé
                 "type": "Ordinateur",
                 "manufacturer": "Apple",
                 "tac": []
@@ -102,7 +118,6 @@
 
         let selectedProduct = null;
 
-        // Init : Remplissage automatique des menus déroulants de filtres
         function initFilters() {
             const types = [...new Set(productsData.map(p => p.type))];
             const manufacturers = [...new Set(productsData.map(p => p.manufacturer))];
@@ -116,12 +131,11 @@
             applyFilters();
         }
 
-        // Algorithme de Luhn pour calculer la clé de contrôle (15ème chiffre de l'IMEI)
         function calculateLuhnCheckDigit(first14) {
             let sum = 0;
             for (let i = 0; i < 14; i++) {
                 let digit = parseInt(first14.charAt(i), 10);
-                if (i % 2 !== 0) { // Positions impaires (1-indexed : 2, 4, 6...)
+                if (i % 2 !== 0) {
                     digit *= 2;
                     if (digit > 9) digit -= 9;
                 }
@@ -130,22 +144,19 @@
             return (10 - (sum % 10)) % 10;
         }
 
-        // Génère 1 IMEI valide à partir d'un TAC
         function createSingleIMEI(tac) {
             let cleanTac = String(tac).padStart(8, '0').slice(0, 8);
-            let snr = Math.floor(100000 + Math.random() * 900000).toString(); // SNR à 6 chiffres
+            let snr = Math.floor(100000 + Math.random() * 900000).toString();
             let first14 = cleanTac + snr;
             let checkDigit = calculateLuhnCheckDigit(first14);
             return first14 + checkDigit;
         }
 
-        // Application des filtres & affichage des 15 premiers résultats
         function applyFilters() {
             const selectedType = document.getElementById('typeFilter').value;
             const selectedBrand = document.getElementById('manufacturerFilter').value;
             const searchQuery = document.getElementById('searchInput').value.toLowerCase();
 
-            // Filtrage : Exclusion stricte de is_imei_required === "no"
             const filtered = productsData.filter(p => {
                 const isImeiRequired = String(p.is_imei_required).toLowerCase() !== "no";
                 const matchType = !selectedType || p.type === selectedType;
@@ -155,13 +166,9 @@
                 return isImeiRequired && matchType && matchBrand && matchQuery;
             });
 
-            // Limitation aux 15 premiers résultats
-            const top15 = filtered.slice(0, 15);
-
-            renderResults(top15, filtered.length);
+            renderResults(filtered.slice(0, 15), filtered.length);
         }
 
-        // Rendu de la liste
         function renderResults(products, totalCount) {
             const resultsDiv = document.getElementById('searchResults');
             const countDiv = document.getElementById('resultsCount');
@@ -188,7 +195,6 @@
             resultsDiv.style.display = 'block';
         }
 
-        // Sélection d'un produit et affichage de ses TACs
         function selectProduct(product) {
             selectedProduct = product;
             
@@ -196,48 +202,52 @@
             document.getElementById('prodType').innerText = product.type;
             document.getElementById('prodBrand').innerText = product.manufacturer;
 
-            // Rendu des TACs
             const tacContainer = document.getElementById('tacList');
             if (product.tac && product.tac.length > 0) {
                 tacContainer.innerHTML = product.tac.map(t => `<span class="tac-tag">${t}</span>`).join(' ');
             } else {
-                tacContainer.innerHTML = `<em>Aucun TAC local disponible (Appel API requis).</em>`;
+                tacContainer.innerHTML = `<em>Aucun TAC disponible.</em>`;
             }
 
+            document.getElementById('pageConsole').style.display = 'none';
             document.getElementById('productDetailCard').style.display = 'block';
         }
 
-        // Action du bouton : Générer et logger 5 IMEIs dans la console
+        // Génération et écriture dans la console UI de la page
         function generateAndLogIMEIs() {
             if (!selectedProduct) return;
 
             let tacs = selectedProduct.tac;
-
-            // TAC de secours si le tableau est vide
             if (!tacs || tacs.length === 0) {
                 tacs = ["01234567"]; 
             }
 
             const imeis = [];
             for (let i = 0; i < 5; i++) {
-                // Utilisation alternée si plusieurs TACs
                 const tacToUse = tacs[i % tacs.length];
                 imeis.push(createSingleIMEI(tacToUse));
             }
 
-            // --- SORTIE CONSOLE ---
-            console.group(`--- IMEIs Générés pour : ${selectedProduct.manufacturer} ${selectedProduct.model} ---`);
-            console.log(`TAC(s) utilisé(s) :`, tacs);
-            console.log(`Liste des 5 IMEIs valides :`);
-            imeis.forEach((imei, index) => {
-                console.log(`  ${index + 1}. ${imei}`);
-            });
-            console.groupEnd();
+            // Rendu dans le bloc console de la page
+            const consoleBox = document.getElementById('pageConsole');
+            const time = new Date().toLocaleTimeString();
 
-            alert(`5 IMEIs ont été générés avec succès !\nOuvrez la console de votre navigateur (F12) pour les consulter.`);
+            let consoleOutput = `
+                <div class="log-header">
+                    <span class="log-time">[${time}]</span> > IMEIs générés pour "${selectedProduct.model}"
+                </div>
+                <div style="margin-left: 10px; color: #aaa; margin-bottom: 8px;">TAC(s) utilisé(s): ${tacs.join(', ')}</div>
+            `;
+
+            imeis.forEach((imei, idx) => {
+                consoleOutput += `<div class="log-item">${idx + 1}. ${imei}</div>`;
+            });
+
+            consoleBox.innerHTML = consoleOutput;
+            consoleBox.style.display = 'block';
+            consoleBox.scrollTop = consoleBox.scrollHeight;
         }
 
-        // Initialisation au chargement de la page
         window.onload = initFilters;
     </script>
 </body>
