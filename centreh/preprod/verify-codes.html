@@ -14,7 +14,7 @@
         <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold text-sky-400">Référentiel des Codes</h1>
-                <p class="text-sm text-slate-400">Visualisation et filtrage des étapes Pre-check et Check</p>
+                <p class="text-sm text-slate-400">Visualisation, filtrage et contrôle de présence (ALLOWED_CODES)</p>
             </div>
             <button id="reloadBtn" class="bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 px-3 py-1.5 rounded-md text-xs font-mono transition flex items-center gap-2">
                 🔄 Recharger les codes
@@ -26,6 +26,16 @@
             <!-- Message de statut / chargement -->
             <div id="statusMessage" class="p-4 rounded-lg bg-slate-800 border border-slate-700 text-center text-sm text-slate-300">
                 Chargement des codes en cours...
+            </div>
+
+            <!-- Légende -->
+            <div id="legend" class="hidden bg-slate-800/60 p-3 rounded-lg border border-slate-700 text-xs flex gap-6 text-slate-300 font-mono">
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Présent dans ALLOWED_CODES
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span> Absent de ALLOWED_CODES (Alerte)
+                </span>
             </div>
 
             <div id="contentBlocks" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
@@ -75,6 +85,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const statusMessage = document.getElementById("statusMessage");
+            const legend = document.getElementById("legend");
             const contentBlocks = document.getElementById("contentBlocks");
             
             const preCheckList = document.getElementById("preCheckList");
@@ -86,6 +97,27 @@
             const preCheckSearch = document.getElementById("preCheckSearch");
             const checkSearch = document.getElementById("checkSearch");
 
+            // Listes de référence pour la comparaison
+            const ALLOWED_PRECHECK_CODES = [
+                "5020", "5010", "5030", "1050", "1060", "1070", "1080", "1090", 
+                "1100", "1110", "1130", "1150", "999", "1000", "1120", "3010", "3020",
+                "2010", "2020", "2030", "2031", "2032", "2033", "2034", "2035", "2036", 
+                "2029", "2037", "2038", "2039", "2041", "3301", "2040", "2050", "2060", 
+                "2061", "2062", "2063", "2070", "2071", "2072", "2080", "2090", "2091", 
+                "2101", "2111", "2112", "2121", "2122", "2123", "2124", "2125", "5041", 
+                "1170", "5110", "3320", "3321", "5060", "5070", "3341", "3342", "3343", 
+                "3344", "3345", "3346", "3357", "3405", "3406", "3407", "3348", "5040", 
+                "5080", "5100"
+            ];
+
+            const ALLOWED_CHECK_CODES = [
+                "3030", "3040", "3050", "3060", "3091", "3110", "3120", "3130", 
+                "3140", "3150", "3160", "3170", "3180", "3190", "3200", "3210", 
+                "3220", "3230", "3240", "3250", "3260", "3280", "3290", "3300", 
+                "3092", "3323", "3324", "3325", "3326", "3327", "3328", "3329", 
+                "3347", "3351", "3408", "3090", "3100", "3340", "3411"
+            ];
+
             let rawPreCheckCodes = [];
             let rawCheckCodes = [];
 
@@ -96,13 +128,14 @@
                 reloadBtn.addEventListener("click", () => loadAndDisplayCodes());
             }
 
-            // Écouteurs sur les champs de recherche multiple
+            // Écouteurs recherche
             preCheckSearch.addEventListener("input", () => filterAndRender("precheck"));
             checkSearch.addEventListener("input", () => filterAndRender("check"));
 
             async function loadAndDisplayCodes() {
                 showStatus("Récupération des codes d'homologation...", "info");
                 contentBlocks.classList.add("hidden");
+                legend.classList.add("hidden");
 
                 try {
                     const response = await fetch(CONFIG.CODES_API_URL, {
@@ -124,7 +157,6 @@
                         responseData = responseData.contents;
                     }
 
-                    // Extraction du tableau
                     let codesArray = [];
                     if (Array.isArray(responseData)) {
                         codesArray = responseData;
@@ -137,7 +169,7 @@
                         }
                     }
 
-                    // Stockage des listes d'origines (filtrées par pre_check / check = true)
+                    // Stockage des listes d'origines (quand pre_check / check = true dans l'API)
                     rawPreCheckCodes = codesArray.filter(item => isTrue(item?.steps?.pre_check));
                     rawCheckCodes = codesArray.filter(item => isTrue(item?.steps?.check));
 
@@ -146,6 +178,7 @@
                     filterAndRender("check");
 
                     hideStatus();
+                    legend.classList.remove("hidden");
                     contentBlocks.classList.remove("hidden");
 
                 } catch (error) {
@@ -153,20 +186,18 @@
                 }
             }
 
-            // Fonction de filtrage dynamique selon la recherche par saisie multiple
             function filterAndRender(type) {
                 if (type === "precheck") {
                     const searchTerms = extractCodesFromInput(preCheckSearch.value);
                     const filtered = filterCodesByList(rawPreCheckCodes, searchTerms);
-                    renderList(filtered, preCheckList, preCheckBadge, "sky");
+                    renderList(filtered, preCheckList, preCheckBadge, "sky", ALLOWED_PRECHECK_CODES);
                 } else {
                     const searchTerms = extractCodesFromInput(checkSearch.value);
                     const filtered = filterCodesByList(rawCheckCodes, searchTerms);
-                    renderList(filtered, checkList, checkBadge, "emerald");
+                    renderList(filtered, checkList, checkBadge, "emerald", ALLOWED_CHECK_CODES);
                 }
             }
 
-            // Découpe la saisie utilisateur par virgule ou espaces
             function extractCodesFromInput(inputValue) {
                 return inputValue
                     .split(/[\s,]+/)
@@ -174,7 +205,6 @@
                     .filter(term => term.length > 0);
             }
 
-            // Filtre les éléments dont le code correspond à l'un des termes recherchés
             function filterCodesByList(codesList, searchTerms) {
                 if (searchTerms.length === 0) return codesList;
                 return codesList.filter(item => {
@@ -183,8 +213,8 @@
                 });
             }
 
-            // Rendu HTML
-            function renderList(codes, container, badge, colorScheme) {
+            // Rendu de la liste avec comparaison d'appartenance
+            function renderList(codes, container, badge, colorScheme, allowedList) {
                 container.innerHTML = "";
                 badge.textContent = `${codes.length} code(s)`;
 
@@ -196,16 +226,27 @@
                 const textColorClass = colorScheme === "sky" ? "text-sky-300" : "text-emerald-300";
 
                 codes.forEach(item => {
-                    const codeVal = item.code || "N/A";
+                    const codeVal = String(item.code || "");
                     const labelFr = (item.label && item.label.fr) ? item.label.fr : "Libellé FR non disponible";
 
+                    // Comparaison : Est-ce que le code fait partie de la liste ALLOWED de l'étape ?
+                    const isAllowed = allowedList.includes(codeVal);
+
+                    // Pastille témoin : vert si autorisé, rouge clignotant/lumineux si absent
+                    const statusDot = isAllowed 
+                        ? `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 mt-1" title="Présent dans ALLOWED_CODES"></span>` 
+                        : `<span class="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0 mt-1 shadow-[0_0_8px_rgba(244,63,94,0.8)]" title="ATTENTION: Absent de la liste ALLOWED_CODES !"></span>`;
+
                     const card = document.createElement("div");
-                    card.className = "p-2.5 bg-slate-900/80 rounded border border-slate-700/60 flex items-start gap-2 text-sm";
+                    card.className = `p-2.5 bg-slate-900/80 rounded border ${isAllowed ? 'border-slate-700/60' : 'border-rose-900/80 bg-rose-950/20'} flex items-start gap-2.5 text-sm transition`;
                     
                     card.innerHTML = `
-                        <span class="font-mono font-bold ${textColorClass} shrink-0">${escapeHtml(String(codeVal))}</span>
-                        <span class="text-slate-400 font-mono shrink-0">-</span>
-                        <span class="text-slate-200">${escapeHtml(labelFr)}</span>
+                        ${statusDot}
+                        <div class="flex items-start gap-2 flex-1">
+                            <span class="font-mono font-bold ${textColorClass} shrink-0">${escapeHtml(codeVal)}</span>
+                            <span class="text-slate-400 font-mono shrink-0">-</span>
+                            <span class="text-slate-200">${escapeHtml(labelFr)}</span>
+                        </div>
                     `;
                     container.appendChild(card);
                 });
