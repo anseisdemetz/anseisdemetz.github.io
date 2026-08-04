@@ -229,7 +229,7 @@ function renderTable() {
             <td class="py-3 px-4 text-slate-600 italic text-xs leading-relaxed max-w-xs sm:max-w-md">
                 ${item.sentence ? `"${escapeHtml(item.sentence)}"` : '<span class="text-slate-300">-</span>'}
             </td>
-            <!--<td class="py-3 px-3 text-center">
+            <td class="py-3 px-3 text-center">
                 <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold font-mono ${score >= 8 ? 'bg-emerald-100 text-emerald-800' : score >= 4 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">
                     ${score}/10
                 </span>
@@ -238,7 +238,7 @@ function renderTable() {
                 <button onclick="deleteWord('${item.id}')" class="text-slate-300 hover:text-rose-500 transition p-1" title="Supprimer">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
-            </td>-->
+            </td>
         `;
         tbody.appendChild(tr);
 
