@@ -1,0 +1,7 @@
+/* Personnalisations légères en complément de Tailwind */
+.nav-tab.active-tab {
+  background-color: #ffffff;
+  color: #0f172a;
+  font-weight: 600;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}

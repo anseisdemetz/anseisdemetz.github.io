@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChunkMail — Smart Email Chunking</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 antialiased">
+
+  <!-- Header / Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="bg-indigo-600 text-white font-black px-3 py-1.5 rounded-lg text-lg tracking-wider">CM</div>
+        <h1 class="text-xl font-bold text-slate-900">ChunkMail</h1>
+        <span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full font-medium">Preprod</span>
+      </div>
+
+      <!-- Compteurs rapides & Filtres par types -->
+      <nav class="flex space-x-2 bg-slate-100 p-1 rounded-xl">
+        <button id="nav-all" class="nav-tab active-tab px-3 py-1.5 text-sm font-medium rounded-lg transition-all">Tous</button>
+        <button id="nav-actions" class="nav-tab px-3 py-1.5 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900">Actions</button>
+        <button id="nav-events" class="nav-tab px-3 py-1.5 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900">Événements</button>
+        <button id="nav-notes" class="nav-tab px-3 py-1.5 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900">Notes</button>
+        <button id="nav-daily" class="nav-tab px-3 py-1.5 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1">
+          <span>Console Quotidienne</span>
+          <span id="badge-spam" class="bg-slate-200 text-slate-700 text-xs px-1.5 rounded-full">0</span>
+        </button>
+      </nav>
+
+      <!-- Actions globales -->
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-trash" class="p-2 text-slate-500 hover:text-red-600 rounded-lg hover:bg-slate-100 transition-colors relative" title="Corbeille">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </button>
+        <button id="btn-open-import" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          <span>Tester un email</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filtres additionnels par Tags & Compte -->
+  <section class="bg-white border-b border-slate-200 py-2.5 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <!-- Filtres par tags dynamiques -->
+      <div id="tags-bar" class="flex flex-wrap gap-1.5 items-center">
+        <span class="text-xs text-slate-400 font-medium mr-1">Tags :</span>
+        <!-- Injecté dynamiquement par JS -->
+      </div>
+
+      <!-- Filtre par compte -->
+      <div class="flex items-center space-x-2 text-xs">
+        <label for="filter-account" class="text-slate-500 font-medium">Compte :</label>
+        <select id="filter-account" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="all">Tous les comptes</option>
+          <option value="personal">Personnel</option>
+          <option value="professional">Professionnel</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Zone Principale de Contenu -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+    <!-- Grille des Morceaux (Chunks) -->
+    <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Les cartes d'items seront générées ici par JS -->
+    </div>
+
+    <!-- State vide -->
+    <div id="empty-state" class="hidden text-center py-16">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-100 text-slate-400 mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+      </div>
+      <h3 class="text-sm font-medium text-slate-900">Aucun morceau trouvé</h3>
+      <p class="text-xs text-slate-500 mt-1">Aucun morceau ne correspond aux filtres sélectionnés.</p>
+    </div>
+  </main>
+
+  <!-- Modale Email d'origine -->
+  <div id="email-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+        <div>
+          <span id="modal-email-account" class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700"></span>
+          <h2 id="modal-email-subject" class="text-base font-bold text-slate-900 mt-1"></h2>
+          <p id="modal-email-meta" class="text-xs text-slate-500"></p>
+        </div>
+        <button id="btn-close-email-modal" class="text-slate-400 hover:text-slate-600 p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto space-y-4">
+        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-xs text-indigo-900">
+          <strong class="font-semibold">Résumé IA :</strong> <span id="modal-email-summary"></span>
+        </div>
+        <div id="modal-email-body" class="text-sm text-slate-700 whitespace-pre-wrap font-sans leading-relaxed border-t border-slate-100 pt-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script d'entrée Principal -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
