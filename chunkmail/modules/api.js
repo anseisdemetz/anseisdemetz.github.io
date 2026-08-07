@@ -46,12 +46,31 @@ export const API = {
     return data;
   },
 
-  // 2. Récupérer tous les tags enregistrés
-  async getTags() {
-    const { data, error } = await supabase.from("cm_tags").select("*").order("name");
-    if (error) console.error("Erreur récupération tags:", error);
-    return data || [];
-  },
+  // 2. Récupérer uniquement les tags associés à au moins un morceau ACTIF
+    async getTags() {
+      const { data, error } = await supabase
+        .from("cm_item_tags")
+        .select(`
+          cm_tags(*),
+          cm_items!inner(status)
+        `)
+        .eq("cm_items.status", "active");
+
+      if (error) {
+        console.error("Erreur récupération tags:", error);
+        return [];
+      }
+
+      // Déduplication des tags uniques
+      const uniqueTagsMap = new Map();
+      (data || []).forEach(row => {
+        if (row.cm_tags && !uniqueTagsMap.has(row.cm_tags.id)) {
+          uniqueTagsMap.set(row.cm_tags.id, row.cm_tags);
+        }
+      });
+
+      return Array.from(uniqueTagsMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+    },
 
   // 3. Mettre un morceau à la corbeille ou le restaurer
   async updateItemStatus(itemId, newStatus) {
