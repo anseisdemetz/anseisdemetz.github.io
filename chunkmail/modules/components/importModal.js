@@ -168,8 +168,9 @@ Bonne journée.</textarea>
     }
   },
 
-  async callGeminiAPI(apiKey, { sender, subject, bodyRaw, receivedAtISO }) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+async callGeminiAPI(apiKey, { sender, subject, bodyRaw, receivedAtISO }) {
+    const { GoogleGenAI, Type } = await import("@google/genai");
+    const ai = new GoogleGenAI({ apiKey });
 
     const promptText = `Tu es le moteur d'analyse IA de ChunkMail.
 CONTEXTE TEMPOREL : La date de réception de cet email est ${receivedAtISO}.
@@ -181,31 +182,31 @@ CORPS DE L'EMAIL:
 ${bodyRaw}`;
 
     const jsonSchema = {
-      type: "OBJECT",
+      type: Type.OBJECT,
       properties: {
-        summary: { type: "STRING" },
-        is_spam_or_low_priority: { type: "BOOLEAN" },
-        priority_score: { type: "INTEGER" },
+        summary: { type: Type.STRING },
+        is_spam_or_low_priority: { type: Type.BOOLEAN },
+        priority_score: { type: Type.INTEGER },
         items: {
-          type: "ARRAY",
+          type: Type.ARRAY,
           items: {
-            type: "OBJECT",
+            type: Type.OBJECT,
             properties: {
-              type: { type: "STRING", enum: ["action", "event", "note", "spam_low_priority"] },
-              title: { type: "STRING" },
-              content: { type: "STRING" },
-              verbatim: { type: "STRING" },
-              due_date: { type: "STRING" },
-              start_time: { type: "STRING" },
-              end_time: { type: "STRING" },
-              reminder_date: { type: "STRING" },
+              type: { type: Type.STRING, enum: ["action", "event", "note", "spam_low_priority"] },
+              title: { type: Type.STRING },
+              content: { type: Type.STRING },
+              verbatim: { type: Type.STRING },
+              due_date: { type: Type.STRING },
+              start_time: { type: Type.STRING },
+              end_time: { type: Type.STRING },
+              reminder_date: { type: Type.STRING },
               tags: {
-                type: "ARRAY",
+                type: Type.ARRAY,
                 items: {
-                  type: "OBJECT",
+                  type: Type.OBJECT,
                   properties: {
-                    name: { type: "STRING" },
-                    color_hex: { type: "STRING" }
+                    name: { type: Type.STRING },
+                    color_hex: { type: Type.STRING }
                   },
                   required: ["name", "color_hex"]
                 }
@@ -218,26 +219,15 @@ ${bodyRaw}`;
       required: ["summary", "is_spam_or_low_priority", "priority_score", "items"]
     };
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: promptText }] }],
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: jsonSchema,
-          temperature: 0.1
-        }
-      })
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash", // Utilisation du modèle 2.5 Flash
+      contents: promptText,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: jsonSchema,
+        temperature: 0.1
+      }
     });
 
-    if (!response.ok) {
-      const errData = await response.json();
-      throw new Error(errData.error?.message || "Erreur de communication avec l'API Gemini");
-    }
-
-    const data = await response.json();
-    const rawJsonText = data.candidates[0].content.parts[0].text;
-    return JSON.parse(rawJsonText);
+    return JSON.parse(response.text);
   }
-};
