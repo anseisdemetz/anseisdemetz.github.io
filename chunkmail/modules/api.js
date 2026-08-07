@@ -1,7 +1,7 @@
 import { supabase } from "../config/supabase.js";
 
 export const API = {
-  // Récupérer les morceaux (items) filtrés avec leurs tags et l'email associé
+  // 1. Récupérer les morceaux (items) filtrés avec leurs tags et l'email associé
   async getItems({ type = null, account = "all", tagId = null, includeTrashed = false }) {
     let query = supabase
       .from("cm_items")
@@ -36,7 +36,7 @@ export const API = {
       return [];
     }
 
-    // Filtrage JS par tag si sélectionné
+    // Filtrage par tag si sélectionné
     if (tagId) {
       return data.filter(item => 
         item.cm_item_tags.some(it => it.cm_tags.id === tagId)
@@ -46,14 +46,14 @@ export const API = {
     return data;
   },
 
-  // Récupérer tous les tags enregistrés
+  // 2. Récupérer tous les tags enregistrés
   async getTags() {
     const { data, error } = await supabase.from("cm_tags").select("*").order("name");
-    if (error) console.error("Erreur tags:", error);
+    if (error) console.error("Erreur récupération tags:", error);
     return data || [];
   },
 
-  // Mettre un morceau à la corbeille ou le restaurer
+  // 3. Mettre un morceau à la corbeille ou le restaurer
   async updateItemStatus(itemId, newStatus) {
     const { error } = await supabase
       .from("cm_items")
@@ -64,7 +64,7 @@ export const API = {
     return !error;
   },
 
-  // Vider définitivement la corbeille (Items + Emails associés si orphelins)
+  // 4. Vider définitivement la corbeille
   async emptyTrash() {
     const { error } = await supabase
       .from("cm_items")
@@ -73,34 +73,36 @@ export const API = {
       
     if (error) console.error("Erreur vidage corbeille:", error);
     return !error;
-  }
-};
+  },
 
-// Ingestion directe depuis le navigateur vers Supabase
+  // 5. Ingestion directe d'un email analysé vers Supabase (cm_emails, cm_items, cm_tags, cm_item_tags)
   async ingestParsedEmail(rawEmail, analysis) {
-    // 1. Insertion Email
+    // A. Insertion de l'Email Source
     const { data: emailRecord, error: emailError } = await supabase
       .from("cm_emails")
       .insert({
         message_id: rawEmail.messageId,
         account_type: analysis.account_type || "professional",
         sender: rawEmail.sender,
-        recipient: rawEmail.recipient,
-        subject: rawEmail.subject,
+        recipient: rawEmail.recipient || null,
+        subject: rawEmail.subject || "(Sans objet)",
         body_raw: rawEmail.bodyRaw,
         received_at: rawEmail.receivedAtISO,
         summary: analysis.summary,
-        is_spam_or_low_priority: analysis.is_spam_or_low_priority,
-        priority_score: analysis.priority_score,
+        is_spam_or_low_priority: analysis.is_spam_or_low_priority || false,
+        priority_score: analysis.priority_score || 3,
         status: "active"
       })
       .select("id")
       .single();
 
-    if (emailError) throw emailError;
+    if (emailError) {
+      console.error("Erreur insertion cm_emails:", emailError);
+      throw emailError;
+    }
 
-    // 2. Insertion Chunks (Items) + Tags
-    for (const item of analysis.items) {
+    // B. Insertion des Morceaux (Items) + Tags
+    for (const item of (analysis.items || [])) {
       const { data: itemRecord, error: itemError } = await supabase
         .from("cm_items")
         .insert({
@@ -118,17 +120,20 @@ export const API = {
         .select("id")
         .single();
 
-      if (itemError) continue;
+      if (itemError) {
+        console.error("Erreur insertion cm_items:", itemError);
+        continue;
+      }
 
-      // Upsert Tags et liaisons
+      // Upsert des Tags et création des liaisons
       for (const tag of (item.tags || [])) {
-        const { data: tagRecord } = await supabase
+        const { data: tagRecord, error: tagError } = await supabase
           .from("cm_tags")
           .upsert({ name: tag.name.trim(), color_hex: tag.color_hex }, { onConflict: "name" })
           .select("id")
           .single();
 
-        if (tagRecord) {
+        if (tagRecord && !tagError) {
           await supabase
             .from("cm_item_tags")
             .upsert({ item_id: itemRecord.id, tag_id: tagRecord.id }, { onConflict: "item_id,tag_id" });
@@ -138,3 +143,4 @@ export const API = {
 
     return true;
   }
+};
