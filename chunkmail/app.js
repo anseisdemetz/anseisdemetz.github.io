@@ -2,6 +2,7 @@ import { API } from "./modules/api.js";
 import { createItemCard } from "./modules/components/itemCard.js";
 import { EmailModal } from "./modules/components/emailModal.js";
 import { TrashModal } from "./modules/components/trashModal.js";
+import { ImportModal } from "./modules/components/importModal.js";
 
 const state = {
   currentFilter: "all",
@@ -12,10 +13,10 @@ const state = {
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Initialisation des composants modaux
+  // Initialisation des modales
   EmailModal.init();
   TrashModal.init(() => loadItems());
-
+  
   // Initialisation du composant d'import/test
   ImportModal.init(async () => {
     await loadTags();
