@@ -86,21 +86,21 @@ Bonne journée.</textarea>
   },
 
   setupEvents() {
-    document.getElementById("btn-close-import-modal").addEventListener("click", () => this.close());
-    document.getElementById("btn-cancel-import").addEventListener("click", () => this.close());
+    document.getElementById("btn-close-import-modal")?.addEventListener("click", () => this.close());
+    document.getElementById("btn-cancel-import")?.addEventListener("click", () => this.close());
     document.getElementById("btn-open-import")?.addEventListener("click", () => this.open());
 
-    document.getElementById("btn-submit-import").addEventListener("click", async () => {
+    document.getElementById("btn-submit-import")?.addEventListener("click", async () => {
       await this.processEmail();
     });
   },
 
   open() {
-    this.modalEl.classList.remove("hidden");
+    if (this.modalEl) this.modalEl.classList.remove("hidden");
   },
 
   close() {
-    this.modalEl.classList.add("hidden");
+    if (this.modalEl) this.modalEl.classList.add("hidden");
   },
 
   async processEmail() {
@@ -121,10 +121,8 @@ Bonne journée.</textarea>
       return;
     }
 
-    // Sauvegarde de la clé API pour les prochains tests
     localStorage.setItem("GEMINI_API_KEY", apiKey);
 
-    // Changement de statut UI
     submitBtn.disabled = true;
     submitBtn.classList.add("opacity-50");
     statusEl.className = "p-3 rounded-xl text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200";
@@ -132,13 +130,11 @@ Bonne journée.</textarea>
     statusEl.classList.remove("hidden");
 
     try {
-      // 1. Appel direct à l'API Gemini REST depuis le navigateur
       const nowISO = new Date().toISOString();
       const analysis = await this.callGeminiAPI(apiKey, { sender, subject, bodyRaw, receivedAtISO: nowISO });
 
       statusEl.textContent = "Analyse réussie ! Injection dans Supabase...";
 
-      // 2. Envoi des données structurées vers Supabase
       const emailInput = {
         messageId: "test_" + Date.now(),
         sender,
@@ -168,7 +164,7 @@ Bonne journée.</textarea>
     }
   },
 
-async callGeminiAPI(apiKey, { sender, subject, bodyRaw, receivedAtISO }) {
+  async callGeminiAPI(apiKey, { sender, subject, bodyRaw, receivedAtISO }) {
     const { GoogleGenAI, Type } = await import("@google/genai");
     const ai = new GoogleGenAI({ apiKey });
 
@@ -220,7 +216,7 @@ ${bodyRaw}`;
     };
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash", // Utilisation du modèle 2.5 Flash
+      model: "gemini-2.5-flash",
       contents: promptText,
       config: {
         responseMimeType: "application/json",
@@ -231,3 +227,4 @@ ${bodyRaw}`;
 
     return JSON.parse(response.text);
   }
+};
