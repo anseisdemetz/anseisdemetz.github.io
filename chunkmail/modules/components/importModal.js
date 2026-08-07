@@ -169,13 +169,19 @@ Bonne journée.</textarea>
     const ai = new GoogleGenAI({ apiKey });
 
     const promptText = `Tu es le moteur d'analyse IA de ChunkMail.
-CONTEXTE TEMPOREL : La date de réception de cet email est ${receivedAtISO}.
-Résous toutes les dates relatives par rapport à cette ancre temporelle.
 
-EXPÉDITEUR: ${sender}
-OBJET: ${subject}
-CORPS DE L'EMAIL:
-${bodyRaw}`;
+    ### RÈGLE DE LANGUE STRICTE :
+    Tous les champs générés (titres 'title', descriptions 'content', résumé 'summary', noms de tags 'name') doivent TOUJOURS être rédigés en FRANÇAIS, quelle que soit la langue de l'email d'origine.
+    Seul le champ 'verbatim' doit conserver la citation exacte de l'extrait textuel source dans sa langue d'origine.
+
+    ### CONTEXTE TEMPOREL :
+    La date de réception de cet email est ${receivedAtISO}.
+    Résous toutes les dates relatives par rapport à cette ancre temporelle.
+
+    EXPÉDITEUR: ${sender}
+    OBJET: ${subject}
+    CORPS DE L'EMAIL:
+    ${bodyRaw}`;
 
     const jsonSchema = {
       type: Type.OBJECT,
