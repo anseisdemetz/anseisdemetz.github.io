@@ -11,8 +11,5 @@ const ENV = {
   }
 };
 
-// Choisissez l'environnement actif : 'preprod' ou 'prod'
 const CURRENT_ENV = 'preprod';
-
-// Export global des identifiants actifs
 window.APP_CONFIG = ENV[CURRENT_ENV];

@@ -159,8 +159,21 @@
     const SUPABASE_KEY = window.APP_CONFIG.supabaseKey;
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // Palette de couleurs pastel pour les plages de lecture dans le calendrier
+    const BOOK_COLORS = [
+      { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-300', hex: '#fef3c7' },
+      { bg: 'bg-sky-100', text: 'text-sky-800', border: 'border-sky-300', hex: '#e0f2fe' },
+      { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-300', hex: '#d1fae5' },
+      { bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-300', hex: '#f3e8ff' },
+      { bg: 'bg-rose-100', text: 'text-rose-800', border: 'border-rose-300', hex: '#ffe4e6' },
+      { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-300', hex: '#ffedd5' },
+      { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-300', hex: '#ccfbf1' },
+      { bg: 'bg-indigo-100', text: 'text-indigo-800', border: 'border-indigo-300', hex: '#e0e7ff' }
+    ];
+
     let daysData = {};
-    let booksListArray = [];
+    let booksListArray = []; // Stocke la liste consolidée des livres
+    let dateToBookMap = {};  // Mappe chaque date (YYYY-MM-DD) à son livre et son style
     let activeBookFilter = 'all';
     let selectedDateStr = null;
     let currentStatus = null;
@@ -202,50 +215,111 @@
       if (!error && data) {
         daysData = {};
         booksListArray = [];
-        
+        dateToBookMap = {};
+
         let successCount = 0;
         let realPagesTotal = 0;
         const langCounts = { 'Français': 0, 'Italien': 0, 'Anglais': 0, 'Autre': 0 };
-        let finishedBooksCount = 0;
 
+        // 1. Charger les données par jour
         data.forEach(row => {
           daysData[row.day_date] = row;
-          
-          if (row.status === 'success') {
-            successCount++;
-          }
+          if (row.status === 'success') successCount++;
+        });
 
-          // Extraction des livres (début ou fin)
-          if (row.book_start || row.book_end || row.book_title) {
-            booksListArray.push({
-              date: row.day_date,
+        // 2. Reconstitution des fiches de livres complètes (Start -> End)
+        let openBook = null;
+        let bookIndex = 0;
+
+        data.forEach(row => {
+          if (row.book_start) {
+            // Nouveau début de livre
+            if (openBook) {
+              // Si un livre était déjà ouvert sans date de fin explicite, on le pousse
+              booksListArray.push(openBook);
+              bookIndex++;
+            }
+
+            const color = BOOK_COLORS[bookIndex % BOOK_COLORS.length];
+            openBook = {
+              id: bookIndex + 1,
+              startDate: row.day_date,
+              endDate: null,
               title: row.book_title || 'Titre non renseigné',
               author: row.book_author || 'Auteur inconnu',
               language: row.book_language || 'Non spécifiée',
               pages: row.book_pages || null,
-              isStart: row.book_start,
-              isEnd: row.book_end
-            });
+              color: color
+            };
           }
 
           if (row.book_end) {
-            finishedBooksCount++;
-            if (row.book_pages) {
-              realPagesTotal += parseInt(row.book_pages, 10);
-            }
-            if (row.book_language && langCounts.hasOwnProperty(row.book_language)) {
-              langCounts[row.book_language]++;
-            } else if (row.book_language) {
-              langCounts['Autre']++;
+            if (openBook) {
+              openBook.endDate = row.day_date;
+              // Si la date de fin contient des informations de titre/auteur plus récentes, on met à jour
+              if (row.book_title) openBook.title = row.book_title;
+              if (row.book_author) openBook.author = row.book_author;
+              if (row.book_language) openBook.language = row.book_language;
+              if (row.book_pages) openBook.pages = row.book_pages;
+
+              booksListArray.push(openBook);
+              openBook = null;
+              bookIndex++;
+            } else {
+              // Fin sans événement de début correspondant : création d'une fiche isolée
+              const color = BOOK_COLORS[bookIndex % BOOK_COLORS.length];
+              booksListArray.push({
+                id: bookIndex + 1,
+                startDate: row.day_date,
+                endDate: row.day_date,
+                title: row.book_title || 'Titre non renseigné',
+                author: row.book_author || 'Auteur inconnu',
+                language: row.book_language || 'Non spécifiée',
+                pages: row.book_pages || null,
+                color: color
+              });
+              bookIndex++;
             }
           }
         });
 
-        // Mise à jour des statistiques
+        // Si un livre est toujours en cours de lecture
+        if (openBook) {
+          booksListArray.push(openBook);
+        }
+
+        // 3. Calculer la plage de dates pour chaque livre (pour colorer le calendrier)
+        booksListArray.forEach(book => {
+          if (book.endDate) {
+            if (book.pages) realPagesTotal += parseInt(book.pages, 10);
+            if (book.language && langCounts.hasOwnProperty(book.language)) {
+              langCounts[book.language]++;
+            } else if (book.language) {
+              langCounts['Autre']++;
+            }
+          }
+
+          const start = new Date(book.startDate);
+          const end = book.endDate ? new Date(book.endDate) : new Date('2027-06-30'); // Jusqu'à aujourd'hui/fin si non fini
+
+          let curr = new Date(start);
+          while (curr <= end) {
+            const dateStr = curr.toISOString().split('T')[0];
+            dateToBookMap[dateStr] = {
+              book: book,
+              isStart: dateStr === book.startDate,
+              isEnd: dateStr === book.endDate
+            };
+            curr.setDate(curr.getDate() + 1);
+          }
+        });
+
+        // 4. Mettre à jour l'affichage des compteurs
+        const finishedCount = booksListArray.filter(b => b.endDate !== null).length;
         document.getElementById('stat-days').innerText = successCount;
         document.getElementById('stat-theo-pages').innerText = (successCount * 30).toLocaleString('fr-FR');
         document.getElementById('stat-real-pages').innerText = realPagesTotal.toLocaleString('fr-FR');
-        document.getElementById('stat-books-total').innerText = finishedBooksCount;
+        document.getElementById('stat-books-total').innerText = finishedCount;
         document.getElementById('stat-books-lang').innerText = `FR: ${langCounts['Français']} | IT: ${langCounts['Italien']} | EN: ${langCounts['Anglais']}`;
         document.getElementById('badge-books-count').innerText = booksListArray.length;
       }
@@ -297,27 +371,46 @@
         const dayData = daysData[dateStr] || {};
         const isToday = (dateStr === todayDateStr);
 
+        const bookMapping = dateToBookMap[dateStr];
         const cell = document.createElement('div');
-        const todayStyle = isToday ? 'ring-2 ring-indigo-500 bg-indigo-50/60 font-semibold' : 'bg-white';
 
-        cell.className = `${todayStyle} p-2 rounded-lg border shadow-sm flex flex-col justify-between items-center h-20 cursor-pointer hover:border-indigo-400 relative transition-all`;
+        // Style de base
+        let baseBg = 'bg-white';
+        let customBorder = 'border-gray-200';
+
+        // Si le jour fait partie d'une période de lecture
+        if (bookMapping) {
+          baseBg = bookMapping.book.color.bg;
+          customBorder = bookMapping.book.color.border;
+        }
+
+        const todayStyle = isToday ? 'ring-2 ring-indigo-600 font-bold' : '';
+
+        cell.className = `${baseBg} ${customBorder} ${todayStyle} p-1.5 rounded-lg border shadow-sm flex flex-col justify-between items-center h-20 cursor-pointer hover:opacity-90 relative transition-all`;
         cell.onclick = () => openModal(dateStr);
 
         let statusIcon = '';
-        if (dayData.status === 'success') statusIcon = '<span class="text-emerald-500 text-base font-bold">✅</span>';
-        if (dayData.status === 'fail') statusIcon = '<span class="text-rose-500 text-base font-bold">❌</span>';
+        if (dayData.status === 'success') statusIcon = '<span class="text-emerald-600 text-base font-bold">✅</span>';
+        if (dayData.status === 'fail') statusIcon = '<span class="text-rose-600 text-base font-bold">❌</span>';
 
         let bookBraces = '';
-        if (dayData.book_start) bookBraces += '{';
-        if (dayData.book_end) bookBraces += '}';
+        if (bookMapping) {
+          if (bookMapping.isStart && bookMapping.isEnd) {
+            bookBraces = '{}';
+          } else if (bookMapping.isStart) {
+            bookBraces = '{';
+          } else if (bookMapping.isEnd) {
+            bookBraces = '}';
+          }
+        }
 
         cell.innerHTML = `
-          <div class="text-xs font-bold ${isToday ? 'text-indigo-600' : 'text-gray-400'} w-full text-left flex justify-between items-center">
+          <div class="text-xs font-bold ${isToday ? 'text-indigo-600' : 'text-gray-500'} w-full text-left flex justify-between items-center">
             <span>${d}</span>
             ${isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>' : ''}
           </div>
           <div class="my-auto">${statusIcon}</div>
-          ${bookBraces ? `<div class="text-xs font-bold text-indigo-600 bg-indigo-100 px-1 rounded truncate max-w-full">${bookBraces}</div>` : ''}
+          ${bookBraces ? `<div class="text-xs font-extrabold ${bookMapping.book.color.text} px-1 rounded truncate max-w-full" title="${bookMapping.book.title}">${bookBraces}</div>` : '<div class="h-4"></div>'}
         `;
         grid.appendChild(cell);
       }
@@ -348,21 +441,22 @@
       listContainer.innerHTML = '';
 
       let filtered = booksListArray;
-      if (activeBookFilter === 'reading') filtered = booksListArray.filter(b => b.isStart && !b.isEnd);
-      if (activeBookFilter === 'finished') filtered = booksListArray.filter(b => b.isEnd);
+      if (activeBookFilter === 'reading') filtered = booksListArray.filter(b => b.endDate === null);
+      if (activeBookFilter === 'finished') filtered = booksListArray.filter(b => b.endDate !== null);
 
       if (filtered.length === 0) {
         listContainer.innerHTML = `<p class="text-xs text-gray-400 text-center py-8">Aucun livre trouvé dans cette catégorie.</p>`;
         return;
       }
 
-      filtered.forEach((book, idx) => {
-        const formattedDate = new Date(book.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
-        
+      filtered.forEach((book) => {
+        const startDateFormatted = new Date(book.startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+        const endDateFormatted = book.endDate ? new Date(book.endDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : 'En cours';
+
         let statusBadge = '';
-        if (book.isEnd) {
+        if (book.endDate) {
           statusBadge = `<span class="bg-emerald-100 text-emerald-700 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">Terminé <code>}</code></span>`;
-        } else if (book.isStart) {
+        } else {
           statusBadge = `<span class="bg-amber-100 text-amber-700 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">En cours <code>{</code></span>`;
         }
 
@@ -370,17 +464,17 @@
         item.className = "bg-gray-50 border rounded-lg p-3 hover:border-indigo-300 transition flex items-start space-x-3 cursor-pointer";
         item.onclick = () => {
           closeBooksPanel();
-          const bookMonthKey = book.date.substring(0, 7);
+          const bookMonthKey = book.startDate.substring(0, 7);
           const monthIdx = monthsList.findIndex(m => m.key === bookMonthKey);
           if (monthIdx !== -1) {
             selectMonth(monthIdx);
           }
-          openModal(book.date);
+          openModal(book.startDate);
         };
 
         item.innerHTML = `
           <div class="bg-indigo-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0">
-            #${idx + 1}
+            #${book.id}
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex justify-between items-start gap-1">
@@ -388,10 +482,10 @@
               ${statusBadge}
             </div>
             <p class="text-xs text-gray-600">${book.author}</p>
-            <div class="flex items-center space-x-2 text-[10px] text-gray-400 mt-1">
+            <div class="flex flex-wrap items-center gap-2 text-[10px] text-gray-500 mt-1.5">
               <span>🌐 ${book.language}</span>
               ${book.pages ? `<span>• 📄 ${book.pages} p.</span>` : ''}
-              <span>• 📅 ${formattedDate}</span>
+              <span>• 📅 ${startDateFormatted} → ${endDateFormatted}</span>
             </div>
           </div>
         `;
