@@ -25,27 +25,27 @@
     }]
   }">
 
-  <!-- Tailwind CSS & Supabase JS SDK -->
+  <!-- Tailwind CSS, Supabase SDK & Config -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Chargement du SDK Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Fichier de configuration séparé -->
   <script src="config.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen text-gray-800 pb-10 select-none overflow-x-hidden">
 
-  <!-- Entête avec Statistiques Avancées -->
+  <!-- Entête avec Statistiques & Bouton Liste Livres -->
   <header class="bg-indigo-600 text-white p-3 shadow-md sticky top-0 z-20">
     <div class="flex justify-between items-center mb-2">
       <div>
         <h1 class="font-bold text-base leading-tight">📚 Challenge 30 P/Jour</h1>
         <p class="text-[10px] text-indigo-200">1er Juil. 2026 – 30 Juin 2027</p>
       </div>
-      <div class="text-right">
-        <span class="text-xs bg-indigo-700 px-2.5 py-1 rounded-full font-bold inline-block">
-          <span id="stat-days">0</span>/365 jours
+      <div class="flex items-center space-x-2">
+        <button onclick="openBooksPanel()" class="text-xs bg-indigo-500 hover:bg-indigo-400 active:bg-indigo-700 px-2.5 py-1 rounded-full font-semibold transition flex items-center space-x-1 border border-indigo-400">
+          <span>📖 Livres</span>
+          <span id="badge-books-count" class="bg-white text-indigo-700 text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+        </button>
+        <span class="text-xs bg-indigo-700 px-2.5 py-1 rounded-full font-bold">
+          <span id="stat-days">0</span>/365 j
         </span>
       </div>
     </div>
@@ -75,8 +75,31 @@
     </div>
   </main>
 
+  <!-- Panneau Liste des Livres -->
+  <div id="books-panel" class="fixed inset-0 bg-black/50 hidden items-end sm:items-center justify-center p-0 sm:p-4 z-40 select-text">
+    <div class="bg-white w-full max-w-md rounded-t-2xl sm:rounded-xl p-5 shadow-2xl max-h-[85vh] flex flex-col space-y-4">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h3 class="font-bold text-lg text-gray-800">📖 Mes Livres</h3>
+          <p class="text-xs text-gray-500">Liste et ordre de lecture du challenge</p>
+        </div>
+        <button onclick="closeBooksPanel()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold px-2">&times;</button>
+      </div>
+
+      <!-- Filtres rapides -->
+      <div class="flex space-x-2 text-xs border-b pb-2">
+        <button onclick="filterBooks('all')" id="filter-btn-all" class="px-2.5 py-1 rounded-full font-medium bg-indigo-600 text-white">Tous</button>
+        <button onclick="filterBooks('reading')" id="filter-btn-reading" class="px-2.5 py-1 rounded-full font-medium bg-gray-100 text-gray-600">En cours ({)</button>
+        <button onclick="filterBooks('finished')" id="filter-btn-finished" class="px-2.5 py-1 rounded-full font-medium bg-gray-100 text-gray-600">Terminés (})</button>
+      </div>
+
+      <!-- Liste scrollable -->
+      <div id="books-list" class="overflow-y-auto space-y-2.5 pr-1 flex-1"></div>
+    </div>
+  </div>
+
   <!-- Modal d'édition du jour -->
-  <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-30 select-text">
+  <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50 select-text">
     <div class="bg-white w-full max-w-sm rounded-xl p-5 shadow-xl space-y-4">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 id="modal-date" class="font-bold text-gray-700">Détails du jour</h3>
@@ -131,13 +154,14 @@
   </div>
 
   <script>
-    // Par la récupération dynamique depuis APP_CONFIG :
+    // Initialisation Supabase via APP_CONFIG (config.js)
     const SUPABASE_URL = window.APP_CONFIG.supabaseUrl;
     const SUPABASE_KEY = window.APP_CONFIG.supabaseKey;
-
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let daysData = {};
+    let booksListArray = [];
+    let activeBookFilter = 'all';
     let selectedDateStr = null;
     let currentStatus = null;
     let currentMonthIndex = 0;
@@ -174,9 +198,10 @@
     }
 
     async function fetchSupabaseData() {
-      const { data, error } = await supabaseClient.from('challenge_reader').select('*');
+      const { data, error } = await supabaseClient.from('challenge_reader').select('*').order('day_date', { ascending: true });
       if (!error && data) {
         daysData = {};
+        booksListArray = [];
         
         let successCount = 0;
         let realPagesTotal = 0;
@@ -190,7 +215,19 @@
             successCount++;
           }
 
-          // Décompte si le livre est terminé `}`
+          // Extraction des livres (début ou fin)
+          if (row.book_start || row.book_end || row.book_title) {
+            booksListArray.push({
+              date: row.day_date,
+              title: row.book_title || 'Titre non renseigné',
+              author: row.book_author || 'Auteur inconnu',
+              language: row.book_language || 'Non spécifiée',
+              pages: row.book_pages || null,
+              isStart: row.book_start,
+              isEnd: row.book_end
+            });
+          }
+
           if (row.book_end) {
             finishedBooksCount++;
             if (row.book_pages) {
@@ -210,6 +247,7 @@
         document.getElementById('stat-real-pages').innerText = realPagesTotal.toLocaleString('fr-FR');
         document.getElementById('stat-books-total').innerText = finishedBooksCount;
         document.getElementById('stat-books-lang').innerText = `FR: ${langCounts['Français']} | IT: ${langCounts['Italien']} | EN: ${langCounts['Anglais']}`;
+        document.getElementById('badge-books-count').innerText = booksListArray.length;
       }
     }
 
@@ -283,6 +321,82 @@
         `;
         grid.appendChild(cell);
       }
+    }
+
+    // Gestion du Panneau des Livres
+    function openBooksPanel() {
+      renderBooksList();
+      document.getElementById('books-panel').classList.remove('hidden');
+      document.getElementById('books-panel').classList.add('flex');
+    }
+
+    function closeBooksPanel() {
+      document.getElementById('books-panel').classList.add('hidden');
+      document.getElementById('books-panel').classList.remove('flex');
+    }
+
+    function filterBooks(type) {
+      activeBookFilter = type;
+      document.getElementById('filter-btn-all').className = `px-2.5 py-1 rounded-full font-medium ${type === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`;
+      document.getElementById('filter-btn-reading').className = `px-2.5 py-1 rounded-full font-medium ${type === 'reading' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`;
+      document.getElementById('filter-btn-finished').className = `px-2.5 py-1 rounded-full font-medium ${type === 'finished' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`;
+      renderBooksList();
+    }
+
+    function renderBooksList() {
+      const listContainer = document.getElementById('books-list');
+      listContainer.innerHTML = '';
+
+      let filtered = booksListArray;
+      if (activeBookFilter === 'reading') filtered = booksListArray.filter(b => b.isStart && !b.isEnd);
+      if (activeBookFilter === 'finished') filtered = booksListArray.filter(b => b.isEnd);
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = `<p class="text-xs text-gray-400 text-center py-8">Aucun livre trouvé dans cette catégorie.</p>`;
+        return;
+      }
+
+      filtered.forEach((book, idx) => {
+        const formattedDate = new Date(book.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+        
+        let statusBadge = '';
+        if (book.isEnd) {
+          statusBadge = `<span class="bg-emerald-100 text-emerald-700 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">Terminé <code>}</code></span>`;
+        } else if (book.isStart) {
+          statusBadge = `<span class="bg-amber-100 text-amber-700 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">En cours <code>{</code></span>`;
+        }
+
+        const item = document.createElement('div');
+        item.className = "bg-gray-50 border rounded-lg p-3 hover:border-indigo-300 transition flex items-start space-x-3 cursor-pointer";
+        item.onclick = () => {
+          closeBooksPanel();
+          const bookMonthKey = book.date.substring(0, 7);
+          const monthIdx = monthsList.findIndex(m => m.key === bookMonthKey);
+          if (monthIdx !== -1) {
+            selectMonth(monthIdx);
+          }
+          openModal(book.date);
+        };
+
+        item.innerHTML = `
+          <div class="bg-indigo-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0">
+            #${idx + 1}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-start gap-1">
+              <h4 class="font-bold text-sm text-gray-800 truncate">${book.title}</h4>
+              ${statusBadge}
+            </div>
+            <p class="text-xs text-gray-600">${book.author}</p>
+            <div class="flex items-center space-x-2 text-[10px] text-gray-400 mt-1">
+              <span>🌐 ${book.language}</span>
+              ${book.pages ? `<span>• 📄 ${book.pages} p.</span>` : ''}
+              <span>• 📅 ${formattedDate}</span>
+            </div>
+          </div>
+        `;
+        listContainer.appendChild(item);
+      });
     }
 
     function setupSwipeEvents() {
