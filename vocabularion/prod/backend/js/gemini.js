@@ -1,3 +1,14 @@
+// --- GESTION DE L'IA GEMINI (BACK-OFFICE) ---
+let detectedLanguageForImport = 'english';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const savedKey = localStorage.getItem('gemini_api_key');
+    const inputKey = document.getElementById('gemini-api-key');
+    if (savedKey && inputKey) {
+        inputKey.value = savedKey;
+    }
+});
+
 async function generateWithGemini() {
     const apiKey = document.getElementById('gemini-api-key').value.trim();
     const rawWords = document.getElementById('ai-raw-words').value.trim();
@@ -18,20 +29,24 @@ async function generateWithGemini() {
     btn.disabled = true;
     btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Filtrage pédagogique (Oxford / De Mauro)...</span>`;
 
+    const langName = db.languages[currentLang].name; // "Anglais" ou "Italien"
+    const targetLangCode = currentLang; // "english" ou "italian"
+
+    // Prompt verrouillé pour la langue de la phrase d'exemple
     const prompt = `Tu es un professeur de langues expert. Analyse cette liste brute de mots et d'expressions :
 "${rawWords}"
 
 INSTRUCTIONS PEDAGOGIQUES STRICTES :
-1. DÉTECTION : Détermine la langue dominante de la liste : "english" ou "italian".
+1. DÉTECTION : Détermine la langue dominante de la liste ("english" ou "italian"). Si doute, la langue cible est "${langName}".
 2. FILTRAGE STRICT :
-   - Si ANGLAIS : Filtre la liste en te basant STRICTEMENT sur le lexique d'Oxford (niveaux CEFR A1, A2, B1, B2, C1). Élimine les mots trop avancés (C2) ou le jargon trop spécifique.
-   - Si ITALIEN : Filtre la liste en te basant STRICTEMENT sur le lexique de Tullio De Mauro (niveaux CEFR A1, A2, B1, B2, C1). Élimine les mots trop avancés (C2) ou le jargon trop spécifique.
+   - Si ANGLAIS : Filtre la liste en te basant STRICTEMENT sur le lexique d'Oxford (niveaux CEFR A1, A2, B1, B2, C1). Élimine les mots C2 ou le jargon très spécifique.
+   - Si ITALIEN : Filtre la liste en te basant STRICTEMENT sur le lexique de Tullio De Mauro (niveaux CEFR A1, A2, B1, B2, C1). Élimine les mots C2 ou le jargon très spécifique.
 3. STRUCTURE DU TABLEAU MARKDOWN (3 colonnes exactes) :
-   - Colonne 1 : "Français" (traduction précise du mot ou de l'expression)
-   - Colonne 2 : "Anglais" ou "Italien" (le mot ou l'expression en gras, sous sa forme infinitive pour les verbes, au masculin singulier pour les noms et adjectifs)
-   - Colonne 3 : "Phrase d'exemple" (phrase simple, naturelle, mettant le mot en valeur en gras)
+   - Colonne 1 : "Français" (uniquement la traduction française du mot/expression)
+   - Colonne 2 : "Anglais" ou "Italien" (le mot/expression en gras dans la langue cible)
+   - Colonne 3 : "Phrase d'exemple" (RÈGLE ABSOLUE : La phrase d'exemple DOIT ÊTRE RÉDIGÉE 100% DANS LA LANGUE CIBLE (${langName.toUpperCase()}). AUCUN MOT EN FRANÇAIS dans la phrase d'exemple ! Si les mots sont en italien, la phrase d'exemple est EN ITALIEN. Si les mots sont en anglais, la phrase d'exemple est EN ANGLAIS.)
 
-4. MOTS REJETÉS : Pour les mots non retenus (C2, jargon ou trop rares), fournis une courte définition/explication en français dans un bloc de texte.
+4. MOTS REJETÉS : Pour les mots non retenus (C2, jargon ou trop rares), fournis une courte explication en français dans un bloc de texte.
 
 Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette structure exacte :
 {
@@ -75,13 +90,12 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
 
             if (data.error) {
                 lastErrorMessage = data.error.message;
-                console.warn(`Modèle ${model} indisponible (${data.error.message}), tentative avec le suivant...`);
                 continue;
             }
 
             const resultJson = JSON.parse(data.candidates[0].content.parts[0].text);
             
-            detectedLanguageForImport = resultJson.language;
+            detectedLanguageForImport = resultJson.language || targetLangCode;
             const markdownText = resultJson.markdown;
             const rejectedNotes = resultJson.rejected_notes || "";
 
@@ -107,18 +121,16 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
             }
 
             document.getElementById('ai-preview-container').classList.remove('hidden');
-
             success = true;
             break;
 
         } catch (err) {
             lastErrorMessage = err.message;
-            console.warn(`Erreur réseau avec ${model}:`, err);
         }
     }
 
     btn.disabled = false;
-    btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer la prévisualisation</span>`;
+    btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer et analyser</span>`;
 
     if (!success) {
         alert("Erreur lors de la génération. Détail : " + lastErrorMessage);
@@ -130,21 +142,21 @@ function renderParsedPreviewTable(mdText) {
     const lines = mdText.split('\n').map(l => l.trim()).filter(l => l.startsWith('|') && !l.includes(':---'));
 
     if (lines.length === 0) {
-        container.innerHTML = `<p class="text-rose-500">Erreur de format de tableau Markdown.</p>`;
+        container.innerHTML = `<p class="text-rose-500 font-semibold p-2">Erreur de format de tableau Markdown.</p>`;
         return;
     }
 
-    let html = `<table class="w-full text-left border-collapse"><thead><tr class="bg-slate-200 font-bold">`;
+    let html = `<table class="w-full text-left border-collapse text-xs"><thead><tr class="bg-slate-200 font-bold text-slate-700">`;
     
     const headers = lines[0].split('|').map(p => p.trim()).filter((p, i, a) => i > 0 && i < a.length - 1);
-    headers.forEach(h => html += `<th class="p-1 border">${escapeHtml(h)}</th>`);
+    headers.forEach(h => html += `<th class="p-2 border border-slate-300">${escapeHtml(h)}</th>`);
     html += `</tr></thead><tbody>`;
 
     for (let i = 1; i < lines.length; i++) {
         const cells = lines[i].split('|').map(p => p.trim()).filter((p, idx, a) => idx > 0 && idx < a.length - 1);
         if (cells.length >= 2) {
-            html += `<tr class="hover:bg-slate-100">`;
-            cells.forEach(c => html += `<td class="p-1 border">${escapeHtml(c.replace(/\*\*/g, ''))}</td>`);
+            html += `<tr class="hover:bg-slate-50">`;
+            cells.forEach(c => html += `<td class="p-2 border border-slate-200">${escapeHtml(c.replace(/\*\*/g, ''))}</td>`);
             html += `</tr>`;
         }
     }
@@ -176,13 +188,14 @@ async function importAIVocabulary() {
 
                 if (french && term) {
                     newEntries.push({
-                        id: `${targetLang}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+                        id: 'vocab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
                         term: term,
                         translation: french,
                         sentence: sentence,
                         status: 'unstudied',
                         score: 1,
-                        language: targetLang
+                        language: targetLang,
+                        created_at: new Date().toISOString()
                     });
                 }
             }
@@ -190,7 +203,7 @@ async function importAIVocabulary() {
     });
 
     if (newEntries.length > 0) {
-        const { error } = await supabaseClient.from('vocabulary').insert(newEntries);
+        const { error } = await supabaseClient.from(VOCAB_TABLE).insert(newEntries);
 
         if (error) {
             console.error("Erreur d'insertion Supabase:", error);
@@ -199,12 +212,17 @@ async function importAIVocabulary() {
         }
 
         db.languages[targetLang].vocabulary.unshift(...newEntries);
-        currentLang = targetLang;
-        switchLanguage(currentLang);
+        
+        if (currentLang !== targetLang) {
+            switchLanguage(targetLang);
+        } else {
+            updateBadges();
+            renderBackendTable();
+            if (typeof updateCharts === 'function') updateCharts();
+        }
 
         closeModal('add-modal');
         document.getElementById('ai-raw-words').value = '';
         document.getElementById('ai-preview-container').classList.add('hidden');
-        alert(`${newEntries.length} mots importés avec succès en ${targetLang === 'english' ? 'Anglais' : 'Italien'} !`);
     }
 }
