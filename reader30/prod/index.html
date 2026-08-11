@@ -53,11 +53,11 @@
     <!-- Barre d'outils statistiques -->
     <div class="grid grid-cols-2 gap-2 text-[11px] bg-indigo-700/60 p-2 rounded-lg border border-indigo-500/40">
       <div>
-        <div class="text-indigo-200">Pages théoriques: <span id="stat-theo-pages" class="font-bold text-white">0</span></div>
-        <div class="text-indigo-200">Pages terminées: <span id="stat-real-pages" class="font-bold text-white">0</span></div>
+        <div class="text-indigo-200">Théorique: <span id="stat-theo-pages" class="font-bold text-white">0</span> / <span class="text-indigo-200 font-semibold">10 950 p.</span></div>
+        <div class="text-indigo-200">Livres finis: <span id="stat-real-pages" class="font-bold text-white">0</span> p.</div>
       </div>
       <div class="border-l border-indigo-500/40 pl-2">
-        <div class="text-indigo-200">Livres lus: <span id="stat-books-total" class="font-bold text-white">0</span></div>
+        <div class="text-indigo-200">Objectif Annuel: <span id="stat-percent" class="font-bold text-emerald-300">0%</span></div>
         <div class="text-[10px] text-indigo-100 truncate mt-0.5" id="stat-books-lang">
           FR: 0 | IT: 0 | EN: 0
         </div>
@@ -159,21 +159,23 @@
     const SUPABASE_KEY = window.APP_CONFIG.supabaseKey;
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    const TOTAL_ANNUAL_TARGET_PAGES = 30 * 365; // 10 950 pages
+
     // Palette de couleurs pastel pour les plages de lecture dans le calendrier
     const BOOK_COLORS = [
-      { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-300', hex: '#fef3c7' },
-      { bg: 'bg-sky-100', text: 'text-sky-800', border: 'border-sky-300', hex: '#e0f2fe' },
-      { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-300', hex: '#d1fae5' },
-      { bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-300', hex: '#f3e8ff' },
-      { bg: 'bg-rose-100', text: 'text-rose-800', border: 'border-rose-300', hex: '#ffe4e6' },
-      { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-300', hex: '#ffedd5' },
-      { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-300', hex: '#ccfbf1' },
-      { bg: 'bg-indigo-100', text: 'text-indigo-800', border: 'border-indigo-300', hex: '#e0e7ff' }
+      { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-300' },
+      { bg: 'bg-sky-100', text: 'text-sky-800', border: 'border-sky-300' },
+      { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-300' },
+      { bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-300' },
+      { bg: 'bg-rose-100', text: 'text-rose-800', border: 'border-rose-300' },
+      { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-300' },
+      { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-300' },
+      { bg: 'bg-indigo-100', text: 'text-indigo-800', border: 'border-indigo-300' }
     ];
 
     let daysData = {};
-    let booksListArray = []; // Stocke la liste consolidée des livres
-    let dateToBookMap = {};  // Mappe chaque date (YYYY-MM-DD) à son livre et son style
+    let booksListArray = [];
+    let dateToBookMap = {};
     let activeBookFilter = 'all';
     let selectedDateStr = null;
     let currentStatus = null;
@@ -221,21 +223,17 @@
         let realPagesTotal = 0;
         const langCounts = { 'Français': 0, 'Italien': 0, 'Anglais': 0, 'Autre': 0 };
 
-        // 1. Charger les données par jour
         data.forEach(row => {
           daysData[row.day_date] = row;
           if (row.status === 'success') successCount++;
         });
 
-        // 2. Reconstitution des fiches de livres complètes (Start -> End)
         let openBook = null;
         let bookIndex = 0;
 
         data.forEach(row => {
           if (row.book_start) {
-            // Nouveau début de livre
             if (openBook) {
-              // Si un livre était déjà ouvert sans date de fin explicite, on le pousse
               booksListArray.push(openBook);
               bookIndex++;
             }
@@ -256,7 +254,6 @@
           if (row.book_end) {
             if (openBook) {
               openBook.endDate = row.day_date;
-              // Si la date de fin contient des informations de titre/auteur plus récentes, on met à jour
               if (row.book_title) openBook.title = row.book_title;
               if (row.book_author) openBook.author = row.book_author;
               if (row.book_language) openBook.language = row.book_language;
@@ -266,7 +263,6 @@
               openBook = null;
               bookIndex++;
             } else {
-              // Fin sans événement de début correspondant : création d'une fiche isolée
               const color = BOOK_COLORS[bookIndex % BOOK_COLORS.length];
               booksListArray.push({
                 id: bookIndex + 1,
@@ -283,12 +279,10 @@
           }
         });
 
-        // Si un livre est toujours en cours de lecture
         if (openBook) {
           booksListArray.push(openBook);
         }
 
-        // 3. Calculer la plage de dates pour chaque livre (pour colorer le calendrier)
         booksListArray.forEach(book => {
           if (book.endDate) {
             if (book.pages) realPagesTotal += parseInt(book.pages, 10);
@@ -300,7 +294,7 @@
           }
 
           const start = new Date(book.startDate);
-          const end = book.endDate ? new Date(book.endDate) : new Date('2027-06-30'); // Jusqu'à aujourd'hui/fin si non fini
+          const end = book.endDate ? new Date(book.endDate) : new Date('2027-06-30');
 
           let curr = new Date(start);
           while (curr <= end) {
@@ -314,12 +308,13 @@
           }
         });
 
-        // 4. Mettre à jour l'affichage des compteurs
-        const finishedCount = booksListArray.filter(b => b.endDate !== null).length;
+        const theoPages = successCount * 30;
+        const progressPercent = ((theoPages / TOTAL_ANNUAL_TARGET_PAGES) * 100).toFixed(1);
+
         document.getElementById('stat-days').innerText = successCount;
-        document.getElementById('stat-theo-pages').innerText = (successCount * 30).toLocaleString('fr-FR');
+        document.getElementById('stat-theo-pages').innerText = theoPages.toLocaleString('fr-FR');
         document.getElementById('stat-real-pages').innerText = realPagesTotal.toLocaleString('fr-FR');
-        document.getElementById('stat-books-total').innerText = finishedCount;
+        document.getElementById('stat-percent').innerText = `${progressPercent}%`;
         document.getElementById('stat-books-lang').innerText = `FR: ${langCounts['Français']} | IT: ${langCounts['Italien']} | EN: ${langCounts['Anglais']}`;
         document.getElementById('badge-books-count').innerText = booksListArray.length;
       }
@@ -374,11 +369,9 @@
         const bookMapping = dateToBookMap[dateStr];
         const cell = document.createElement('div');
 
-        // Style de base
         let baseBg = 'bg-white';
         let customBorder = 'border-gray-200';
 
-        // Si le jour fait partie d'une période de lecture
         if (bookMapping) {
           baseBg = bookMapping.book.color.bg;
           customBorder = bookMapping.book.color.border;
@@ -416,7 +409,6 @@
       }
     }
 
-    // Gestion du Panneau des Livres
     function openBooksPanel() {
       renderBooksList();
       document.getElementById('books-panel').classList.remove('hidden');
