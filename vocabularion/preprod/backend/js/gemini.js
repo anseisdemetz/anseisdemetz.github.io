@@ -56,8 +56,7 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
 }`;
 
     const modelsToTry = [
-        'gemini-2.0-flash',
-        'gemini-1.5-flash'
+        'gemini-2.0-flash'
     ];
 
     let success = false;
@@ -65,7 +64,8 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
 
     for (const model of modelsToTry) {
         try {
-            let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+            // Utilisation de l'endpoint 'v1' au lieu de 'v1beta' pour une meilleure stabilité des modèles flash
+            let response = await fetch(`https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -76,7 +76,7 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
 
             if (response.status === 429) {
                 await new Promise(res => setTimeout(res, 2000));
-                response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                response = await fetch(`https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -90,6 +90,7 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
 
             if (data.error) {
                 lastErrorMessage = data.error.message;
+                console.warn(`Erreur avec le modèle ${model}:`, lastErrorMessage);
                 continue;
             }
 
