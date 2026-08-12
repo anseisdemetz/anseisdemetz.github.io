@@ -1,16 +1,22 @@
 // --- GESTION DE L'IA GEMINI (BACK-OFFICE) ---
 let detectedLanguageForImport = 'english';
 
+// Au chargement de la page, restaurer la clé API ET le modèle enregistrés dans le navigateur
 document.addEventListener('DOMContentLoaded', () => {
     const savedKey = localStorage.getItem('gemini_api_key');
-    const inputKey = document.getElementById('gemini-api-key');
-    if (savedKey && inputKey) {
-        inputKey.value = savedKey;
+    const savedModel = localStorage.getItem('gemini_model');
+    
+    if (savedKey && document.getElementById('gemini-api-key')) {
+        document.getElementById('gemini-api-key').value = savedKey;
+    }
+    if (savedModel && document.getElementById('gemini-model')) {
+        document.getElementById('gemini-model').value = savedModel;
     }
 });
 
 async function generateWithGemini() {
     const apiKey = document.getElementById('gemini-api-key').value.trim();
+    const selectedModel = document.getElementById('gemini-model').value.trim() || 'gemini-2.5-flash';
     const rawWords = document.getElementById('ai-raw-words').value.trim();
     const btn = document.getElementById('btn-generate-ai');
 
@@ -18,21 +24,23 @@ async function generateWithGemini() {
         alert("Veuillez saisir votre clé API Gemini.");
         return;
     }
-
     if (!rawWords) {
         alert("Veuillez coller au moins un mot de vocabulaire.");
         return;
     }
 
+    // Sauvegarde automatique des préférences dans LocalStorage
     localStorage.setItem('gemini_api_key', apiKey);
+    localStorage.setItem('gemini_model', selectedModel);
 
+    // État de chargement du bouton
     btn.disabled = true;
-    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Filtrage pédagogique (Oxford / De Mauro)...</span>`;
+    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Analyse avec ${selectedModel}...</span>`;
 
     const langName = db.languages[currentLang].name; // "Anglais" ou "Italien"
     const targetLangCode = currentLang; // "english" ou "italian"
 
-    // Prompt verrouillé pour la langue de la phrase d'exemple
+    // Prompt pédagogique strict
     const prompt = `Tu es un professeur de langues expert. Analyse cette liste brute de mots et d'expressions :
 "${rawWords}"
 
@@ -55,88 +63,62 @@ Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette 
   "rejected_notes": "Explication des mots rejetés (ou 'Aucun mot rejeté' si tout est conservé)"
 }`;
 
-    const modelsToTry = [
-        'gemini-2.0-flash',
-        'gemini-1.5-flash'
-    ];
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { responseMimeType: "application/json" }
+            })
+        });
 
-    let success = false;
-    let lastErrorMessage = "";
+        const data = await response.json();
 
-    for (const model of modelsToTry) {
-        try {
-            let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: { responseMimeType: "application/json" }
-                })
-            });
-
-            if (response.status === 429) {
-                await new Promise(res => setTimeout(res, 2000));
-                response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        generationConfig: { responseMimeType: "application/json" }
-                    })
-                });
-            }
-
-            const data = await response.json();
-
-            if (data.error) {
-                lastErrorMessage = data.error.message;
-                continue;
-            }
-
-            const resultJson = JSON.parse(data.candidates[0].content.parts[0].text);
-            
-            detectedLanguageForImport = resultJson.language || targetLangCode;
-            const markdownText = resultJson.markdown;
-            const rejectedNotes = resultJson.rejected_notes || "";
-
-            const langLabel = detectedLanguageForImport === 'english' ? '🇬🇧 Anglais (Filtré Oxford)' : '🇮🇹 Italien (Filtré De Mauro)';
-            document.getElementById('detected-lang-badge').innerText = langLabel;
-            document.getElementById('ai-markdown-output').value = markdownText;
-            
-            renderParsedPreviewTable(markdownText);
-
-            let notesContainer = document.getElementById('ai-rejected-notes');
-            if (!notesContainer) {
-                notesContainer = document.createElement('div');
-                notesContainer.id = 'ai-rejected-notes';
-                notesContainer.className = "p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 space-y-1 mt-2";
-                document.getElementById('ai-preview-container').insertBefore(notesContainer, document.getElementById('ai-preview-container').lastElementChild);
-            }
-
-            if (rejectedNotes && !rejectedNotes.toLowerCase().includes('aucun mot')) {
-                notesContainer.innerHTML = `<strong>⚠️ Mots écartés (C2 / Jargon) :</strong><p class="mt-1 text-slate-700 whitespace-pre-line">${escapeHtml(rejectedNotes)}</p>`;
-                notesContainer.classList.remove('hidden');
-            } else {
-                notesContainer.classList.add('hidden');
-            }
-
-            document.getElementById('ai-preview-container').classList.remove('hidden');
-            success = true;
-            break;
-
-        } catch (err) {
-            lastErrorMessage = err.message;
+        if (data.error) {
+            throw new Error(data.error.message);
         }
-    }
 
-    btn.disabled = false;
-    btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer et analyser</span>`;
+        const resultJson = JSON.parse(data.candidates[0].content.parts[0].text);
+        
+        detectedLanguageForImport = resultJson.language || targetLangCode;
+        const markdownText = resultJson.markdown;
+        const rejectedNotes = resultJson.rejected_notes || "";
 
-    if (!success) {
-        alert("Erreur lors de la génération. Détail : " + lastErrorMessage);
+        const langLabel = detectedLanguageForImport === 'english' ? '🇬🇧 Anglais (Filtré Oxford)' : '🇮🇹 Italien (Filtré De Mauro)';
+        document.getElementById('detected-lang-badge').innerText = langLabel;
+        document.getElementById('ai-markdown-output').value = markdownText;
+        
+        renderParsedPreviewTable(markdownText);
+
+        // Affichage des remarques sur les mots rejetés
+        let notesContainer = document.getElementById('ai-rejected-notes');
+        if (!notesContainer) {
+            notesContainer = document.createElement('div');
+            notesContainer.id = 'ai-rejected-notes';
+            notesContainer.className = "p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 space-y-1 mt-2";
+            document.getElementById('ai-preview-container').insertBefore(notesContainer, document.getElementById('ai-preview-container').lastElementChild);
+        }
+
+        if (rejectedNotes && !rejectedNotes.toLowerCase().includes('aucun mot')) {
+            notesContainer.innerHTML = `<strong>⚠️ Mots écartés (C2 / Jargon) :</strong><p class="mt-1 text-slate-700 whitespace-pre-line">${escapeHtml(rejectedNotes)}</p>`;
+            notesContainer.classList.remove('hidden');
+        } else {
+            notesContainer.classList.add('hidden');
+        }
+
+        document.getElementById('ai-preview-container').classList.remove('hidden');
+
+    } catch (err) {
+        console.error("Erreur Gemini :", err);
+        alert(`Erreur lors de la génération avec le modèle "${selectedModel}" : ` + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer et analyser</span>`;
     }
 }
 
+// Convertit le Markdown en tableau HTML de prévisualisation
 function renderParsedPreviewTable(mdText) {
     const container = document.getElementById('ai-preview-table');
     const lines = mdText.split('\n').map(l => l.trim()).filter(l => l.startsWith('|') && !l.includes(':---'));
@@ -165,6 +147,7 @@ function renderParsedPreviewTable(mdText) {
     container.innerHTML = html;
 }
 
+// Importation des mots validés vers Supabase
 async function importAIVocabulary() {
     const mdContent = document.getElementById('ai-markdown-output').value;
     const targetLang = detectedLanguageForImport;
