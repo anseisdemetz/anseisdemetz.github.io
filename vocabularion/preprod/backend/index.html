@@ -99,6 +99,21 @@
                     <span id="table-row-count" class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-0.5 rounded-full border border-indigo-100">0 mots</span>
                 </div>
 
+                <!-- Filtre par Score -->
+                <select id="filter-score" onchange="renderBackendTable()" class="bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="all">📊 Tous les scores (1-10)</option>
+                    <option value="1">Score 1 / 10 (Boîte 1)</option>
+                    <option value="2">Score 2 / 10 (Boîte 1)</option>
+                    <option value="3">Score 3 / 10 (Boîte 2)</option>
+                    <option value="4">Score 4 / 10 (Boîte 2)</option>
+                    <option value="5">Score 5 / 10 (Boîte 3)</option>
+                    <option value="6">Score 6 / 10 (Boîte 3)</option>
+                    <option value="7">Score 7 / 10 (Boîte 4)</option>
+                    <option value="8">Score 8 / 10 (Boîte 4)</option>
+                    <option value="9">Score 9 / 10 (Boîte 5)</option>
+                    <option value="10">Score 10 / 10 (Boîte 5)</option>
+                </select>
+
                 <div class="flex items-center gap-2">
                     <div class="relative w-full sm:w-64">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
