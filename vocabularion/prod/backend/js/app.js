@@ -6,14 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // Chargement initial des données depuis Supabase
 async function loadBackendData() {
     try {
+        // Sécurité : Fallback si VOCAB_TABLE n'est pas défini dans config.js
+        const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
+
         const { data, error } = await supabaseClient
-            .from(VOCAB_TABLE)
+            .from(tableName)
             .select('*')
             .order('created_at', { ascending: false });
 
         if (error) throw error;
 
         // Réinitialisation des tableaux
+        if (!window.db) window.db = { languages: { english: { vocabulary: [] }, italian: { vocabulary: [] } } };
         db.languages.english.vocabulary = [];
         db.languages.italian.vocabulary = [];
 
@@ -25,32 +29,36 @@ async function loadBackendData() {
 
         updateBadges();
         renderBackendTable();
+        
         if (typeof updateCharts === 'function') {
             updateCharts();
         }
 
     } catch (err) {
-        console.error("Erreur lors du chargement Supabase (Back-Office) :", err);
-        alert("Impossible de charger les données depuis Supabase. Vérifiez votre fichier config.js.");
+        // Affiche la VRAIE erreur JS dans la console et à l'écran
+        console.error("Détail de l'erreur Back-Office :", err);
+        alert(`Erreur d'exécution JS : ${err.name} - ${err.message}`);
     }
 }
 
 // Commutation d'onglet de langue
 function switchLanguage(lang) {
-    currentLang = lang;
+    if (typeof currentLang !== 'undefined') {
+        currentLang = lang;
+    }
 
-    // Mise à jour visuelle des boutons d'onglet
     const btnEn = document.getElementById('btn-lang-english');
     const btnIt = document.getElementById('btn-lang-italian');
+    const thTarget = document.getElementById('th-target-lang');
 
     if (lang === 'english') {
-        btnEn.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 bg-indigo-600 text-white font-semibold shadow-sm";
-        btnIt.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 text-slate-300 hover:text-white";
-        document.getElementById('th-target-lang').innerText = "Mot / Expression (Anglais)";
+        if (btnEn) btnEn.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 bg-indigo-600 text-white font-semibold shadow-sm";
+        if (btnIt) btnIt.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 text-slate-300 hover:text-white";
+        if (thTarget) thTarget.innerText = "Mot / Expression (Anglais)";
     } else {
-        btnIt.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 bg-indigo-600 text-white font-semibold shadow-sm";
-        btnEn.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 text-slate-300 hover:text-white";
-        document.getElementById('th-target-lang').innerText = "Mot / Expression (Italien)";
+        if (btnIt) btnIt.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 bg-indigo-600 text-white font-semibold shadow-sm";
+        if (btnEn) btnEn.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 text-slate-300 hover:text-white";
+        if (thTarget) thTarget.innerText = "Mot / Expression (Italien)";
     }
 
     renderBackendTable();
@@ -73,42 +81,71 @@ function updateBadges() {
 
 // --- AFFICHAGE DU TABLEAU BACKEND (READ) ---
 function renderBackendTable() {
+    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+    const list = db.languages[activeLang].vocabulary || [];
+    
+    const searchInput = document.getElementById('backend-search');
+    const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    
+    const scoreFilterElement = document.getElementById('filter-score');
+    const selectedScore = scoreFilterElement ? scoreFilterElement.value : 'all';
+
     const tbody = document.getElementById('backend-table-body');
     const emptyState = document.getElementById('backend-empty-state');
-    const rowCountEl = document.getElementById('table-row-count');
-    const searchValue = (document.getElementById('backend-search')?.value || '').toLowerCase().trim();
+    const rowCountBadge = document.getElementById('table-row-count');
 
     if (!tbody) return;
 
     tbody.innerHTML = '';
 
-    const vocabList = db.languages[currentLang].vocabulary;
+    const filtered = list.filter(item => {
+        const itemStatus = item.status || 'unstudied';
+        const itemScore = item.score || 1;
 
-    // Filtrage dynamique
-    const filtered = vocabList.filter(item => {
-        if (!searchValue) return true;
-        return (item.term || '').toLowerCase().includes(searchValue) ||
-               (item.translation || '').toLowerCase().includes(searchValue) ||
-               (item.sentence || '').toLowerCase().includes(searchValue);
+        // 1. Filtrage par statut
+        if (typeof filterView !== 'undefined' && filterView !== 'all') {
+            if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
+            if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
+            if (filterView === 'known' && itemStatus !== 'known') return false;
+        }
+
+        // 2. Filtrage par Score
+        if (selectedScore !== 'all' && parseInt(itemScore) !== parseInt(selectedScore)) {
+            return false;
+        }
+
+        // 3. Filtrage par recherche textuelle
+        if (searchQuery) {
+            const matchTerm = (item.term || '').toLowerCase().includes(searchQuery);
+            const matchTrans = (item.translation || '').toLowerCase().includes(searchQuery);
+            const matchSent = (item.sentence || '').toLowerCase().includes(searchQuery);
+            return matchTerm || matchTrans || matchSent;
+        }
+
+        return true;
     });
 
-    if (rowCountEl) {
-        rowCountEl.innerText = `${filtered.length} mot${filtered.length > 1 ? 's' : ''}`;
+    if (rowCountBadge) {
+        rowCountBadge.innerText = `${filtered.length} mot${filtered.length > 1 ? 's' : ''}`;
     }
 
     if (filtered.length === 0) {
         if (emptyState) emptyState.classList.remove('hidden');
         return;
+    } else {
+        if (emptyState) emptyState.classList.add('hidden');
     }
 
-    if (emptyState) emptyState.classList.add('hidden');
+    // Fonction de sécurité pour l'échappement HTML
+    const safeEscape = (str) => {
+        if (typeof escapeHtml === 'function') return escapeHtml(str || '');
+        return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    };
 
-    // Affichage des lignes numérotées de 1 à N
     filtered.forEach((item, index) => {
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50/80 transition group";
 
-        // Badges de statut visuels
         let statusBadgeClass = "bg-slate-100 text-slate-600 border-slate-200";
         let statusLabel = "Pas appris";
         if (item.status === 'known') {
@@ -122,40 +159,34 @@ function renderBackendTable() {
         tr.innerHTML = `
             <td class="py-3 px-3 text-center text-slate-400 font-mono text-[11px] font-semibold">${index + 1}</td>
             
-            <!-- Cellule Éditable : Traduction (Français) -->
             <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:bg-amber-50/60 rounded transition" 
                 title="Cliquer pour modifier"
                 onblur="saveInPlaceEdit('${item.id}', 'translation', this)" 
                 contenteditable="true" 
-                onkeydown="handleInPlaceKeydown(event, this)">${escapeHtml(item.translation)}</td>
+                onkeydown="handleInPlaceKeydown(event, this)">${safeEscape(item.translation)}</td>
             
-            <!-- Cellule Éditable : Mot Cible (Anglais / Italien) -->
             <td class="py-3 px-4 font-bold text-indigo-900 cursor-pointer hover:bg-amber-50/60 rounded transition" 
                 title="Cliquer pour modifier"
                 onblur="saveInPlaceEdit('${item.id}', 'term', this)" 
                 contenteditable="true" 
-                onkeydown="handleInPlaceKeydown(event, this)">${escapeHtml(item.term)}</td>
+                onkeydown="handleInPlaceKeydown(event, this)">${safeEscape(item.term)}</td>
             
-            <!-- Cellule Éditable : Phrase d'exemple -->
             <td class="py-3 px-4 text-slate-600 italic cursor-pointer hover:bg-amber-50/60 rounded transition leading-relaxed" 
                 title="Cliquer pour modifier"
                 onblur="saveInPlaceEdit('${item.id}', 'sentence', this)" 
                 contenteditable="true" 
-                onkeydown="handleInPlaceKeydown(event, this)">${escapeHtml(item.sentence || '')}</td>
+                onkeydown="handleInPlaceKeydown(event, this)">${safeEscape(item.sentence)}</td>
             
-            <!-- Statut (Verrouillé - Lecture Seule) -->
             <td class="py-3 px-3 text-center select-none">
                 <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusBadgeClass}">
                     ${statusLabel}
                 </span>
             </td>
             
-            <!-- Score (Verrouillé - Lecture Seule) -->
             <td class="py-3 px-3 text-center font-mono font-bold text-slate-700 select-none">
                 <span class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200">${item.score || 1}/10</span>
             </td>
             
-            <!-- Action Delete -->
             <td class="py-3 px-3 text-right">
                 <button onclick="deleteBackendItem('${item.id}')" class="text-slate-300 hover:text-rose-600 p-1.5 rounded-lg transition" title="Supprimer cet item">
                     <i class="fa-solid fa-trash-can text-sm"></i>
@@ -168,36 +199,32 @@ function renderBackendTable() {
 
 // --- ÉDITION IN-PLACE (UPDATE) ---
 
-// Gestion de la touche Entrée pour valider l'édition in-place
 function handleInPlaceKeydown(event, element) {
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        element.blur(); // Déclenche automatiquement l'événement onblur -> saveInPlaceEdit
+        element.blur();
     }
 }
 
-// Sauvegarde automatique de la modification directe dans Supabase
 async function saveInPlaceEdit(id, fieldName, element) {
     const newValue = element.innerText.trim();
-    const vocabList = db.languages[currentLang].vocabulary;
+    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+    const vocabList = db.languages[activeLang].vocabulary;
     const item = vocabList.find(x => x.id === id);
 
     if (!item) return;
 
-    // Si aucune modification n'a été apportée, on ne fait rien
     const oldValue = (item[fieldName] || '').trim();
     if (oldValue === newValue) return;
 
-    // Mise à jour locale
     item[fieldName] = newValue;
 
     try {
-        // Validation visuelle temporaire (effet feedback)
         element.classList.add('bg-emerald-100');
+        const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
 
-        // Mise à jour dans Supabase (table VOCAB_TABLE)
         const { error } = await supabaseClient
-            .from(VOCAB_TABLE)
+            .from(tableName)
             .update({ [fieldName]: newValue })
             .eq('id', id);
 
@@ -210,14 +237,15 @@ async function saveInPlaceEdit(id, fieldName, element) {
     } catch (err) {
         console.error(`Erreur de mise à jour du champ ${fieldName} :`, err);
         alert("Erreur lors de la sauvegarde de la modification.");
-        element.innerText = oldValue; // Restauration de l'ancienne valeur
+        element.innerText = oldValue;
         item[fieldName] = oldValue;
     }
 }
 
 // --- SUPPRESSION (DELETE) ---
 async function deleteBackendItem(id) {
-    const vocabList = db.languages[currentLang].vocabulary;
+    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+    const vocabList = db.languages[activeLang].vocabulary;
     const item = vocabList.find(x => x.id === id);
 
     if (!item) return;
@@ -227,16 +255,16 @@ async function deleteBackendItem(id) {
     }
 
     try {
-        // Suppression dans Supabase
+        const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
+
         const { error } = await supabaseClient
-            .from(VOCAB_TABLE)
+            .from(tableName)
             .delete()
             .eq('id', id);
 
         if (error) throw error;
 
-        // Suppression dans la structure locale
-        db.languages[currentLang].vocabulary = vocabList.filter(x => x.id !== id);
+        db.languages[activeLang].vocabulary = vocabList.filter(x => x.id !== id);
 
         updateBadges();
         renderBackendTable();
@@ -250,7 +278,7 @@ async function deleteBackendItem(id) {
     }
 }
 
-// --- CREATION (CREATE) & GESTION DES ONGLETS DE LA MODALE ---
+// --- CREATION & GESTION DES ONGLETS DE LA MODALE ---
 
 function switchAddTab(tab) {
     const formAi = document.getElementById('add-ai-form');
@@ -261,7 +289,8 @@ function switchAddTab(tab) {
     const btnMd = document.getElementById('tab-btn-md');
     const btnManual = document.getElementById('tab-btn-manual');
 
-    // Reset visibility
+    if (!formAi || !formMd || !formManual) return;
+
     formAi.classList.add('hidden');
     formMd.classList.add('hidden');
     formManual.classList.add('hidden');
@@ -305,19 +334,21 @@ async function handleAddWord(e) {
     };
 
     try {
+        const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
+
         const { error } = await supabaseClient
-            .from(VOCAB_TABLE)
+            .from(tableName)
             .insert([newItem]);
 
         if (error) throw error;
 
         db.languages[targetLang].vocabulary.unshift(newItem);
 
-        // Reset formulaire & Fermeture modale
         document.getElementById('add-word-form').reset();
         closeModal('add-modal');
 
-        if (currentLang !== targetLang) {
+        const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+        if (activeLang !== targetLang) {
             switchLanguage(targetLang);
         } else {
             updateBadges();
@@ -344,7 +375,6 @@ async function handleAddMarkdown(e) {
     const newItems = [];
 
     lines.forEach(line => {
-        // Ignorer les séparateurs Markdown (ex: |---|---|)
         if (line.includes('---') || line.toLowerCase().includes('français')) return;
 
         const parts = line.split('|').map(p => p.trim()).filter(p => p.length > 0);
@@ -372,8 +402,10 @@ async function handleAddMarkdown(e) {
     }
 
     try {
+        const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
+
         const { error } = await supabaseClient
-            .from(VOCAB_TABLE)
+            .from(tableName)
             .insert(newItems);
 
         if (error) throw error;
@@ -383,7 +415,8 @@ async function handleAddMarkdown(e) {
         document.getElementById('add-md-input').value = '';
         closeModal('add-modal');
 
-        if (currentLang !== targetLang) {
+        const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+        if (activeLang !== targetLang) {
             switchLanguage(targetLang);
         } else {
             updateBadges();
