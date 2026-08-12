@@ -73,35 +73,51 @@ function updateBadges() {
 
 // --- AFFICHAGE DU TABLEAU BACKEND (READ) ---
 function renderBackendTable() {
-    const tbody = document.getElementById('backend-table-body');
-    const emptyState = document.getElementById('backend-empty-state');
-    const rowCountEl = document.getElementById('table-row-count');
-    const searchValue = (document.getElementById('backend-search')?.value || '').toLowerCase().trim();
+    const list = db.languages[currentLang].vocabulary;
+    const searchQuery = document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase().trim() : '';
+    
+    // Récupération de la valeur du filtre de score
+    const scoreFilterElement = document.getElementById('filter-score');
+    const selectedScore = scoreFilterElement ? scoreFilterElement.value : 'all';
 
-    if (!tbody) return;
+    const tbody = document.getElementById('backend-vocab-table-body');
+    const emptyState = document.getElementById('empty-state');
 
     tbody.innerHTML = '';
 
-    const vocabList = db.languages[currentLang].vocabulary;
+    const filtered = list.filter(item => {
+        const itemStatus = item.status || 'unstudied';
+        const itemScore = item.score || 1;
 
-    // Filtrage dynamique
-    const filtered = vocabList.filter(item => {
-        if (!searchValue) return true;
-        return (item.term || '').toLowerCase().includes(searchValue) ||
-               (item.translation || '').toLowerCase().includes(searchValue) ||
-               (item.sentence || '').toLowerCase().includes(searchValue);
+        // 1. Filtrage par statut (Si un filtre statut existe)
+        if (typeof filterView !== 'undefined' && filterView !== 'all') {
+            if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
+            if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
+            if (filterView === 'known' && itemStatus !== 'known') return false;
+        }
+
+        // 2. Filtrage par Score
+        if (selectedScore !== 'all' && parseInt(itemScore) !== parseInt(selectedScore)) {
+            return false;
+        }
+
+        // 3. Filtrage par recherche textuelle
+        if (searchQuery) {
+            const matchTerm = item.term.toLowerCase().includes(searchQuery);
+            const matchTrans = item.translation.toLowerCase().includes(searchQuery);
+            const matchSent = item.sentence ? item.sentence.toLowerCase().includes(searchQuery) : false;
+            return matchTerm || matchTrans || matchSent;
+        }
+
+        return true;
     });
-
-    if (rowCountEl) {
-        rowCountEl.innerText = `${filtered.length} mot${filtered.length > 1 ? 's' : ''}`;
-    }
 
     if (filtered.length === 0) {
         if (emptyState) emptyState.classList.remove('hidden');
         return;
+    } else {
+        if (emptyState) emptyState.classList.add('hidden');
     }
-
-    if (emptyState) emptyState.classList.add('hidden');
 
     // Affichage des lignes numérotées de 1 à N
     filtered.forEach((item, index) => {
