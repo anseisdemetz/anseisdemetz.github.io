@@ -73,55 +73,96 @@ function updateBadges() {
 
 // --- AFFICHAGE DU TABLEAU BACKEND (READ) ---
 function renderBackendTable() {
-    const list = db.languages[currentLang].vocabulary;
-    const searchQuery = document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase().trim() : '';
-    
-    // Récupération de la valeur du filtre de score
-    const scoreFilterElement = document.getElementById('filter-score');
-    const selectedScore = scoreFilterElement ? scoreFilterElement.value : 'all';
+    const tbody = document.getElementById('backend-table-body');
+    const emptyState = document.getElementById('backend-empty-state');
+    const rowCountEl = document.getElementById('table-row-count');
+    const searchValue = (document.getElementById('backend-search')?.value || '').toLowerCase().trim();
 
-    const tbody = document.getElementById('backend-vocab-table-body');
-    const emptyState = document.getElementById('empty-state');
+    if (!tbody) return;
 
     tbody.innerHTML = '';
 
-    const filtered = list.filter(item => {
-        const itemStatus = item.status || 'unstudied';
-        const itemScore = item.score || 1;
+    const vocabList = db.languages[currentLang].vocabulary;
 
-        // 1. Filtrage par statut (Si un filtre statut existe)
-        if (typeof filterView !== 'undefined' && filterView !== 'all') {
-            if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
-            if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
-            if (filterView === 'known' && itemStatus !== 'known') return false;
-        }
-
-        // 2. Filtrage par Score
-        if (selectedScore !== 'all' && parseInt(itemScore) !== parseInt(selectedScore)) {
-            return false;
-        }
-
-        // 3. Filtrage par recherche textuelle
-        if (searchQuery) {
-            const matchTerm = item.term.toLowerCase().includes(searchQuery);
-            const matchTrans = item.translation.toLowerCase().includes(searchQuery);
-            const matchSent = item.sentence ? item.sentence.toLowerCase().includes(searchQuery) : false;
-            return matchTerm || matchTrans || matchSent;
-        }
-
-        return true;
+    // Filtrage dynamique
+    const filtered = vocabList.filter(item => {
+        if (!searchValue) return true;
+        return (item.term || '').toLowerCase().includes(searchValue) ||
+               (item.translation || '').toLowerCase().includes(searchValue) ||
+               (item.sentence || '').toLowerCase().includes(searchValue);
     });
+
+    if (rowCountEl) {
+        rowCountEl.innerText = `${filtered.length} mot${filtered.length > 1 ? 's' : ''}`;
+    }
 
     if (filtered.length === 0) {
         if (emptyState) emptyState.classList.remove('hidden');
         return;
-    } else {
-        if (emptyState) emptyState.classList.add('hidden');
     }
 
-    // Rendu des lignes de la table avec le tableau filtré
+    if (emptyState) emptyState.classList.add('hidden');
+
+    // Affichage des lignes numérotées de 1 à N
     filtered.forEach((item, index) => {
-        // ... (votre code d'affichage des tr existant dans le backend)
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50/80 transition group";
+
+        // Badges de statut visuels
+        let statusBadgeClass = "bg-slate-100 text-slate-600 border-slate-200";
+        let statusLabel = "Pas appris";
+        if (item.status === 'known') {
+            statusBadgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
+            statusLabel = "Je sais";
+        } else if (item.status === 'unknown') {
+            statusBadgeClass = "bg-rose-50 text-rose-700 border-rose-200";
+            statusLabel = "Je sais pas";
+        }
+
+        tr.innerHTML = `
+            <td class="py-3 px-3 text-center text-slate-400 font-mono text-[11px] font-semibold">${index + 1}</td>
+            
+            <!-- Cellule Éditable : Traduction (Français) -->
+            <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:bg-amber-50/60 rounded transition" 
+                title="Cliquer pour modifier"
+                onblur="saveInPlaceEdit('${item.id}', 'translation', this)" 
+                contenteditable="true" 
+                onkeydown="handleInPlaceKeydown(event, this)">${escapeHtml(item.translation)}</td>
+            
+            <!-- Cellule Éditable : Mot Cible (Anglais / Italien) -->
+            <td class="py-3 px-4 font-bold text-indigo-900 cursor-pointer hover:bg-amber-50/60 rounded transition" 
+                title="Cliquer pour modifier"
+                onblur="saveInPlaceEdit('${item.id}', 'term', this)" 
+                contenteditable="true" 
+                onkeydown="handleInPlaceKeydown(event, this)">${escapeHtml(item.term)}</td>
+            
+            <!-- Cellule Éditable : Phrase d'exemple -->
+            <td class="py-3 px-4 text-slate-600 italic cursor-pointer hover:bg-amber-50/60 rounded transition leading-relaxed" 
+                title="Cliquer pour modifier"
+                onblur="saveInPlaceEdit('${item.id}', 'sentence', this)" 
+                contenteditable="true" 
+                onkeydown="handleInPlaceKeydown(event, this)">${escapeHtml(item.sentence || '')}</td>
+            
+            <!-- Statut (Verrouillé - Lecture Seule) -->
+            <td class="py-3 px-3 text-center select-none">
+                <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusBadgeClass}">
+                    ${statusLabel}
+                </span>
+            </td>
+            
+            <!-- Score (Verrouillé - Lecture Seule) -->
+            <td class="py-3 px-3 text-center font-mono font-bold text-slate-700 select-none">
+                <span class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200">${item.score || 1}/10</span>
+            </td>
+            
+            <!-- Action Delete -->
+            <td class="py-3 px-3 text-right">
+                <button onclick="deleteBackendItem('${item.id}')" class="text-slate-300 hover:text-rose-600 p-1.5 rounded-lg transition" title="Supprimer cet item">
+                    <i class="fa-solid fa-trash-can text-sm"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
     });
 }
 
