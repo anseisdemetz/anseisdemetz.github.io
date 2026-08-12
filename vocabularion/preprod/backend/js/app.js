@@ -30,8 +30,8 @@ async function loadBackendData() {
         }
 
     } catch (err) {
-        console.error("Erreur lors du chargement Supabase (Back-Office) :", err);
-        alert("Impossible de charger les données depuis Supabase. Vérifiez votre fichier config.js.");
+        console.error("Erreur dans le Back-Office :", err);
+        alert("Erreur d'affichage ou de chargement : " + err.message);
     }
 }
 
@@ -74,14 +74,19 @@ function updateBadges() {
 // --- AFFICHAGE DU TABLEAU BACKEND (READ) ---
 function renderBackendTable() {
     const list = db.languages[currentLang].vocabulary;
-    const searchQuery = document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase().trim() : '';
     
-    // Récupération de la valeur du filtre de score
+    // IDs alignés avec le HTML
+    const searchInput = document.getElementById('backend-search');
+    const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    
     const scoreFilterElement = document.getElementById('filter-score');
     const selectedScore = scoreFilterElement ? scoreFilterElement.value : 'all';
 
-    const tbody = document.getElementById('backend-vocab-table-body');
-    const emptyState = document.getElementById('empty-state');
+    const tbody = document.getElementById('backend-table-body');
+    const emptyState = document.getElementById('backend-empty-state');
+    const rowCountBadge = document.getElementById('table-row-count');
+
+    if (!tbody) return;
 
     tbody.innerHTML = '';
 
@@ -89,7 +94,7 @@ function renderBackendTable() {
         const itemStatus = item.status || 'unstudied';
         const itemScore = item.score || 1;
 
-        // 1. Filtrage par statut (Si un filtre statut existe)
+        // 1. Filtrage par statut
         if (typeof filterView !== 'undefined' && filterView !== 'all') {
             if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
             if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
@@ -112,6 +117,11 @@ function renderBackendTable() {
         return true;
     });
 
+    // Mise à jour du compteur sous le titre
+    if (rowCountBadge) {
+        rowCountBadge.innerText = `${filtered.length} mot${filtered.length > 1 ? 's' : ''}`;
+    }
+
     if (filtered.length === 0) {
         if (emptyState) emptyState.classList.remove('hidden');
         return;
@@ -124,7 +134,6 @@ function renderBackendTable() {
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50/80 transition group";
 
-        // Badges de statut visuels
         let statusBadgeClass = "bg-slate-100 text-slate-600 border-slate-200";
         let statusLabel = "Pas appris";
         if (item.status === 'known') {
@@ -138,40 +147,34 @@ function renderBackendTable() {
         tr.innerHTML = `
             <td class="py-3 px-3 text-center text-slate-400 font-mono text-[11px] font-semibold">${index + 1}</td>
             
-            <!-- Cellule Éditable : Traduction (Français) -->
             <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:bg-amber-50/60 rounded transition" 
                 title="Cliquer pour modifier"
                 onblur="saveInPlaceEdit('${item.id}', 'translation', this)" 
                 contenteditable="true" 
                 onkeydown="handleInPlaceKeydown(event, this)">${escapeHtml(item.translation)}</td>
             
-            <!-- Cellule Éditable : Mot Cible (Anglais / Italien) -->
             <td class="py-3 px-4 font-bold text-indigo-900 cursor-pointer hover:bg-amber-50/60 rounded transition" 
                 title="Cliquer pour modifier"
                 onblur="saveInPlaceEdit('${item.id}', 'term', this)" 
                 contenteditable="true" 
                 onkeydown="handleInPlaceKeydown(event, this)">${escapeHtml(item.term)}</td>
             
-            <!-- Cellule Éditable : Phrase d'exemple -->
             <td class="py-3 px-4 text-slate-600 italic cursor-pointer hover:bg-amber-50/60 rounded transition leading-relaxed" 
                 title="Cliquer pour modifier"
                 onblur="saveInPlaceEdit('${item.id}', 'sentence', this)" 
                 contenteditable="true" 
                 onkeydown="handleInPlaceKeydown(event, this)">${escapeHtml(item.sentence || '')}</td>
             
-            <!-- Statut (Verrouillé - Lecture Seule) -->
             <td class="py-3 px-3 text-center select-none">
                 <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusBadgeClass}">
                     ${statusLabel}
                 </span>
             </td>
             
-            <!-- Score (Verrouillé - Lecture Seule) -->
             <td class="py-3 px-3 text-center font-mono font-bold text-slate-700 select-none">
                 <span class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200">${item.score || 1}/10</span>
             </td>
             
-            <!-- Action Delete -->
             <td class="py-3 px-3 text-right">
                 <button onclick="deleteBackendItem('${item.id}')" class="text-slate-300 hover:text-rose-600 p-1.5 rounded-lg transition" title="Supprimer cet item">
                     <i class="fa-solid fa-trash-can text-sm"></i>
@@ -184,15 +187,13 @@ function renderBackendTable() {
 
 // --- ÉDITION IN-PLACE (UPDATE) ---
 
-// Gestion de la touche Entrée pour valider l'édition in-place
 function handleInPlaceKeydown(event, element) {
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        element.blur(); // Déclenche automatiquement l'événement onblur -> saveInPlaceEdit
+        element.blur();
     }
 }
 
-// Sauvegarde automatique de la modification directe dans Supabase
 async function saveInPlaceEdit(id, fieldName, element) {
     const newValue = element.innerText.trim();
     const vocabList = db.languages[currentLang].vocabulary;
@@ -200,18 +201,14 @@ async function saveInPlaceEdit(id, fieldName, element) {
 
     if (!item) return;
 
-    // Si aucune modification n'a été apportée, on ne fait rien
     const oldValue = (item[fieldName] || '').trim();
     if (oldValue === newValue) return;
 
-    // Mise à jour locale
     item[fieldName] = newValue;
 
     try {
-        // Validation visuelle temporaire (effet feedback)
         element.classList.add('bg-emerald-100');
 
-        // Mise à jour dans Supabase (table VOCAB_TABLE)
         const { error } = await supabaseClient
             .from(VOCAB_TABLE)
             .update({ [fieldName]: newValue })
@@ -226,7 +223,7 @@ async function saveInPlaceEdit(id, fieldName, element) {
     } catch (err) {
         console.error(`Erreur de mise à jour du champ ${fieldName} :`, err);
         alert("Erreur lors de la sauvegarde de la modification.");
-        element.innerText = oldValue; // Restauration de l'ancienne valeur
+        element.innerText = oldValue;
         item[fieldName] = oldValue;
     }
 }
@@ -243,7 +240,6 @@ async function deleteBackendItem(id) {
     }
 
     try {
-        // Suppression dans Supabase
         const { error } = await supabaseClient
             .from(VOCAB_TABLE)
             .delete()
@@ -251,7 +247,6 @@ async function deleteBackendItem(id) {
 
         if (error) throw error;
 
-        // Suppression dans la structure locale
         db.languages[currentLang].vocabulary = vocabList.filter(x => x.id !== id);
 
         updateBadges();
@@ -277,7 +272,6 @@ function switchAddTab(tab) {
     const btnMd = document.getElementById('tab-btn-md');
     const btnManual = document.getElementById('tab-btn-manual');
 
-    // Reset visibility
     formAi.classList.add('hidden');
     formMd.classList.add('hidden');
     formManual.classList.add('hidden');
@@ -329,7 +323,6 @@ async function handleAddWord(e) {
 
         db.languages[targetLang].vocabulary.unshift(newItem);
 
-        // Reset formulaire & Fermeture modale
         document.getElementById('add-word-form').reset();
         closeModal('add-modal');
 
@@ -360,7 +353,6 @@ async function handleAddMarkdown(e) {
     const newItems = [];
 
     lines.forEach(line => {
-        // Ignorer les séparateurs Markdown (ex: |---|---|)
         if (line.includes('---') || line.toLowerCase().includes('français')) return;
 
         const parts = line.split('|').map(p => p.trim()).filter(p => p.length > 0);
