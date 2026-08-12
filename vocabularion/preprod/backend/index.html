@@ -166,9 +166,16 @@
 
             <!-- Form 1: AI Gemini -->
             <div id="add-ai-form" class="space-y-3.5 text-xs">
-                <div>
-                    <label class="block font-semibold text-slate-600 mb-1">Clé API Google Gemini</label>
-                    <input type="password" id="gemini-api-key" placeholder="Collez votre clé API" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <!-- Champ Clé API + Modèle -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Clé API Google Gemini</label>
+                        <input type="password" id="gemini-api-key" placeholder="Collez votre clé API (AI Studio)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Modèle Gemini</label>
+                        <input type="text" id="gemini-model" value="gemini-2.5-flash" placeholder="ex: gemini-2.5-flash" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
                 </div>
 
                 <div>
