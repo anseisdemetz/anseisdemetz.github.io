@@ -167,6 +167,31 @@
       margin-bottom: 4px;
     }
 
+    /* Styles spécifiques aux Radio Buttons */
+    .radio-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 6px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      color: #212121;
+      cursor: pointer;
+    }
+
+    .radio-label input[type="radio"] {
+      accent-color: #00acc1;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
     .input-wrapper {
       position: relative;
       display: flex;
@@ -296,19 +321,22 @@
       <!-- Corps du formulaire -->
       <div class="modal-body" id="modal-body-content">
         
-        <!-- Champ État -->
+        <!-- Champ État (Boutons Radio) -->
         <div class="form-group" data-matrix-name="Etat">
           <label class="form-label">État</label>
-          <div class="input-wrapper">
-            <input type="text" class="form-input" value="Actif">
-            <div class="field-icons">
-              <button type="button" class="icon-btn" onclick="clearInput(this)">&#10005;</button>
-              <button type="button" class="icon-btn">&#9660;</button>
-            </div>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="etat" value="Actif" checked>
+              <span>Actif</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="etat" value="Inactif">
+              <span>Inactif</span>
+            </label>
           </div>
         </div>
 
-        <!-- Les combinaisons de matrices seront injectées ici par JavaScript -->
+        <!-- Les combinaisons de matrices injectées par JS -->
         <div id="dynamic-matrices-container"></div>
 
         <!-- Message aucun résultat -->
@@ -326,7 +354,6 @@
   </div>
 
   <script>
-    // Liste exhaustive de toutes les combinaisons et leurs grades
     const matricesData = [
       { code: "BBAAA", grade: "A" },
       { code: "BBAAB", grade: "A-" },
@@ -586,7 +613,6 @@
       { code: "DDDDD", grade: "D-" }
     ];
 
-    // Génération dynamique des éléments HTML au chargement
     function renderMatrices() {
       const container = document.getElementById('dynamic-matrices-container');
       let html = '';
@@ -609,7 +635,6 @@
       container.innerHTML = html;
     }
 
-    // Fonctions d'interaction
     function closeModal() {
       document.getElementById('modal').style.display = 'none';
     }
@@ -671,7 +696,6 @@
       }
     }
 
-    // Initialisation
     renderMatrices();
   </script>
 </body>
