@@ -179,11 +179,20 @@ function renderTable() {
     filtered.forEach((item, index) => {
         const itemStatus = item.status || 'unstudied';
         const rowNum = index + 1;
-        const score = item.score || 1;
         
         let rowBgClass = "hover:bg-slate-50 transition";
-        if (itemStatus === 'known') rowBgClass = "status-known transition hover:bg-emerald-100/60";
-        if (itemStatus === 'unknown') rowBgClass = "status-unknown transition hover:bg-rose-100/60";
+        let statusBadgeClass = "bg-slate-100 text-slate-600 border-slate-200";
+        let statusLabel = "Pas encore appris";
+
+        if (itemStatus === 'known') {
+            rowBgClass = "status-known transition hover:bg-emerald-100/60";
+            statusBadgeClass = "bg-emerald-100/80 text-emerald-800 border-emerald-300";
+            statusLabel = "✅ Je sais";
+        } else if (itemStatus === 'unknown') {
+            rowBgClass = "status-unknown transition hover:bg-rose-100/60";
+            statusBadgeClass = "bg-rose-100/80 text-rose-800 border-rose-300";
+            statusLabel = "❌ Je ne sais pas";
+        }
 
         const escapedTerm = escapeHtml(item.term);
         const escapedTermJs = escapeJsString(item.term);
@@ -198,22 +207,16 @@ function renderTable() {
             ? `<span onclick="this.innerHTML='${escapedTransJs}'; this.className='text-slate-700 cursor-default';" class="inline-block bg-slate-200 text-slate-500 rounded px-2 py-0.5 text-xs font-mono select-none cursor-pointer hover:bg-slate-300 transition">🙈 Cliquez pour révéler</span>`
             : `<span>${escapedTrans}</span>`;
 
+        // Ligne Tableau Ordinateur
         const tr = document.createElement('tr');
         tr.className = rowBgClass;
 
         tr.innerHTML = `
             <td class="py-3 px-3 text-center font-mono text-xs text-slate-400 font-semibold">${rowNum}</td>
-            <td class="py-3 px-3 text-center">
-                <div class="inline-flex rounded-lg p-0.5 bg-slate-100 border border-slate-200">
-                    <button onclick="setStatus('${item.id}', 'known')" title="Je sais" class="px-2 py-1 rounded-md text-xs font-semibold flex items-center space-x-1 transition ${itemStatus === 'known' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 hover:text-emerald-700'}">
-                        <i class="fa-solid fa-check"></i>
-                        <span>SAIS</span>
-                    </button>
-                    <button onclick="setStatus('${item.id}', 'unknown')" title="Je ne sais pas" class="px-2 py-1 rounded-md text-xs font-semibold flex items-center space-x-1 transition ${itemStatus === 'unknown' ? 'bg-rose-500 text-white shadow-sm' : 'text-slate-600 hover:text-rose-700'}">
-                        <i class="fa-solid fa-xmark"></i>
-                        <span>SAIS PAS</span>
-                    </button>
-                </div>
+            <td class="py-3 px-3 text-center select-none">
+                <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold border ${statusBadgeClass}">
+                    ${statusLabel}
+                </span>
             </td>
             <td class="py-3 px-4 font-semibold ${itemStatus === 'known' ? 'text-slate-600 line-through' : 'text-slate-900'}">
                 <div class="flex items-center space-x-2">
@@ -229,19 +232,10 @@ function renderTable() {
             <td class="py-3 px-4 text-slate-600 italic text-xs leading-relaxed max-w-xs sm:max-w-md">
                 ${item.sentence ? `"${escapeHtml(item.sentence)}"` : '<span class="text-slate-300">-</span>'}
             </td>
-            <!--<td class="py-3 px-3 text-center">
-                <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold font-mono ${score >= 8 ? 'bg-emerald-100 text-emerald-800' : score >= 4 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">
-                    ${score}/10
-                </span>
-            </td>
-            <td class="py-3 px-4 text-right">
-                <button onclick="deleteWord('${item.id}')" class="text-slate-300 hover:text-rose-500 transition p-1" title="Supprimer">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-            </td>-->
         `;
         tbody.appendChild(tr);
 
+        // Carte Vue Mobile
         const card = document.createElement('div');
         card.className = `p-4 space-y-3 ${rowBgClass}`;
 
@@ -254,12 +248,8 @@ function renderTable() {
                         <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
                             <i class="fa-solid fa-volume-high text-sm"></i>
                         </button>
-                        <span class="text-[10px] font-bold font-mono px-1.5 py-0.5 rounded ${score >= 8 ? 'bg-emerald-100 text-emerald-800' : score >= 4 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">${score}/10</span>
                     </div>
                 </div>
-                <button onclick="deleteWord('${item.id}')" class="text-slate-300 hover:text-rose-500 transition p-1" title="Supprimer">
-                    <i class="fa-solid fa-trash-can text-sm"></i>
-                </button>
             </div>
 
             <div class="text-sm font-medium text-slate-700 border-l-2 border-indigo-500 pl-2 py-0.5">
@@ -270,16 +260,9 @@ function renderTable() {
 
             <div class="flex justify-between items-center pt-1">
                 <span class="text-[11px] text-slate-400">Statut :</span>
-                <div class="inline-flex rounded-lg p-0.5 bg-slate-100 border border-slate-200">
-                    <button onclick="setStatus('${item.id}', 'known')" class="px-3 py-1 rounded-md text-xs font-semibold flex items-center space-x-1 transition ${itemStatus === 'known' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600'}">
-                        <i class="fa-solid fa-check"></i>
-                        <span>JE SAIS</span>
-                    </button>
-                    <button onclick="setStatus('${item.id}', 'unknown')" class="px-3 py-1 rounded-md text-xs font-semibold flex items-center space-x-1 transition ${itemStatus === 'unknown' ? 'bg-rose-500 text-white shadow-sm' : 'text-slate-600'}">
-                        <i class="fa-solid fa-xmark"></i>
-                        <span>JE SAIS PAS</span>
-                    </button>
-                </div>
+                <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusBadgeClass}">
+                    ${statusLabel}
+                </span>
             </div>
         `;
         mobileList.appendChild(card);
@@ -332,6 +315,8 @@ function switchAddTab(tab) {
     const formAi = document.getElementById('add-ai-form');
     const formMd = document.getElementById('add-md-form');
     const formManual = document.getElementById('add-word-form');
+
+    if (!btnAi || !formAi) return;
 
     [btnAi, btnMd, btnManual].forEach(b => b.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition text-center");
     [formAi, formMd, formManual].forEach(f => f.classList.add('hidden'));
@@ -440,11 +425,13 @@ async function handleAddWord(e) {
 }
 
 function openModal(id) {
-    document.getElementById(id).classList.remove('hidden');
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('hidden');
 }
 
 function closeModal(id) {
-    document.getElementById(id).classList.add('hidden');
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
 }
 
 // Variable globale pour le lot du jour
@@ -457,7 +444,6 @@ function initDailyFocus() {
     
     if (savedData) {
         const parsed = JSON.parse(savedData);
-        // Si c'est le même jour, on réutilise le même lot
         if (parsed.date === todayStr && parsed.words && parsed.words.length > 0) {
             dailyFocusWords = parsed.words;
             renderDailyFocus();
@@ -465,7 +451,6 @@ function initDailyFocus() {
         }
     }
     
-    // Sinon, on génère un nouveau lot
     generateDailyFocus(false);
 }
 
@@ -480,7 +465,6 @@ function generateDailyFocus(forceNew = false) {
         return;
     }
 
-    // Tirage au sort de 5 mots max
     const shuffled = [...eligibleWords].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, 5);
 
@@ -496,7 +480,6 @@ function generateDailyFocus(forceNew = false) {
 }
 
 // Affichage des cartes compactes du lot du jour
-// Affichage des cartes compactes du lot du jour (Version avec phrase d'illustration)
 function renderDailyFocus() {
     const container = document.getElementById('daily-focus-list');
     if (!container) return;
@@ -523,7 +506,6 @@ function renderDailyFocus() {
 
         card.innerHTML = `
             <div class="space-y-1.5">
-                <!-- Terme & Prononciation -->
                 <div class="flex justify-between items-start gap-1">
                     <span class="font-bold text-white text-sm ${isKnown ? 'line-through text-indigo-300' : ''}">${escapeHtml(item.term)}</span>
                     <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-indigo-300 hover:text-white p-0.5" title="Écouter">
@@ -531,12 +513,10 @@ function renderDailyFocus() {
                     </button>
                 </div>
 
-                <!-- Traduction masquée / révélée -->
                 <div onclick="this.innerText='${escapedTransJs}'" class="text-indigo-200 text-[11px] cursor-pointer hover:text-white transition select-none font-medium">
                     🙈 Voir traduction
                 </div>
 
-                <!-- Phrase d'exemple en situation -->
                 ${item.sentence ? `
                     <div class="text-[11px] italic text-indigo-100 bg-indigo-900/50 p-2 rounded-lg border border-indigo-700/50 leading-relaxed mt-1">
                         "${escapeHtml(item.sentence)}"
@@ -544,7 +524,6 @@ function renderDailyFocus() {
                 ` : ''}
             </div>
 
-            <!-- Bouton JE SAIS -->
             <div class="pt-2 border-t border-indigo-800/80 flex justify-between items-center">
                 <button onclick="setStatus('${item.id}', 'known'); renderDailyFocus();" class="w-full py-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-300 font-semibold text-[10px] border border-emerald-500/30 flex items-center justify-center space-x-1 transition">
                     <i class="fa-solid fa-check text-[9px]"></i>
