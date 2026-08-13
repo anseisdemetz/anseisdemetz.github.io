@@ -87,6 +87,10 @@ function renderBackendTable() {
     const searchInput = document.getElementById('backend-search');
     const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
     
+    // Récupération des filtres
+    const statusFilterElement = document.getElementById('filter-status');
+    const selectedStatus = statusFilterElement ? statusFilterElement.value : 'all';
+
     const scoreFilterElement = document.getElementById('filter-score');
     const selectedScore = scoreFilterElement ? scoreFilterElement.value : 'all';
 
@@ -103,10 +107,8 @@ function renderBackendTable() {
         const itemScore = item.score || 1;
 
         // 1. Filtrage par statut
-        if (typeof filterView !== 'undefined' && filterView !== 'all') {
-            if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
-            if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
-            if (filterView === 'known' && itemStatus !== 'known') return false;
+        if (selectedStatus !== 'all' && itemStatus !== selectedStatus) {
+            return false;
         }
 
         // 2. Filtrage par Score
@@ -136,7 +138,6 @@ function renderBackendTable() {
         if (emptyState) emptyState.classList.add('hidden');
     }
 
-    // Fonction de sécurité pour l'échappement HTML
     const safeEscape = (str) => {
         if (typeof escapeHtml === 'function') return escapeHtml(str || '');
         return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
