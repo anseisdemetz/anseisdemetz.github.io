@@ -430,3 +430,38 @@ async function handleAddMarkdown(e) {
         alert("Erreur lors de l'import Markdown dans Supabase.");
     }
 }
+
+// Mise à jour du statut directement depuis le tableau du Back-Office
+async function setBackendStatus(id, newStatus) {
+    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+    const vocabList = db.languages[activeLang].vocabulary;
+    const item = vocabList.find(x => x.id === id);
+
+    if (!item) return;
+
+    // Bascule en 'unstudied' si on clique une seconde fois sur le même statut
+    const updatedStatus = (item.status === newStatus) ? 'unstudied' : newStatus;
+    item.status = updatedStatus;
+
+    // Rendu visuel immédiat
+    renderBackendTable();
+
+    try {
+        const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
+
+        const { error } = await supabaseClient
+            .from(tableName)
+            .update({ status: updatedStatus })
+            .eq('id', id);
+
+        if (error) throw error;
+
+        if (typeof updateCharts === 'function') {
+            updateCharts();
+        }
+
+    } catch (err) {
+        console.error("Erreur de mise à jour du statut Supabase :", err);
+        alert("Erreur lors de la mise à jour du statut.");
+    }
+}
