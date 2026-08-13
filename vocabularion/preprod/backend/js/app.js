@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Chargement initial des données depuis Supabase
 async function loadBackendData() {
     try {
-        // Sécurité : Fallback si VOCAB_TABLE n'est pas défini dans config.js
         const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
 
         const { data, error } = await supabaseClient
@@ -16,12 +15,10 @@ async function loadBackendData() {
 
         if (error) throw error;
 
-        // Réinitialisation des tableaux
         if (!window.db) window.db = { languages: { english: { vocabulary: [] }, italian: { vocabulary: [] } } };
         db.languages.english.vocabulary = [];
         db.languages.italian.vocabulary = [];
 
-        // Dispatch par langue
         (data || []).forEach(item => {
             const langKey = item.language === 'english' ? 'english' : 'italian';
             db.languages[langKey].vocabulary.push(item);
@@ -35,13 +32,12 @@ async function loadBackendData() {
         }
 
     } catch (err) {
-        // Affiche la VRAIE erreur JS dans la console et à l'écran
         console.error("Détail de l'erreur Back-Office :", err);
         alert(`Erreur d'exécution JS : ${err.name} - ${err.message}`);
     }
 }
 
-// Commutation d'onglet de langue
+// Commutation d'onglet de langue (Anglais / Italien)
 function switchLanguage(lang) {
     if (typeof currentLang !== 'undefined') {
         currentLang = lang;
@@ -79,6 +75,40 @@ function updateBadges() {
     if (badgeIt) badgeIt.innerText = itCount;
 }
 
+// --- MODIFICATION DU STATUT DEPUIS LE BACK-OFFICE ---
+async function setBackendStatus(id, newStatus) {
+    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+    const vocabList = db.languages[activeLang].vocabulary;
+    const item = vocabList.find(x => x.id === id);
+
+    if (!item) return;
+
+    // Réinitialise en 'unstudied' si on re-clique sur le même bouton
+    const updatedStatus = (item.status === newStatus) ? 'unstudied' : newStatus;
+    item.status = updatedStatus;
+
+    renderBackendTable();
+
+    try {
+        const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
+
+        const { error } = await supabaseClient
+            .from(tableName)
+            .update({ status: updatedStatus })
+            .eq('id', id);
+
+        if (error) throw error;
+
+        if (typeof updateCharts === 'function') {
+            updateCharts();
+        }
+
+    } catch (err) {
+        console.error("Erreur de mise à jour du statut Supabase :", err);
+        alert("Erreur lors de la mise à jour du statut dans Supabase.");
+    }
+}
+
 // --- AFFICHAGE DU TABLEAU BACKEND (READ) ---
 function renderBackendTable() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
@@ -87,7 +117,6 @@ function renderBackendTable() {
     const searchInput = document.getElementById('backend-search');
     const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
     
-    // Récupération des filtres
     const statusFilterElement = document.getElementById('filter-status');
     const selectedStatus = statusFilterElement ? statusFilterElement.value : 'all';
 
@@ -147,47 +176,52 @@ function renderBackendTable() {
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50/80 transition group";
 
-        let statusBadgeClass = "bg-slate-100 text-slate-600 border-slate-200";
-        let statusLabel = "Pas appris";
-        if (item.status === 'known') {
-            statusBadgeClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
-            statusLabel = "Je sais";
-        } else if (item.status === 'unknown') {
-            statusBadgeClass = "bg-rose-50 text-rose-700 border-rose-200";
-            statusLabel = "Je sais pas";
-        }
+        const itemStatus = item.status || 'unstudied';
 
         tr.innerHTML = `
             <td class="py-3 px-3 text-center text-slate-400 font-mono text-[11px] font-semibold">${index + 1}</td>
             
+            <!-- Édition In-Place : Traduction (Français) -->
             <td class="py-3 px-4 font-medium text-slate-800 cursor-pointer hover:bg-amber-50/60 rounded transition" 
                 title="Cliquer pour modifier"
                 onblur="saveInPlaceEdit('${item.id}', 'translation', this)" 
                 contenteditable="true" 
                 onkeydown="handleInPlaceKeydown(event, this)">${safeEscape(item.translation)}</td>
             
+            <!-- Édition In-Place : Mot Cible (Anglais / Italien) -->
             <td class="py-3 px-4 font-bold text-indigo-900 cursor-pointer hover:bg-amber-50/60 rounded transition" 
                 title="Cliquer pour modifier"
                 onblur="saveInPlaceEdit('${item.id}', 'term', this)" 
                 contenteditable="true" 
                 onkeydown="handleInPlaceKeydown(event, this)">${safeEscape(item.term)}</td>
             
+            <!-- Édition In-Place : Phrase d'exemple -->
             <td class="py-3 px-4 text-slate-600 italic cursor-pointer hover:bg-amber-50/60 rounded transition leading-relaxed" 
                 title="Cliquer pour modifier"
                 onblur="saveInPlaceEdit('${item.id}', 'sentence', this)" 
                 contenteditable="true" 
                 onkeydown="handleInPlaceKeydown(event, this)">${safeEscape(item.sentence)}</td>
             
-            <td class="py-3 px-3 text-center select-none">
-                <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusBadgeClass}">
-                    ${statusLabel}
-                </span>
+            <!-- Boutons d'action Statut (SAIS / SAIS PAS) -->
+            <td class="py-3 px-3 text-center">
+                <div class="inline-flex rounded-lg p-0.5 bg-slate-100 border border-slate-200">
+                    <button onclick="setBackendStatus('${item.id}', 'known')" title="Je sais" class="px-2 py-1 rounded-md text-[10px] font-semibold flex items-center space-x-1 transition ${itemStatus === 'known' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 hover:text-emerald-700'}">
+                        <i class="fa-solid fa-check"></i>
+                        <span>SAIS</span>
+                    </button>
+                    <button onclick="setBackendStatus('${item.id}', 'unknown')" title="Je ne sais pas" class="px-2 py-1 rounded-md text-[10px] font-semibold flex items-center space-x-1 transition ${itemStatus === 'unknown' ? 'bg-rose-500 text-white shadow-sm' : 'text-slate-600 hover:text-rose-700'}">
+                        <i class="fa-solid fa-xmark"></i>
+                        <span>SAIS PAS</span>
+                    </button>
+                </div>
             </td>
             
+            <!-- Score (Lecture seule) -->
             <td class="py-3 px-3 text-center font-mono font-bold text-slate-700 select-none">
                 <span class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200">${item.score || 1}/10</span>
             </td>
             
+            <!-- Action Suppression -->
             <td class="py-3 px-3 text-right">
                 <button onclick="deleteBackendItem('${item.id}')" class="text-slate-300 hover:text-rose-600 p-1.5 rounded-lg transition" title="Supprimer cet item">
                     <i class="fa-solid fa-trash-can text-sm"></i>
@@ -278,8 +312,6 @@ async function deleteBackendItem(id) {
         alert("Impossible de supprimer cet élément.");
     }
 }
-
-
 
 // --- CREATION & GESTION DES ONGLETS DE LA MODALE ---
 
@@ -430,40 +462,5 @@ async function handleAddMarkdown(e) {
     } catch (err) {
         console.error("Erreur d'import Markdown :", err);
         alert("Erreur lors de l'import Markdown dans Supabase.");
-    }
-}
-
-// Mise à jour du statut directement depuis le tableau du Back-Office
-async function setBackendStatus(id, newStatus) {
-    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
-    const vocabList = db.languages[activeLang].vocabulary;
-    const item = vocabList.find(x => x.id === id);
-
-    if (!item) return;
-
-    // Bascule en 'unstudied' si on clique une seconde fois sur le même statut
-    const updatedStatus = (item.status === newStatus) ? 'unstudied' : newStatus;
-    item.status = updatedStatus;
-
-    // Rendu visuel immédiat
-    renderBackendTable();
-
-    try {
-        const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
-
-        const { error } = await supabaseClient
-            .from(tableName)
-            .update({ status: updatedStatus })
-            .eq('id', id);
-
-        if (error) throw error;
-
-        if (typeof updateCharts === 'function') {
-            updateCharts();
-        }
-
-    } catch (err) {
-        console.error("Erreur de mise à jour du statut Supabase :", err);
-        alert("Erreur lors de la mise à jour du statut.");
     }
 }
