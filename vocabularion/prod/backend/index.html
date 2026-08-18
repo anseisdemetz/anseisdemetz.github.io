@@ -89,46 +89,45 @@
             </div>
         </div>
 
-        <!-- Section Liste & Édition In-Place -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden space-y-4 p-5">
-            
-            <!-- Toolbar de filtrage et recherche -->
-            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
-                <div class="flex items-center space-x-2">
-                    <h2 class="font-bold text-slate-800 text-base">Vocabulaire enregistré</h2>
-                    <span id="table-row-count" class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-0.5 rounded-full border border-indigo-100">0 mots</span>
-                </div>
+        <!-- Toolbar de filtrage et recherche -->
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+            <div class="flex items-center space-x-2">
+                <h2 class="font-bold text-slate-800 text-base">Vocabulaire enregistré</h2>
+                <span id="table-row-count" class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-0.5 rounded-full border border-indigo-100">0 mots</span>
+            </div>
 
-                <div class="flex items-center gap-2">
-                    
-                    <!-- Filtre par Statut -->
-                    <select id="filter-status" onchange="renderBackendTable()" class="bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="all">🏷️ Tous les statuts</option>
-                        <option value="unstudied">⚪ Pas encore appris</option>
-                        <option value="known">🟢 Je sais</option>
-                        <option value="unknown">🔴 Je sais pas</option>
-                    </select>
+            <!-- Conteneur des 3 filtres : Empilés sur mobile (flex-col), côte à côte sur écran sm+ (sm:flex-row) -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                <!-- 1. Filtre par Statut -->
+                <select id="filter-status" onchange="renderBackendTable()" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="all">🏷️ Tous les statuts</option>
+                    <option value="unstudied">⚪ Pas encore appris</option>
+                    <option value="known">🟢 Je sais</option>
+                    <option value="unknown">🔴 Je sais pas</option>
+                </select>
 
-                    <!-- Filtre par Score -->
-                    <select id="filter-score" onchange="renderBackendTable()" class="bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="all">📊 Tous les scores (1-10)</option>
-                        <option value="1">Score 1 / 10 (Boîte 1)</option>
-                        <option value="2">Score 2 / 10 (Boîte 1)</option>
-                        <option value="3">Score 3 / 10 (Boîte 2)</option>
-                        <option value="4">Score 4 / 10 (Boîte 2)</option>
-                        <option value="5">Score 5 / 10 (Boîte 3)</option>
-                        <option value="6">Score 6 / 10 (Boîte 3)</option>
-                        <option value="7">Score 7 / 10 (Boîte 4)</option>
-                        <option value="8">Score 8 / 10 (Boîte 4)</option>
-                        <option value="9">Score 9 / 10 (Boîte 5)</option>
-                        <option value="10">Score 10 / 10 (Boîte 5)</option>
-                    </select>
-                    <div class="relative w-full sm:w-64">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        <input type="text" id="backend-search" oninput="renderBackendTable()" placeholder="Filtrer la liste..." class="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full">
-                    </div>
+                <!-- 2. Filtre par Score -->
+                <select id="filter-score" onchange="renderBackendTable()" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="all">📊 Tous les scores (1-10)</option>
+                    <option value="1">Score 1 / 10 (Boîte 1)</option>
+                    <option value="2">Score 2 / 10 (Boîte 1)</option>
+                    <option value="3">Score 3 / 10 (Boîte 2)</option>
+                    <option value="4">Score 4 / 10 (Boîte 2)</option>
+                    <option value="5">Score 5 / 10 (Boîte 3)</option>
+                    <option value="6">Score 6 / 10 (Boîte 3)</option>
+                    <option value="7">Score 7 / 10 (Boîte 4)</option>
+                    <option value="8">Score 8 / 10 (Boîte 4)</option>
+                    <option value="9">Score 9 / 10 (Boîte 5)</option>
+                    <option value="10">Score 10 / 10 (Boîte 5)</option>
+                </select>
+
+                <!-- 3. Champ de Recherche dynamique -->
+                <div class="relative w-full sm:w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="backend-search" oninput="renderBackendTable()" placeholder="Filtrer la liste..." class="pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full">
                 </div>
             </div>
+        </div>
 
             <!-- Indication d'édition in-place -->
             <div class="text-[11px] text-slate-500 bg-amber-50 border border-amber-200/80 rounded-lg p-2.5 flex items-center space-x-2">
