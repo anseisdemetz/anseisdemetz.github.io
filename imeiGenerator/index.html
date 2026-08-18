@@ -6,7 +6,9 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; max-width: 900px; color: #333; }
         .filter-section { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        select, input[type="text"] { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; flex: 1; min-width: 200px; }
+        select, input[type="text"], input[type="number"] { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; flex: 1; min-width: 200px; }
+        .qty-section { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .qty-section input[type="number"] { max-width: 100px; min-width: auto; }
         .card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-top: 15px; background: #fafafa; }
         .results-list { border: 1px solid #ccc; border-radius: 4px; max-height: 400px; overflow-y: auto; margin-top: 10px; }
         .product-item { padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
@@ -45,13 +47,11 @@
 
     <div id="statusMessage" class="status-msg status-loading">Chargement du fichier response.json...</div>
 
-    <!-- Fallback si ouvert sans serveur local (file://) -->
     <div id="filePickerContainer" style="display: none; margin-bottom: 15px;">
         <label for="fileInput"><strong>Sélectionnez manuellement le fichier response.json :</strong> </label>
         <input type="file" id="fileInput" accept=".json" onchange="handleFileSelect(event)">
     </div>
 
-    <!-- Filtres -->
     <div class="filter-section">
         <select id="manufacturerFilter" onchange="applyFilters()" disabled>
             <option value="">-- Chargement des marques... --</option>
@@ -60,11 +60,9 @@
         <input type="text" id="searchInput" placeholder="Rechercher par nom de produit..." onkeyup="applyFilters()" disabled>
     </div>
 
-    <!-- Compteur et Résultats -->
     <div id="resultsCount" style="font-size: 0.9em; color: #555;"></div>
     <div id="searchResults" class="results-list" style="display: none;"></div>
 
-    <!-- Fiche du produit sélectionné -->
     <div id="productDetailCard" class="card" style="display: none;">
         <h3 id="prodModel"></h3>
         <p><strong>Marque :</strong> <span id="prodBrand"></span> | <strong>Type :</strong> <span id="prodType"></span></p>
@@ -75,6 +73,11 @@
         </div>
 
         <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+
+        <div class="qty-section">
+            <label for="imeiQuantity"><strong>Nombre d'IMEI à générer :</strong></label>
+            <input type="number" id="imeiQuantity" value="5" min="1" max="1000">
+        </div>
 
         <button onclick="generateAndLogIMEIs()">Générer les IMEI</button>
 
@@ -133,10 +136,7 @@
                 return;
             }
 
-            // Filtrage :
-            // 1. type === "Mobile"
-            // 2. is_imei_required !== "no"
-            // 3. Présence obligatoire d'au moins un TAC dans le tableau Tac / tac
+            // Filtrage
             catalogProducts = rawList.filter(item => {
                 const isMobileType = item.type === "Mobile";
                 const isImeiRequired = String(item.is_imei_required).toLowerCase() !== "no";
@@ -194,7 +194,7 @@
             return first14 + checkDigit;
         }
 
-        // 5. Filtrage et affichage de la totalité des résultats (sans limite de 15)
+        // 5. Filtrage et affichage
         function applyFilters() {
             const selectedBrand = document.getElementById('manufacturerFilter').value;
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -253,14 +253,30 @@
             document.getElementById('productDetailCard').style.display = 'block';
         }
 
-        // 7. Génération des 5 IMEIs
+        // 7. Génération du nombre d'IMEIs demandé
         function generateAndLogIMEIs() {
             if (!selectedProduct) return;
+
+            const qtyInput = document.getElementById('imeiQuantity');
+            const quantity = parseInt(qtyInput.value, 10);
+
+            // Gestion de l'alerte si 0 ou invalide
+            if (isNaN(quantity) || quantity <= 0) {
+                alert("⚠️ Erreur : Le nombre d'IMEI à générer doit être supérieur à 0.");
+                return;
+            }
+
+            // Sécurité technique pour éviter le crash de l'onglet/navigateur
+            const MAX_ALLOWED = 1000;
+            if (quantity > MAX_ALLOWED) {
+                alert(`⚠️ Impossible de générer autant d'IMEI à la fois. La limite maximale est fixée à ${MAX_ALLOWED} pour préserver les performances.`);
+                return;
+            }
 
             let tacs = selectedProduct.Tac || selectedProduct.tac || [];
             const imeis = [];
 
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < quantity; i++) {
                 const tacToUse = tacs[i % tacs.length];
                 imeis.push(createSingleIMEI(tacToUse));
             }
@@ -270,7 +286,7 @@
 
             let consoleOutput = `
                 <div class="log-header">
-                    <span class="log-time">[${time}]</span> > 5 IMEIs générés pour "${selectedProduct.product}"
+                    <span class="log-time">[${time}]</span> > ${quantity} IMEI(s) généré(s) pour "${selectedProduct.product}"
                 </div>
                 <div style="margin-left: 10px; color: #aaa; margin-bottom: 8px;">TAC(s) utilisé(s) : ${tacs.join(', ')}</div>
             `;
