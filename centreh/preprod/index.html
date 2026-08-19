@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plateforme d'Homologation - Diagnostic</title>
+    <title>Plateforme d'Homologation - Pre-check</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -14,7 +14,7 @@
         <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold text-sky-400">Plateforme d'Homologation</h1>
-                <p class="text-sm text-slate-400">Étape de contrôle et diagnostic</p>
+                <p class="text-sm text-slate-400">Étape de contrôle préliminaire</p>
             </div>
             <button id="reloadBtn" class="bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 px-3 py-1.5 rounded-md text-xs font-mono transition">
                 🔄 Recharger
@@ -28,38 +28,7 @@
                 Chargement des codes en cours...
             </div>
 
-            <!-- Bloc Administration -->
-            <section id="adminBlock" class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md hidden">
-                <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
-                    <h2 class="text-lg font-semibold text-purple-400"># Administration</h2>
-                    <span id="adminCounterBadge" class="text-xs bg-slate-700 text-purple-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
-                </div>
-
-                <form id="adminForm" class="space-y-4">
-                    <!-- Champ numéro de transaction -->
-                    <div class="bg-slate-900/60 p-3 rounded border border-slate-700 mb-4">
-                        <label for="transactionInput" class="block text-xs font-medium text-slate-400 mb-1">
-                            Numéro de transaction *
-                        </label>
-                        <input type="text" id="transactionInput" required placeholder="Ex: GRA0003895353"
-                               class="w-full bg-slate-800 border border-slate-600 rounded px-3 py-1.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500">
-                    </div>
-
-                    <!-- Liste des codes Administration -->
-                    <div id="adminCodesList" class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-                        <!-- Généré en JS -->
-                    </div>
-
-                    <!-- Bouton de validation Administration -->
-                    <div class="pt-4 border-t border-slate-700 flex justify-end">
-                        <button type="submit" id="sendAdminBtn" class="bg-purple-600 hover:bg-purple-500 text-white font-medium px-6 py-2 rounded-md transition duration-150 shadow">
-                            Valider l'Administration
-                        </button>
-                    </div>
-                </form>
-            </section>
-
-            <!-- Bloc Pre-check (Démasqué après validation Administration) -->
+            <!-- Bloc Pre-check -->
             <section id="preCheckBlock" class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md hidden">
                 <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
                     <h2 class="text-lg font-semibold text-slate-200"># Pre-check</h2>
@@ -67,7 +36,16 @@
                 </div>
 
                 <form id="preCheckForm" class="space-y-4">
-                    <!-- Liste des codes Pre-check -->
+                    <!-- Champ numéro de transaction -->
+                    <div class="bg-slate-900/60 p-3 rounded border border-slate-700 mb-4">
+                        <label for="transactionInput" class="block text-xs font-medium text-slate-400 mb-1">
+                            Numéro de transaction *
+                        </label>
+                        <input type="text" id="transactionInput" required placeholder="Ex: GRA0003895353"
+                               class="w-full bg-slate-800 border border-slate-600 rounded px-3 py-1.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
+                    </div>
+
+                    <!-- Liste des codes d'homologation -->
                     <div id="codesList" class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                         <!-- Généré en JS -->
                     </div>
@@ -81,7 +59,7 @@
                 </form>
             </section>
 
-            <!-- Bloc Check (Démasqué si status === "to_check") -->
+            <!-- Bloc Check (Affiche si status === "to_check") -->
             <section id="checkBlock" class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md hidden">
                 <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
                     <h2 class="text-lg font-semibold text-emerald-400"># Check</h2>
@@ -106,10 +84,10 @@
             <!-- Console Log API (Résultat Brut) -->
             <section class="bg-slate-950 p-4 rounded-lg border border-slate-800 font-mono text-xs shadow-inner">
                 <div class="text-slate-500 border-b border-slate-800 pb-2 mb-2 flex justify-between items-center">
-                    <span>// Console : Logs & Payload JSON</span>
+                    <span>// Console : Body JSON à copier dans Postman</span>
                     <button id="clearConsoleBtn" class="hover:text-slate-200 transition text-xs">Vider</button>
                 </div>
-                <pre id="consoleOutput" class="text-emerald-400 overflow-x-auto max-h-60 leading-relaxed">// Complétez la saisie et validez l'étape Administration...</pre>
+                <pre id="consoleOutput" class="text-emerald-400 overflow-x-auto max-h-60 leading-relaxed">// Complétez la saisie et cliquez sur le bouton pour afficher le JSON...</pre>
             </section>
         </main>
     </div>

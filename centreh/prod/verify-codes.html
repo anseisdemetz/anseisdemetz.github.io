@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-900">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification des Codes d'Homologation</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-full text-slate-100 flex flex-col justify-between">
+
+    <div class="max-w-5xl w-full mx-auto p-6 space-y-6">
+        <!-- Header -->
+        <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-sky-400">Référentiel des Codes</h1>
+                <p class="text-sm text-slate-400">Visualisation, filtrage et contrôle de présence (ALLOWED_CODES)</p>
+            </div>
+            <button id="reloadBtn" class="bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 px-3 py-1.5 rounded-md text-xs font-mono transition flex items-center gap-2">
+                🔄 Recharger les codes
+            </button>
+        </header>
+
+        <main class="space-y-6">
+            
+            <!-- Message de statut / chargement -->
+            <div id="statusMessage" class="p-4 rounded-lg bg-slate-800 border border-slate-700 text-center text-sm text-slate-300">
+                Chargement des codes en cours...
+            </div>
+
+            <!-- Légende -->
+            <div id="legend" class="hidden bg-slate-800/60 p-3 rounded-lg border border-slate-700 text-xs flex gap-6 text-slate-300 font-mono">
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Présent dans ALLOWED_CODES
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span> Absent de ALLOWED_CODES (Alerte)
+                </span>
+            </div>
+
+            <div id="contentBlocks" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
+                
+                <!-- Bloc Pre-check -->
+                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col space-y-4">
+                    <div class="flex justify-between items-center pb-2 border-b border-slate-700 shrink-0">
+                        <h2 class="text-lg font-semibold text-sky-400"># Pre-check</h2>
+                        <span id="preCheckBadge" class="text-xs bg-slate-700 text-sky-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
+                    </div>
+
+                    <!-- Champ de recherche multiple Pre-check -->
+                    <div class="shrink-0">
+                        <input type="text" id="preCheckSearch" placeholder="Filtrer par codes (ex: 5020, 1050 3010)..." 
+                               class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono">
+                    </div>
+
+                    <div id="preCheckList" class="space-y-2 max-h-[550px] overflow-y-auto pr-2 flex-1">
+                        <!-- Code - Libellé générés en JS -->
+                    </div>
+                </section>
+
+                <!-- Bloc Check -->
+                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col space-y-4">
+                    <div class="flex justify-between items-center pb-2 border-b border-slate-700 shrink-0">
+                        <h2 class="text-lg font-semibold text-emerald-400"># Check</h2>
+                        <span id="checkBadge" class="text-xs bg-slate-700 text-emerald-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
+                    </div>
+
+                    <!-- Champ de recherche multiple Check -->
+                    <div class="shrink-0">
+                        <input type="text" id="checkSearch" placeholder="Filtrer par codes (ex: 3030, 3040 3060)..." 
+                               class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono">
+                    </div>
+
+                    <div id="checkList" class="space-y-2 max-h-[550px] overflow-y-auto pr-2 flex-1">
+                        <!-- Code - Libellé générés en JS -->
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Script de configuration -->
+    <script src="config.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const statusMessage = document.getElementById("statusMessage");
+            const legend = document.getElementById("legend");
+            const contentBlocks = document.getElementById("contentBlocks");
+            
+            const preCheckList = document.getElementById("preCheckList");
+            const checkList = document.getElementById("checkList");
+            const preCheckBadge = document.getElementById("preCheckBadge");
+            const checkBadge = document.getElementById("checkBadge");
+            const reloadBtn = document.getElementById("reloadBtn");
+
+            const preCheckSearch = document.getElementById("preCheckSearch");
+            const checkSearch = document.getElementById("checkSearch");
+
+            // Listes de référence pour la comparaison
+            const ALLOWED_PRECHECK_CODES = [
+                "5020", "5010", "5030", "1050", "1060", "1070", "1080", "1090", 
+                "1100", "1110", "1130", "1150", "999", "1000", "1120", "3010", "3020",
+                "2010", "2020", "2030", "2031", "2032", "2033", "2034", "2035", "2036", 
+                "2029", "2037", "2038", "2039", "2041", "3301", "2040", "2050", "2060", 
+                "2061", "2062", "2063", "2070", "2071", "2072", "2080", "2090", "2091", 
+                "2101", "2111", "2112", "2121", "2122", "2123", "2124", "2125", "5041", 
+                "1170", "5110", "3320", "3321", "5060", "5070", "3341", "3342", "3343", 
+                "3344", "3345", "3346", "3357", "3405", "3406", "3407", "3348", "5040", 
+                "5080", "5100"
+            ];
+
+            const ALLOWED_CHECK_CODES = [
+                "3030", "3040", "3050", "3060", "3091", "3110", "3120", "3130", 
+                "3140", "3150", "3160", "3170", "3180", "3190", "3200", "3210", 
+                "3220", "3230", "3240", "3250", "3260", "3280", "3290", "3300", 
+                "3092", "3323", "3324", "3325", "3326", "3327", "3328", "3329", 
+                "3347", "3351", "3408", "3090", "3100", "3340", "3411"
+            ];
+
+            let rawPreCheckCodes = [];
+            let rawCheckCodes = [];
+
+            // Chargement initial
+            loadAndDisplayCodes();
+
+            if (reloadBtn) {
+                reloadBtn.addEventListener("click", () => loadAndDisplayCodes());
+            }
+
+            // Écouteurs recherche
+            preCheckSearch.addEventListener("input", () => filterAndRender("precheck"));
+            checkSearch.addEventListener("input", () => filterAndRender("check"));
+
+            async function loadAndDisplayCodes() {
+                showStatus("Récupération des codes d'homologation...", "info");
+                contentBlocks.classList.add("hidden");
+                legend.classList.add("hidden");
+
+                try {
+                    const response = await fetch(CONFIG.CODES_API_URL, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                        }
+                    });
+
+                    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+
+                    let responseData = await response.json();
+
+                    // Désencapsulation proxy CORS
+                    if (responseData && typeof responseData.contents === 'string') {
+                        try { responseData = JSON.parse(responseData.contents); } catch (e) {}
+                    } else if (responseData && responseData.contents) {
+                        responseData = responseData.contents;
+                    }
+
+                    let codesArray = [];
+                    if (Array.isArray(responseData)) {
+                        codesArray = responseData;
+                    } else if (responseData && typeof responseData === 'object') {
+                        for (const key in responseData) {
+                            if (Array.isArray(responseData[key])) {
+                                codesArray = responseData[key];
+                                break;
+                            }
+                        }
+                    }
+
+                    // Stockage des listes d'origines (quand pre_check / check = true dans l'API)
+                    rawPreCheckCodes = codesArray.filter(item => isTrue(item?.steps?.pre_check));
+                    rawCheckCodes = codesArray.filter(item => isTrue(item?.steps?.check));
+
+                    // Premier rendu
+                    filterAndRender("precheck");
+                    filterAndRender("check");
+
+                    hideStatus();
+                    legend.classList.remove("hidden");
+                    contentBlocks.classList.remove("hidden");
+
+                } catch (error) {
+                    showStatus(`Erreur lors du chargement des codes : ${error.message}`, "error");
+                }
+            }
+
+            function filterAndRender(type) {
+                if (type === "precheck") {
+                    const searchTerms = extractCodesFromInput(preCheckSearch.value);
+                    const filtered = filterCodesByList(rawPreCheckCodes, searchTerms);
+                    renderList(filtered, preCheckList, preCheckBadge, "sky", ALLOWED_PRECHECK_CODES);
+                } else {
+                    const searchTerms = extractCodesFromInput(checkSearch.value);
+                    const filtered = filterCodesByList(rawCheckCodes, searchTerms);
+                    renderList(filtered, checkList, checkBadge, "emerald", ALLOWED_CHECK_CODES);
+                }
+            }
+
+            function extractCodesFromInput(inputValue) {
+                return inputValue
+                    .split(/[\s,]+/)
+                    .map(term => term.trim())
+                    .filter(term => term.length > 0);
+            }
+
+            function filterCodesByList(codesList, searchTerms) {
+                if (searchTerms.length === 0) return codesList;
+                return codesList.filter(item => {
+                    const itemCode = String(item?.code || "").toLowerCase();
+                    return searchTerms.some(term => itemCode.includes(term.toLowerCase()));
+                });
+            }
+
+            // Rendu de la liste avec comparaison d'appartenance
+            function renderList(codes, container, badge, colorScheme, allowedList) {
+                container.innerHTML = "";
+                badge.textContent = `${codes.length} code(s)`;
+
+                if (codes.length === 0) {
+                    container.innerHTML = `<div class="text-xs text-slate-500 italic p-3">Aucun code correspondant.</div>`;
+                    return;
+                }
+
+                const textColorClass = colorScheme === "sky" ? "text-sky-300" : "text-emerald-300";
+
+                codes.forEach(item => {
+                    const codeVal = String(item.code || "");
+                    const labelFr = (item.label && item.label.fr) ? item.label.fr : "Libellé FR non disponible";
+
+                    // Comparaison : Est-ce que le code fait partie de la liste ALLOWED de l'étape ?
+                    const isAllowed = allowedList.includes(codeVal);
+
+                    // Pastille témoin : vert si autorisé, rouge clignotant/lumineux si absent
+                    const statusDot = isAllowed 
+                        ? `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 mt-1" title="Présent dans ALLOWED_CODES"></span>` 
+                        : `<span class="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0 mt-1 shadow-[0_0_8px_rgba(244,63,94,0.8)]" title="ATTENTION: Absent de la liste ALLOWED_CODES !"></span>`;
+
+                    const card = document.createElement("div");
+                    card.className = `p-2.5 bg-slate-900/80 rounded border ${isAllowed ? 'border-slate-700/60' : 'border-rose-900/80 bg-rose-950/20'} flex items-start gap-2.5 text-sm transition`;
+                    
+                    card.innerHTML = `
+                        ${statusDot}
+                        <div class="flex items-start gap-2 flex-1">
+                            <span class="font-mono font-bold ${textColorClass} shrink-0">${escapeHtml(codeVal)}</span>
+                            <span class="text-slate-400 font-mono shrink-0">-</span>
+                            <span class="text-slate-200">${escapeHtml(labelFr)}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            function isTrue(value) {
+                return value === true || value === "true" || value === 1;
+            }
+
+            function showStatus(text, type) {
+                statusMessage.textContent = text;
+                statusMessage.classList.remove("hidden", "text-red-400", "text-amber-400", "text-slate-300");
+                if (type === "error") statusMessage.classList.add("text-red-400");
+                else if (type === "warning") statusMessage.classList.add("text-amber-400");
+                else statusMessage.classList.add("text-slate-300");
+            }
+
+            function hideStatus() {
+                statusMessage.classList.add("hidden");
+            }
+
+            function escapeHtml(str) {
+                return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
+            }
+        });
+    </script>
+</body>
+</html>

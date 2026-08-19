@@ -1,11 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Éléments UI Administration
-    const adminBlock = document.getElementById("adminBlock");
-    const adminForm = document.getElementById("adminForm");
-    const adminCodesList = document.getElementById("adminCodesList");
-    const adminCounterBadge = document.getElementById("adminCounterBadge");
-    const sendAdminBtn = document.getElementById("sendAdminBtn");
-
     // Éléments UI Pre-check
     const statusMessage = document.getElementById("statusMessage");
     const preCheckBlock = document.getElementById("preCheckBlock");
@@ -27,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const reloadBtn = document.getElementById("reloadBtn");
     const sendBtn = document.getElementById("sendBtn");
 
-    // Whitelist locale de secours (au cas où) pour Pre-check et Check
+    // Liste des codes autorisés pour Pre-check
     const ALLOWED_PRECHECK_CODES = [
         "5020", "5010", "5030", "1050", "1060", "1070", "1080", "1090", 
         "1100", "1110", "1130", "1150", "999", "1000", "1120", "3010", "3020",
@@ -40,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "5080", "5100"
     ];
 
+    // Liste des codes autorisés pour Check
     const ALLOWED_CHECK_CODES = [
         "3030", "3040", "3050", "3060", "3091", "3110", "3120", "3130", 
         "3140", "3150", "3160", "3170", "3180", "3190", "3200", "3210", 
@@ -49,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     let rawApiCodes = [];
-    let filteredAdminCodes = [];
     let filteredPreCheckCodes = [];
     let filteredCheckCodes = [];
 
@@ -62,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- 1. Chargement de l'ensemble des codes API ---
     async function loadCodes() {
         showStatus("Chargement des codes d'homologation...", "info");
-        adminBlock.classList.add("hidden");
         preCheckBlock.classList.add("hidden");
         checkBlock.classList.add("hidden");
         consoleOutput.textContent = "// Requête en cours vers l'API...";
@@ -99,11 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            // Filtrage : Extraction dynamique des codes Administration (admin_check / admin_precheck === true)
-            filteredAdminCodes = rawApiCodes.filter(item => {
-                return item?.steps?.admin_check === true || item?.steps?.admin_precheck === true;
-            });
-
             // Indexation rapide des codes API
             const codesMap = new Map();
             rawApiCodes.forEach(item => {
@@ -112,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            // Filtrage des listes Pre-check et Check
+            // Filtrage des deux listes
             filteredPreCheckCodes = ALLOWED_PRECHECK_CODES
                 .filter(code => codesMap.has(code))
                 .map(code => codesMap.get(code));
@@ -121,18 +108,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 .filter(code => codesMap.has(code))
                 .map(code => codesMap.get(code));
 
-            if (filteredAdminCodes.length === 0 && filteredPreCheckCodes.length === 0) {
-                showStatus(`Aucun code trouvé.`, "warning");
+            if (filteredPreCheckCodes.length === 0) {
+                showStatus(`Aucun code correspondant à la liste n'a été trouvé.`, "warning");
             } else {
                 hideStatus();
-                // Rendu des 3 listes
-                renderCodes(filteredAdminCodes, adminCodesList, adminCounterBadge, "admin");
                 renderCodes(filteredPreCheckCodes, codesList, counterBadge, "precheck");
                 renderCodes(filteredCheckCodes, checkCodesList, checkCounterBadge, "check");
-                
-                // Afficher uniquement le bloc Administration au démarrage
-                adminBlock.classList.remove("hidden");
-                consoleOutput.textContent = "// Codes chargés. Renseignez la transaction, cochez les éléments d'Administration et validez.";
+                preCheckBlock.classList.remove("hidden");
+                consoleOutput.textContent = "// Codes chargés. Renseignez la transaction, cochez les éléments et cliquez sur Valider.";
             }
 
         } catch (error) {
@@ -160,13 +143,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let data = await response.json();
 
+        // Désencapsulation proxy CORS
         if (data && typeof data.contents === 'string') {
             try { data = JSON.parse(data.contents); } catch (e) {}
         } else if (data && data.contents) {
             data = data.contents;
         }
 
+        // Extraction imei : results -> current -> imei
         const imei = data?.results?.current?.imei;
+        
         return imei !== undefined && imei !== null ? imei : "";
     }
 
@@ -200,35 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 4. Traitement du bloc Administration ---
-    if (adminForm) {
-        adminForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            const txNum = transactionInput.value.trim();
-            if (!txNum) {
-                alert("Veuillez renseigner un numéro de transaction.");
-                return;
-            }
-
-            // Extraction des réponses du formulaire Administration
-            const formData = new FormData(adminForm);
-            const adminCheckObject = {};
-
-            filteredAdminCodes.forEach(item => {
-                const val = formData.get(`admin_code_${item.code}`);
-                adminCheckObject[String(item.code)] = (val === "true");
-            });
-
-            consoleOutput.textContent = `// Saisie Administration enregistrée pour la transaction ${txNum} :\n` + JSON.stringify(adminCheckObject, null, 2);
-
-            // Validation OK -> Démasquage du bloc Pre-check
-            preCheckBlock.classList.remove("hidden");
-            preCheckBlock.scrollIntoView({ behavior: "smooth" });
-        });
-    }
-
-    // --- 5. Traitement du Pre-Check ---
+    // --- 4. Traitement du Pre-Check ---
     if (preCheckForm) {
         preCheckForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -300,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 consoleOutput.textContent = statusInfo + `// Réponse de l'API Pre-Check :\n` + formattedBody;
 
-                // Si status === "to_check", démasquage de l'étape Check
+                // Si status === "to_check", on démasque l'interface # Check
                 const status = responseData?.results?.status;
                 if (status === "to_check") {
                     checkBlock.classList.remove("hidden");
@@ -318,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 6. Traitement du Check ---
+    // --- 5. Traitement du Check ---
     if (checkForm) {
         checkForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -335,6 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             try {
+                // Construction du product_check dynamique à partir des radios du formulaire Check
                 const formData = new FormData(checkForm);
                 const productCheckObject = {};
 
@@ -343,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     productCheckObject[String(item.code)] = (val === "true");
                 });
 
-                // Clés fixes d'effacement
+                // Ajout des clés fixes d'effacement
                 productCheckObject["401"] = true;
                 productCheckObject["402"] = txNum;
 
@@ -413,3 +372,24 @@ document.addEventListener("DOMContentLoaded", () => {
         return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
     }
 });
+
+
+
+/*
+
+=> réponse de l'api pre-check
+
+// Statut HTTP : 200 
+// Réponse de l'API :
+{
+  "result_code": "OK",
+  "message": "",
+  "results_count": 3,
+  "results": {
+    "status": "to_check",
+    "proof_is_required": false,
+    "litigations_proofs": []
+  }
+}
+
+*/
