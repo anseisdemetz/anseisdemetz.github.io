@@ -109,21 +109,41 @@ function renderAnalysis(productId) {
     const p0 = info.initial_price;
     const rate = info.annual_rate;
 
-    // Calcul / Récupération Réel vs Projeté
-    const p3  = info.m3_real !== null ? info.m3_real : p0 * Math.pow(1 - rate, 3 / 12);
-    const p6  = info.m6_real !== null ? info.m6_real : p0 * Math.pow(1 - rate, 6 / 12);
-    const p12 = p0 * Math.pow(1 - rate, 1);
-    const p24 = p0 * Math.pow(1 - rate, 2);
-    const p36 = p0 * Math.pow(1 - rate, 3);
+    // 1. Déterminer le DERNIER prix réel disponible et son nombre de mois d'ancrage
+    let lastRealPrice = p0;
+    let lastRealMonths = 0;
+
+    if (info.m6_real !== null && info.m6_real !== undefined) {
+      lastRealPrice = info.m6_real;
+      lastRealMonths = 6;
+    } else if (info.m3_real !== null && info.m3_real !== undefined) {
+      lastRealPrice = info.m3_real;
+      lastRealMonths = 3;
+    }
+
+    // 2. Définir les valeurs M+3 et M+6 (Réel si présent, sinon projeté)
+    const p3 = (info.m3_real !== null && info.m3_real !== undefined) 
+      ? info.m3_real 
+      : p0 * Math.pow(1 - rate, 3 / 12);
+
+    const p6 = (info.m6_real !== null && info.m6_real !== undefined) 
+      ? info.m6_real 
+      : p3 * Math.pow(1 - rate, 3 / 12);
+
+    // 3. Projeter M+12, M+24, M+36 EN PARTANT du dernier prix réel
+    const p12 = lastRealPrice * Math.pow(1 - rate, (12 - lastRealMonths) / 12);
+    const p24 = lastRealPrice * Math.pow(1 - rate, (24 - lastRealMonths) / 12);
+    const p36 = lastRealPrice * Math.pow(1 - rate, (36 - lastRealMonths) / 12);
 
     const color = GRADE_COLORS[grade] || '#000000';
     
-    // Indice à partir duquel la courbe passe en pointillés
+    // Découpage du point de transition pour la ligne pointillée (Réel -> Projeté)
     const realDays = info.last_real_days;
     let splitIndex = 1;
-    if (realDays >= 180) splitIndex = 3;
-    else if (realDays >= 90) splitIndex = 2;
+    if (realDays >= 180) splitIndex = 3;      // En pointillés après M+6
+    else if (realDays >= 90) splitIndex = 2;   // En pointillés après M+3
 
+    // Ajout aux datasets du graphique
     chartDatasets.push({
       label: `Grade ${grade}`,
       data: [p0, p3, p6, p12, p24, p36],
@@ -136,6 +156,7 @@ function renderAnalysis(productId) {
       }
     });
 
+    // Ajout aux lignes du tableau HTML
     tableRows.push(`
       <tr>
         <td><span class="badge-grade">${grade}</span></td>
@@ -148,10 +169,12 @@ function renderAnalysis(productId) {
         <td>-${(rate * 100).toFixed(1)}% / an</td>
       </tr>
     `);
-  });
+  }); // Fin de la boucle grades.forEach
 
+  // Injection dans le tableau HTML
   document.querySelector('#projectionsTable tbody').innerHTML = tableRows.join('');
 
+  // Rendu du graphique Chart.js
   const ctx = document.getElementById('depreciationChart').getContext('2d');
   if (chartInstance) chartInstance.destroy();
 
