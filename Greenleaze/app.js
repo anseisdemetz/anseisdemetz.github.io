@@ -1,5 +1,6 @@
 let rawData = [];
 let chartInstance = null;
+let brandChartInstance = null;
 
 const GRADE_COLORS = {
   'A+': '#10b981', 'A': '#06b6d4', 'B': '#3b82f6',
@@ -33,6 +34,7 @@ function initControls() {
     productSelect.disabled = !selectedBrand;
 
     if (selectedBrand) {
+      // 1. Mise à jour de la liste des produits
       const filteredProducts = rawData.filter(item => item.manufacturer === selectedBrand);
       const uniqueProducts = [...new Map(filteredProducts.map(item => [item.idproduct, item])).values()];
       uniqueProducts.forEach(p => {
@@ -40,6 +42,11 @@ function initControls() {
         opt.value = p.idproduct; opt.textContent = p.product;
         productSelect.appendChild(opt);
       });
+
+      // 2. Affichage immédiat de la courbe moyenne de la MARQUE
+      renderBrandAnalysis(selectedBrand);
+    } else {
+      document.getElementById('brandChartContainer').style.display = 'none';
     }
   });
 
@@ -55,13 +62,99 @@ function formatDate(dateObj) {
   return `${day}/${month}/${dateObj.getFullYear()}`;
 }
 
+// --- NOUVELLE FONCTION : Graphique Moyen par Marque ---
+function renderBrandAnalysis(brandName) {
+  const brandData = rawData.filter(item => item.manufacturer === brandName);
+  if (brandData.length === 0) return;
+
+  const container = document.getElementById('brandChartContainer');
+  if (container) container.style.display = 'block';
+
+  const grades = [...new Set(brandData.map(d => d.grade))].sort();
+  const timeLabels = ['M+0', 'M+3', 'M+6', 'M+12', 'M+24', 'M+36'];
+  const chartDatasets = [];
+
+  grades.forEach(grade => {
+    const gradeItems = brandData.filter(d => d.grade === grade);
+    if (gradeItems.length === 0) return;
+
+    // Calcul de la moyenne de la marque pour chaque jalon
+    let sumP0 = 0, sumP3 = 0, sumP6 = 0, sumP12 = 0, sumP24 = 0, sumP36 = 0;
+
+    gradeItems.forEach(info => {
+      const p0 = info.initial_price;
+      const rate = info.annual_rate;
+
+      let lastRealPrice = p0;
+      let lastRealMonths = 0;
+
+      if (info.m6_real !== null && info.m6_real !== undefined) {
+        lastRealPrice = info.m6_real;
+        lastRealMonths = 6;
+      } else if (info.m3_real !== null && info.m3_real !== undefined) {
+        lastRealPrice = info.m3_real;
+        lastRealMonths = 3;
+      }
+
+      const p3 = (info.m3_real !== null && info.m3_real !== undefined) ? info.m3_real : p0 * Math.pow(1 - rate, 3 / 12);
+      const p6 = (info.m6_real !== null && info.m6_real !== undefined) ? info.m6_real : p3 * Math.pow(1 - rate, 3 / 12);
+      const p12 = lastRealPrice * Math.pow(1 - rate, (12 - lastRealMonths) / 12);
+      const p24 = lastRealPrice * Math.pow(1 - rate, (24 - lastRealMonths) / 12);
+      const p36 = lastRealPrice * Math.pow(1 - rate, (36 - lastRealMonths) / 12);
+
+      sumP0 += p0; sumP3 += p3; sumP6 += p6; sumP12 += p12; sumP24 += p24; sumP36 += p36;
+    });
+
+    const count = gradeItems.length;
+    const avgData = [
+      sumP0 / count, sumP3 / count, sumP6 / count,
+      sumP12 / count, sumP24 / count, sumP36 / count
+    ];
+
+    const color = GRADE_COLORS[grade] || '#000000';
+
+    chartDatasets.push({
+      label: `Grade ${grade} (Moy. ${brandName})`,
+      data: avgData,
+      borderColor: color,
+      backgroundColor: color,
+      tension: 0.2,
+      borderWidth: 2
+    });
+  });
+
+  const ctx = document.getElementById('brandDepreciationChart').getContext('2d');
+  if (brandChartInstance) brandChartInstance.destroy();
+
+  brandChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: { labels: timeLabels, datasets: chartDatasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)} €`
+          }
+        }
+      },
+      scales: {
+        y: { title: { display: true, text: 'Prix Moyen (€)' } },
+        x: { title: { display: true, text: 'Timeline de Dépréciation Marque' } }
+      }
+    }
+  });
+}
+
+// --- FONCTION PRODUIT SPECIFIQUE ---
 function renderAnalysis(productId) {
   const productData = rawData.filter(item => item.idproduct == productId);
   if (productData.length === 0) return;
 
   const startDate = new Date(productData[0].first_date);
 
-  // Génération des 6 dates jalons
   const addMonths = (date, months) => {
     const d = new Date(date);
     d.setMonth(d.getMonth() + months);
@@ -84,7 +177,6 @@ function renderAnalysis(productId) {
     `M+36 (${formatDate(d36)})`
   ];
 
-  // Entêtes de tableau
   document.querySelector('#projectionsTable thead').innerHTML = `
     <tr>
       <th>Grade</th>
@@ -109,7 +201,6 @@ function renderAnalysis(productId) {
     const p0 = info.initial_price;
     const rate = info.annual_rate;
 
-    // 1. Déterminer le DERNIER prix réel disponible et son nombre de mois d'ancrage
     let lastRealPrice = p0;
     let lastRealMonths = 0;
 
@@ -121,29 +212,19 @@ function renderAnalysis(productId) {
       lastRealMonths = 3;
     }
 
-    // 2. Définir les valeurs M+3 et M+6 (Réel si présent, sinon projeté)
-    const p3 = (info.m3_real !== null && info.m3_real !== undefined) 
-      ? info.m3_real 
-      : p0 * Math.pow(1 - rate, 3 / 12);
-
-    const p6 = (info.m6_real !== null && info.m6_real !== undefined) 
-      ? info.m6_real 
-      : p3 * Math.pow(1 - rate, 3 / 12);
-
-    // 3. Projeter M+12, M+24, M+36 EN PARTANT du dernier prix réel
+    const p3 = (info.m3_real !== null && info.m3_real !== undefined) ? info.m3_real : p0 * Math.pow(1 - rate, 3 / 12);
+    const p6 = (info.m6_real !== null && info.m6_real !== undefined) ? info.m6_real : p3 * Math.pow(1 - rate, 3 / 12);
     const p12 = lastRealPrice * Math.pow(1 - rate, (12 - lastRealMonths) / 12);
     const p24 = lastRealPrice * Math.pow(1 - rate, (24 - lastRealMonths) / 12);
     const p36 = lastRealPrice * Math.pow(1 - rate, (36 - lastRealMonths) / 12);
 
     const color = GRADE_COLORS[grade] || '#000000';
     
-    // Découpage du point de transition pour la ligne pointillée (Réel -> Projeté)
     const realDays = info.last_real_days;
     let splitIndex = 1;
-    if (realDays >= 180) splitIndex = 3;      // En pointillés après M+6
-    else if (realDays >= 90) splitIndex = 2;   // En pointillés après M+3
+    if (realDays >= 180) splitIndex = 3;
+    else if (realDays >= 90) splitIndex = 2;
 
-    // Ajout aux datasets du graphique
     chartDatasets.push({
       label: `Grade ${grade}`,
       data: [p0, p3, p6, p12, p24, p36],
@@ -156,7 +237,6 @@ function renderAnalysis(productId) {
       }
     });
 
-    // Ajout aux lignes du tableau HTML
     tableRows.push(`
       <tr>
         <td><span class="badge-grade">${grade}</span></td>
@@ -169,12 +249,10 @@ function renderAnalysis(productId) {
         <td>-${(rate * 100).toFixed(1)}% / an</td>
       </tr>
     `);
-  }); // Fin de la boucle grades.forEach
+  });
 
-  // Injection dans le tableau HTML
   document.querySelector('#projectionsTable tbody').innerHTML = tableRows.join('');
 
-  // Rendu du graphique Chart.js
   const ctx = document.getElementById('depreciationChart').getContext('2d');
   if (chartInstance) chartInstance.destroy();
 
