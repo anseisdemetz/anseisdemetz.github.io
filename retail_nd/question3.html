@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auchan by CompaRecycle - Diagnostic Écran (Question 3)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#ffffff',
+                        foreground: '#1f2937',
+                        border: '#e5e7eb',
+                        muted: {
+                            DEFAULT: '#f3f4f6',
+                            foreground: '#6b7280'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Masquer la barre de défilement pour la nav horizontale */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen bg-background text-foreground antialiased flex flex-col">
+
+    <header class="sticky top-0 z-50 bg-background border-b border-border shadow-sm bg-white">
+        <div class="border-b border-border">
+            <div class="max-w-full mx-auto px-8 lg:px-14 h-16 flex items-center justify-between gap-6">
+                
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[#e30613] font-bold text-xl leading-none">Auchan</span>
+                        <span class="text-muted-foreground text-xs">by <span class="text-foreground font-medium">CompaRecycle</span></span>
+                    </div>
+
+                    <div class="hidden lg:block w-px h-5 bg-border"></div>
+
+                    <a href="index.html" class="hidden lg:flex items-center gap-1.5 transition-colors text-slate-700">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-muted-foreground"></i>
+                        <span class="text-sm font-medium">Auchan Gap</span>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-2 lg:gap-4 shrink-0">
+                    <div id="cart-trigger" class="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer group text-slate-700">
+                        <i data-lucide="shopping-basket" class="w-5 h-5 text-muted-foreground group-hover:text-[#e30613] transition-colors"></i>
+                        <div class="flex flex-col items-start leading-none">
+                            <span class="text-sm font-medium group-hover:text-[#e30613] transition-colors">Panier de reprises</span>
+                            <span class="text-[11px] font-semibold text-[#2da44e] mt-0.5">Total : 665 €</span>
+                        </div>
+                        <span class="ml-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#e30613] text-[10px] font-bold text-white">3</span>
+                    </div>
+
+                    <div class="hidden lg:block w-px h-4 bg-border mx-1"></div>
+
+                <div class="flex items-center gap-2">
+                    
+                    <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 transition-colors">
+                        <i data-lucide="phone" class="w-4 h-4 text-muted-foreground"></i>
+                        <span class="text-sm font-medium">+33(0)1 84 66 04 22</span>
+                    </div>
+
+                    <a href="contact.html" class="hidden lg:flex items-center gap-2 px-3 py-1.5 transition-colors">
+                        <i data-lucide="mail" class="w-4 h-4 text-muted-foreground"></i>
+                        <span class="text-sm font-medium">Contact</span>
+                    </a>
+
+                    <div id="info-trigger" class="flex items-center justify-center p-2 rounded-full hover:bg-muted transition-colors cursor-pointer text-muted-foreground hover:text-foreground" title="Instructions de reprise">
+                        <i data-lucide="help-circle" class="w-5 h-5"></i>
+                    </div>
+
+                    <a href="compte.html" class="relative flex items-center justify-center p-2 rounded-full hover:bg-muted transition-colors cursor-pointer text-muted-foreground hover:text-foreground" title="Mes notifications">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        
+                        <span class="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#e30613] text-[9px] font-bold text-white ring-2 ring-white">
+                            3
+                        </span>
+                    </a>                    
+
+                    <a href="connexion.html">
+                        <div class="flex items-center justify-center p-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                            <div class="bg-foreground text-white rounded-full p-1.5 flex items-center justify-center">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-muted/30 pt-3">
+            <div class="max-w-full mx-auto px-8 lg:px-14">
+                <div class="flex items-center justify-between">
+                    <nav class="flex items-center gap-6 overflow-x-auto scrollbar-hide">
+                        <a href="index.html" class="relative pb-3 cursor-pointer group">
+                            <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-[#e30613]">Reprise</span>
+                            <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-100 transition-all duration-300"></div>
+                        </a>
+                        <a href="expedition.html" class="relative pb-3 cursor-pointer group">
+                            <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Expédition</span>
+                            <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                        </a>
+                        <a href="historique.html" class="relative pb-3 cursor-pointer group">
+                            <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Historique</span>
+                            <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                        </a>
+                        <a href="plv.html" class="relative pb-3 cursor-pointer group">
+                            <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">PLV</span>
+                            <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                        </a>
+                        <a href="devis.html" class="relative pb-3 cursor-pointer group">
+                            <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Devis</span>
+                            <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                        </a>
+                        <a href="#" class="relative pb-3 cursor-pointer group">
+                            <span class="text-sm font-medium whitespace-nowrap transition-colors duration-200 text-foreground hover:text-[#e30613]">Guide</span>
+                            <div class="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-[#e30613] opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                        </a>
+                    </nav>
+
+                    <div class="hidden md:flex items-center gap-6 py-3 shrink-0 pl-8">
+                        <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                            <span class="text-sm text-muted-foreground whitespace-nowrap">Volume à expédier</span>
+                            <span class="text-sm font-semibold text-foreground">1</span>
+                        </div>
+                        <div class="w-px h-4 bg-border"></div>
+                        <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                            <span class="text-sm text-muted-foreground whitespace-nowrap">Valeur à expédier</span>
+                            <span class="text-sm font-semibold text-[#2da44e]">558 €</span>
+                        </div>
+                        <div class="w-px h-4 bg-border"></div>
+                        <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                            <span class="text-sm text-muted-foreground whitespace-nowrap">Valeur en écart</span>
+                            <span class="text-sm font-semibold text-foreground">0 €</span>
+                        </div>
+                        <div class="w-px h-4 bg-border"></div>
+                        <div class="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer">
+                            <span class="text-sm text-muted-foreground whitespace-nowrap">Quarantaines</span>
+                            <span class="text-sm font-semibold text-foreground">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-full w-full mx-auto px-8 lg:px-14 py-12 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <aside class="lg:col-span-1 flex flex-col gap-5">
+            <a href="catalogue.html" class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium mb-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Retour à la page d'accueil
+            </a>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col gap-5">
+                <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
+                    <div class="w-16 h-16 bg-white border border-gray-100 rounded-lg p-1.5 flex items-center justify-center shrink-0">
+                        <img src="https://comparecycle.com/_next/image?url=https%3A%2F%2Fstatic.comparecycle.com%2Fimages%2F10%2F334ce7c092539db60c33e9d6d72122b06bf9ac7a.png&w=96&q=75" 
+                             alt="iPhone 16 Pro Max" 
+                             class="object-contain max-h-full max-w-full">
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Apple</h3>
+                        <p class="text-xs text-slate-500 font-medium">iPhone 16 Pro Max</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 text-xs">
+                    <div class="flex justify-between items-center gap-4">
+                        <span class="text-slate-500">Le mobile est-il fonctionnel ?</span>
+                        <span class="font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded shrink-0">Oui</span>
+                    </div>
+                    <div class="flex justify-between items-center gap-4">
+                        <span class="text-slate-500">Écran et boutons OK ?</span>
+                        <span class="font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded shrink-0">Oui</span>
+                    </div>
+                    <div class="flex justify-between items-start gap-4">
+                        <span class="text-slate-500">Quel est l'état de l'écran ?</span>
+                        <span class="font-semibold bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-right whitespace-nowrap shrink-0">En attente...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#e30613] text-white rounded-2xl p-6 shadow-md flex flex-col gap-1.5">
+                <span class="text-xs font-medium text-white/80 uppercase tracking-wider">Prix de reprise estimé</span>
+                <span class="text-4xl font-extrabold tracking-tight">498€</span>
+            </div>
+        </aside>
+
+        <div class="lg:col-span-3 space-y-8 flex flex-col justify-start">
+            
+            <div class="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                <span class="hover:text-foreground transition-colors">Évaluation</span>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <span class="text-foreground bg-muted px-2 py-0.5 rounded-full">Étape 3 sur 6</span>
+            </div>
+
+            <div class="text-left">
+                <h1 class="text-xl md:text-2xl font-bold tracking-tight text-slate-900 mb-2 flex items-baseline gap-2">
+                    <span class="text-slate-400 font-medium text-lg shrink-0">3/6</span>
+                    <span>Quel est l'état esthétique (de la vitre) de l'écran ?</span>
+                </h1>
+                <p class="text-sm text-muted-foreground">
+                    Inspectez attentivement la surface à l'aide d'un reflet lumineux pour détecter les micro-rayures profondes ou les fissures.
+                </p>
+            </div>
+
+            <div class="hidden">
+                <input type="radio" name="form_screen_status" value="comme_neuf" id="radio-0">
+                <input type="radio" name="form_screen_status" value="tres_bon_etat" id="radio-1">
+                <input type="radio" name="form_screen_status" value="raye" id="radio-2">
+                <input type="radio" name="form_screen_status" value="tres_abime" id="radio-3">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                
+                <div class="relative bg-slate-50 rounded-2xl p-8 flex flex-col items-center justify-center min-h-[380px] border border-slate-100 shadow-sm" style="background-color: #F2F5F7;">
+                    
+                    <button id="carousel-prev-btn" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-md border border-slate-200 flex items-center justify-center hover:bg-slate-50 text-slate-600 transition-colors z-10 cursor-pointer">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <div class="p-2 max-w-[220px] w-full flex items-center justify-center">
+                        <img id="phone-screen-img" src="" alt="État de l'écran" class="max-w-full h-auto object-contain rounded-[2.1rem] transition-opacity duration-300">
+                    </div>
+
+                    <button id="carousel-next-btn" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-md border border-slate-200 flex items-center justify-center hover:bg-slate-50 text-slate-600 transition-colors z-10 cursor-pointer">
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+
+                </div>
+
+                <div class="space-y-4" id="options-container">
+                        
+                    <a href="question6.html" class="option-card block border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:border-slate-300 hover:shadow-md transition-all relative group bg-white">
+                        <input type="radio" name="screen_status" value="0" class="sr-only peer">
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 absolute top-6 right-5 flex items-center justify-center shrink-0 peer-checked:border-[#e30613] peer-checked:bg-[#e30613] transition-colors">
+                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                        </div>
+                        <div class="pr-8">
+                            <span class="block font-bold text-sm text-slate-800 mb-1">Très abîmé - Cassé</span>
+                            <span class="block text-xs text-slate-500 leading-relaxed">Fissuré, cassé, éclat, décollement.</span>
+                        </div>
+                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-[#e30613] rounded-2xl pointer-events-none transition-colors"></div>
+                    </a>
+
+                    <label class="option-card block border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:border-slate-300 hover:shadow-md transition-all relative group bg-white">
+                        <input type="radio" name="screen_status" value="1" class="sr-only peer">
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 absolute top-6 right-5 flex items-center justify-center shrink-0 peer-checked:border-[#e30613] peer-checked:bg-[#e30613] transition-colors">
+                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                        </div>
+                        <div class="pr-8">
+                            <span class="block font-bold text-sm text-slate-800 mb-1">Rayure(s) / Impact(s)</span>
+                            <span class="block text-xs text-slate-500 leading-relaxed">Rayure(s) marquée(s) sensible(s) à l'ongle, visible(s) à 20 cm. Rayure(s) étendue(s). Impact(s) ou altération(s) visible(s) à 20 cm.</span>
+                        </div>
+                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-[#e30613] rounded-2xl pointer-events-none transition-colors"></div>
+                    </label>
+
+                    <label class="option-card block border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:border-slate-300 hover:shadow-md transition-all relative group bg-white">
+                        <input type="radio" name="screen_status" value="2" class="sr-only peer">
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 absolute top-6 right-5 flex items-center justify-center shrink-0 peer-checked:border-[#e30613] peer-checked:bg-[#e30613] transition-colors">
+                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                        </div>
+                        <div class="pr-8">
+                            <span class="block font-bold text-sm text-slate-800 mb-1">Micro rayure(s) / Micro impact(s)</span>
+                            <span class="block text-xs text-slate-500 leading-relaxed">Légère trace d'utilisation. Rayure(s) ou impact(s) non sensible(s) à l'ongle, invisible à 20 cm.</span>
+                        </div>
+                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-[#e30613] rounded-2xl pointer-events-none transition-colors"></div>
+                    </label>
+
+                    <label class="option-card block border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:border-slate-300 hover:shadow-md transition-all relative group bg-white">
+                        <input type="radio" name="screen_status" value="3" class="sr-only peer">
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 absolute top-6 right-5 flex items-center justify-center shrink-0 peer-checked:border-[#e30613] peer-checked:bg-[#e30613] transition-colors">
+                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                        </div>
+                        <div class="pr-8">
+                            <span class="block font-bold text-sm text-slate-800 mb-1">Comme neuf - Intact</span>
+                            <span class="block text-xs text-slate-500 leading-relaxed">Aucun défaut. Aucune marque. Aucune rayure ou impact.</span>
+                        </div>
+                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-[#e30613] rounded-2xl pointer-events-none transition-colors"></div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="border border-border rounded-xl bg-slate-50/50 overflow-hidden">
+                <details class="group">
+                    <summary class="flex items-center justify-between p-4 font-medium text-sm text-slate-700 cursor-pointer select-none hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="help-circle" class="w-4 h-4 text-muted-foreground"></i>
+                            <span>Un doute ? Consulter les points de contrôle et le guide visuel</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180"></i>
+                    </summary>
+                    
+                    <div class="p-6 border-t border-border bg-white space-y-6">
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5">
+                            <div class="flex items-center gap-2 text-slate-900 font-semibold text-sm mb-3">
+                                <i data-lucide="clipboard-check" class="w-4 h-4 text-[#e30613]"></i>
+                                <span>PENSEZ À BIEN VÉRIFIER</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground mb-4 font-medium">
+                                Lire attentivement et contrôler votre produit avec les points suivants avant de confirmer votre choix :
+                            </p>
+                            <ul class="space-y-3 text-xs text-slate-700">
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 mt-0.5 shrink-0"></i>
+                                    <span>Si la charnière d'un smartphone pliable est défectueuse, déclarer <strong class="text-[#e30613] font-semibold">“Abîmé - Non fonctionnel”</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 mt-0.5 shrink-0"></i>
+                                    <span>Vérifier le fonctionnement de l’écran : Pixel mort, tâche, rémanence, icône figée, rétroéclairage HS, décollement : déclarer <strong class="text-[#e30613] font-semibold">“Abîmé - Non fonctionnel”</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 mt-0.5 shrink-0"></i>
+                                    <span>Le tactile fonctionne sur toute la surface, le produit ne présente aucune trace d’oxydation, de gonflement, de décollement de l’écran ou de la vitre arrière.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Exemples visuels d'anomalies</h4>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                <div class="space-y-1.5">
+                                    <div class="aspect-video bg-muted rounded-lg overflow-hidden border border-border flex items-center justify-center text-xs text-muted-foreground">
+                                        [Image Écran Brisé]
+                                    </div>
+                                    <p class="text-[11px] font-medium text-slate-700 text-center">Fêlures & Brisure de vitre</p>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="aspect-video bg-muted rounded-lg overflow-hidden border border-border flex items-center justify-center text-xs text-muted-foreground">
+                                        [Image Pixels Morts]
+                                    </div>
+                                    <p class="text-[11px] font-medium text-slate-700 text-center">Taches noires ou lignes</p>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="aspect-video bg-muted rounded-lg overflow-hidden border border-border flex items-center justify-center text-xs text-muted-foreground">
+                                        [Image Batterie Gonflée]
+                                    </div>
+                                    <p class="text-[11px] font-medium text-slate-700 text-center">Écran décollé (Batterie)</p>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="aspect-video bg-muted rounded-lg overflow-hidden border border-border flex items-center justify-center text-xs text-muted-foreground">
+                                        [Image Bouton Manquant]
+                                    </div>
+                                    <p class="text-[11px] font-medium text-slate-700 text-center">Bouton enfoncé/manquant</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="pt-4 flex justify-between items-center">
+                <a href="question1.html" class="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors px-5 py-3 rounded-xl hover:bg-slate-100 border border-slate-200">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    Étape précédente
+                </a>
+                <a href="question6.html" id="submit-action-btn" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3.5 rounded-xl text-sm font-bold inline-flex items-center gap-2 transition-colors shadow-sm">
+                    Continuer
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="border-t border-border bg-[#fafafa] mt-24">
+        <div class="max-w-full mx-auto px-8 lg:px-14 py-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-6 text-sm text-muted-foreground">
+                    <span>© 2026 CompaRecycle</span>
+                    <span>·</span>
+                    <span class="hover:underline cursor-pointer">Confidentialité</span>
+                    <span>·</span>
+                    <span class="hover:underline cursor-pointer">Conditions</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                        support-reprise@comparecycle.com
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#e30613]"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#2da44e]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialisation de Lucide
+            lucide.createIcons();
+
+            // Liste ordonnée des images du carrousel
+            const images = [
+                "https://static.comparecycle.com/images/18/cc163e7901fe26beb9d7a66d380476329c4bbdca.png", // Très abîmé
+                "https://static.comparecycle.com/images/18/e8042a3cfe0d9fb19cc177f105ca57bcc654224f.png", // Rayures
+                "https://static.comparecycle.com/images/18/2ea7931c50a54b872e21da82339d928c0f9c1444.png", // Micro rayures
+                "https://static.comparecycle.com/images/18/fa11bc6e4050e1b4f856807a6193d99e02337511.png"  // Comme neuf
+            ];
+
+            let currentIndex = 3; // Index par défaut : "Comme neuf - Intact"
+
+            // Éléments du DOM
+            const imgElement = document.getElementById('phone-screen-img');
+            const optionCards = document.querySelectorAll('.option-card');
+            const prevBtn = document.getElementById('carousel-prev-btn');
+            const nextBtn = document.getElementById('carousel-next-btn');
+
+            // Fonction de mise à jour synchronisée de l'interface
+            function updateUI(index) {
+                currentIndex = index;
+                
+                // Effet de transition fluide sur l'image
+                imgElement.style.opacity = 0;
+                setTimeout(() => {
+                    imgElement.src = images[currentIndex];
+                    imgElement.style.opacity = 1;
+                }, 150);
+
+                // Synchronisation visuelle des bordures/boutons radio de la liste latérale
+                optionCards.forEach((card, i) => {
+                    const radio = card.querySelector('input[type="radio"]');
+                    if (i === currentIndex) {
+                        radio.checked = true;
+                        card.classList.remove('border-gray-200');
+                        card.classList.add('border-[#e30613]', 'shadow-sm');
+                    } else {
+                        radio.checked = false;
+                        card.classList.remove('border-[#e30613]', 'shadow-sm');
+                        card.classList.add('border-gray-200');
+                    }
+                });
+            }
+
+            // Gestion du clic direct sur les cartes descriptives
+            optionCards.forEach((card, index) => {
+                card.addEventListener('click', () => {
+                    updateUI(index);
+                });
+            });
+
+            // Contrôles des flèches directionnelles du carrousel
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                let newIndex = currentIndex - 1;
+                if (newIndex < 0) newIndex = images.length - 1;
+                updateUI(newIndex);
+            });
+
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                let newIndex = currentIndex + 1;
+                if (newIndex >= images.length) newIndex = 0;
+                updateUI(newIndex);
+            });
+
+            // Initialisation au chargement de la page
+            updateUI(currentIndex);
+        });
+    </script>
+</body>
+</html>

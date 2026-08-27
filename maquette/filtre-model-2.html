@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panneau Filtres - Option 2 Modale</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .filter-panel {
+      width: 320px;
+      background: #ffffff;
+      padding: 24px 20px;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+
+    /* En-tête principal */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #333;
+      padding: 0;
+      line-height: 1;
+    }
+
+    /* Titres de sous-sections */
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #00acc1;
+      text-transform: uppercase;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      display: block;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-section:first-of-type .section-title {
+      margin-top: 0;
+    }
+
+    /* --- OPTION 3 : BOUTONS DECLENCHEURS D'ATTRIBUTS --- */
+    .attributes-trigger-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .btn-attribute-trigger {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-attribute-trigger:hover {
+      background: #f0fdfd;
+      border-color: #00acc1;
+    }
+
+    .btn-attribute-trigger .badge-count {
+      background: #00acc1;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    .btn-attribute-trigger.has-active .badge-count {
+      display: inline-block;
+    }
+
+    /* Tags actifs sélectionnés */
+    .active-attributes-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .attr-chip {
+      background: #e0f7fa;
+      border: 1px solid #b2ebf2;
+      color: #00838f;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .attr-chip .remove-chip {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* --- FENÊTRE MODALE D'ATTRIBUTS --- */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      z-index: 100;
+      padding: 20px;
+      border-radius: 4px;
+      display: none;
+      flex-direction: column;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 10px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #00acc1;
+    }
+
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* Grille de Couleurs */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .color-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .color-option input {
+      display: none;
+    }
+
+    .color-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .color-option:has(input:checked) {
+      border-color: #00acc1;
+      background: #e0f7fa;
+      font-weight: 600;
+    }
+
+    /* Grille de Boutons (RAM / Stockage) */
+    .pill-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .pill-option {
+      text-align: center;
+      padding: 10px 4px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .pill-option input {
+      display: none;
+    }
+
+    .pill-option:has(input:checked) {
+      border-color: #00acc1;
+      background: #00acc1;
+      color: white;
+      font-weight: 600;
+    }
+
+    /* Boutons de la modale */
+    .modal-footer {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-modal-apply {
+      flex: 1;
+      background: #00acc1;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Champs & Checkboxes standards */
+    .field-group { margin-bottom: 20px; }
+    .input-text { width: 100%; border: none; border-bottom: 1px solid #b0b0b0; padding: 6px 0; font-size: 15px; outline: none; }
+    .sub-label { font-size: 14px; color: #757575; margin-bottom: 8px; display: block; }
+    .checkbox-section { margin-bottom: 20px; }
+    .checkbox-group { display: flex; gap: 24px; }
+    .checkbox-label { display: flex; align-items: center; gap: 10px; font-size: 15px; cursor: pointer; }
+    .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+    .btn { width: 100%; padding: 10px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; background: #fff; }
+    .btn-submit { border: 1px solid #4ed1e0; color: #00b4cb; }
+    .btn-reset { border: 1px solid #f06292; color: #e91e63; }
+  </style>
+</head>
+<body>
+
+  <div class="filter-panel">
+    <!-- En-tête -->
+    <div class="header">
+      <h2>Filtres</h2>
+      <button class="close-btn">&times;</button>
+    </div>
+
+    <!-- CARACTÉRISTIQUES -->
+    <div class="filter-section">
+      <span class="section-title">CARACTÉRISTIQUES</span>
+
+      <span class="sub-label">Attributs Mac</span>
+
+      <!-- Liste des déclencheurs de modale -->
+      <div class="attributes-trigger-list">
+        <button type="button" class="btn-attribute-trigger" onclick="openModal('modal-couleur')">
+          <span>Couleur</span>
+          <span class="badge-count" id="count-couleur">0</span>
+        </button>
+
+        <button type="button" class="btn-attribute-trigger" onclick="openModal('modal-ram')">
+          <span>Mémoire (RAM)</span>
+          <span class="badge-count" id="count-ram">0</span>
+        </button>
+
+        <button type="button" class="btn-attribute-trigger" onclick="openModal('modal-stockage')">
+          <span>Stockage (SSD)</span>
+          <span class="badge-count" id="count-stockage">0</span>
+        </button>
+      </div>
+
+      <!-- Résumé visuel des filtres appliqués -->
+      <div class="active-attributes-summary" id="chips-container"></div>
+
+      <!-- Référence GSX -->
+      <div class="field-group">
+        <input type="text" class="input-text" placeholder="Référence GSX">
+      </div>
+
+      <!-- Checkboxes -->
+      <div class="checkbox-section">
+        <span class="sub-label">A acheter</span>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox"> Oui</label>
+          <label class="checkbox-label"><input type="checkbox"> Non</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-submit" type="button">FILTRER</button>
+      <button class="btn btn-reset" type="button">EFFACER</button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODALE 1 : COULEURS (Visuelle avec pastilles) -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modal-couleur">
+      <div class="modal-header">
+        <h3>Choisir les couleurs</h3>
+        <button class="close-btn" onclick="closeModal('modal-couleur')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="color-grid">
+          <label class="color-option">
+            <input type="checkbox" value="Gris sidéral" name="couleur">
+            <span class="color-dot" style="background: #53555a;"></span> Gris sidéral
+          </label>
+          <label class="color-option">
+            <input type="checkbox" value="Argent" name="couleur">
+            <span class="color-dot" style="background: #e2e4e1;"></span> Argent
+          </label>
+          <label class="color-option">
+            <input type="checkbox" value="Noir minuit" name="couleur">
+            <span class="color-dot" style="background: #2e3641;"></span> Noir minuit
+          </label>
+          <label class="color-option">
+            <input type="checkbox" value="Starlight" name="couleur">
+            <span class="color-dot" style="background: #f0e4d3;"></span> Starlight
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-apply" onclick="applyAttribute('couleur', 'modal-couleur')">Valider</button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODALE 2 : RAM (Grille de badges numérotés) -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modal-ram">
+      <div class="modal-header">
+        <h3>Mémoire RAM</h3>
+        <button class="close-btn" onclick="closeModal('modal-ram')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="pill-grid">
+          <label class="pill-option"><input type="checkbox" value="8 Go" name="ram"> 8 Go</label>
+          <label class="pill-option"><input type="checkbox" value="16 Go" name="ram"> 16 Go</label>
+          <label class="pill-option"><input type="checkbox" value="18 Go" name="ram"> 18 Go</label>
+          <label class="pill-option"><input type="checkbox" value="24 Go" name="ram"> 24 Go</label>
+          <label class="pill-option"><input type="checkbox" value="32 Go" name="ram"> 32 Go</label>
+          <label class="pill-option"><input type="checkbox" value="64 Go" name="ram"> 64 Go</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-apply" onclick="applyAttribute('ram', 'modal-ram')">Valider</button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODALE 3 : STOCKAGE (Grille de badges) -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modal-stockage">
+      <div class="modal-header">
+        <h3>Stockage SSD</h3>
+        <button class="close-btn" onclick="closeModal('modal-stockage')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="pill-grid">
+          <label class="pill-option"><input type="checkbox" value="256 Go" name="stockage"> 256 Go</label>
+          <label class="pill-option"><input type="checkbox" value="512 Go" name="stockage"> 512 Go</label>
+          <label class="pill-option"><input type="checkbox" value="1 To" name="stockage"> 1 To</label>
+          <label class="pill-option"><input type="checkbox" value="2 To" name="stockage"> 2 To</label>
+          <label class="pill-option"><input type="checkbox" value="4 To" name="stockage"> 4 To</label>
+          <label class="pill-option"><input type="checkbox" value="8 To" name="stockage"> 8 To</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-apply" onclick="applyAttribute('stockage', 'modal-stockage')">Valider</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function applyAttribute(groupName, modalId) {
+      const checkedInputs = document.querySelectorAll(`input[name="${groupName}"]:checked`);
+      const countBadge = document.getElementById(`count-${groupName}`);
+      const triggerBtn = countBadge.closest('.btn-attribute-trigger');
+      
+      // Mise à jour du badge numérique sur le bouton
+      if (checkedInputs.length > 0) {
+        countBadge.textContent = checkedInputs.length;
+        triggerBtn.classList.add('has-active');
+      } else {
+        countBadge.textContent = '0';
+        triggerBtn.classList.remove('has-active');
+      }
+
+      renderChips();
+      closeModal(modalId);
+    }
+
+    // Regroupe et affiche tous les badges sous forme de résumés cliquables
+    function renderChips() {
+      const container = document.getElementById('chips-container');
+      container.innerHTML = '';
+
+      const allChecked = document.querySelectorAll('.modal-overlay input[type="checkbox"]:checked');
+      
+      allChecked.forEach(input => {
+        const chip = document.createElement('span');
+        chip.className = 'attr-chip';
+        chip.innerHTML = `${input.value} <span class="remove-chip">&times;</span>`;
+        
+        chip.querySelector('.remove-chip').addEventListener('click', () => {
+          input.checked = false;
+          applyAttribute(input.name, `modal-${input.name}`);
+        });
+
+        container.appendChild(chip);
+      });
+    }
+  </script>
+
+</body>
+</html>

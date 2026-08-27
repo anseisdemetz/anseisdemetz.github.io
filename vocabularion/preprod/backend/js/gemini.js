@@ -1,0 +1,211 @@
+// --- GESTION DE L'IA GEMINI (BACK-OFFICE) ---
+let detectedLanguageForImport = 'english';
+
+// Au chargement de la page, restaurer la clé API ET le modèle enregistrés dans le navigateur
+document.addEventListener('DOMContentLoaded', () => {
+    const savedKey = localStorage.getItem('gemini_api_key');
+    const savedModel = localStorage.getItem('gemini_model');
+    
+    if (savedKey && document.getElementById('gemini-api-key')) {
+        document.getElementById('gemini-api-key').value = savedKey;
+    }
+    if (savedModel && document.getElementById('gemini-model')) {
+        document.getElementById('gemini-model').value = savedModel;
+    }
+});
+
+async function generateWithGemini() {
+    const apiKey = document.getElementById('gemini-api-key').value.trim();
+    const selectedModel = document.getElementById('gemini-model').value.trim() || 'gemini-2.5-flash';
+    const rawWords = document.getElementById('ai-raw-words').value.trim();
+    const btn = document.getElementById('btn-generate-ai');
+
+    if (!apiKey) {
+        alert("Veuillez saisir votre clé API Gemini.");
+        return;
+    }
+    if (!rawWords) {
+        alert("Veuillez coller au moins un mot de vocabulaire.");
+        return;
+    }
+
+    // Sauvegarde automatique des préférences dans LocalStorage
+    localStorage.setItem('gemini_api_key', apiKey);
+    localStorage.setItem('gemini_model', selectedModel);
+
+    // État de chargement du bouton
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Analyse avec ${selectedModel}...</span>`;
+
+    const langName = db.languages[currentLang].name; // "Anglais" ou "Italien"
+    const targetLangCode = currentLang; // "english" ou "italian"
+
+    // Prompt pédagogique strict
+    const prompt = `Tu es un professeur de langues expert. Analyse cette liste brute de mots et d'expressions :
+"${rawWords}"
+
+INSTRUCTIONS PEDAGOGIQUES STRICTES :
+1. DÉTECTION : Détermine la langue dominante de la liste ("english" ou "italian"). Si doute, la langue cible est "${langName}".
+2. FILTRAGE STRICT :
+   - Si ANGLAIS : Filtre la liste en te basant STRICTEMENT sur le lexique d'Oxford (niveaux CEFR A1, A2, B1, B2, C1). Élimine les mots C2 ou le jargon très spécifique.
+   - Si ITALIEN : Filtre la liste en te basant STRICTEMENT sur le lexique de Tullio De Mauro (niveaux CEFR A1, A2, B1, B2, C1). Élimine les mots C2 ou le jargon très spécifique.
+3. STRUCTURE DU TABLEAU MARKDOWN (3 colonnes exactes) :
+   - Colonne 1 : "Français" (uniquement la traduction française du mot/expression)
+   - Colonne 2 : "Anglais" ou "Italien" (le mot/expression en gras dans la langue cible)
+   - Colonne 3 : "Phrase d'exemple" (RÈGLE ABSOLUE : La phrase d'exemple DOIT ÊTRE RÉDIGÉE 100% DANS LA LANGUE CIBLE (${langName.toUpperCase()}). AUCUN MOT EN FRANÇAIS dans la phrase d'exemple ! Si les mots sont en italien, la phrase d'exemple est EN ITALIEN. Si les mots sont en anglais, la phrase d'exemple est EN ANGLAIS.)
+
+4. MOTS REJETÉS : Pour les mots non retenus (C2, jargon ou trop rares), fournis une courte explication en français dans un bloc de texte.
+
+Tu dois répondre EXCLUSIVEMENT sous la forme d'un objet JSON strict avec cette structure exacte :
+{
+  "language": "english" ou "italian",
+  "markdown": "tableau markdown à 3 colonnes pour les mots retenus",
+  "rejected_notes": "Explication des mots rejetés (ou 'Aucun mot rejeté' si tout est conservé)"
+}`;
+
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { responseMimeType: "application/json" }
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error.message);
+        }
+
+        const resultJson = JSON.parse(data.candidates[0].content.parts[0].text);
+        
+        detectedLanguageForImport = resultJson.language || targetLangCode;
+        const markdownText = resultJson.markdown;
+        const rejectedNotes = resultJson.rejected_notes || "";
+
+        const langLabel = detectedLanguageForImport === 'english' ? '🇬🇧 Anglais (Filtré Oxford)' : '🇮🇹 Italien (Filtré De Mauro)';
+        document.getElementById('detected-lang-badge').innerText = langLabel;
+        document.getElementById('ai-markdown-output').value = markdownText;
+        
+        renderParsedPreviewTable(markdownText);
+
+        // Affichage des remarques sur les mots rejetés
+        let notesContainer = document.getElementById('ai-rejected-notes');
+        if (!notesContainer) {
+            notesContainer = document.createElement('div');
+            notesContainer.id = 'ai-rejected-notes';
+            notesContainer.className = "p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 space-y-1 mt-2";
+            document.getElementById('ai-preview-container').insertBefore(notesContainer, document.getElementById('ai-preview-container').lastElementChild);
+        }
+
+        if (rejectedNotes && !rejectedNotes.toLowerCase().includes('aucun mot')) {
+            notesContainer.innerHTML = `<strong>⚠️ Mots écartés (C2 / Jargon) :</strong><p class="mt-1 text-slate-700 whitespace-pre-line">${escapeHtml(rejectedNotes)}</p>`;
+            notesContainer.classList.remove('hidden');
+        } else {
+            notesContainer.classList.add('hidden');
+        }
+
+        document.getElementById('ai-preview-container').classList.remove('hidden');
+
+    } catch (err) {
+        console.error("Erreur Gemini :", err);
+        alert(`Erreur lors de la génération avec le modèle "${selectedModel}" : ` + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Générer et analyser</span>`;
+    }
+}
+
+// Convertit le Markdown en tableau HTML de prévisualisation
+function renderParsedPreviewTable(mdText) {
+    const container = document.getElementById('ai-preview-table');
+    const lines = mdText.split('\n').map(l => l.trim()).filter(l => l.startsWith('|') && !l.includes(':---'));
+
+    if (lines.length === 0) {
+        container.innerHTML = `<p class="text-rose-500 font-semibold p-2">Erreur de format de tableau Markdown.</p>`;
+        return;
+    }
+
+    let html = `<table class="w-full text-left border-collapse text-xs"><thead><tr class="bg-slate-200 font-bold text-slate-700">`;
+    
+    const headers = lines[0].split('|').map(p => p.trim()).filter((p, i, a) => i > 0 && i < a.length - 1);
+    headers.forEach(h => html += `<th class="p-2 border border-slate-300">${escapeHtml(h)}</th>`);
+    html += `</tr></thead><tbody>`;
+
+    for (let i = 1; i < lines.length; i++) {
+        const cells = lines[i].split('|').map(p => p.trim()).filter((p, idx, a) => idx > 0 && idx < a.length - 1);
+        if (cells.length >= 2) {
+            html += `<tr class="hover:bg-slate-50">`;
+            cells.forEach(c => html += `<td class="p-2 border border-slate-200">${escapeHtml(c.replace(/\*\*/g, ''))}</td>`);
+            html += `</tr>`;
+        }
+    }
+
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+}
+
+// Importation des mots validés vers Supabase
+async function importAIVocabulary() {
+    const mdContent = document.getElementById('ai-markdown-output').value;
+    const targetLang = detectedLanguageForImport;
+
+    if (!mdContent.trim()) return;
+
+    const lines = mdContent.split('\n');
+    const newEntries = [];
+
+    lines.forEach(line => {
+        line = line.trim();
+        if (line.startsWith('|') && !line.includes(':---') && !line.toLowerCase().includes('français')) {
+            const parts = line.split('|').map(p => p.trim()).filter((p, idx, arr) => idx > 0 && idx < arr.length - 1);
+            
+            if (parts.length >= 2) {
+                const french = parts[0].replace(/\*\*/g, '').trim();
+                const term = parts[1].replace(/\*\*/g, '').trim();
+                let sentence = parts.length >= 3 ? parts[2].replace(/\*\*/g, '').trim() : "";
+
+                if (sentence === "//") sentence = "";
+
+                if (french && term) {
+                    newEntries.push({
+                        id: 'vocab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                        term: term,
+                        translation: french,
+                        sentence: sentence,
+                        status: 'unstudied',
+                        score: 1,
+                        language: targetLang,
+                        created_at: new Date().toISOString()
+                    });
+                }
+            }
+        }
+    });
+
+    if (newEntries.length > 0) {
+        const { error } = await supabaseClient.from(VOCAB_TABLE).insert(newEntries);
+
+        if (error) {
+            console.error("Erreur d'insertion Supabase:", error);
+            alert("Erreur lors de l'enregistrement dans la base de données.");
+            return;
+        }
+
+        db.languages[targetLang].vocabulary.unshift(...newEntries);
+        
+        if (currentLang !== targetLang) {
+            switchLanguage(targetLang);
+        } else {
+            updateBadges();
+            renderBackendTable();
+            if (typeof updateCharts === 'function') updateCharts();
+        }
+
+        closeModal('add-modal');
+        document.getElementById('ai-raw-words').value = '';
+        document.getElementById('ai-preview-container').classList.add('hidden');
+    }
+}

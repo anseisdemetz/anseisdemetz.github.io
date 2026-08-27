@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouveau Paquet de Transactions - CompareCycle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-sm border border-slate-100 p-8 md:p-12">
+        
+        <header class="mb-10">
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Nouveau Paquet de Transactions</h1>
+            <p class="text-sm text-slate-500 mt-1">Plateforme de flux contrôlé CompareCycle</p>
+        </header>
+
+        <main class="space-y-10">
+            
+            <section class="space-y-4">
+                <h2 class="text-lg font-semibold text-slate-900">Définir l'argus et l'affilié</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50/50 border border-slate-200 rounded-xl p-5 hover:border-slate-300 transition-colors">
+                        <label for="affilie" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Sélectionner un affilié</label>
+                        <div class="relative">
+                            <select id="affilie" class="block w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-pointer">
+                                <option>TechRetail France</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50/50 border border-slate-200 rounded-xl p-5 hover:border-slate-300 transition-colors">
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="date-argus" class="block text-xs font-bold uppercase tracking-wider text-slate-400">Date de l'argus</label>
+                            <span class="text-[10px] bg-slate-200/60 text-slate-600 px-2 py-0.5 rounded font-medium">Par défaut : Aujourd'hui</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="date-argus" value="18/06/2026" class="block w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="mt-12 pt-6 border-t border-slate-100 flex justify-end space-x-3">
+            <button class="px-5 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                Annuler
+            </button>
+            <a href="simulateur.html" class="px-5 py-2.5 rounded-lg bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 shadow-sm shadow-blue-500/10 active:scale-[0.98] transition-all">
+                Créer le simulateur
+            </a>
+        </footer>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
