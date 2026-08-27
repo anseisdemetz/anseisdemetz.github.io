@@ -92,6 +92,24 @@
       </div>
     </div>
 
+    <!-- TABLEAU COMPARATIF THÉORIQUE (M+0) VS RÉEL -->
+    <div class="card my-4" id="theoreticalTableContainer" style="display: none;">
+      <h3>📊 Projection Théorique pure depuis M+0 (et Écart avec le Réel)</h3>
+      <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">
+        Ce tableau applique le taux annuel théorique uniquement depuis la valeur de sortie (M+0), sans recalage sur le réel, pour mesurer la dérive du marché.
+      </p>
+      <div style="overflow-x: auto;">
+        <table class="table" id="theoreticalTable">
+          <thead>
+            <!-- Injecté dynamiquement en JS -->
+          </thead>
+          <tbody>
+            <!-- Injecté dynamiquement en JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- CONSOLE / DONNÉES BRUTES -->
     <div class="card my-4" id="rawDataContainer" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -100,7 +118,7 @@
       </div>
       <pre id="jsonOutput" style="background-color: #0f172a; color: #38bdf8; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.85rem; overflow-x: auto; max-height: 400px;"></pre>
     </div>
-    
+
   </div>
 
   <script src="app.js"></script>

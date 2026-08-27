@@ -72,17 +72,23 @@ function resetProductView() {
   const productContainer = document.getElementById('productChartContainer');
   if (productContainer) productContainer.style.display = 'none';
 
+  const theoreticalContainer = document.getElementById('theoreticalTableContainer');
+  if (theoreticalContainer) theoreticalContainer.style.display = 'none';
+
   const rawDataContainer = document.getElementById('rawDataContainer');
   if (rawDataContainer) rawDataContainer.style.display = 'none';
 
   const titleEl = document.getElementById('selectedProductTitle');
   if (titleEl) titleEl.textContent = '';
 
-  const tbody = document.querySelector('#projectionsTable tbody');
-  if (tbody) tbody.innerHTML = '';
+  document.querySelector('#projectionsTable tbody').innerHTML = '';
+  document.querySelector('#projectionsTable thead').innerHTML = '';
 
-  const thead = document.querySelector('#projectionsTable thead');
-  if (thead) thead.innerHTML = '';
+  const theoTbody = document.querySelector('#theoreticalTable tbody');
+  if (theoTbody) theoTbody.innerHTML = '';
+
+  const theoThead = document.querySelector('#theoreticalTable thead');
+  if (theoThead) theoThead.innerHTML = '';
 
   const jsonOutput = document.getElementById('jsonOutput');
   if (jsonOutput) jsonOutput.textContent = '';
@@ -206,7 +212,7 @@ function renderBrandAnalysis(brandName) {
   });
 }
 
-// 2. Graphique Produit + Console Données Brutes
+// 2. Graphique Produit, Tableau Recalé, Tableau Théorique M+0 et Console
 function renderAnalysis(productId, productName) {
   const productData = rawData.filter(item => item.idproduct == productId);
   if (productData.length === 0) return;
@@ -214,7 +220,9 @@ function renderAnalysis(productId, productName) {
   const productContainer = document.getElementById('productChartContainer');
   if (productContainer) productContainer.style.display = 'block';
 
-  // Affichage de la console de données brutes
+  const theoreticalContainer = document.getElementById('theoreticalTableContainer');
+  if (theoreticalContainer) theoreticalContainer.style.display = 'block';
+
   const rawDataContainer = document.getElementById('rawDataContainer');
   if (rawDataContainer) {
     rawDataContainer.style.display = 'block';
@@ -250,21 +258,27 @@ function renderAnalysis(productId, productName) {
     `M+36 (${formatDate(d36)})`
   ];
 
-  document.querySelector('#projectionsTable thead').innerHTML = `
+  // En-têtes pour les deux tableaux
+  const headerHTML = `
     <tr>
       <th>Grade</th>
       <th style="background-color: #e0f2fe;">Sortie (${formatDate(d0)})</th>
-      <th>M+3</th>
-      <th>M+6</th>
-      <th>M+12</th>
-      <th>M+24</th>
-      <th>M+36</th>
+      <th>M+3 (${formatDate(d3)})</th>
+      <th>M+6 (${formatDate(d6)})</th>
+      <th>M+12 (${formatDate(d12)})</th>
+      <th>M+24 (${formatDate(d24)})</th>
+      <th>M+36 (${formatDate(d36)})</th>
       <th>Baisse / an</th>
     </tr>
   `;
 
+  document.querySelector('#projectionsTable thead').innerHTML = headerHTML;
+  document.querySelector('#theoreticalTable thead').innerHTML = headerHTML;
+
   const chartDatasets = [];
   const tableRows = [];
+  const theoreticalRows = [];
+
   const grades = [...new Set(productData.map(d => d.grade))].sort();
 
   grades.forEach(grade => {
@@ -274,6 +288,7 @@ function renderAnalysis(productId, productName) {
     const p0 = info.initial_price;
     const rate = info.annual_rate;
 
+    // --- A. CALCULS AVEC RECALAGE SUR LE RÉEL (Tableau 1 & Graphique) ---
     let lastRealPrice = p0;
     let lastRealMonths = 0;
 
@@ -314,17 +329,56 @@ function renderAnalysis(productId, productName) {
       <tr>
         <td><span class="badge-grade">${grade}</span></td>
         <td style="background-color: #f0fdf4;"><strong>${p0.toFixed(2)} €</strong></td>
-        <td>${p3.toFixed(2)} € ${info.m3_real ? '<small>(réel)</small>' : ''}</td>
-        <td>${p6.toFixed(2)} € ${info.m6_real ? '<small>(réel)</small>' : ''}</td>
+        <td>${p3.toFixed(2)} € ${info.m3_real ? '<small style="color:#0284c7;">(réel)</small>' : ''}</td>
+        <td>${p6.toFixed(2)} € ${info.m6_real ? '<small style="color:#0284c7;">(réel)</small>' : ''}</td>
         <td>${p12.toFixed(2)} €</td>
         <td>${p24.toFixed(2)} €</td>
         <td>${p36.toFixed(2)} €</td>
         <td>-${(rate * 100).toFixed(1)}% / an</td>
       </tr>
     `);
+
+    // --- B. CALCULS PROJECTION THÉORIQUE PURE DEPUIS M+0 (Tableau 2) ---
+    const theoM3 = p0 * Math.pow(1 - rate, 3 / 12);
+    const theoM6 = p0 * Math.pow(1 - rate, 6 / 12);
+    const theoM12 = p0 * Math.pow(1 - rate, 12 / 12);
+    const theoM24 = p0 * Math.pow(1 - rate, 24 / 12);
+    const theoM36 = p0 * Math.pow(1 - rate, 36 / 12);
+
+    // Formatage des cellules avec calcul d'écart si le prix réel existe
+    const formatCellWithGap = (theoVal, realVal) => {
+      if (realVal === null || realVal === undefined) {
+        return `${theoVal.toFixed(2)} €`;
+      }
+      const gap = realVal - theoVal;
+      const gapPercent = ((gap / theoVal) * 100).toFixed(1);
+      const isPositive = gap >= 0;
+      const color = isPositive ? '#10b981' : '#ef4444';
+      const sign = isPositive ? '+' : '';
+      return `
+        ${theoVal.toFixed(2)} €
+        <br><small style="color: ${color}; font-weight: 600;">
+          Écart: ${sign}${gap.toFixed(2)} € (${sign}${gapPercent}%)
+        </small>
+      `;
+    };
+
+    theoreticalRows.push(`
+      <tr>
+        <td><span class="badge-grade">${grade}</span></td>
+        <td style="background-color: #f0fdf4;"><strong>${p0.toFixed(2)} €</strong></td>
+        <td>${formatCellWithGap(theoM3, info.m3_real)}</td>
+        <td>${formatCellWithGap(theoM6, info.m6_real)}</td>
+        <td>${theoM12.toFixed(2)} €</td>
+        <td>${theoM24.toFixed(2)} €</td>
+        <td>${theoM36.toFixed(2)} €</td>
+        <td>-${(rate * 100).toFixed(1)}% / an</td>
+      </tr>
+    `);
   });
 
   document.querySelector('#projectionsTable tbody').innerHTML = tableRows.join('');
+  document.querySelector('#theoreticalTable tbody').innerHTML = theoreticalRows.join('');
 
   const ctx = document.getElementById('depreciationChart').getContext('2d');
   if (chartInstance) chartInstance.destroy();
