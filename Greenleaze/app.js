@@ -98,16 +98,17 @@ function renderBrandAnalysis(brandName) {
 
   // Mise à jour du titre et du sous-titre dans le HTML
   const brandTitle = document.getElementById('brandTitle');
-  if (brandTitle) brandTitle.textContent = `Dépréciation moyenne : ${brandName} par Grade`;
-
+  
   const brandAnnualRates = brandData.map(d => d.annual_rate).filter(r => r > 0);
   const avgBrandRate = brandAnnualRates.length > 0 
     ? (brandAnnualRates.reduce((a, b) => a + b, 0) / brandAnnualRates.length * 100).toFixed(1)
     : "20.0";
 
+  if (brandTitle) brandTitle.innerHTML = brandName;
+
   const infoBox = document.getElementById('brandRateInfo');
   if (infoBox) {
-    infoBox.innerHTML = `📊 Taux de dépréciation moyen appliqué aux nouveaux produits ${brandName} : <strong>-${avgBrandRate}% / an</strong>`;
+    infoBox.innerHTML = `📊 Taux de dépréciation : <strong>-${avgBrandRate}% / an</strong>`;
   }
 
   const grades = [...new Set(brandData.map(d => d.grade))].sort();
@@ -212,7 +213,7 @@ function renderAnalysis(productId, productName) {
   // Mise à jour du titre Produit au-dessus du bloc
   const titleEl = document.getElementById('selectedProductTitle');
   if (titleEl) {
-    titleEl.textContent = `📈 Analyse détaillée : ${productName}`;
+    titleEl.textContent = `📈 ${productName}`;
   }
 
   const startDate = new Date(productData[0].first_date);
