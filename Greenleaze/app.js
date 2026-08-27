@@ -1,69 +1,41 @@
 let rawData = [];
 let chartInstance = null;
 let brandChartInstance = null;
-let currentJsonFile = 'predictions_2.json'; // Fichier par défaut
 
 const GRADE_COLORS = {
-  'A+': '#10b981', 'A': '#06b6d4', 'B': '#3b82f6',
-  'C': '#f59e0b', 'D': '#ef4444', 'E': '#8b5cf6', 'F': '#64748b'
+  'A': '#10b981',  'A-': '#06b6d4',
+  'B': '#3b82f6',  'C':  '#f59e0b',
+  'C-': '#d97706', 'D':  '#ef4444',
+  'D-': '#b91c1c'
 };
 
-// Formule de calcul prospective amortie avec valeur plancher
-function calculateProjectedPrice(p0, pMin, rate, months) {
-  if (months <= 0) return p0;
-  const timeFactor = Math.log(1 + (months / 12));
-  const projected = pMin + (p0 - pMin) * Math.pow(1 - rate, timeFactor);
-  return Math.max(pMin, projected);
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadData(currentJsonFile);
-  initControls();
-  updateMathExplanation();
+  try {
+    const response = await fetch('predictions.json');
+    rawData = await response.json();
+    initControls();
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      window.MathJax.typesetPromise();
+    }
+  } catch (error) {
+    console.error("Erreur de chargement du JSON :", error);
+  }
 });
 
-async function loadData(jsonFile) {
-  try {
-    const response = await fetch(jsonFile);
-    rawData = await response.json();
-  } catch (error) {
-    console.error(`Erreur de chargement JSON (${jsonFile}) :`, error);
-  }
-}
-
 function initControls() {
-  const modelSelect = document.getElementById('modelSelect');
   const manufacturerSelect = document.getElementById('manufacturerSelect');
   const productSelect = document.getElementById('productSelect');
 
-  // 1. Écoute du changement de Modèle de calcul
-  if (modelSelect) {
-    modelSelect.addEventListener('change', async (e) => {
-      currentJsonFile = e.target.value;
-      const currentBrand = manufacturerSelect.value;
-      const currentProduct = productSelect.value;
-
-      await loadData(currentJsonFile);
-
-      // Rafraîchissement des graphiques en conservant la sélection
-      if (currentBrand) {
-        renderBrandAnalysis(currentBrand);
-      }
-      if (currentProduct) {
-        const selectedOptionText = productSelect.options[productSelect.selectedIndex].text;
-        renderAnalysis(currentProduct, selectedOptionText);
-      }
-
-      updateMathExplanation();
-    });
-  }
-
   // Initialisation de la liste des marques
-  populateManufacturers();
+  const manufacturers = [...new Set(rawData.map(item => item.manufacturer))].sort();
+  manufacturers.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m; opt.textContent = m;
+    manufacturerSelect.appendChild(opt);
+  });
 
   manufacturerSelect.addEventListener('change', (e) => {
     const selectedBrand = e.target.value;
-    
     productSelect.innerHTML = '<option value="">-- Sélectionner un produit --</option>';
     productSelect.disabled = !selectedBrand;
 
@@ -94,21 +66,6 @@ function initControls() {
       resetProductView();
     }
   });
-}
-
-function populateManufacturers() {
-  const manufacturerSelect = document.getElementById('manufacturerSelect');
-  const selectedValue = manufacturerSelect.value;
-  
-  manufacturerSelect.innerHTML = '<option value="">-- Sélectionner une marque --</option>';
-  const manufacturers = [...new Set(rawData.map(item => item.manufacturer))].sort();
-  manufacturers.forEach(m => {
-    const opt = document.createElement('option');
-    opt.value = m; opt.textContent = m;
-    manufacturerSelect.appendChild(opt);
-  });
-  
-  if (selectedValue) manufacturerSelect.value = selectedValue;
 }
 
 function resetProductView() {
@@ -148,7 +105,7 @@ function formatDate(dateObj) {
   return `${day}/${month}/${dateObj.getFullYear()}`;
 }
 
-// 1. Graphique Marque
+// 1. Graphique Marque (Calcul Linéaire Pur)
 function renderBrandAnalysis(brandName) {
   const brandData = rawData.filter(item => item.manufacturer === brandName);
   if (brandData.length === 0) return;
@@ -181,7 +138,6 @@ function renderBrandAnalysis(brandName) {
 
     gradeItems.forEach(info => {
       const p0 = info.initial_price;
-      const pMin = info.p_min || 30;
       const rate = info.annual_rate;
 
       let lastRealPrice = p0;
@@ -198,17 +154,9 @@ function renderBrandAnalysis(brandName) {
       const p3 = (info.m3_real !== null && info.m3_real !== undefined) ? info.m3_real : p0 * Math.pow(1 - rate, 3 / 12);
       const p6 = (info.m6_real !== null && info.m6_real !== undefined) ? info.m6_real : p3 * Math.pow(1 - rate, 3 / 12);
       
-      const p12 = currentJsonFile.includes('_2') 
-        ? calculateProjectedPrice(lastRealPrice, pMin, rate, 12 - lastRealMonths)
-        : lastRealPrice * Math.pow(1 - rate, (12 - lastRealMonths) / 12);
-
-      const p24 = currentJsonFile.includes('_2') 
-        ? calculateProjectedPrice(lastRealPrice, pMin, rate, 24 - lastRealMonths)
-        : lastRealPrice * Math.pow(1 - rate, (24 - lastRealMonths) / 12);
-
-      const p36 = currentJsonFile.includes('_2') 
-        ? calculateProjectedPrice(lastRealPrice, pMin, rate, 36 - lastRealMonths)
-        : lastRealPrice * Math.pow(1 - rate, (36 - lastRealMonths) / 12);
+      const p12 = lastRealPrice * Math.pow(1 - rate, (12 - lastRealMonths) / 12);
+      const p24 = lastRealPrice * Math.pow(1 - rate, (24 - lastRealMonths) / 12);
+      const p36 = lastRealPrice * Math.pow(1 - rate, (36 - lastRealMonths) / 12);
 
       sumP0 += p0; sumP3 += p3; sumP6 += p6; sumP12 += p12; sumP24 += p24; sumP36 += p36;
     });
@@ -270,7 +218,7 @@ function renderBrandAnalysis(brandName) {
   });
 }
 
-// 2. Graphique Produit, Tableau Recalé, Tableau Théorique M+0 et Console
+// 2. Graphique Produit, Tableau Recalé et Tableau Théorique M+0 (Modèle Linéaire)
 function renderAnalysis(productId, productName) {
   const productData = rawData.filter(item => item.idproduct == productId);
   if (productData.length === 0) return;
@@ -343,7 +291,6 @@ function renderAnalysis(productId, productName) {
     if (!info) return;
 
     const p0 = info.initial_price;
-    const pMin = info.p_min || 30;
     const rate = info.annual_rate;
 
     let lastRealPrice = p0;
@@ -357,23 +304,18 @@ function renderAnalysis(productId, productName) {
       lastRealMonths = 3;
     }
 
-    const p3 = (info.m3_real !== null && info.m3_real !== undefined) ? info.m3_real : p0 * Math.pow(1 - rate, 3 / 12);
-    const p6 = (info.m6_real !== null && info.m6_real !== undefined) ? info.m6_real : p3 * Math.pow(1 - rate, 3 / 12);
+    // --- A. CALCULS LINÉAIRES RECALÉS SUR LE RÉEL (Tableau 1 & Graphique) ---
+    const p3 = (info.m3_real !== null && info.m3_real !== undefined) 
+      ? info.m3_real 
+      : p0 * Math.pow(1 - rate, 3 / 12);
 
-    // Adaptation dynamique selon la version sélectionnée
-    const isVersion2 = currentJsonFile.includes('_2');
+    const p6 = (info.m6_real !== null && info.m6_real !== undefined) 
+      ? info.m6_real 
+      : p3 * Math.pow(1 - rate, 3 / 12);
 
-    const p12 = isVersion2
-      ? calculateProjectedPrice(lastRealPrice, pMin, rate, 12 - lastRealMonths)
-      : lastRealPrice * Math.pow(1 - rate, (12 - lastRealMonths) / 12);
-
-    const p24 = isVersion2
-      ? calculateProjectedPrice(lastRealPrice, pMin, rate, 24 - lastRealMonths)
-      : lastRealPrice * Math.pow(1 - rate, (24 - lastRealMonths) / 12);
-
-    const p36 = isVersion2
-      ? calculateProjectedPrice(lastRealPrice, pMin, rate, 36 - lastRealMonths)
-      : lastRealPrice * Math.pow(1 - rate, (36 - lastRealMonths) / 12);
+    const p12 = lastRealPrice * Math.pow(1 - rate, (12 - lastRealMonths) / 12);
+    const p24 = lastRealPrice * Math.pow(1 - rate, (24 - lastRealMonths) / 12);
+    const p36 = lastRealPrice * Math.pow(1 - rate, (36 - lastRealMonths) / 12);
 
     const color = GRADE_COLORS[grade] || '#000000';
     
@@ -407,13 +349,12 @@ function renderAnalysis(productId, productName) {
       </tr>
     `);
 
-    // CALCULS PROJECTION THÉORIQUE PURE DEPUIS M+0
+    // --- B. CALCULS PROJECTION THÉORIQUE PURE LINÉAIRE DEPUIS M+0 (Tableau 2) ---
     const theoM3 = p0 * Math.pow(1 - rate, 3 / 12);
     const theoM6 = p0 * Math.pow(1 - rate, 6 / 12);
-    
-    const theoM12 = isVersion2 ? calculateProjectedPrice(p0, pMin, rate, 12) : p0 * Math.pow(1 - rate, 12 / 12);
-    const theoM24 = isVersion2 ? calculateProjectedPrice(p0, pMin, rate, 24) : p0 * Math.pow(1 - rate, 24 / 12);
-    const theoM36 = isVersion2 ? calculateProjectedPrice(p0, pMin, rate, 36) : p0 * Math.pow(1 - rate, 36 / 12);
+    const theoM12 = p0 * Math.pow(1 - rate, 12 / 12);
+    const theoM24 = p0 * Math.pow(1 - rate, 24 / 12);
+    const theoM36 = p0 * Math.pow(1 - rate, 36 / 12);
 
     const formatCellWithGap = (theoVal, realVal) => {
       if (realVal === null || realVal === undefined) {
@@ -422,11 +363,11 @@ function renderAnalysis(productId, productName) {
       const gap = realVal - theoVal;
       const gapPercent = ((gap / theoVal) * 100).toFixed(1);
       const isPositive = gap >= 0;
-      const color = isPositive ? '#10b981' : '#ef4444';
+      const gapColor = isPositive ? '#10b981' : '#ef4444';
       const sign = isPositive ? '+' : '';
       return `
         ${theoVal.toFixed(2)} €
-        <br><small style="color: ${color}; font-weight: 600;">
+        <br><small style="color: ${gapColor}; font-weight: 600;">
           Écart: ${sign}${gap.toFixed(2)} € (${sign}${gapPercent}%)
         </small>
       `;
@@ -472,70 +413,4 @@ function renderAnalysis(productId, productName) {
       }
     }
   });
-}
-
-
-// Fonction d'affichage et de rendu dynamique des explications mathématiques
-// Fonction d'affichage et de rendu dynamique des explications mathématiques
-function updateMathExplanation() {
-  const container = document.getElementById('mathExplanationContent');
-  if (!container) return;
-
-  const isVersion2 = currentJsonFile.includes('_2');
-
-  if (isVersion2) {
-    container.innerHTML = `
-        <h4 style="color: #0284c7; margin-top: 0;">Modèle Avancé (Pondération Grade + Amortissement Logarithmique)</h4>
-        <p>Ce modèle prospective adapte la décote selon la catégorie du produit et la maturité du marché :</p>
-        <ul>
-          <li><strong>Taux ajusté par Grade :</strong> Le taux de dépréciation annuel \\(r\\) est pondéré par un coefficient \\(k_g\\) :
-            \\[ r_g = r \\times k_g \\]
-            
-            <div style="margin: 12px 0 16px 0; max-width: 500px;">
-              <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden;">
-                <thead>
-                  <tr style="background-color: #f1f5f9; color: #334155; text-align: left;">
-                    <th style="padding: 6px 12px; border-bottom: 1px solid #cbd5e1;">Grade</th>
-                    <th style="padding: 6px 12px; border-bottom: 1px solid #cbd5e1;">Coefficient (\\(k_g\\))</th>
-                    <th style="padding: 6px 12px; border-bottom: 1px solid #cbd5e1;">Impact sur la décote</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;"><strong>A+</strong></td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;">0,85</td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0; color: #16a34a;">-15% plus lente</td></tr>
-                  <tr><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;"><strong>A</strong></td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;">0,90</td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0; color: #16a34a;">-10% plus lente</td></tr>
-                  <tr><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;"><strong>B</strong></td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;">1,00</td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0; color: #475569;">Taux standard (100%)</td></tr>
-                  <tr><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;"><strong>C</strong></td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;">1,15</td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0; color: #dc2626;">+15% plus rapide</td></tr>
-                  <tr><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;"><strong>D</strong></td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;">1,30</td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0; color: #dc2626;">+30% plus rapide</td></tr>
-                  <tr><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;"><strong>E</strong></td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0;">1,40</td><td style="padding: 5px 12px; border-bottom: 1px solid #e2e8f0; color: #dc2626;">+40% plus rapide</td></tr>
-                  <tr><td style="padding: 5px 12px;"><strong>F</strong></td><td style="padding: 5px 12px;">1,50</td><td style="padding: 5px 12px; color: #dc2626;">+50% plus rapide</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </li>
-          <li><strong>Amortissement Temporel Logarithmique :</strong> La perte de valeur s'amortit au fil du temps via la formule :
-            \\[ P(t) = P_{\\text{min}} + (P_{\\text{réf}} - P_{\\text{min}}) \\times (1 - r_g)^{\\ln\\left(1 + \\frac{t}{12}\\right)} \\]
-            La décote est marquée sur les 6 premiers mois puis se stabilise progressivement.
-          </li>
-          <li><strong>Valeur Plancher Résiduelle (\\(P_{\\text{min}}\\)) :</strong> Un prix minimal garanti (15% du prix de sortie ou 30 € minimum) empêche les valeurs théoriques de chuter vers 0 € à M+24/M+36.</li>
-        </ul>
-      `;
-  } else {
-    container.innerHTML = `
-      <h4 style="color: #475569; margin-top: 0;">Modèle Standard (Linéaire / Géométrique Pur)</h4>
-      <p>Ce modèle applique une dépréciation exponentielle classique uniforme :</p>
-      <ul>
-        <li><strong>Formule Générale :</strong> 
-          \\[ P(t) = P_{\\text{réf}} \\times (1 - r)^{\\frac{t}{12}} \\]
-          où \\(r\\) est le taux moyen annuel historique calculé pour la marque ou le produit.
-        </li>
-        <li><strong>Progression Constante :</strong> La perte en pourcentage est strictement identique quel que soit le jalon de temps ou le grade concerné.</li>
-        <li><strong>Recalage sur le Réel :</strong> Lorsque des prix réels existent à M+3 ou M+6, la formule repart de là pour projeter les valeurs aux dates futures.</li>
-      </ul>
-    `;
-  }
-
-  // Demander à MathJax de re-rendre le bloc HTML mis à jour
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    window.MathJax.typesetPromise([container]);
-  }
 }

@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prédiction Argus & Dépréciation - 7 Grades</title>
+  <title>Prédiction Argus & Dépréciation - Modèle Linéaire</title>
   <!-- Chart.js pour les graphiques -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  window.MathJax = {
-    tex: {
-      inlineMath: [['\\(', '\\)']],
-      displayMath: [['\\[', '\\]']]
-    }
-  };
-</script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
@@ -37,24 +37,14 @@
     tr:hover { background-color: #f1f5f9; }
     .badge-grade { font-weight: bold; padding: 4px 8px; border-radius: 4px; background: #e2e8f0; }
   </style>
-  <!-- Inclusion MathJax sécurisée (sans polyfill.io) -->
-<!-- Configuration et chargement sécurisé de MathJax -->
-
 </head>
 <body>
 
   <div class="container">
-    <h1>Projection de Cote & Dépréciation (3, 6, 12, 24, 36 mois)</h1>
+    <h1>Projection de Cote & Dépréciation Linéaire (3, 6, 12, 24, 36 mois)</h1>
 
-    <!-- Filtres de sélection -->
+    <!-- Filtres de sélection (Sélecteur de modèle supprimé) -->
     <div class="card controls">
-      <div class="control-group">
-        <label for="modelSelect">Modèle de calcul prospective :</label>
-        <select id="modelSelect">
-          <option value="predictions_1.json">Standard (Modèle linéaire/géométrique pur)</option>
-          <option value="predictions_2.json" selected>Avancé (Pondéré par Grade + Valeur plancher)</option>
-        </select>
-      </div>
       <div class="control-group">
         <label for="manufacturerSelect">Constructeur / Marque :</label>
         <select id="manufacturerSelect">
@@ -69,14 +59,23 @@
       </div>
     </div>
 
-    <!-- ENCART DÉPLIABLE EXPLICATIF DES CALCULS -->
+    <!-- ENCART DÉPLIABLE EXPLICATIF DES CALCULS (FIXE LINÉAIRE) -->
     <div class="card my-4">
       <details id="mathExplanationDetails">
         <summary style="font-weight: bold; cursor: pointer; color: #1e293b; font-size: 1.05rem;">
-          📘 Explication des modèles mathématiques de calcul (Cliquer pour déplier)
+          📘 Explication du modèle mathématique linéaire (Cliquer pour déplier)
         </summary>
         <div id="mathExplanationContent" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0; color: #334155; font-size: 0.95rem; line-height: 1.6;">
-          <!-- Le texte expliquant le modèle actif s'injecte dynamiquement ici -->
+          <h4 style="color: #475569; margin-top: 0;">Modèle Linéaire (Géométrique Pur)</h4>
+          <p>Ce modèle applique une dépréciation exponentielle classique uniforme :</p>
+          <ul>
+            <li><strong>Formule Générale :</strong> 
+              \[ P(t) = P_{\text{réf}} \times (1 - r)^{\frac{t}{12}} \]
+              où \(r\) est le taux moyen annuel historique calculé pour la marque ou le produit et \(t\) le nombre de mois.
+            </li>
+            <li><strong>Progression Constante :</strong> La perte en pourcentage est identique quel que soit le jalon de temps ou le grade concerné.</li>
+            <li><strong>Recalage sur le Réel :</strong> Lorsque des prix réels existent à M+3 ou M+6, la formule repart de ce dernier point ancré pour projeter les jalons futurs.</li>
+          </ul>
         </div>
       </details>
     </div>    
