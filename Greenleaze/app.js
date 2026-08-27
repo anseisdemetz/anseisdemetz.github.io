@@ -34,7 +34,6 @@ function initControls() {
     productSelect.disabled = !selectedBrand;
 
     if (selectedBrand) {
-      // 1. Mise à jour de la liste des produits
       const filteredProducts = rawData.filter(item => item.manufacturer === selectedBrand);
       const uniqueProducts = [...new Map(filteredProducts.map(item => [item.idproduct, item])).values()];
       uniqueProducts.forEach(p => {
@@ -43,10 +42,10 @@ function initControls() {
         productSelect.appendChild(opt);
       });
 
-      // 2. Affichage immédiat de la courbe moyenne de la MARQUE
       renderBrandAnalysis(selectedBrand);
     } else {
-      document.getElementById('brandChartContainer').style.display = 'none';
+      const container = document.getElementById('brandChartContainer');
+      if (container) container.style.display = 'none';
     }
   });
 
@@ -62,7 +61,7 @@ function formatDate(dateObj) {
   return `${day}/${month}/${dateObj.getFullYear()}`;
 }
 
-// --- NOUVELLE FONCTION : Graphique Moyen par Marque ---
+// 1. Graphique Moyen par Marque (avec % de décote)
 function renderBrandAnalysis(brandName) {
   const brandData = rawData.filter(item => item.manufacturer === brandName);
   if (brandData.length === 0) return;
@@ -74,11 +73,31 @@ function renderBrandAnalysis(brandName) {
   const timeLabels = ['M+0', 'M+3', 'M+6', 'M+12', 'M+24', 'M+36'];
   const chartDatasets = [];
 
+  const brandAnnualRates = brandData.map(d => d.annual_rate).filter(r => r > 0);
+  const avgBrandRate = brandAnnualRates.length > 0 
+    ? (brandAnnualRates.reduce((a, b) => a + b, 0) / brandAnnualRates.length * 100).toFixed(1)
+    : "20.0";
+
+  let infoBox = document.getElementById('brandRateInfo');
+  if (!infoBox) {
+    infoBox = document.createElement('p');
+    infoBox.id = 'brandRateInfo';
+    infoBox.style.fontWeight = 'bold';
+    infoBox.style.color = '#3b82f6';
+    infoBox.style.marginBottom = '10px';
+    const canvasEl = document.getElementById('brandDepreciationChart');
+    if (canvasEl && canvasEl.parentNode) {
+      canvasEl.parentNode.insertBefore(infoBox, canvasEl);
+    }
+  }
+  if (infoBox) {
+    infoBox.innerHTML = `📊 Taux de dépréciation moyen appliqué aux nouveaux produits ${brandName} : <strong>-${avgBrandRate}% / an</strong>`;
+  }
+
   grades.forEach(grade => {
     const gradeItems = brandData.filter(d => d.grade === grade);
     if (gradeItems.length === 0) return;
 
-    // Calcul de la moyenne de la marque pour chaque jalon
     let sumP0 = 0, sumP3 = 0, sumP6 = 0, sumP12 = 0, sumP24 = 0, sumP36 = 0;
 
     gradeItems.forEach(info => {
@@ -106,16 +125,25 @@ function renderBrandAnalysis(brandName) {
     });
 
     const count = gradeItems.length;
-    const avgData = [
-      sumP0 / count, sumP3 / count, sumP6 / count,
-      sumP12 / count, sumP24 / count, sumP36 / count
-    ];
+    const avgP0 = sumP0 / count;
+    const avgP3 = sumP3 / count;
+    const avgP6 = sumP6 / count;
+    const avgP12 = sumP12 / count;
+    const avgP24 = sumP24 / count;
+    const avgP36 = sumP36 / count;
+
+    const dropP3 = (((avgP3 - avgP0) / avgP0) * 100).toFixed(1);
+    const dropP6 = (((avgP6 - avgP0) / avgP0) * 100).toFixed(1);
+    const dropP12 = (((avgP12 - avgP0) / avgP0) * 100).toFixed(1);
+    const dropP24 = (((avgP24 - avgP0) / avgP0) * 100).toFixed(1);
+    const dropP36 = (((avgP36 - avgP0) / avgP0) * 100).toFixed(1);
 
     const color = GRADE_COLORS[grade] || '#000000';
 
     chartDatasets.push({
-      label: `Grade ${grade} (Moy. ${brandName})`,
-      data: avgData,
+      label: `Grade ${grade}`,
+      data: [avgP0, avgP3, avgP6, avgP12, avgP24, avgP36],
+      drops: ['0%', `${dropP3}%`, `${dropP6}%`, `${dropP12}%`, `${dropP24}%`, `${dropP36}%`],
       borderColor: color,
       backgroundColor: color,
       tension: 0.2,
@@ -136,19 +164,24 @@ function renderBrandAnalysis(brandName) {
         legend: { position: 'top' },
         tooltip: {
           callbacks: {
-            label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)} €`
+            label: (ctx) => {
+              const dataset = ctx.dataset;
+              const val = ctx.raw.toFixed(2);
+              const drop = dataset.drops ? dataset.drops[ctx.dataIndex] : '';
+              return `${dataset.label}: ${val} € (${ctx.dataIndex === 0 ? 'Réf' : drop})`;
+            }
           }
         }
       },
       scales: {
         y: { title: { display: true, text: 'Prix Moyen (€)' } },
-        x: { title: { display: true, text: 'Timeline de Dépréciation Marque' } }
+        x: { title: { display: true, text: 'Timeline de Dépréciation' } }
       }
     }
   });
 }
 
-// --- FONCTION PRODUIT SPECIFIQUE ---
+// 2. Graphique Produit Spécifique
 function renderAnalysis(productId) {
   const productData = rawData.filter(item => item.idproduct == productId);
   if (productData.length === 0) return;
