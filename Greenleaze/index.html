@@ -50,18 +50,20 @@
       </div>
     </div>
 
-    <!-- Graphique Marque -->
+    <!-- BLOC MARQUE -->
     <div class="card my-4" id="brandChartContainer" style="display: none;">
-      <h3>Dépréciation moyenne de la Marque par Grade</h3>
+      <h2 id="brandTitle">Dépréciation moyenne de la Marque par Grade</h2>
+      <p id="brandRateInfo" style="font-weight: bold; color: #3b82f6; margin-bottom: 15px;"></p>
       <div style="height: 350px;">
         <canvas id="brandDepreciationChart"></canvas>
       </div>
     </div>
 
-    <!-- Graphique des projections -->
-    <div class="card">
-      <h2>Courbes de dépréciation par Grade</h2>
-      <div class="chart-container">
+    <!-- BLOC PRODUIT -->
+    <div class="card my-4" id="productChartContainer" style="display: none;">
+      <h2 id="selectedProductTitle"></h2>
+      <h4 id="productSubTitle" style="color: #64748b; margin-bottom: 15px;">Courbes de dépréciation par Grade</h4>
+      <div style="height: 350px;">
         <canvas id="depreciationChart"></canvas>
       </div>
     </div>

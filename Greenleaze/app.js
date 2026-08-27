@@ -30,8 +30,11 @@ function initControls() {
 
   manufacturerSelect.addEventListener('change', (e) => {
     const selectedBrand = e.target.value;
+    
     productSelect.innerHTML = '<option value="">-- Sélectionner un produit --</option>';
     productSelect.disabled = !selectedBrand;
+
+    resetProductView();
 
     if (selectedBrand) {
       const filteredProducts = rawData.filter(item => item.manufacturer === selectedBrand);
@@ -44,15 +47,39 @@ function initControls() {
 
       renderBrandAnalysis(selectedBrand);
     } else {
-      const container = document.getElementById('brandChartContainer');
-      if (container) container.style.display = 'none';
+      const brandContainer = document.getElementById('brandChartContainer');
+      if (brandContainer) brandContainer.style.display = 'none';
     }
   });
 
   productSelect.addEventListener('change', (e) => {
     const productId = e.target.value;
-    if (productId) renderAnalysis(productId);
+    if (productId) {
+      const selectedOptionText = productSelect.options[productSelect.selectedIndex].text;
+      renderAnalysis(productId, selectedOptionText);
+    } else {
+      resetProductView();
+    }
   });
+}
+
+function resetProductView() {
+  if (chartInstance) {
+    chartInstance.destroy();
+    chartInstance = null;
+  }
+  
+  const productContainer = document.getElementById('productChartContainer');
+  if (productContainer) productContainer.style.display = 'none';
+
+  const titleEl = document.getElementById('selectedProductTitle');
+  if (titleEl) titleEl.textContent = '';
+
+  const tbody = document.querySelector('#projectionsTable tbody');
+  if (tbody) tbody.innerHTML = '';
+
+  const thead = document.querySelector('#projectionsTable thead');
+  if (thead) thead.innerHTML = '';
 }
 
 function formatDate(dateObj) {
@@ -61,7 +88,7 @@ function formatDate(dateObj) {
   return `${day}/${month}/${dateObj.getFullYear()}`;
 }
 
-// 1. Graphique Moyen par Marque (avec % de décote)
+// 1. Graphique Marque (Textes sortis au-dessus du bloc)
 function renderBrandAnalysis(brandName) {
   const brandData = rawData.filter(item => item.manufacturer === brandName);
   if (brandData.length === 0) return;
@@ -69,30 +96,23 @@ function renderBrandAnalysis(brandName) {
   const container = document.getElementById('brandChartContainer');
   if (container) container.style.display = 'block';
 
-  const grades = [...new Set(brandData.map(d => d.grade))].sort();
-  const timeLabels = ['M+0', 'M+3', 'M+6', 'M+12', 'M+24', 'M+36'];
-  const chartDatasets = [];
+  // Mise à jour du titre et du sous-titre dans le HTML
+  const brandTitle = document.getElementById('brandTitle');
+  if (brandTitle) brandTitle.textContent = `Dépréciation moyenne : ${brandName} par Grade`;
 
   const brandAnnualRates = brandData.map(d => d.annual_rate).filter(r => r > 0);
   const avgBrandRate = brandAnnualRates.length > 0 
     ? (brandAnnualRates.reduce((a, b) => a + b, 0) / brandAnnualRates.length * 100).toFixed(1)
     : "20.0";
 
-  let infoBox = document.getElementById('brandRateInfo');
-  if (!infoBox) {
-    infoBox = document.createElement('p');
-    infoBox.id = 'brandRateInfo';
-    infoBox.style.fontWeight = 'bold';
-    infoBox.style.color = '#3b82f6';
-    infoBox.style.marginBottom = '10px';
-    const canvasEl = document.getElementById('brandDepreciationChart');
-    if (canvasEl && canvasEl.parentNode) {
-      canvasEl.parentNode.insertBefore(infoBox, canvasEl);
-    }
-  }
+  const infoBox = document.getElementById('brandRateInfo');
   if (infoBox) {
     infoBox.innerHTML = `📊 Taux de dépréciation moyen appliqué aux nouveaux produits ${brandName} : <strong>-${avgBrandRate}% / an</strong>`;
   }
+
+  const grades = [...new Set(brandData.map(d => d.grade))].sort();
+  const timeLabels = ['M+0', 'M+3', 'M+6', 'M+12', 'M+24', 'M+36'];
+  const chartDatasets = [];
 
   grades.forEach(grade => {
     const gradeItems = brandData.filter(d => d.grade === grade);
@@ -181,10 +201,19 @@ function renderBrandAnalysis(brandName) {
   });
 }
 
-// 2. Graphique Produit Spécifique
-function renderAnalysis(productId) {
+// 2. Graphique Produit (Textes sortis au-dessus du bloc)
+function renderAnalysis(productId, productName) {
   const productData = rawData.filter(item => item.idproduct == productId);
   if (productData.length === 0) return;
+
+  const productContainer = document.getElementById('productChartContainer');
+  if (productContainer) productContainer.style.display = 'block';
+
+  // Mise à jour du titre Produit au-dessus du bloc
+  const titleEl = document.getElementById('selectedProductTitle');
+  if (titleEl) {
+    titleEl.textContent = `📈 Analyse détaillée : ${productName}`;
+  }
 
   const startDate = new Date(productData[0].first_date);
 
