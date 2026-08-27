@@ -72,6 +72,9 @@ function resetProductView() {
   const productContainer = document.getElementById('productChartContainer');
   if (productContainer) productContainer.style.display = 'none';
 
+  const rawDataContainer = document.getElementById('rawDataContainer');
+  if (rawDataContainer) rawDataContainer.style.display = 'none';
+
   const titleEl = document.getElementById('selectedProductTitle');
   if (titleEl) titleEl.textContent = '';
 
@@ -80,6 +83,9 @@ function resetProductView() {
 
   const thead = document.querySelector('#projectionsTable thead');
   if (thead) thead.innerHTML = '';
+
+  const jsonOutput = document.getElementById('jsonOutput');
+  if (jsonOutput) jsonOutput.textContent = '';
 }
 
 function formatDate(dateObj) {
@@ -88,7 +94,7 @@ function formatDate(dateObj) {
   return `${day}/${month}/${dateObj.getFullYear()}`;
 }
 
-// 1. Graphique Marque (Textes sortis au-dessus du bloc)
+// 1. Graphique Marque
 function renderBrandAnalysis(brandName) {
   const brandData = rawData.filter(item => item.manufacturer === brandName);
   if (brandData.length === 0) return;
@@ -96,19 +102,17 @@ function renderBrandAnalysis(brandName) {
   const container = document.getElementById('brandChartContainer');
   if (container) container.style.display = 'block';
 
-  // Mise à jour du titre et du sous-titre dans le HTML
   const brandTitle = document.getElementById('brandTitle');
-  
+  if (brandTitle) brandTitle.textContent = `Dépréciation moyenne : ${brandName} par Grade`;
+
   const brandAnnualRates = brandData.map(d => d.annual_rate).filter(r => r > 0);
   const avgBrandRate = brandAnnualRates.length > 0 
     ? (brandAnnualRates.reduce((a, b) => a + b, 0) / brandAnnualRates.length * 100).toFixed(1)
     : "20.0";
 
-  if (brandTitle) brandTitle.innerHTML = brandName;
-
   const infoBox = document.getElementById('brandRateInfo');
   if (infoBox) {
-    infoBox.innerHTML = `📊 Taux de dépréciation : <strong>-${avgBrandRate}% / an</strong>`;
+    infoBox.innerHTML = `📊 Taux de dépréciation moyen appliqué aux nouveaux produits ${brandName} : <strong>-${avgBrandRate}% / an</strong>`;
   }
 
   const grades = [...new Set(brandData.map(d => d.grade))].sort();
@@ -202,7 +206,7 @@ function renderBrandAnalysis(brandName) {
   });
 }
 
-// 2. Graphique Produit (Textes sortis au-dessus du bloc)
+// 2. Graphique Produit + Console Données Brutes
 function renderAnalysis(productId, productName) {
   const productData = rawData.filter(item => item.idproduct == productId);
   if (productData.length === 0) return;
@@ -210,10 +214,16 @@ function renderAnalysis(productId, productName) {
   const productContainer = document.getElementById('productChartContainer');
   if (productContainer) productContainer.style.display = 'block';
 
-  // Mise à jour du titre Produit au-dessus du bloc
+  // Affichage de la console de données brutes
+  const rawDataContainer = document.getElementById('rawDataContainer');
+  if (rawDataContainer) {
+    rawDataContainer.style.display = 'block';
+    document.getElementById('jsonOutput').textContent = JSON.stringify(productData, null, 2);
+  }
+
   const titleEl = document.getElementById('selectedProductTitle');
   if (titleEl) {
-    titleEl.textContent = `📈 ${productName}`;
+    titleEl.textContent = `📈 Analyse détaillée : ${productName}`;
   }
 
   const startDate = new Date(productData[0].first_date);

@@ -91,6 +91,16 @@
         </table>
       </div>
     </div>
+
+    <!-- CONSOLE / DONNÉES BRUTES -->
+    <div class="card my-4" id="rawDataContainer" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="margin: 0; font-size: 1.1rem; color: #334155;">💻 Inspecteur de Données Brutes (JSON)</h3>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('jsonOutput').textContent)" class="btn-copy">Copier le JSON</button>
+      </div>
+      <pre id="jsonOutput" style="background-color: #0f172a; color: #38bdf8; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.85rem; overflow-x: auto; max-height: 400px;"></pre>
+    </div>
+    
   </div>
 
   <script src="app.js"></script>
