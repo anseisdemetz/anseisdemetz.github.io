@@ -1,9 +1,32 @@
-// V3.0 - Quiz révision paginé & corrigé
+// V3.1 - Quiz révision paginé, corrigé & historique [A015]
 
 let quizQuestions = [];
 let quizCurrentIndex = 0;
 let quizScore = 0;
 let quizIsAnswering = false;
+
+// [A015] Enregistrement de la session dans l'historique du jour
+function saveQuizSessionToHistory(questions) {
+    if (!questions || questions.length === 0) return;
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const storageKey = `quiz_history_${currentLang}_${todayStr}`;
+
+    const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+    const sessionWords = questions.map(q => ({
+        term: q.targetWord.term,
+        translation: q.targetWord.translation
+    }));
+
+    history.push({
+        time: timeStr,
+        words: sessionWords
+    });
+
+    localStorage.setItem(storageKey, JSON.stringify(history));
+}
 
 // Helper : Obtenir les données des mots vus aujourd'hui
 function getQuizSeenTodayData() {
@@ -254,8 +277,59 @@ async function handleQuizAnswer(selectedIndex, selectedBtn) {
     }, 1200);
 }
 
+// [A015] Ouverture et rendu de la modale d'historique
+function openQuizHistoryModal() {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const storageKey = `quiz_history_${currentLang}_${todayStr}`;
+    const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    
+    const container = document.getElementById('quiz-history-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (history.length === 0) {
+        container.innerHTML = `
+            <div class="py-12 text-center text-slate-400">
+                <i class="fa-solid fa-hourglass-start text-3xl mb-2 text-slate-300"></i>
+                <p class="text-xs font-medium">Aucun quiz effectué aujourd'hui.</p>
+            </div>
+        `;
+    } else {
+        history.forEach((session, idx) => {
+            const card = document.createElement('div');
+            card.className = "border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-3";
+
+            const wordsListHtml = session.words.map(w => `
+                <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-slate-100 text-xs">
+                    <span class="font-bold text-slate-800">${escapeHtml(w.term)}</span>
+                    <span class="text-slate-500">${escapeHtml(w.translation)}</span>
+                </div>
+            `).join('');
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center border-b border-slate-200/60 pb-2">
+                    <span class="text-xs font-bold text-indigo-900 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-md">
+                        Série #${idx + 1}
+                    </span>
+                    <span class="text-xs font-mono font-medium text-slate-500">
+                        🕒 ${session.time}
+                    </span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    ${wordsListHtml}
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    openModal('quiz-history-modal');
+}
+
 function showQuizResults() {
-    // Validation des mots révisés à la fin du Quiz
+    // 1. Sauvegarde dans les statistiques quotidiennes
     const { storageKey, seenData } = getQuizSeenTodayData();
     quizQuestions.forEach(q => {
         if (!seenData.ids.includes(q.targetWord.id)) {
@@ -263,6 +337,9 @@ function showQuizResults() {
         }
     });
     localStorage.setItem(storageKey, JSON.stringify(seenData));
+
+    // 2. [A015] Enregistrement unique de la session dans l'historique
+    saveQuizSessionToHistory(quizQuestions);
 
     const totalSeenToday = seenData.ids.length;
     updateQuizHeaderButton();
