@@ -24,7 +24,6 @@ const BOOK_COLORS = [
 let daysData = {};
 let booksListArray = [];
 let dateToBookMap = {};
-let activeBookFilterStatus = 'all';
 let activeBookFilterLanguage = 'all';
 let selectedDateStr = null;
 let currentStatus = null;
@@ -182,12 +181,16 @@ async function fetchSupabaseData() {
       }
     }
 
+    // Mise à jour des éléments du DOM
     document.getElementById('stat-days').innerText = successCount;
     document.getElementById('stat-theo-pages').innerText = theoPages.toLocaleString('fr-FR');
     document.getElementById('stat-real-pages').innerText = realPagesTotal.toLocaleString('fr-FR');
     document.getElementById('stat-percent').innerText = `${progressPercent}%`;
     document.getElementById('stat-books-lang').innerText = `FR: ${langCounts['Français']} | IT: ${langCounts['Italien']} | EN: ${langCounts['Anglais']}`;
-    document.getElementById('badge-books-count').innerText = booksListArray.length;
+
+    // [A023] Formatage dynamique : "0 livre", "1 livre", "2 livres", etc.
+    const booksCount = booksListArray.length;
+    document.getElementById('badge-books-count').innerText = `${booksCount} livre${booksCount > 1 ? 's' : ''}`;
   }
 }
 
@@ -318,16 +321,6 @@ function openBooksPanel() {
 function closeBooksPanel() {
   document.getElementById('books-panel').classList.add('hidden');
   document.getElementById('books-panel').classList.remove('flex');
-}
-
-function filterBooksStatus(status) {
-  activeBookFilterStatus = status;
-  
-  document.getElementById('filter-btn-all').className = `px-2.5 py-1 rounded-full font-medium transition ${status === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`;
-  document.getElementById('filter-btn-reading').className = `px-2.5 py-1 rounded-full font-medium transition ${status === 'reading' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`;
-  document.getElementById('filter-btn-finished').className = `px-2.5 py-1 rounded-full font-medium transition ${status === 'finished' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`;
-  
-  renderBooksList();
 }
 
 function filterBooksLanguage(lang) {

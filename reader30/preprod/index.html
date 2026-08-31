@@ -32,13 +32,14 @@
   <header class="bg-white text-gray-800 p-3 shadow-sm border-b sticky top-0 z-20">
     <div class="flex justify-between items-center mb-2">
       <div>
-        <h1 class="font-bold text-base leading-tight text-gray-900">📚 Challenge 30 P/Jour</h1>
+        <!-- [A024] Nouveau titre -->
+        <h1 class="font-bold text-base leading-tight text-gray-900">📚 Lire 30 pages/jour</h1>
         <p class="text-[10px] text-gray-500">1er Juil. 2026 – 30 Juin 2027</p>
       </div>
       <div class="flex items-center space-x-2">
-        <button onclick="openBooksPanel()" class="text-xs bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 px-2.5 py-1 rounded-full font-semibold transition flex items-center space-x-1 border border-gray-300">
-          <span>📖 Livres</span>
-          <span id="badge-books-count" class="bg-indigo-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+        <!-- [A023] Icône supprimée et structure inversée pour "N livre(s)" -->
+        <button onclick="openBooksPanel()" class="text-xs bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 px-2.5 py-1 rounded-full font-semibold transition flex items-center border border-gray-300">
+          <span id="badge-books-count">0 livre</span>
         </button>
         <span class="text-xs bg-gray-100 border text-gray-700 px-2.5 py-1 rounded-full font-bold">
           <span id="stat-days">0</span>/365 j
