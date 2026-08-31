@@ -188,9 +188,14 @@ async function fetchSupabaseData() {
     document.getElementById('stat-percent').innerText = `${progressPercent}%`;
     document.getElementById('stat-books-lang').innerText = `FR: ${langCounts['Français']} | IT: ${langCounts['Italien']} | EN: ${langCounts['Anglais']}`;
 
-    // [A023] Formatage dynamique : "0 livre", "1 livre", "2 livres", etc.
+    // [A023] & [A025] Mise à jour des badges du nombre de livres
     const booksCount = booksListArray.length;
     document.getElementById('badge-books-count').innerText = `${booksCount} livre${booksCount > 1 ? 's' : ''}`;
+    
+    const modalBadge = document.getElementById('modal-books-count-badge');
+    if (modalBadge) {
+      modalBadge.innerText = booksCount;
+    }
   }
 }
 
