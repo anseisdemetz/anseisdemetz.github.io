@@ -1,9 +1,35 @@
-// V3.0 - Quiz révision paginé & corrigé
+// V3.1 - Quiz révision paginé, corrigé & historique [A015]
 
 let quizQuestions = [];
 let quizCurrentIndex = 0;
 let quizScore = 0;
 let quizIsAnswering = false;
+
+// [A015] Enregistrement de la session dans l'historique avec évolution du score et exemple
+function saveQuizSessionToHistory(questions) {
+    if (!questions || questions.length === 0) return;
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const storageKey = `quiz_history_${currentLang}_${todayStr}`;
+
+    const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+    const sessionWords = questions.map(q => ({
+        term: q.targetWord.term,
+        translation: q.targetWord.translation,
+        sentence: q.targetWord.sentence || '',
+        scoreBefore: q.initialScore,
+        scoreAfter: q.targetWord.score || 1
+    }));
+
+    history.push({
+        time: timeStr,
+        words: sessionWords
+    });
+
+    localStorage.setItem(storageKey, JSON.stringify(history));
+}
 
 // Helper : Obtenir les données des mots vus aujourd'hui
 function getQuizSeenTodayData() {
@@ -82,32 +108,22 @@ function startQuiz() {
     // 4. Composition des questions
     selectedWords.sort(() => 0.5 - Math.random());
 
+    // Dans startQuiz(), lors de la composition des questions :
     quizQuestions = selectedWords.map(targetWord => {
         const direction = Math.floor(Math.random() * 2);
-
         const distractorsPool = allWords.filter(x => x.id !== targetWord.id);
         const shuffledPool = [...distractorsPool].sort(() => 0.5 - Math.random());
         const distractors = shuffledPool.slice(0, 3);
 
-        let choices = [];
+        let choices = direction === 0
+            ? [{ text: targetWord.translation, isCorrect: true }, ...distractors.map(d => ({ text: d.translation, isCorrect: false }))]
+            : [{ text: targetWord.term, isCorrect: true }, ...distractors.map(d => ({ text: d.term, isCorrect: false }))];
 
-        if (direction === 0) {
-            choices = [
-                { text: targetWord.translation, isCorrect: true },
-                ...distractors.map(d => ({ text: d.translation, isCorrect: false }))
-            ];
-        } else {
-            choices = [
-                { text: targetWord.term, isCorrect: true },
-                ...distractors.map(d => ({ text: d.term, isCorrect: false }))
-            ];
-        }
-
-        // Mélange des propositions
         choices.sort(() => 0.5 - Math.random());
 
         return {
             targetWord,
+            initialScore: targetWord.score || 1, // Enregistre le score AVANT le quiz [A015]
             direction,
             prompt: direction === 0 ? targetWord.term : targetWord.translation,
             choices
@@ -254,8 +270,89 @@ async function handleQuizAnswer(selectedIndex, selectedBtn) {
     }, 1200);
 }
 
+// [A015] Modale d'historique avec cartes dédiées, évolution du score et phrases d'exemple
+function openQuizHistoryModal() {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const storageKey = `quiz_history_${currentLang}_${todayStr}`;
+    const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    
+    const container = document.getElementById('quiz-history-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (history.length === 0) {
+        container.innerHTML = `
+            <div class="py-12 text-center text-slate-400">
+                <i class="fa-solid fa-hourglass-start text-3xl mb-2 text-slate-300"></i>
+                <p class="text-xs font-medium">Aucun quiz effectué aujourd'hui.</p>
+            </div>
+        `;
+    } else {
+        history.forEach((session, idx) => {
+            const sessionBlock = document.createElement('div');
+            sessionBlock.className = "border border-slate-200 rounded-2xl p-4 bg-slate-50/70 space-y-3";
+
+            // En-tête de la série avec heure
+            sessionBlock.innerHTML = `
+                <div class="flex justify-between items-center border-b border-slate-200/80 pb-2.5">
+                    <span class="text-xs font-bold text-indigo-900 bg-indigo-100/80 border border-indigo-200 px-3 py-1 rounded-lg">
+                        Série #${idx + 1}
+                    </span>
+                    <span class="text-xs font-mono font-semibold text-slate-500 flex items-center space-x-1">
+                        <i class="fa-regular fa-clock text-[11px]"></i>
+                        <span>${session.time}</span>
+                    </span>
+                </div>
+            `;
+
+            // Grille des encarts dédiés pour chaque mot de la série
+            const cardsGrid = document.createElement('div');
+            cardsGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1";
+
+            session.words.forEach(w => {
+                const isGood = w.scoreAfter > w.scoreBefore;
+                const scoreColorClass = isGood 
+                    ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
+                    : "bg-rose-50 text-rose-700 border-rose-200";
+
+                const wordCard = document.createElement('div');
+                wordCard.className = "bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-sm flex flex-col justify-between space-y-2";
+
+                wordCard.innerHTML = `
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="font-bold text-slate-900 text-sm">${escapeHtml(w.term)}</span>
+                            <!-- Badge d'évolution du score (Avant -> Après) -->
+                            <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border shrink-0 ${scoreColorClass}">
+                                ${w.scoreBefore} <i class="fa-solid fa-arrow-right text-[9px] mx-0.5"></i> ${w.scoreAfter}
+                            </span>
+                        </div>
+                        <p class="text-xs font-medium text-slate-600 border-l-2 border-indigo-500 pl-2 py-0.5">
+                            ${escapeHtml(w.translation)}
+                        </p>
+                    </div>
+
+                    ${w.sentence ? `
+                        <p class="text-[11px] italic text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 leading-relaxed">
+                            "${escapeHtml(w.sentence)}"
+                        </p>
+                    ` : ''}
+                `;
+
+                cardsGrid.appendChild(wordCard);
+            });
+
+            sessionBlock.appendChild(cardsGrid);
+            container.appendChild(sessionBlock);
+        });
+    }
+
+    openModal('quiz-history-modal');
+}
+
 function showQuizResults() {
-    // Validation des mots révisés à la fin du Quiz
+    // 1. Sauvegarde dans les statistiques quotidiennes
     const { storageKey, seenData } = getQuizSeenTodayData();
     quizQuestions.forEach(q => {
         if (!seenData.ids.includes(q.targetWord.id)) {
@@ -263,6 +360,9 @@ function showQuizResults() {
         }
     });
     localStorage.setItem(storageKey, JSON.stringify(seenData));
+
+    // 2. [A015] Enregistrement unique de la session dans l'historique
+    saveQuizSessionToHistory(quizQuestions);
 
     const totalSeenToday = seenData.ids.length;
     updateQuizHeaderButton();
