@@ -24,7 +24,6 @@ const BOOK_COLORS = [
 let daysData = {};
 let booksListArray = [];
 let dateToBookMap = {};
-let activeBookFilterStatus = 'all';
 let activeBookFilterLanguage = 'all';
 let selectedDateStr = null;
 let currentStatus = null;
@@ -182,12 +181,21 @@ async function fetchSupabaseData() {
       }
     }
 
+    // Mise à jour des éléments du DOM
     document.getElementById('stat-days').innerText = successCount;
     document.getElementById('stat-theo-pages').innerText = theoPages.toLocaleString('fr-FR');
     document.getElementById('stat-real-pages').innerText = realPagesTotal.toLocaleString('fr-FR');
     document.getElementById('stat-percent').innerText = `${progressPercent}%`;
     document.getElementById('stat-books-lang').innerText = `FR: ${langCounts['Français']} | IT: ${langCounts['Italien']} | EN: ${langCounts['Anglais']}`;
-    document.getElementById('badge-books-count').innerText = booksListArray.length;
+
+    // [A023] & [A025] Mise à jour des badges du nombre de livres
+    const booksCount = booksListArray.length;
+    document.getElementById('badge-books-count').innerText = `${booksCount} livre${booksCount > 1 ? 's' : ''}`;
+    
+    const modalBadge = document.getElementById('modal-books-count-badge');
+    if (modalBadge) {
+      modalBadge.innerText = booksCount;
+    }
   }
 }
 
@@ -320,16 +328,6 @@ function closeBooksPanel() {
   document.getElementById('books-panel').classList.remove('flex');
 }
 
-function filterBooksStatus(status) {
-  activeBookFilterStatus = status;
-  
-  document.getElementById('filter-btn-all').className = `px-2.5 py-1 rounded-full font-medium transition ${status === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`;
-  document.getElementById('filter-btn-reading').className = `px-2.5 py-1 rounded-full font-medium transition ${status === 'reading' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`;
-  document.getElementById('filter-btn-finished').className = `px-2.5 py-1 rounded-full font-medium transition ${status === 'finished' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`;
-  
-  renderBooksList();
-}
-
 function filterBooksLanguage(lang) {
   activeBookFilterLanguage = lang;
   renderBooksList();
@@ -341,14 +339,7 @@ function renderBooksList() {
 
   let filtered = booksListArray;
 
-  // 1. Filtrage par statut
-  if (activeBookFilterStatus === 'reading') {
-    filtered = filtered.filter(b => b.endDate === null);
-  } else if (activeBookFilterStatus === 'finished') {
-    filtered = filtered.filter(b => b.endDate !== null);
-  }
-
-  // 2. Filtrage par langue
+  // Filtrage par langue uniquement [A020]
   if (activeBookFilterLanguage !== 'all') {
     filtered = filtered.filter(b => b.language === activeBookFilterLanguage);
   }
@@ -362,13 +353,6 @@ function renderBooksList() {
     const startDateFormatted = new Date(book.startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
     const endDateFormatted = book.endDate ? new Date(book.endDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : 'En cours';
 
-    let statusBadge = '';
-    if (book.endDate) {
-      statusBadge = `<span class="bg-emerald-100 text-emerald-700 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">Terminé <code>}</code></span>`;
-    } else {
-      statusBadge = `<span class="bg-amber-100 text-amber-700 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">En cours <code>{</code></span>`;
-    }
-
     const item = document.createElement('div');
     item.className = "bg-gray-50 border rounded-lg p-3 hover:border-indigo-300 transition flex items-start space-x-3 cursor-pointer";
     item.onclick = () => {
@@ -381,6 +365,7 @@ function renderBooksList() {
       openModal(book.startDate);
     };
 
+    // [A021] Badge de statut supprimé
     item.innerHTML = `
       <div class="bg-indigo-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0">
         #${book.id}
@@ -388,7 +373,6 @@ function renderBooksList() {
       <div class="flex-1 min-w-0">
         <div class="flex justify-between items-start gap-1">
           <h4 class="font-bold text-sm text-gray-800 truncate">${book.title}</h4>
-          ${statusBadge}
         </div>
         <p class="text-xs text-gray-600">${book.author}</p>
         <div class="flex flex-wrap items-center gap-2 text-[10px] text-gray-500 mt-1.5">
@@ -489,26 +473,52 @@ function updateStatusUI() {
   document.getElementById('btn-fail').className = `p-3 border rounded-lg text-lg flex items-center justify-center ${currentStatus === 'fail' ? 'border-rose-500 bg-rose-50 ring-2 ring-rose-400' : ''}`;
 }
 
+/**
+ * Calcul de la date de fin théorique au rythme de 30 pages / jour
+ * - Moins de 30 pages : se termine le jour même.
+ * - Reliquat sur le dernier jour : fin ramenée à J-1.
+ * - Dépassement du calendrier : fin plafonnée au 30 juin 2027.
+ */
 function calculateProjectedEndDate(startDateStr, totalPages) {
-  if (!totalPages || totalPages <= 0) return startDateStr;
+  const LAST_CHALLENGE_DAY = '2027-06-30';
+
+  // Cas 1 : Si le livre fait moins de 30 pages ou pas de nombre renseigné
+  if (!totalPages || totalPages <= 30) {
+    return startDateStr;
+  }
+
   const totalDays = Math.ceil(totalPages / 30);
   const remainder = totalPages % 30;
+
+  // Si le dernier jour comporte moins de 30 pages (reliquat > 0), on retire 1 jour au total
   const daysToAdd = (remainder > 0 && totalDays > 1) ? totalDays - 2 : totalDays - 1;
 
   const startDate = new Date(startDateStr);
   startDate.setDate(startDate.getDate() + daysToAdd);
-  return startDate.toISOString().split('T')[0];
+  const projectedEndDateStr = startDate.toISOString().split('T')[0];
+
+  // Cas 2 : Si la date de fin dépasse le 30 juin 2027, on la plafonne au dernier jour
+  if (projectedEndDateStr > LAST_CHALLENGE_DAY) {
+    return LAST_CHALLENGE_DAY;
+  }
+
+  return projectedEndDateStr;
 }
 
 async function saveDayData() {
   const pagesVal = document.getElementById('input-pages').value;
   const totalPages = pagesVal ? parseInt(pagesVal, 10) : null;
-  const isStart = document.getElementById('input-start').checked;
-  const isEnd = document.getElementById('input-end').checked;
+  let isStart = document.getElementById('input-start').checked;
+  let isEnd = document.getElementById('input-end').checked;
 
   const title = document.getElementById('input-title').value || null;
   const author = document.getElementById('input-author').value || null;
   const language = document.getElementById('input-language').value || null;
+
+  // Si le livre fait 30 pages ou moins et qu'on déclare un début, la fin est le jour même
+  if (isStart && totalPages && totalPages <= 30) {
+    isEnd = true;
+  }
 
   if (isEnd) {
     const activeBook = getActiveBookForDate(selectedDateStr);
@@ -521,6 +531,7 @@ async function saveDayData() {
     }
   }
 
+  // 1. Sauvegarde du jour courant
   const payload = {
     day_date: selectedDateStr,
     status: currentStatus,
@@ -540,7 +551,8 @@ async function saveDayData() {
     return;
   }
 
-  if (isStart && totalPages && totalPages > 0 && !isEnd) {
+  // 2. Traitement automatique pour les livres de plus de 30 pages
+  if (isStart && totalPages && totalPages > 30) {
     const projectedEndDateStr = calculateProjectedEndDate(selectedDateStr, totalPages);
 
     if (projectedEndDateStr !== selectedDateStr) {

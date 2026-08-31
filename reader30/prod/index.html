@@ -12,6 +12,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="30Pages/J">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' style='background-color:%23FFFFFF;'><text x='50%' y='55%' dominant-baseline='central' text-anchor='middle' font-size='40'>📚</text></svg>">
+  <!-- Favicon du site (icône PWA) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' style='background-color:%23FFFFFF;'><text x='50%' y='55%' dominant-baseline='central' text-anchor='middle' font-size='40'>📚</text></svg>">
 
   <!-- Style CSS séparé -->
   <link rel="stylesheet" href="style.css">
@@ -30,13 +32,14 @@
   <header class="bg-white text-gray-800 p-3 shadow-sm border-b sticky top-0 z-20">
     <div class="flex justify-between items-center mb-2">
       <div>
-        <h1 class="font-bold text-base leading-tight text-gray-900">📚 Challenge 30 P/Jour</h1>
+        <!-- [A024] Nouveau titre -->
+        <h1 class="font-bold text-base leading-tight text-gray-900">📚 Lire 30 pages/jour</h1>
         <p class="text-[10px] text-gray-500">1er Juil. 2026 – 30 Juin 2027</p>
       </div>
       <div class="flex items-center space-x-2">
-        <button onclick="openBooksPanel()" class="text-xs bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 px-2.5 py-1 rounded-full font-semibold transition flex items-center space-x-1 border border-gray-300">
-          <span>📖 Livres</span>
-          <span id="badge-books-count" class="bg-indigo-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+        <!-- [A023] Icône supprimée et structure inversée pour "N livre(s)" -->
+        <button onclick="openBooksPanel()" class="text-xs bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 px-2.5 py-1 rounded-full font-semibold transition flex items-center border border-gray-300">
+          <span id="badge-books-count">0 livre</span>
         </button>
         <span class="text-xs bg-gray-100 border text-gray-700 px-2.5 py-1 rounded-full font-bold">
           <span id="stat-days">0</span>/365 j
@@ -72,27 +75,19 @@
     </div>
   </main>
 
-  <!-- Drawer : Panneau de la Liste des Livres -->
+<!-- Drawer : Panneau de la Liste des Livres [A020], [A021], [A022], [A025] -->
   <div id="books-panel" class="fixed inset-0 bg-black/50 hidden items-end sm:items-center justify-center p-0 sm:p-4 z-40 select-text backdrop-blur-xs">
     <div class="bg-white w-full max-w-md rounded-t-2xl sm:rounded-xl p-5 shadow-2xl max-h-[85vh] flex flex-col space-y-4">
       <div class="flex justify-between items-center border-b pb-3">
-        <div>
+        <div class="flex items-center space-x-2">
           <h3 class="font-bold text-lg text-gray-800">📖 Mes Livres</h3>
-          <p class="text-xs text-gray-500">Liste et ordre de lecture du challenge</p>
+          <span id="modal-books-count-badge" class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full font-bold leading-none flex items-center justify-center">0</span>
         </div>
         <button onclick="closeBooksPanel()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold px-2">&times;</button>
       </div>
 
-      <!-- Filtres rapides (Statut & Langue) -->
-      <div class="space-y-2 border-b pb-3">
-        <!-- Filtre par statut -->
-        <div class="flex space-x-1.5 text-xs">
-          <button onclick="filterBooksStatus('all')" id="filter-btn-all" class="px-2.5 py-1 rounded-full font-medium bg-indigo-600 text-white transition">Tous</button>
-          <button onclick="filterBooksStatus('reading')" id="filter-btn-reading" class="px-2.5 py-1 rounded-full font-medium bg-gray-100 text-gray-600 transition">En cours ({)</button>
-          <button onclick="filterBooksStatus('finished')" id="filter-btn-finished" class="px-2.5 py-1 rounded-full font-medium bg-gray-100 text-gray-600 transition">Terminés (})</button>
-        </div>
-
-        <!-- Filtre par langue -->
+      <!-- [A020] Filtres de statut supprimés, seul le filtre de langue est conservé -->
+      <div class="border-b pb-3">
         <div class="flex items-center space-x-2 text-xs">
           <span class="text-gray-400 font-medium shrink-0">🌐 Langue :</span>
           <select id="filter-book-language" onchange="filterBooksLanguage(this.value)" class="w-full bg-gray-50 border border-gray-200 text-gray-700 py-1 px-2 rounded-lg outline-none focus:ring-1 focus:ring-indigo-500">
