@@ -142,6 +142,7 @@ function renderTable(resetPage = true) {
     mobileList.innerHTML = '';
 
     // 1. Filtrage global sur TOUTE la base (Recherche prédictive + Statuts)
+    // [A017] Filtrage sur le terme et la traduction uniquement
     const filtered = list.filter(item => {
         const itemStatus = item.status || 'unstudied';
 
@@ -152,8 +153,7 @@ function renderTable(resetPage = true) {
         if (searchQuery) {
             const matchTerm = (item.term || '').toLowerCase().includes(searchQuery);
             const matchTrans = (item.translation || '').toLowerCase().includes(searchQuery);
-            const matchSent = item.sentence ? item.sentence.toLowerCase().includes(searchQuery) : false;
-            return matchTerm || matchTrans || matchSent;
+            return matchTerm || matchTrans; // Retrait de matchSent
         }
 
         return true;

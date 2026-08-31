@@ -125,6 +125,7 @@ function changeBackendPage(direction) {
 }
 
 // --- AFFICHAGE DU TABLEAU BACKEND (PAGINÉ & LAZY LOADED) ---
+// --- AFFICHAGE DU TABLEAU BACKEND (PAGINÉ & LAZY LOADED) ---
 function renderBackendTable(resetPage = true) {
     if (resetPage) {
         currentBackendPage = 1;
@@ -151,7 +152,7 @@ function renderBackendTable(resetPage = true) {
 
     tbody.innerHTML = '';
 
-    // 1. Filtrage global (Recherche prédictive + Filtres)
+    // 1. Filtrage global (Recherche prédictive + Filtres) [A017]
     const filtered = list.filter(item => {
         const itemStatus = item.status || 'unstudied';
         const itemScore = item.score || 1;
@@ -164,11 +165,11 @@ function renderBackendTable(resetPage = true) {
             return false;
         }
 
+        // [A017] Recherche restreinte au terme et à la traduction
         if (searchQuery) {
             const matchTerm = (item.term || '').toLowerCase().includes(searchQuery);
             const matchTrans = (item.translation || '').toLowerCase().includes(searchQuery);
-            const matchSent = (item.sentence || '').toLowerCase().includes(searchQuery);
-            return matchTerm || matchTrans || matchSent;
+            return matchTerm || matchTrans;
         }
 
         return true;
