@@ -2,6 +2,16 @@
 const PAGE_SIZE = 100;
 let currentPage = 1;
 
+// [A018] Variable globale pour gérer le sens d'affichage du Lot du Jour (0: Terme -> Trad, 1: Trad -> Terme)
+let dailyFocusDirection = parseInt(localStorage.getItem('daily_focus_direction') || '0', 10);
+
+// [A018] Fonction pour inverser manuellement le sens via le bouton dédié
+function toggleDailyFocusDirection() {
+    dailyFocusDirection = dailyFocusDirection === 0 ? 1 : 0;
+    localStorage.setItem('daily_focus_direction', dailyFocusDirection);
+    renderDailyFocus();
+}
+
 // Navigation de page
 function changePage(direction) {
     currentPage += direction;
@@ -13,7 +23,6 @@ function changePage(direction) {
         container.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadInitialDatabase();
@@ -106,8 +115,6 @@ function renderApp() {
     document.getElementById('stat-progressbar').style.width = `${percent}%`;
 
     document.getElementById('th-term-header').innerText = `Mot / Expression (${db.languages[currentLang].name})`;
-
-    // LIGNE SUPPRIMÉE : updateMaskingControls(); 
 
     renderTable();
     initDailyFocus();
@@ -455,8 +462,12 @@ let dailyFocusWords = {
 function initDailyFocus() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const todayStr = new Date().toISOString().split('T')[0];
-    const savedData = localStorage.getItem(`daily_focus_${activeLang}`);
     
+    // [A018] Inversion systématique du sens à CHAQUE rechargement de l'application
+    dailyFocusDirection = dailyFocusDirection === 0 ? 1 : 0;
+    localStorage.setItem('daily_focus_direction', dailyFocusDirection);
+
+    const savedData = localStorage.getItem(`daily_focus_${activeLang}`);
     if (savedData) {
         try {
             const parsed = JSON.parse(savedData);
@@ -469,7 +480,7 @@ function initDailyFocus() {
             console.error("Erreur lecture LocalStorage Daily Focus:", e);
         }
     }
-    
+
     // Génération automatique si aucun tirage valide aujourd'hui
     generateDailyFocus(false);
 }
@@ -543,32 +554,36 @@ function renderDailyFocus() {
 
     currentFocusItems.forEach((item) => {
         const isKnown = item.status === 'known';
+        
+        // [A018] Détermination du texte à afficher en face avant et en masqué
+        const showTermAsPrompt = (dailyFocusDirection === 0);
+        const displayPrompt = showTermAsPrompt ? item.term : item.translation;
+        const hiddenAnswer = showTermAsPrompt ? item.translation : item.term;
+
+        const escapedTermJs = escapeJsString(item.term);
+        const escapedAnswerJs = escapeJsString(hiddenAnswer);
+
         const card = document.createElement('div');
         card.className = `p-3 rounded-xl border text-xs flex flex-col justify-between space-y-2.5 transition relative ${isKnown ? 'bg-indigo-950/40 border-emerald-500/50 opacity-60' : 'bg-indigo-950/70 border-indigo-600/60'}`;
 
-        const escapedTermJs = escapeJsString(item.term);
-        const escapedTransJs = escapeJsString(item.translation);
-
         card.innerHTML = `
             <div class="space-y-1.5">
-                <!-- En-tête : Audio à gauche + Mot + Croix sur disque blanc à droite -->
                 <div class="flex justify-between items-start gap-2 pr-7">
                     <div class="flex items-center space-x-2">
-                        <!-- [A012] Bouton Audio placé à gauche du mot -->
                         <button onclick="speakTerm('${escapedTermJs}', '${db.languages[activeLang].code}')" class="text-indigo-300 hover:text-white transition shrink-0 p-0.5" title="Écouter">
                             <i class="fa-solid fa-volume-high text-xs"></i>
                         </button>
-                        <span class="font-bold text-white text-sm ${isKnown ? 'line-through text-indigo-300' : ''}">${escapeHtml(item.term)}</span>
+                        <!-- Affichage du terme ou de la traduction selon le sens actuel -->
+                        <span class="font-bold text-white text-sm ${isKnown ? 'line-through text-indigo-300' : ''}">${escapeHtml(displayPrompt)}</span>
                     </div>
 
-                    <!-- [A007/A012] Bouton Fermer : Croix dans un disque blanc légèrement opaque à droite -->
                     <button onclick="removeWordFromDailyFocus('${item.id}')" class="absolute top-2.5 right-2.5 w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 text-white transition flex items-center justify-center shadow-sm" title="Retirer ce mot du lot du jour">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
 
-                <!-- Bouton Masquer/Afficher Traduction -->
-                <div onclick="toggleDailyTranslation(this, '${escapedTransJs}')" class="text-indigo-200 text-[11px] cursor-pointer hover:text-white transition select-none font-medium pt-1">
+                <!-- Masquage / Démasquage de la valeur inverse -->
+                <div onclick="toggleDailyTranslation(this, '${escapedAnswerJs}')" class="text-indigo-200 text-[11px] cursor-pointer hover:text-white transition select-none font-medium pt-1">
                     🙈 Voir traduction
                 </div>
 
