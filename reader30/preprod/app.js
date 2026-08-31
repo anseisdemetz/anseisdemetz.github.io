@@ -341,14 +341,7 @@ function renderBooksList() {
 
   let filtered = booksListArray;
 
-  // 1. Filtrage par statut
-  if (activeBookFilterStatus === 'reading') {
-    filtered = filtered.filter(b => b.endDate === null);
-  } else if (activeBookFilterStatus === 'finished') {
-    filtered = filtered.filter(b => b.endDate !== null);
-  }
-
-  // 2. Filtrage par langue
+  // Filtrage par langue uniquement [A020]
   if (activeBookFilterLanguage !== 'all') {
     filtered = filtered.filter(b => b.language === activeBookFilterLanguage);
   }
@@ -362,13 +355,6 @@ function renderBooksList() {
     const startDateFormatted = new Date(book.startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
     const endDateFormatted = book.endDate ? new Date(book.endDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : 'En cours';
 
-    let statusBadge = '';
-    if (book.endDate) {
-      statusBadge = `<span class="bg-emerald-100 text-emerald-700 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">Terminé <code>}</code></span>`;
-    } else {
-      statusBadge = `<span class="bg-amber-100 text-amber-700 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">En cours <code>{</code></span>`;
-    }
-
     const item = document.createElement('div');
     item.className = "bg-gray-50 border rounded-lg p-3 hover:border-indigo-300 transition flex items-start space-x-3 cursor-pointer";
     item.onclick = () => {
@@ -381,6 +367,7 @@ function renderBooksList() {
       openModal(book.startDate);
     };
 
+    // [A021] Badge de statut supprimé
     item.innerHTML = `
       <div class="bg-indigo-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0">
         #${book.id}
@@ -388,7 +375,6 @@ function renderBooksList() {
       <div class="flex-1 min-w-0">
         <div class="flex justify-between items-start gap-1">
           <h4 class="font-bold text-sm text-gray-800 truncate">${book.title}</h4>
-          ${statusBadge}
         </div>
         <p class="text-xs text-gray-600">${book.author}</p>
         <div class="flex flex-wrap items-center gap-2 text-[10px] text-gray-500 mt-1.5">
