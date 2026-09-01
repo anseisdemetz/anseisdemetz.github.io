@@ -278,9 +278,16 @@ function renderCalendar(yearMonth) {
       }
     }
 
+    // [A027] Détection d'une note renseignée
+    const hasNote = dayData.notes && dayData.notes.trim().length > 0;
+    const noteIndicator = hasNote ? '<span class="text-gray-400 font-bold text-xs" title="Note présente">-</span>' : '';
+
     cell.innerHTML = `
-      <div class="text-xs font-bold ${isToday ? 'text-indigo-600' : 'text-gray-500'} w-full text-left flex justify-between items-center">
-        <span>${d}</span>
+      <div class="text-xs font-bold ${isToday ? 'text-indigo-600' : 'text-gray-500'} w-full flex justify-between items-center">
+        <div class="flex items-center space-x-1">
+          <span>${d}</span>
+          ${noteIndicator}
+        </div>
         ${isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>' : ''}
       </div>
       <div class="my-auto">${statusIcon}</div>
