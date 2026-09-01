@@ -278,9 +278,16 @@ function renderCalendar(yearMonth) {
       }
     }
 
+    // [A027] Détection d'une note renseignée avec icône crayon ✏️
+    const hasNote = dayData.notes && dayData.notes.trim().length > 0;
+    const noteIndicator = hasNote ? '<span class="text-[10px]" title="Note présente">✏️</span>' : '';
+
     cell.innerHTML = `
-      <div class="text-xs font-bold ${isToday ? 'text-indigo-600' : 'text-gray-500'} w-full text-left flex justify-between items-center">
-        <span>${d}</span>
+      <div class="text-xs font-bold ${isToday ? 'text-indigo-600' : 'text-gray-500'} w-full flex justify-between items-center">
+        <div class="flex items-center space-x-1">
+          <span>${d}</span>
+          ${noteIndicator}
+        </div>
         ${isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>' : ''}
       </div>
       <div class="my-auto">${statusIcon}</div>
@@ -365,7 +372,6 @@ function renderBooksList() {
       openModal(book.startDate);
     };
 
-    // [A021] Badge de statut supprimé
     item.innerHTML = `
       <div class="bg-indigo-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0">
         #${book.id}
@@ -434,6 +440,9 @@ function openModal(dateStr) {
   document.getElementById('input-start').checked = isStart;
   document.getElementById('input-end').checked = isEnd;
 
+  // [A026] Chargement de la note existante
+  document.getElementById('input-notes').value = data.notes || '';
+
   if (data.book_title || data.book_author || data.book_language || data.book_pages) {
     document.getElementById('input-title').value = data.book_title || '';
     document.getElementById('input-author').value = data.book_author || '';
@@ -482,22 +491,18 @@ function updateStatusUI() {
 function calculateProjectedEndDate(startDateStr, totalPages) {
   const LAST_CHALLENGE_DAY = '2027-06-30';
 
-  // Cas 1 : Si le livre fait moins de 30 pages ou pas de nombre renseigné
   if (!totalPages || totalPages <= 30) {
     return startDateStr;
   }
 
   const totalDays = Math.ceil(totalPages / 30);
   const remainder = totalPages % 30;
-
-  // Si le dernier jour comporte moins de 30 pages (reliquat > 0), on retire 1 jour au total
   const daysToAdd = (remainder > 0 && totalDays > 1) ? totalDays - 2 : totalDays - 1;
 
   const startDate = new Date(startDateStr);
   startDate.setDate(startDate.getDate() + daysToAdd);
   const projectedEndDateStr = startDate.toISOString().split('T')[0];
 
-  // Cas 2 : Si la date de fin dépasse le 30 juin 2027, on la plafonne au dernier jour
   if (projectedEndDateStr > LAST_CHALLENGE_DAY) {
     return LAST_CHALLENGE_DAY;
   }
@@ -514,8 +519,8 @@ async function saveDayData() {
   const title = document.getElementById('input-title').value || null;
   const author = document.getElementById('input-author').value || null;
   const language = document.getElementById('input-language').value || null;
+  const notes = document.getElementById('input-notes').value || null;
 
-  // Si le livre fait 30 pages ou moins et qu'on déclare un début, la fin est le jour même
   if (isStart && totalPages && totalPages <= 30) {
     isEnd = true;
   }
@@ -541,6 +546,7 @@ async function saveDayData() {
     book_author: author,
     book_language: language,
     book_pages: totalPages,
+    notes: notes, // [A026] Champ texte brut
     updated_at: new Date().toISOString()
   };
 
