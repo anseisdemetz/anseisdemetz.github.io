@@ -79,8 +79,20 @@
       color: #1e40af;
       padding: 10px 16px;
       font-size: 13px;
+      margin-bottom: 12px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Note d'alerte / Incomplet */
+    .alert-note {
+      background-color: #fffbe6;
+      border-left: 4px solid #f59e0b;
+      color: #b45309;
+      padding: 10px 16px;
+      font-size: 13px;
       margin-bottom: 16px;
       border-radius: 0 4px 4px 0;
+      display: none; /* Masqué par défaut */
     }
 
     .modal-body {
@@ -191,6 +203,11 @@
       <div class="modal-body">
         <div class="info-note">
           <strong>Note :</strong> Une question impacte plusieurs positions, mais une position n'est pas impactée par plusieurs questions.
+        </div>
+
+        <!-- Cadre d'avertissement en cas d'élément(s) non défini(s) -->
+        <div class="alert-note" id="alertNote">
+          <strong>Attention :</strong> La définition des impacts est incomplète. Certains éléments restent à configurer dans les colonnes impactées.
         </div>
 
         <form id="diagnosticForm">
@@ -352,6 +369,7 @@
     const closeBtn = document.getElementById('closeModalBtn');
     const cancelBtn = document.getElementById('cancelBtn');
     const submitBtn = document.getElementById('submitBtn');
+    const alertNote = document.getElementById('alertNote');
 
     function openModal() { modal.classList.add('active'); }
     function closeModal() { modal.classList.remove('active'); }
@@ -364,13 +382,16 @@
       if (e.target === modal) closeModal();
     });
 
-    // Fonction de mise à jour du style des réponses
-    function updateAnswerHighlights() {
+    // Mise à jour de la mise en surbrillance + Vérification de la complétude
+    function updateAnswerHighlightsAndValidation() {
+      // Re-initialiser le style
       document.querySelectorAll('.answer-row td').forEach((td, index) => {
         if (index % 7 !== 0) {
           td.classList.remove('highlight-blue');
         }
       });
+
+      let missingCount = 0;
 
       document.querySelectorAll('.question-row').forEach(qRow => {
         const checkboxes = qRow.querySelectorAll('input[type="checkbox"]');
@@ -384,15 +405,28 @@
               const targetTd = nextRow.children[colIndex + 1];
               if (targetTd) {
                 targetTd.classList.add('highlight-blue');
+                
+                // Vérifier si le select de la colonne surbrillée est non renseigné
+                const select = targetTd.querySelector('select');
+                if (select && select.value === "") {
+                  missingCount++;
+                }
               }
               nextRow = nextRow.nextElementSibling;
             }
           }
         });
       });
+
+      // Affichage du message d'avertissement si au moins une réponse est manquante dans une colonne active
+      if (missingCount > 0) {
+        alertNote.style.display = 'block';
+      } else {
+        alertNote.style.display = 'none';
+      }
     }
 
-    // Gestion de l'exclusivité verticale + mise à jour des arrière-plans
+    // Écoute des checkboxes de questions
     const questionCheckboxes = document.querySelectorAll('.question-row input[type="checkbox"]');
 
     questionCheckboxes.forEach(chk => {
@@ -406,12 +440,17 @@
             }
           });
         }
-        updateAnswerHighlights();
+        updateAnswerHighlightsAndValidation();
       });
     });
 
+    // Écoute du changement sur tous les éléments <select>
+    document.querySelectorAll('.impact-select').forEach(select => {
+      select.addEventListener('change', updateAnswerHighlightsAndValidation);
+    });
+
     // Initialisation au chargement de la page
-    updateAnswerHighlights();
+    updateAnswerHighlightsAndValidation();
 
     // Soumission du formulaire
     submitBtn.addEventListener('click', () => {
