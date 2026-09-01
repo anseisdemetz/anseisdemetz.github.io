@@ -1,9 +1,12 @@
-// V3.1 - Quiz révision paginé, corrigé & historique [A015]
+// V3.2 - Quiz révision paginé, corrigé & historique filtrable [A015][A028]
 
 let quizQuestions = [];
 let quizCurrentIndex = 0;
 let quizScore = 0;
 let quizIsAnswering = false;
+
+// [A028] État du filtre d'affichage de l'historique ('all' ou 'dropped')
+let quizHistoryFilterView = 'all';
 
 // [A015] Enregistrement de la session dans l'historique avec évolution du score et exemple
 function saveQuizSessionToHistory(questions) {
@@ -108,7 +111,6 @@ function startQuiz() {
     // 4. Composition des questions
     selectedWords.sort(() => 0.5 - Math.random());
 
-    // Dans startQuiz(), lors de la composition des questions :
     quizQuestions = selectedWords.map(targetWord => {
         const direction = Math.floor(Math.random() * 2);
         const distractorsPool = allWords.filter(x => x.id !== targetWord.id);
@@ -270,8 +272,43 @@ async function handleQuizAnswer(selectedIndex, selectedBtn) {
     }, 1200);
 }
 
-// [A015] Modale d'historique avec cartes dédiées, évolution du score et phrases d'exemple
+// [A028] Changer le filtre d'affichage de l'historique ('all' ou 'dropped')
+function filterQuizHistory(view) {
+    quizHistoryFilterView = view;
+
+    const btnAll = document.getElementById('quiz-history-filter-all');
+    const btnDropped = document.getElementById('quiz-history-filter-dropped');
+
+    if (btnAll && btnDropped) {
+        if (view === 'all') {
+            btnAll.className = "flex-1 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center";
+            btnDropped.className = "flex-1 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition text-center";
+        } else {
+            btnDropped.className = "flex-1 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center";
+            btnAll.className = "flex-1 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition text-center";
+        }
+    }
+
+    renderQuizHistoryModal();
+}
+
+// [A028] Ouverture de la modale d'historique
 function openQuizHistoryModal() {
+    quizHistoryFilterView = 'all'; // Réinitialise sur "Tous les mots" à l'ouverture
+    
+    const btnAll = document.getElementById('quiz-history-filter-all');
+    const btnDropped = document.getElementById('quiz-history-filter-dropped');
+    if (btnAll && btnDropped) {
+        btnAll.className = "flex-1 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center";
+        btnDropped.className = "flex-1 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition text-center";
+    }
+
+    renderQuizHistoryModal();
+    openModal('quiz-history-modal');
+}
+
+// [A028] Génération dynamique du contenu de la modale d'historique
+function renderQuizHistoryModal() {
     const todayStr = new Date().toISOString().split('T')[0];
     const storageKey = `quiz_history_${currentLang}_${todayStr}`;
     const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
@@ -288,67 +325,93 @@ function openQuizHistoryModal() {
                 <p class="text-xs font-medium">Aucun quiz effectué aujourd'hui.</p>
             </div>
         `;
-    } else {
-        history.forEach((session, idx) => {
-            const sessionBlock = document.createElement('div');
-            sessionBlock.className = "border border-slate-200 rounded-2xl p-4 bg-slate-50/70 space-y-3";
-
-            // En-tête de la série avec heure
-            sessionBlock.innerHTML = `
-                <div class="flex justify-between items-center border-b border-slate-200/80 pb-2.5">
-                    <span class="text-xs font-bold text-indigo-900 bg-indigo-100/80 border border-indigo-200 px-3 py-1 rounded-lg">
-                        Série #${idx + 1}
-                    </span>
-                    <span class="text-xs font-mono font-semibold text-slate-500 flex items-center space-x-1">
-                        <i class="fa-regular fa-clock text-[11px]"></i>
-                        <span>${session.time}</span>
-                    </span>
-                </div>
-            `;
-
-            // Grille des encarts dédiés pour chaque mot de la série
-            const cardsGrid = document.createElement('div');
-            cardsGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1";
-
-            session.words.forEach(w => {
-                const isGood = w.scoreAfter > w.scoreBefore;
-                const scoreColorClass = isGood 
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
-                    : "bg-rose-50 text-rose-700 border-rose-200";
-
-                const wordCard = document.createElement('div');
-                wordCard.className = "bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-sm flex flex-col justify-between space-y-2";
-
-                wordCard.innerHTML = `
-                    <div class="space-y-1">
-                        <div class="flex justify-between items-start gap-2">
-                            <span class="font-bold text-slate-900 text-sm">${escapeHtml(w.term)}</span>
-                            <!-- Badge d'évolution du score (Avant -> Après) -->
-                            <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border shrink-0 ${scoreColorClass}">
-                                ${w.scoreBefore} <i class="fa-solid fa-arrow-right text-[9px] mx-0.5"></i> ${w.scoreAfter}
-                            </span>
-                        </div>
-                        <p class="text-xs font-medium text-slate-600 border-l-2 border-indigo-500 pl-2 py-0.5">
-                            ${escapeHtml(w.translation)}
-                        </p>
-                    </div>
-
-                    ${w.sentence ? `
-                        <p class="text-[11px] italic text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 leading-relaxed">
-                            "${escapeHtml(w.sentence)}"
-                        </p>
-                    ` : ''}
-                `;
-
-                cardsGrid.appendChild(wordCard);
-            });
-
-            sessionBlock.appendChild(cardsGrid);
-            container.appendChild(sessionBlock);
-        });
+        return;
     }
 
-    openModal('quiz-history-modal');
+    let totalCardsRendered = 0;
+
+    history.forEach((session, idx) => {
+        // [A028] Filtrage des mots selon le bouton actif
+        const filteredWords = session.words.filter(w => {
+            if (quizHistoryFilterView === 'dropped') {
+                return w.scoreAfter < w.scoreBefore; // Garde uniquement les baisses de score
+            }
+            return true;
+        });
+
+        if (filteredWords.length === 0) return;
+
+        totalCardsRendered += filteredWords.length;
+
+        const sessionBlock = document.createElement('div');
+        sessionBlock.className = "border border-slate-200 rounded-2xl p-4 bg-slate-50/70 space-y-3";
+
+        sessionBlock.innerHTML = `
+            <div class="flex justify-between items-center border-b border-slate-200/80 pb-2.5">
+                <span class="text-xs font-bold text-indigo-900 bg-indigo-100/80 border border-indigo-200 px-3 py-1 rounded-lg">
+                    Série #${idx + 1}
+                </span>
+                <span class="text-xs font-mono font-semibold text-slate-500 flex items-center space-x-1">
+                    <i class="fa-regular fa-clock text-[11px]"></i>
+                    <span>${session.time}</span>
+                </span>
+            </div>
+        `;
+
+        const cardsGrid = document.createElement('div');
+        cardsGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1";
+
+        filteredWords.forEach(w => {
+            const isGood = w.scoreAfter > w.scoreBefore;
+            const isDropped = w.scoreAfter < w.scoreBefore;
+
+            let scoreColorClass = "bg-slate-100 text-slate-600 border-slate-200";
+            if (isGood) {
+                scoreColorClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
+            } else if (isDropped) {
+                scoreColorClass = "bg-rose-50 text-rose-700 border-rose-200";
+            }
+
+            const wordCard = document.createElement('div');
+            wordCard.className = "bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-sm flex flex-col justify-between space-y-2";
+
+            wordCard.innerHTML = `
+                <div class="space-y-1">
+                    <div class="flex justify-between items-start gap-2">
+                        <span class="font-bold text-slate-900 text-sm">${escapeHtml(w.term)}</span>
+                        <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border shrink-0 ${scoreColorClass}">
+                            ${w.scoreBefore} <i class="fa-solid fa-arrow-right text-[9px] mx-0.5"></i> ${w.scoreAfter}
+                        </span>
+                    </div>
+                    <p class="text-xs font-medium text-slate-600 border-l-2 border-indigo-500 pl-2 py-0.5">
+                        ${escapeHtml(w.translation)}
+                    </p>
+                </div>
+
+                ${w.sentence ? `
+                    <p class="text-[11px] italic text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 leading-relaxed">
+                        "${escapeHtml(w.sentence)}"
+                    </p>
+                ` : ''}
+            `;
+
+            cardsGrid.appendChild(wordCard);
+        });
+
+        sessionBlock.appendChild(cardsGrid);
+        container.appendChild(sessionBlock);
+    });
+
+    // Message spécifique si aucun mot n'est en baisse de score
+    if (totalCardsRendered === 0 && quizHistoryFilterView === 'dropped') {
+        container.innerHTML = `
+            <div class="py-12 text-center text-slate-400">
+                <i class="fa-solid fa-circle-check text-3xl mb-2 text-emerald-400"></i>
+                <p class="text-xs font-medium text-slate-600">Aucune baisse de score aujourd'hui !</p>
+                <p class="text-[11px] text-slate-400 mt-1">Tous les mots révisés ont maintenu ou augmenté leur score.</p>
+            </div>
+        `;
+    }
 }
 
 function showQuizResults() {
@@ -361,7 +424,7 @@ function showQuizResults() {
     });
     localStorage.setItem(storageKey, JSON.stringify(seenData));
 
-    // 2. [A015] Enregistrement unique de la session dans l'historique
+    // 2. Enregistrement unique de la session dans l'historique [A015]
     saveQuizSessionToHistory(quizQuestions);
 
     const totalSeenToday = seenData.ids.length;
