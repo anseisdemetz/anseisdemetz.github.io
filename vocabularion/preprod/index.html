@@ -87,13 +87,16 @@
                             </button>
                         </div>
 
-                        <!-- [A028] Commutateur de filtre -->
-                        <div class="flex bg-slate-100 p-1 rounded-lg text-xs font-medium space-x-1">
-                            <button id="quiz-history-filter-all" onclick="filterQuizHistory('all')" class="flex-1 py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center">
-                                👁️ Tous les mots
+                        <!-- [A028 & A029] Commutateur de filtres dans la modale d'historique -->
+                        <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-lg text-xs font-medium">
+                            <button id="quiz-history-filter-all" onclick="filterQuizHistory('all')" class="py-1.5 rounded-md bg-white text-slate-800 shadow-sm font-semibold transition text-center">
+                                👁️ Tous
                             </button>
-                            <button id="quiz-history-filter-dropped" onclick="filterQuizHistory('dropped')" class="flex-1 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition text-center">
-                                🔻 Mots en baisse
+                            <button id="quiz-history-filter-dropped" onclick="filterQuizHistory('dropped')" class="py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition text-center">
+                                🔻 En baisse
+                            </button>
+                            <button id="quiz-history-filter-unstudied" onclick="filterQuizHistory('unstudied')" class="py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition text-center">
+                                ⏳ Repassés "Pas appris"
                             </button>
                         </div>
                     </div>
