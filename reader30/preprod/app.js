@@ -278,9 +278,9 @@ function renderCalendar(yearMonth) {
       }
     }
 
-    // [A027] Détection d'une note renseignée
+    // [A027] Détection d'une note renseignée avec icône crayon ✏️
     const hasNote = dayData.notes && dayData.notes.trim().length > 0;
-    const noteIndicator = hasNote ? '<span class="text-gray-400 font-bold text-xs" title="Note présente">-</span>' : '';
+    const noteIndicator = hasNote ? '<span class="text-[10px]" title="Note présente">✏️</span>' : '';
 
     cell.innerHTML = `
       <div class="text-xs font-bold ${isToday ? 'text-indigo-600' : 'text-gray-500'} w-full flex justify-between items-center">
