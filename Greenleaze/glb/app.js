@@ -9,7 +9,7 @@ function App() {
   const [selectedGrade, setSelectedGrade] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 100;
+  const itemsPerPage = 10;
 
   const chartContainer1Ref = useRef(null);
   const chartContainer2Ref = useRef(null);
