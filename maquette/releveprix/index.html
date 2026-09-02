@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relevé de Prix — Consultation</title>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+<body>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div>
+        <h1>Relevé de Prix</h1>
+        <p>Consultation optimisée des données volumineuses</p>
+      </div>
+      <div class="controls-group">
+        <span id="stats-counter" class="stats-badge">Chargement...</span>
+      </div>
+    </header>
+
+    <main>
+      <div id="table-app">
+        <div class="table-wrapper">
+          <div class="empty-state">
+            Chargement des données depuis ArgusGrading.csv...
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

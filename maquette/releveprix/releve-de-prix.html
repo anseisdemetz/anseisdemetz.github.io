@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparatif Multi-Produits - Tarifs de Reprise</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.55rem 1rem 0.55rem 2.2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .stats-badge {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Listing des cartes produits */
+        .products-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* Header compact par produit */
+        .product-header {
+            padding: 0.85rem 1.25rem;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .product-title-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .product-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .badge-sub {
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item strong {
+            color: var(--text-main);
+        }
+
+        /* Grille des grades */
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+            gap: 1px;
+            background-color: var(--border-color);
+        }
+
+        .grade-cell {
+            background: #ffffff;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .grade-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.2rem;
+        }
+
+        .grade-pill {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .grade-A { background: #dcfce7; color: #15803d; }
+        .grade-A- { background: #fef9c3; color: #a16207; }
+        .grade-B { background: #fef3c7; color: #b45309; }
+        .grade-C { background: #ffedd5; color: #c2410c; }
+        .grade-C- { background: #fee2e2; color: #b91c1c; }
+        .grade-D { background: #f3e8ff; color: #6b21a8; }
+        .grade-D- { background: #f1f5f9; color: #64748b; }
+
+        .partner-tag {
+            font-size: 0.72rem;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+
+        /* Alignement des 4 prix */
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            padding: 0.1rem 0;
+            border-bottom: 1px dashed #f1f5f9;
+        }
+
+        .price-row:last-child {
+            border-bottom: none;
+        }
+
+        .price-label {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+        }
+
+        .price-val {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .price-val.client {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        @media (max-width: 640px) {
+            .grades-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Barre de recherche -->
+        <div class="toolbar">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="global-search" class="search-input" placeholder="Rechercher par produit, marque, modèle, partenaire...">
+            </div>
+            <div class="stats-badge" id="product-count">0 produit(s) affiché(s)</div>
+        </div>
+
+        <!-- Conteneur des produits -->
+        <div class="products-list" id="products-container">
+            <!-- Injecté dynamiquement par JS -->
+        </div>
+    </div>
+
+    <script>
+        // Données d'origine (Prix Partenaire Brut HT)
+        const productsData = [
+            {
+                "Argus": "85-116",
+                "Affilié": "CompaRecycle",
+                "Argus création": "01/06/2026",
+                "Produit": "29315",
+                "Marque": "Apple",
+                "Modèle": "iPhone 8 Plus 256Go",
+                "Type": "Mobile",
+                "Grades": [
+                    { "grade": "A",  "prixPartenaire": 29.00, "partenaire": "Grading-ISR" },
+                    { "grade": "A-", "prixPartenaire": 29.00, "partenaire": "Grading-ISR" },
+                    { "grade": "B",  "prixPartenaire": 29.00, "partenaire": "Grading-ISR" },
+                    { "grade": "C",  "prixPartenaire": 29.00, "partenaire": "Grading-ISR" },
+                    { "grade": "C-", "prixPartenaire": 29.00, "partenaire": "Grading-ISR" },
+                    { "grade": "D",  "prixPartenaire": 10.00, "partenaire": "Grading-ISR" },
+                    { "grade": "D-", "prixPartenaire": 0.00,  "partenaire": "-" }
+                ]
+            },
+            {
+                "Argus": "90-140",
+                "Affilié": "CompaRecycle",
+                "Argus création": "01/06/2026",
+                "Produit": "31042",
+                "Marque": "Samsung",
+                "Modèle": "Galaxy S20 FE 128Go",
+                "Type": "Mobile",
+                "Grades": [
+                    { "grade": "A",  "prixPartenaire": 85.00, "partenaire": "ReBuy" },
+                    { "grade": "A-", "prixPartenaire": 75.00, "partenaire": "ReBuy" },
+                    { "grade": "B",  "prixPartenaire": 60.00, "partenaire": "ReBuy" },
+                    { "grade": "C",  "prixPartenaire": 45.00, "partenaire": "ReBuy" },
+                    { "grade": "C-", "prixPartenaire": 30.00, "partenaire": "ReBuy" },
+                    { "grade": "D",  "prixPartenaire": 15.00, "partenaire": "ReBuy" },
+                    { "grade": "D-", "prixPartenaire": 5.00,  "partenaire": "ReBuy" }
+                ]
+            }
+        ];
+
+        // Taux de taxe [A012] : 46.56% appliqué en cascade
+        const TAX_RATE = 0.4656;
+
+        /**
+         * Calcule la chaîne des 4 prix [A011, A012] :
+         * 1. Partenaire (brut HT)
+         * 2. CompaRecycle = Partenaire * 46.56%
+         * 3. Affilié = CompaRecycle * 46.56%
+         * 4. Client = Affilié * 46.56%
+         */
+        function calculatePrices(prixPartenaire) {
+            const raw = typeof prixPartenaire === 'string' ? parseFloat(prixPartenaire.replace('€', '').trim()) : prixPartenaire;
+            
+            if (isNaN(raw) || raw === 0) {
+                return {
+                    partenaire: "0.00 €",
+                    comparecycle: "0.00 €",
+                    affilie: "0.00 €",
+                    client: "0.00 €"
+                };
+            }
+
+            const pPartenaire = raw;
+            const pComparecycle = pPartenaire * TAX_RATE;
+            const pAffilie = pComparecycle * TAX_RATE;
+            const pClient = pAffilie * TAX_RATE;
+
+            const format = (num) => num.toFixed(2) + " €";
+
+            return {
+                partenaire: format(pPartenaire),
+                comparecycle: format(pComparecycle),
+                affilie: format(pAffilie),
+                client: format(pClient)
+            };
+        }
+
+        function renderProducts(items) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+
+            document.getElementById('product-count').textContent = `${items.length} produit(s) affiché(s)`;
+
+            if (items.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding: 2rem; color: #64748b;">Aucun produit ne correspond à votre recherche.</div>';
+                return;
+            }
+
+            items.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+
+                // Génération des 7 cellules de grade
+                const gradesHtml = prod.Grades.map(g => {
+                    const prices = calculatePrices(g.prixPartenaire);
+
+                    return `
+                        <div class="grade-cell">
+                            <div class="grade-top">
+                                <span class="grade-pill grade-${g.grade}">${g.grade}</span>
+                                <span class="partner-tag" title="${g.partenaire}">${g.partenaire}</span>
+                            </div>
+                            <!-- Ordre strict [A011] : Partenaire, Comparecycle, Affilié, Client -->
+                            <div class="price-row">
+                                <span class="price-label">1. Partenaire</span>
+                                <span class="price-val">${prices.partenaire}</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">2. CompaRecycle</span>
+                                <span class="price-val">${prices.comparecycle}</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">3. Affilié</span>
+                                <span class="price-val">${prices.affilie}</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">4. Client</span>
+                                <span class="price-val client">${prices.client}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                card.innerHTML = `
+                    <div class="product-header">
+                        <div class="product-title-group">
+                            <span class="product-title">${prod.Marque} ${prod.Modèle}</span>
+                            <span class="badge-sub">${prod.Type}</span>
+                        </div>
+                        <div class="meta-info">
+                            <span class="meta-item">Réf: <strong>${prod.Produit}</strong></span>
+                            <span class="meta-item">Affilié: <strong>${prod.Affilié}</strong></span>
+                            <span class="meta-item">Argus: <strong>${prod.Argus}</strong></span>
+                        </div>
+                    </div>
+                    <div class="grades-grid">
+                        ${gradesHtml}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Recherche dynamique
+        document.getElementById('global-search').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = productsData.filter(p => {
+                const searchStr = `${p.Marque} ${p.Modèle} ${p.Produit} ${p.Affilié} ${p.Type}`.toLowerCase();
+                const partnerMatch = p.Grades.some(g => g.partenaire.toLowerCase().includes(query));
+                return searchStr.includes(query) || partnerMatch;
+            });
+            renderProducts(filtered);
+        });
+
+        // Initialisation
+        renderProducts(productsData);
+    </script>
+</body>
+</html>
