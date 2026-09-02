@@ -3,40 +3,48 @@ let originalHeaders = [];
 let displayHeaders = [];
 const expandedRows = new Set();
 
-// Taux de déduction : -45.46 % => multiplicateur de 0.5454
 const FACTOR_45_46 = 0.4546;
-
 const GRADES = ['A', 'A-', 'B', 'C', 'C-', 'D', 'D-'];
 
-// [A015] Champs généraux à exclure des détails textuels s'il y en a
-const excludedFields = [
+// [A025] Ordre strict des colonnes du tableau principal
+const PREFERRED_COLUMN_ORDER = [
   'Argus',
-  'Affilié',
   'Argus création',
+  'Affilié',
+  'Type',
   'Produit',
   'Marque',
-  'Modèle',
-  'Type'
+  'Modèle'
 ];
 
-// Masquer les colonnes brutes de prix du tableau principal
-const originalPriceHeadersToHide = [];
-GRADES.forEach(g => {
-  originalPriceHeadersToHide.push(`Prix partenaire grade ${g}`);
-  originalPriceHeadersToHide.push(`Partenaire grade ${g}`);
-  originalPriceHeadersToHide.push(`Prix client grade ${g}`);
-});
-
-const PAGE_SIZE = 50;
-let visibleCount = PAGE_SIZE;
-let observer = null;
+// [A027] Gestion de la pagination (20 lignes par défaut)
+let currentPage = 1;
+let rowsPerPage = 20;
 
 function normalizeStr(str) {
   return (str || '').toString().trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+function toggleSidebar() {
+  const container = document.getElementById('layout-container');
+  if (container) {
+    container.classList.toggle('sidebar-collapsed');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadAutoCSV();
+
+  // Écouteur pour le changement de nombre de lignes par page
+  const rowsSelect = document.getElementById('rows-per-page');
+  if (rowsSelect) {
+    rowsSelect.value = rowsPerPage;
+    rowsSelect.addEventListener('change', (e) => {
+      rowsPerPage = parseInt(e.target.value, 10);
+      currentPage = 1;
+      renderCurrentPage();
+    });
+  }
 });
 
 function loadAutoCSV() {
@@ -48,19 +56,14 @@ function loadAutoCSV() {
     complete: function (results) {
       if (results.data && results.data.length > 0) {
         originalHeaders = (results.meta.fields || []).map(h => h.trim());
-        
-        // Enrichissement des données avec les calculs dynamiques
         fullDataset = results.data.map(row => calculateCalculatedPrices(row));
         
         buildDisplayHeaders();
-        
         expandedRows.clear();
-        visibleCount = PAGE_SIZE;
+        currentPage = 1;
         
-        updateCounter();
         initTableSkeleton();
-        renderRows(0, visibleCount);
-        setupInfiniteScroll();
+        renderCurrentPage();
       } else {
         showError("Le fichier ArgusGrading.csv est vide ou invalide.");
       }
@@ -71,7 +74,6 @@ function loadAutoCSV() {
   });
 }
 
-// [A021] Calcul en cascade direct (Partenaire -> Compare -> Affilié -> Client)
 function calculateCalculatedPrices(row) {
   const newRow = { ...row };
 
@@ -98,11 +100,9 @@ function calculateCalculatedPrices(row) {
 }
 
 function buildDisplayHeaders() {
-  const normIgnored = originalPriceHeadersToHide.map(normalizeStr);
-  const baseHeaders = originalHeaders.filter(h => !normIgnored.includes(normalizeStr(h)));
-  const affiliateHeaders = GRADES.map(g => `Prix affilié grade ${g}`);
-  
-  displayHeaders = [...baseHeaders, ...affiliateHeaders];
+  displayHeaders = PREFERRED_COLUMN_ORDER.filter(preferredCol => {
+    return originalHeaders.some(h => normalizeStr(h) === normalizeStr(preferredCol));
+  });
 }
 
 function showError(message) {
@@ -119,16 +119,10 @@ function showError(message) {
 }
 
 function getHeaderLabel(header) {
-  if (normalizeStr(header) === 'type') return 'Catégorie';
+  const norm = normalizeStr(header);
+  if (norm === 'type') return 'Catégorie';
+  if (norm === 'produit') return 'Id produit';
   return header;
-}
-
-function updateCounter() {
-  const counterEl = document.getElementById('stats-counter');
-  if (counterEl) {
-    counterEl.style.display = 'inline-block';
-    counterEl.textContent = `${fullDataset.length} lignes chargées`;
-  }
 }
 
 function initTableSkeleton() {
@@ -147,12 +141,10 @@ function initTableSkeleton() {
         </thead>
         <tbody id="table-body"></tbody>
       </table>
-      <div id="sentinel" class="sentinel">Chargement de la suite...</div>
     </div>
   `;
 }
 
-// [A020 & A022] Sous-tableau des grades avec espacement accru et alignement à gauche
 function renderGradeDetailsTable(row) {
   let rowsHtml = '';
 
@@ -176,7 +168,7 @@ function renderGradeDetailsTable(row) {
   });
 
   return `
-    <div style="padding: 16px; background: #ffffff; border-radius: 6px; border: 1px solid #cbd5e1; margin-top: 8px; max-width: 50%;">
+    <div class="table-price-grade">
       <h4 style="margin: 0 0 12px 0; color: #1e293b; font-size: 0.9rem;">Détail de la grille tarifaire par grade</h4>
       <table class="custom-table" style="font-size: 0.85rem; width: 100%;">
         <thead>
@@ -197,14 +189,20 @@ function renderGradeDetailsTable(row) {
   `;
 }
 
-function renderRows(startIndex, endIndex) {
+// [A027] Rendu basé sur la page active et le nombre de lignes par page
+function renderCurrentPage() {
   const tbody = document.getElementById('table-body');
   if (!tbody) return;
 
-  const slice = fullDataset.slice(startIndex, endIndex);
+  tbody.innerHTML = '';
+
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = Math.min(startIndex + rowsPerPage, fullDataset.length);
+  const pageSlice = fullDataset.slice(startIndex, endIndex);
+
   const fragment = document.createDocumentFragment();
 
-  slice.forEach((row, relativeIndex) => {
+  pageSlice.forEach((row, relativeIndex) => {
     const actualIndex = startIndex + relativeIndex;
     const isExpanded = expandedRows.has(actualIndex);
 
@@ -213,12 +211,14 @@ function renderRows(startIndex, endIndex) {
     tr.setAttribute('data-index', actualIndex);
     tr.setAttribute('onclick', `toggleRow(${actualIndex})`);
     
-    const cellsHtml = displayHeaders.map(h => `<td>${row[h] ?? '-'}</td>`).join('');
+    const cellsHtml = displayHeaders.map(h => {
+      const matchKey = Object.keys(row).find(k => normalizeStr(k) === normalizeStr(h));
+      return `<td>${(matchKey ? row[matchKey] : null) ?? '-'}</td>`;
+    }).join('');
+
     tr.innerHTML = cellsHtml;
-    
     fragment.appendChild(tr);
 
-    // [A020] Affichage du tableau de synthèse des 7 grades au clic
     if (isExpanded) {
       const detailsTr = document.createElement('tr');
       detailsTr.className = 'details-row';
@@ -237,6 +237,73 @@ function renderRows(startIndex, endIndex) {
   });
 
   tbody.appendChild(fragment);
+  updatePaginationUI(startIndex, endIndex);
+}
+
+// [A027] Mise à jour des boutons et compteurs de la pagination
+function updatePaginationUI(startIndex, endIndex) {
+  const total = fullDataset.length;
+  const totalPages = Math.ceil(total / rowsPerPage);
+
+  // Badge header
+  const counterEl = document.getElementById('stats-counter');
+  if (counterEl) {
+    counterEl.textContent = `${total} lignes chargées`;
+  }
+
+  // Texte de pagination
+  const pagText = document.getElementById('pagination-text');
+  if (pagText) {
+    pagText.textContent = `${total > 0 ? startIndex + 1 : 0} à ${endIndex} sur ${total}`;
+  }
+
+  // Conteneur des boutons
+  const controlsContainer = document.getElementById('pagination-controls');
+  if (!controlsContainer) return;
+
+  controlsContainer.innerHTML = '';
+
+  // Bouton Précédent
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'page-btn';
+  prevBtn.textContent = '‹';
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.onclick = () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderCurrentPage();
+    }
+  };
+  controlsContainer.appendChild(prevBtn);
+
+  // Numéros de page
+  let startP = Math.max(1, currentPage - 1);
+  let endP = Math.min(totalPages, startP + 2);
+  if (endP - startP < 2) startP = Math.max(1, endP - 2);
+
+  for (let p = startP; p <= endP; p++) {
+    const pBtn = document.createElement('button');
+    pBtn.className = `page-btn ${p === currentPage ? 'active' : ''}`;
+    pBtn.textContent = p;
+    pBtn.onclick = () => {
+      currentPage = p;
+      renderCurrentPage();
+    };
+    controlsContainer.appendChild(pBtn);
+  }
+
+  // Bouton Suivant
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'page-btn';
+  nextBtn.textContent = '›';
+  nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+  nextBtn.onclick = () => {
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderCurrentPage();
+    }
+  };
+  controlsContainer.appendChild(nextBtn);
 }
 
 function toggleRow(rowIndex) {
@@ -245,36 +312,5 @@ function toggleRow(rowIndex) {
   } else {
     expandedRows.add(rowIndex);
   }
-  
-  const tbody = document.getElementById('table-body');
-  if (tbody) {
-    tbody.innerHTML = '';
-    renderRows(0, visibleCount);
-  }
-}
-
-function setupInfiniteScroll() {
-  const wrapper = document.getElementById('scroll-wrapper');
-  const sentinel = document.getElementById('sentinel');
-
-  if (!wrapper || !sentinel) return;
-
-  if (observer) observer.disconnect();
-
-  observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && visibleCount < fullDataset.length) {
-      const nextLimit = Math.min(visibleCount + PAGE_SIZE, fullDataset.length);
-      renderRows(visibleCount, nextLimit);
-      visibleCount = nextLimit;
-
-      if (visibleCount >= fullDataset.length) {
-        sentinel.textContent = "Fin des données";
-      }
-    }
-  }, {
-    root: wrapper,
-    threshold: 0.1
-  });
-
-  observer.observe(sentinel);
+  renderCurrentPage();
 }

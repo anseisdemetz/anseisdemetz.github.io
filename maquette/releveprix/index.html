@@ -3,33 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relevé de Prix — V1.0</title>
+  <title>CompaRecycle — Relevé de prix Grading</title>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <div class="app-container">
-    <header class="app-header">
-      <div>
-        <h1>Relevé de Prix</h1>
-        <p>Consultation optimisée des données volumineuses</p>
+  <!-- Layout Général CompaRecycle -->
+  <div class="layout-container" id="layout-container">
+
+    <!-- Barre supérieure -->
+    <header class="top-bar">
+      <!-- Clic sur le logo pour masquer/afficher le menu latéral -->
+      <div class="logo-zone" onclick="toggleSidebar()" title="Réduire/Agrandir le menu">
+        <span class="logo-text">Compa<strong>Recycle</strong></span>
       </div>
-      <div class="controls-group">
-        <span id="stats-counter" class="stats-badge">Chargement...</span>
+      <nav class="top-nav">
+        <a href="#">AFFILIÉS</a>
+        <a href="#">GROUPES AFFILIÉS</a>
+        <a href="#" class="active">RELEVÉ DE PRIX GRADING</a>
+        <a href="#">POINTS DE PAIEMENT</a>
+        <a href="#">POINTS DE VENTE</a>
+        <a href="#">LISTE D'EXPÉDITION</a>
+        <a href="#">LIENS AFFILIÉS-PARTENAIRES</a>
+        <span class="nav-arrow">›</span>
+      </nav>
+      <div class="user-zone">
+        <span class="user-icon">👤</span>
       </div>
     </header>
 
-    <main>
-      <div id="table-app">
-        <div class="table-wrapper">
-          <div class="empty-state">
-            Chargement des données depuis ArgusGrading.csv...
+    <div class="main-body">
+
+      <!-- Sidebar gauche -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section active-group">
+          <span class="sidebar-title">📊 Gestion des affiliés</span>
+          <ul class="sidebar-menu">
+            <li class="active"><a href="#">Relevé de prix Grading</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Zone de contenu principal -->
+      <main class="content-area">
+
+        <!-- Header du contenu -->
+        <div class="content-header">
+          <h1 class="page-title">Relevé de prix</h1>
+          <div class="header-actions">
+            <span id="stats-counter" class="stats-badge">Chargement...</span>
+            <button class="icon-btn" title="Rechercher">🔍</button>
+            <button class="icon-btn" title="Actualiser">🔄</button>
+            <button class="icon-btn" title="Options">⚙️</button>
+            <button class="icon-btn" title="Filtrer">🌪️</button>
           </div>
         </div>
-      </div>
-    </main>
+
+        <!-- Tableau de prix dynamique -->
+        <div id="table-app">
+          <div class="table-wrapper">
+            <div class="empty-state">
+              Chargement des données depuis ArgusGrading.csv...
+            </div>
+          </div>
+        </div>
+
+        <!-- Pied de page avec pagination -->
+        <footer class="table-footer">
+          <div class="pagination-rows">
+            <span>Lignes par page</span>
+            <select id="rows-per-page">
+              <option value="20" selected>20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="pagination-info">
+            <span id="pagination-text">0 à 0 sur 0</span>
+            <div class="pagination-controls" id="pagination-controls"></div>
+          </div>
+        </footer>
+
+      </main>
+    </div>
   </div>
 
   <script src="app.js"></script>
