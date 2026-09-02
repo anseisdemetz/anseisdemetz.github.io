@@ -1,7 +1,6 @@
 let fullDataset = [];
 let originalHeaders = [];
 let displayHeaders = [];
-const expandedRows = new Set();
 
 const FACTOR_45_46 = 0.4546;
 const GRADES = ['A', 'A-', 'B', 'C', 'C-', 'D', 'D-'];
@@ -35,7 +34,6 @@ function toggleSidebar() {
 document.addEventListener('DOMContentLoaded', () => {
   loadAutoCSV();
 
-  // Écouteur pour le changement de nombre de lignes par page
   const rowsSelect = document.getElementById('rows-per-page');
   if (rowsSelect) {
     rowsSelect.value = rowsPerPage;
@@ -45,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCurrentPage();
     });
   }
+
+  // Fermeture modale avec la touche Échap
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
 });
 
 function loadAutoCSV() {
@@ -59,7 +62,6 @@ function loadAutoCSV() {
         fullDataset = results.data.map(row => calculateCalculatedPrices(row));
         
         buildDisplayHeaders();
-        expandedRows.clear();
         currentPage = 1;
         
         initTableSkeleton();
@@ -145,6 +147,7 @@ function initTableSkeleton() {
   `;
 }
 
+// [A028] Génération du tableau des prix par grade pour la modale
 function renderGradeDetailsTable(row) {
   let rowsHtml = '';
 
@@ -168,28 +171,24 @@ function renderGradeDetailsTable(row) {
   });
 
   return `
-    <div class="table-price-grade">
-      <h4 style="margin: 0 0 12px 0; color: #1e293b; font-size: 0.9rem;">Détail de la grille tarifaire par grade</h4>
-      <table class="custom-table" style="font-size: 0.85rem; width: 100%;">
-        <thead>
-          <tr style="background-color: #f1f5f9;">
-            <th style="text-align: left; padding: 12px 14px;"><strong>Grade</strong></th>
-            <th style="text-align: left; padding: 12px 14px;"><strong>Prix Partenaire</strong></th>
-            <th style="text-align: left; padding: 12px 14px;"><strong>Prix Compare</strong></th>
-            <th style="text-align: left; padding: 12px 14px;"><strong>Prix Affilié</strong></th>
-            <th style="text-align: left; padding: 12px 14px;"><strong>Prix Client</strong></th>
-            <th style="text-align: left; padding: 12px 14px;"><strong>Nom du partenaire</strong></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rowsHtml}
-        </tbody>
-      </table>
-    </div>
+    <table class="custom-table" style="font-size: 0.85rem; width: 100%;">
+      <thead>
+        <tr style="background-color: #f1f5f9;">
+          <th style="text-align: left; padding: 12px 14px;"><strong>Grade</strong></th>
+          <th style="text-align: left; padding: 12px 14px;"><strong>Prix Partenaire</strong></th>
+          <th style="text-align: left; padding: 12px 14px;"><strong>Prix Compare</strong></th>
+          <th style="text-align: left; padding: 12px 14px;"><strong>Prix Affilié</strong></th>
+          <th style="text-align: left; padding: 12px 14px;"><strong>Prix Client</strong></th>
+          <th style="text-align: left; padding: 12px 14px;"><strong>Nom du partenaire</strong></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rowsHtml}
+      </tbody>
+    </table>
   `;
 }
 
-// [A027] Rendu basé sur la page active et le nombre de lignes par page
 function renderCurrentPage() {
   const tbody = document.getElementById('table-body');
   if (!tbody) return;
@@ -204,12 +203,11 @@ function renderCurrentPage() {
 
   pageSlice.forEach((row, relativeIndex) => {
     const actualIndex = startIndex + relativeIndex;
-    const isExpanded = expandedRows.has(actualIndex);
 
     const tr = document.createElement('tr');
-    tr.className = `main-row ${isExpanded ? 'expanded' : ''}`;
+    tr.className = 'main-row';
     tr.setAttribute('data-index', actualIndex);
-    tr.setAttribute('onclick', `toggleRow(${actualIndex})`);
+    tr.setAttribute('onclick', `openModal(${actualIndex})`);
     
     const cellsHtml = displayHeaders.map(h => {
       const matchKey = Object.keys(row).find(k => normalizeStr(k) === normalizeStr(h));
@@ -218,52 +216,70 @@ function renderCurrentPage() {
 
     tr.innerHTML = cellsHtml;
     fragment.appendChild(tr);
-
-    if (isExpanded) {
-      const detailsTr = document.createElement('tr');
-      detailsTr.className = 'details-row';
-      
-      const gradeTableHtml = renderGradeDetailsTable(row);
-
-      detailsTr.innerHTML = `
-        <td colSpan="${displayHeaders.length}">
-          <div class="details-content">
-            ${gradeTableHtml}
-          </div>
-        </td>
-      `;
-      fragment.appendChild(detailsTr);
-    }
   });
 
   tbody.appendChild(fragment);
   updatePaginationUI(startIndex, endIndex);
 }
 
-// [A027] Mise à jour des boutons et compteurs de la pagination
+// [A028] Fonctions d'ouverture/fermeture de la modale
+function openModal(rowIndex) {
+  const row = fullDataset[rowIndex];
+  if (!row) return;
+
+  const modal = document.getElementById('price-modal');
+  const modalTitle = document.getElementById('modal-product-title');
+  const modalBody = document.getElementById('modal-body');
+
+  const marque = row['Marque'] || '';
+  const modele = row['Modèle'] || '';
+  const nomProduit = `${marque} ${modele}`.trim() || 'Produit sans nom';
+
+  if (modalTitle) {
+    modalTitle.textContent = `Grille tarifaire — ${nomProduit}`;
+  }
+
+  if (modalBody) {
+    modalBody.innerHTML = renderGradeDetailsTable(row);
+  }
+
+  if (modal) {
+    modal.classList.add('active');
+  }
+}
+
+function closeModal() {
+  const modal = document.getElementById('price-modal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+}
+
+function closeModalOnOverlay(e) {
+  if (e.target.id === 'price-modal') {
+    closeModal();
+  }
+}
+
 function updatePaginationUI(startIndex, endIndex) {
   const total = fullDataset.length;
   const totalPages = Math.ceil(total / rowsPerPage);
 
-  // Badge header
   const counterEl = document.getElementById('stats-counter');
   if (counterEl) {
     counterEl.textContent = `${total} lignes chargées`;
   }
 
-  // Texte de pagination
   const pagText = document.getElementById('pagination-text');
   if (pagText) {
     pagText.textContent = `${total > 0 ? startIndex + 1 : 0} à ${endIndex} sur ${total}`;
   }
 
-  // Conteneur des boutons
   const controlsContainer = document.getElementById('pagination-controls');
   if (!controlsContainer) return;
 
   controlsContainer.innerHTML = '';
 
-  // Bouton Précédent
   const prevBtn = document.createElement('button');
   prevBtn.className = 'page-btn';
   prevBtn.textContent = '‹';
@@ -276,7 +292,6 @@ function updatePaginationUI(startIndex, endIndex) {
   };
   controlsContainer.appendChild(prevBtn);
 
-  // Numéros de page
   let startP = Math.max(1, currentPage - 1);
   let endP = Math.min(totalPages, startP + 2);
   if (endP - startP < 2) startP = Math.max(1, endP - 2);
@@ -292,7 +307,6 @@ function updatePaginationUI(startIndex, endIndex) {
     controlsContainer.appendChild(pBtn);
   }
 
-  // Bouton Suivant
   const nextBtn = document.createElement('button');
   nextBtn.className = 'page-btn';
   nextBtn.textContent = '›';
@@ -304,13 +318,4 @@ function updatePaginationUI(startIndex, endIndex) {
     }
   };
   controlsContainer.appendChild(nextBtn);
-}
-
-function toggleRow(rowIndex) {
-  if (expandedRows.has(rowIndex)) {
-    expandedRows.delete(rowIndex);
-  } else {
-    expandedRows.add(rowIndex);
-  }
-  renderCurrentPage();
 }

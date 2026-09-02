@@ -15,7 +15,6 @@
 
     <!-- Barre supérieure -->
     <header class="top-bar">
-      <!-- Clic sur le logo pour masquer/afficher le menu latéral -->
       <div class="logo-zone" onclick="toggleSidebar()" title="Réduire/Agrandir le menu">
         <span class="logo-text">Compa<strong>Recycle</strong></span>
       </div>
@@ -87,6 +86,19 @@
         </footer>
 
       </main>
+    </div>
+  </div>
+
+  <!-- [A028] Fenêtre Modale de détails -->
+  <div id="price-modal" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-container">
+      <header class="modal-header">
+        <h3 id="modal-product-title" class="modal-title">Détail du produit</h3>
+        <button class="modal-close-btn" onclick="closeModal()">✕</button>
+      </header>
+      <div id="modal-body" class="modal-body">
+        <!-- Le sous-tableau des 7 grades est injecté ici -->
+      </div>
     </div>
   </div>
 
