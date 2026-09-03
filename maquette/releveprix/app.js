@@ -11,8 +11,8 @@ const PREFERRED_COLUMN_ORDER = [
   'Argus création',
   'Affilié',
   'Type',
-  'Produit',
   'Marque',
+  'Produit',
   'Modèle'
 ];
 
@@ -124,6 +124,9 @@ function getHeaderLabel(header) {
   const norm = normalizeStr(header);
   if (norm === 'type') return 'Catégorie';
   if (norm === 'produit') return 'Id produit';
+  if (norm === 'modèle') return 'Produit';
+  if (norm === 'argus création') return 'Date création Argus';
+  if (norm === 'argus') return 'N° Argus';
   return header;
 }
 
@@ -147,24 +150,40 @@ function initTableSkeleton() {
   `;
 }
 
+function deleteEuroSymbol(val) {
+  if (!val || val === '-') return '-';
+
+  // Extrait uniquement le nombre (ex: "12.45 €" -> 12.45)
+  const numericValue = parseFloat(val.toString().replace(',', '.').replace(/[^0-9.]/g, ''));
+
+  if (isNaN(numericValue)) return '-';
+
+  // Si c'est un nombre entier (ex: 12.00 -> 12), on enlève les décimales
+  // Si vous souhaitez TOUJOURS supprimer les décimales (ex: 12.45 -> 12), utilisez Math.floor(numericValue) ou Math.round(numericValue)
+  return Number.isInteger(numericValue) ? numericValue : numericValue.toFixed(2);
+}
+
 // [A028] Génération du tableau des prix par grade pour la modale
 function renderGradeDetailsTable(row) {
   let rowsHtml = '';
 
   GRADES.forEach(grade => {
-    const partenairePrix = row[`Prix partenaire grade ${grade}`] ? `${row[`Prix partenaire grade ${grade}`]} €` : '-';
-    const comparePrix = row[`Prix compare grade ${grade}`] || '-';
-    const affiliePrix = row[`Prix affilié grade ${grade}`] || '-';
-    const clientPrix = row[`Prix client grade ${grade}`] ? `${row[`Prix client grade ${grade}`]} €` : '-';
-    const nomPartenaire = row[`Partenaire grade ${grade}`] || '-';
+    const partenairePrix = deleteEuroSymbol(row[`Prix partenaire grade ${grade}`]);
+    const comparePrix    = deleteEuroSymbol(row[`Prix compare grade ${grade}`]);
+    const affiliePrix    = deleteEuroSymbol(row[`Prix affilié grade ${grade}`]);
+    const clientPrix     = deleteEuroSymbol(row[`Prix client calculé grade ${grade}`] || row[`Prix client grade ${grade}`]);
+    const nomPartenaire  = row[`Partenaire grade ${grade}`] || '-';
+
+    // Helper pour afficher le symbole € uniquement si la valeur n'est pas un tiret
+    const formatPrice = (val) => (val !== '-' ? `${val} €` : '-');
 
     rowsHtml += `
       <tr>
         <td style="padding: 12px 14px;"><strong>Grade ${grade}</strong></td>
-        <td style="padding: 12px 14px;">${partenairePrix}</td>
-        <td style="padding: 12px 14px;">${comparePrix}</td>
-        <td style="padding: 12px 14px;">${affiliePrix}</td>
-        <td style="padding: 12px 14px;">${clientPrix}</td>
+        <td style="padding: 12px 14px;">${formatPrice(partenairePrix)}</td>
+        <td style="padding: 12px 14px;">${formatPrice(comparePrix)}</td>
+        <td style="padding: 12px 14px;">${formatPrice(affiliePrix)}</td>
+        <td style="padding: 12px 14px;">${formatPrice(clientPrix)}</td>
         <td style="padding: 12px 14px;">${nomPartenaire}</td>
       </tr>
     `;
