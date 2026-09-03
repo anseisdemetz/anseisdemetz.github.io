@@ -222,7 +222,7 @@ function renderCurrentPage() {
   updatePaginationUI(startIndex, endIndex);
 }
 
-// [A028] Fonctions d'ouverture/fermeture de la modale
+// [A028 & A029] Fonctions d'ouverture/fermeture de la modale avec titre personnalisé
 function openModal(rowIndex) {
   const row = fullDataset[rowIndex];
   if (!row) return;
@@ -231,12 +231,15 @@ function openModal(rowIndex) {
   const modalTitle = document.getElementById('modal-product-title');
   const modalBody = document.getElementById('modal-body');
 
+  // Récupération des données pour le titre [A029]
+  const numArgus = row['Argus'] || '-';
+  const dateArgus = row['Argus création'] || '-';
   const marque = row['Marque'] || '';
   const modele = row['Modèle'] || '';
   const nomProduit = `${marque} ${modele}`.trim() || 'Produit sans nom';
 
   if (modalTitle) {
-    modalTitle.textContent = `Grille tarifaire — ${nomProduit}`;
+    modalTitle.textContent = `Argus (${numArgus}) du ${dateArgus} — ${nomProduit}`;
   }
 
   if (modalBody) {
