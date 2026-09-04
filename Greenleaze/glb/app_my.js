@@ -1,3 +1,5 @@
+// A prendre en compte
+
 const { useState, useEffect, useMemo, useRef } = React;
 
 function App() {
@@ -55,56 +57,7 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Fonction d'exportation du modèle décisionnel en CSV
-  const handleExportCSV = () => {
-    if (filteredData.length === 0) return;
-
-    const headers = [
-      "ID Produit",
-      "Catégorie",
-      "Produit",
-      "Marque",
-      "Grade",
-      "Prix P0",
-      "Taux Marque (%)",
-      "M+3",
-      "M+6",
-      "M+12",
-      "M+24",
-      "M+36",
-      "Prix Plancher (P_min)"
-    ];
-
-    const rows = filteredData.map((item) => [
-      `"${item.idproduct || ''}"`,
-      "Mobile", // Colonne fixe pour la catégorie
-      `"${item.product.replace(/"/g, '""')}"`,
-      `"${item.manufacturer.replace(/"/g, '""')}"`,
-      `"${item.grade}"`,
-      item.initial_price,
-      (item.brand_annual_rate * 100).toFixed(1),
-      item.m3_real !== null ? item.m3_real : item.m3_hybrid,
-      item.m6_real !== null ? item.m6_real : item.m6_hybrid,
-      item.m12_hybrid,
-      item.m24_hybrid,
-      item.m36_hybrid,
-      item.p_min
-    ]);
-
-    // Formatage CSV avec séparateur point-virgule et BOM UTF-8 pour Excel
-    const csvContent = "\uFEFF" + [headers.join(";"), ...rows.map((e) => e.join(";"))].join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `projections_decisionnelles_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  // Thème & Design Moderne Highcharts
+  // [A007] Thème & Design Moderne Highcharts
   const modernTheme = {
     colors: ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'],
     chart: {
@@ -126,6 +79,7 @@ function App() {
       labels: { style: { color: '#64748b', fontSize: '11px' } }
     },
     yAxis: {
+      // [A008] Échelle de prix élargie et dynamique
       softMin: 0,
       maxPadding: 0.15,
       gridLineColor: '#f1f5f9',
@@ -157,7 +111,7 @@ function App() {
     }
   };
 
-  // Graphique 1 : Hybride / Décisionnel
+  // [A001 + A007 + A008] Graphique 1 : Hybride avec courbe lissée et échelle étendue
   useEffect(() => {
     if (!chartContainer1Ref.current || paginatedData.length === 0) return;
 
@@ -186,7 +140,7 @@ function App() {
     }));
   }, [paginatedData]);
 
-  // Graphique 2 : Comparaison
+  // [A002 + A007 + A008] Graphique 2 : Comparaison Réel vs Théorie par Grade
   useEffect(() => {
     if (!chartContainer2Ref.current || paginatedData.length === 0) return;
 
@@ -276,14 +230,14 @@ function App() {
         </div>
       </header>
 
-      {/* Barre de filtres & Actions */}
+      {/* Barre de filtres */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
         <div>
           <label className="block text-xs font-medium text-slate-500 mb-1">Produit</label>
           <div className="relative">
             <input
               type="text"
-              placeholder="Nom ou ID produit"
+              placeholder="Nom ou ID produit..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
@@ -334,17 +288,7 @@ function App() {
         </div>
 
         <div className="bg-slate-800 text-white px-6 py-3 flex justify-between items-center">
-          <h2 className="font-semibold text-lg">Tableau décisionnel : Réel &amp; Projections</h2>
-          <button
-            onClick={handleExportCSV}
-            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition-colors shadow-sm"
-            title="Exporter la sélection filtrée au format CSV"
-          >
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-              <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-            </svg>
-            Export CSV ({filteredData.length})
-          </button>
+          <h2 className="font-semibold text-lg">Tableau décisionnel : Réel & Projections</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs whitespace-nowrap">
