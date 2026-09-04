@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Marketing & Trade-in Analytics</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen">
+
+    <!-- Top Navigation / Header -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="p-2 bg-indigo-600 rounded-lg text-white">
+                <i data-lucide="trending-up" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-white tracking-tight">Trade-in Growth Analytics</h1>
+                <p class="text-xs text-slate-400">Suivi & Performance de la Reprise Électronique</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Données synchronisées
+            </span>
+            <button onclick="window.print()" class="px-3 py-1.5 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-md border border-slate-700 transition">
+                Exporter PDF
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+        <!-- Executive Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- Card 1 -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-5 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Inscrits Totaux</p>
+                        <h2 class="text-2xl font-bold text-white mt-1" id="stat-users">--</h2>
+                    </div>
+                    <div class="p-2 bg-blue-500/10 text-blue-400 rounded-lg">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-slate-400">
+                    <span class="text-emerald-400 font-semibold mr-1 flex items-center">
+                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-0.5"></i>+350%
+                    </span>
+                    <span>accélération en 2024</span>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-5 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Demandes de Reprise</p>
+                        <h2 class="text-2xl font-bold text-white mt-1" id="stat-reprises">--</h2>
+                    </div>
+                    <div class="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg">
+                        <i data-lucide="repeat" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-slate-400">
+                    <span class="text-indigo-400 font-semibold mr-1" id="stat-avg-user">--</span>
+                    <span>demandes / client actif</span>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-5 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Taux d'Annulation</p>
+                        <h2 class="text-2xl font-bold text-rose-400 mt-1" id="stat-cancel-rate">--</h2>
+                    </div>
+                    <div class="p-2 bg-rose-500/10 text-rose-400 rounded-lg">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-slate-400">
+                    <span class="text-rose-400 font-medium mr-1" id="stat-canceled-cnt">--</span>
+                    <span>dossiers abandonnés (Friction)</span>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-5 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Activation à H+1</p>
+                        <h2 class="text-2xl font-bold text-emerald-400 mt-1">92.9%</h2>
+                    </div>
+                    <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-slate-400">
+                    <span>1ère demande faite dans l'heure</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chart: Timeline -->
+        <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-white">Évolution Mensuelle : Inscriptions vs Reprises</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Mise en évidence du pic de croissance et du volume d'annulations</p>
+                </div>
+                <div class="flex items-center space-x-2 bg-slate-900/80 p-1 rounded-lg border border-slate-800 text-xs">
+                    <button id="btn-view-global" class="px-3 py-1 rounded bg-indigo-600 text-white font-medium transition">Vue Globale</button>
+                    <button id="btn-view-zoom" class="px-3 py-1 rounded text-slate-400 hover:text-white transition">Zoom 2024-2026</button>
+                </div>
+            </div>
+            <div class="h-80 w-full">
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Secondary Grid: Distribution & Breakdown -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Distribution Reprises / Client -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-6 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-semibold text-white">Nombre de Reprises par Client</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Identification de la récurrence</p>
+                    <div class="h-64 mt-4 relative">
+                        <canvas id="distChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-slate-900/60 rounded-lg border border-slate-700/40 text-xs text-slate-300">
+                    <span class="font-semibold text-amber-400">Insight Growth :</span> 51.1% des inscrits n'ont validé aucun dossier. Opportunité de relance d'activation.
+                </div>
+            </div>
+
+            <!-- Canal de Reprise (Bol/Partenaires) -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-6 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-semibold text-white">Répartition par Canal / Partenaire</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Volume des flux de reprises</p>
+                    <div class="h-64 mt-4 relative">
+                        <canvas id="channelChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-slate-900/60 rounded-lg border border-slate-700/40 text-xs text-slate-300">
+                    <span class="font-semibold text-indigo-400">Canal Majeur :</span> Cdiscount V3 concentre 89.3% du volume global.
+                </div>
+            </div>
+
+            <!-- Statuts des Reprises -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-6 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-semibold text-white">Entonnoir des Statuts</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">État de conversion des dossiers</p>
+                    <div class="h-64 mt-4 relative">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-slate-900/60 rounded-lg border border-slate-700/40 text-xs text-slate-300">
+                    <span class="font-semibold text-rose-400">Point de Friction :</span> 79.3% d'annulations. Priorité : Séquence Email/SMS H+2 post-estimation.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Actionable Growth Levers Section -->
+        <div class="bg-gradient-to-r from-indigo-950/60 via-slate-800/60 to-slate-800/60 border border-indigo-500/30 rounded-xl p-6">
+            <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+                <i data-lucide="rocket" class="w-5 h-5 text-indigo-400"></i>
+                Pistes d'Actions Growth Marketing à Expérimenter
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div class="p-4 bg-slate-900/80 rounded-lg border border-slate-800">
+                    <div class="text-xs font-semibold text-indigo-400 uppercase tracking-wider">1. Relance Abandon (H+2)</div>
+                    <p class="text-sm text-slate-200 font-medium mt-1">Récupération des 79% d'annulations</p>
+                    <p class="text-xs text-slate-400 mt-2">Déclencher un SMS/Email automatique avec un bon de revalorisation de +5% valable 48h dès qu'un dossier passe en <code>canceled</code>.</p>
+                </div>
+                <div class="p-4 bg-slate-900/80 rounded-lg border border-slate-800">
+                    <div class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">2. Alerte Dépréciation (M+6)</div>
+                    <p class="text-sm text-slate-200 font-medium mt-1">Stimuler la récurrence</p>
+                    <p class="text-xs text-slate-400 mt-2">Notifier les clients à 6-8 mois (délai médian de récurrence) : <em>"Votre téléphone perd X€ le mois prochain. Vendez-le aujourd'hui."</em></p>
+                </div>
+                <div class="p-4 bg-slate-900/80 rounded-lg border border-slate-800">
+                    <div class="text-xs font-semibold text-amber-400 uppercase tracking-wider">3. Programme VIP / Power Sellers</div>
+                    <p class="text-sm text-slate-200 font-medium mt-1">Choyer le Top 1.8% des clients</p>
+                    <p class="text-xs text-slate-400 mt-2">Créer un flux B2B accéléré (bordereau d'envoi groupé + paiement à l'expédition) pour les clients à plus de 5 reprises.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        Tableau de bord généré automatiquement - Architecture Modulaire Clean Code - Trade-in Growth Analytics
+    </footer>
+
+    <!-- External Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>

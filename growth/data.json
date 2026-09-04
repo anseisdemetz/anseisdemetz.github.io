@@ -1,0 +1,558 @@
+{
+  "summary": {
+    "total_users": 51231,
+    "total_reprises": 35412,
+    "valid_reprises": 7346,
+    "canceled_reprises": 28066,
+    "cancel_rate": 79.3,
+    "avg_reprises_per_active_user": 1.41
+  },
+  "timeline": [
+    {
+      "month": "2020-07",
+      "signups": 0,
+      "reprises_total": 2,
+      "reprises_canceled": 2,
+      "reprises_valid": 0
+    },
+    {
+      "month": "2020-09",
+      "signups": 0,
+      "reprises_total": 3,
+      "reprises_canceled": 1,
+      "reprises_valid": 2
+    },
+    {
+      "month": "2020-10",
+      "signups": 100,
+      "reprises_total": 23,
+      "reprises_canceled": 12,
+      "reprises_valid": 11
+    },
+    {
+      "month": "2020-11",
+      "signups": 104,
+      "reprises_total": 43,
+      "reprises_canceled": 20,
+      "reprises_valid": 23
+    },
+    {
+      "month": "2020-12",
+      "signups": 83,
+      "reprises_total": 44,
+      "reprises_canceled": 17,
+      "reprises_valid": 27
+    },
+    {
+      "month": "2021-01",
+      "signups": 90,
+      "reprises_total": 46,
+      "reprises_canceled": 23,
+      "reprises_valid": 23
+    },
+    {
+      "month": "2021-02",
+      "signups": 70,
+      "reprises_total": 40,
+      "reprises_canceled": 19,
+      "reprises_valid": 21
+    },
+    {
+      "month": "2021-03",
+      "signups": 71,
+      "reprises_total": 33,
+      "reprises_canceled": 12,
+      "reprises_valid": 21
+    },
+    {
+      "month": "2021-04",
+      "signups": 97,
+      "reprises_total": 48,
+      "reprises_canceled": 34,
+      "reprises_valid": 14
+    },
+    {
+      "month": "2021-05",
+      "signups": 56,
+      "reprises_total": 30,
+      "reprises_canceled": 12,
+      "reprises_valid": 18
+    },
+    {
+      "month": "2021-06",
+      "signups": 47,
+      "reprises_total": 75,
+      "reprises_canceled": 29,
+      "reprises_valid": 46
+    },
+    {
+      "month": "2021-07",
+      "signups": 40,
+      "reprises_total": 98,
+      "reprises_canceled": 47,
+      "reprises_valid": 51
+    },
+    {
+      "month": "2021-08",
+      "signups": 39,
+      "reprises_total": 65,
+      "reprises_canceled": 20,
+      "reprises_valid": 45
+    },
+    {
+      "month": "2021-09",
+      "signups": 59,
+      "reprises_total": 124,
+      "reprises_canceled": 50,
+      "reprises_valid": 74
+    },
+    {
+      "month": "2021-10",
+      "signups": 53,
+      "reprises_total": 94,
+      "reprises_canceled": 40,
+      "reprises_valid": 54
+    },
+    {
+      "month": "2021-11",
+      "signups": 61,
+      "reprises_total": 131,
+      "reprises_canceled": 46,
+      "reprises_valid": 85
+    },
+    {
+      "month": "2021-12",
+      "signups": 60,
+      "reprises_total": 100,
+      "reprises_canceled": 41,
+      "reprises_valid": 59
+    },
+    {
+      "month": "2022-01",
+      "signups": 54,
+      "reprises_total": 82,
+      "reprises_canceled": 14,
+      "reprises_valid": 68
+    },
+    {
+      "month": "2022-02",
+      "signups": 66,
+      "reprises_total": 83,
+      "reprises_canceled": 23,
+      "reprises_valid": 60
+    },
+    {
+      "month": "2022-03",
+      "signups": 139,
+      "reprises_total": 147,
+      "reprises_canceled": 36,
+      "reprises_valid": 111
+    },
+    {
+      "month": "2022-04",
+      "signups": 25,
+      "reprises_total": 41,
+      "reprises_canceled": 9,
+      "reprises_valid": 32
+    },
+    {
+      "month": "2022-05",
+      "signups": 66,
+      "reprises_total": 39,
+      "reprises_canceled": 11,
+      "reprises_valid": 28
+    },
+    {
+      "month": "2022-06",
+      "signups": 58,
+      "reprises_total": 58,
+      "reprises_canceled": 21,
+      "reprises_valid": 37
+    },
+    {
+      "month": "2022-07",
+      "signups": 34,
+      "reprises_total": 37,
+      "reprises_canceled": 16,
+      "reprises_valid": 21
+    },
+    {
+      "month": "2022-08",
+      "signups": 80,
+      "reprises_total": 68,
+      "reprises_canceled": 10,
+      "reprises_valid": 58
+    },
+    {
+      "month": "2022-09",
+      "signups": 101,
+      "reprises_total": 99,
+      "reprises_canceled": 25,
+      "reprises_valid": 74
+    },
+    {
+      "month": "2022-10",
+      "signups": 41,
+      "reprises_total": 58,
+      "reprises_canceled": 11,
+      "reprises_valid": 47
+    },
+    {
+      "month": "2022-11",
+      "signups": 73,
+      "reprises_total": 67,
+      "reprises_canceled": 22,
+      "reprises_valid": 45
+    },
+    {
+      "month": "2022-12",
+      "signups": 69,
+      "reprises_total": 79,
+      "reprises_canceled": 28,
+      "reprises_valid": 51
+    },
+    {
+      "month": "2023-01",
+      "signups": 59,
+      "reprises_total": 48,
+      "reprises_canceled": 9,
+      "reprises_valid": 39
+    },
+    {
+      "month": "2023-02",
+      "signups": 211,
+      "reprises_total": 211,
+      "reprises_canceled": 28,
+      "reprises_valid": 183
+    },
+    {
+      "month": "2023-03",
+      "signups": 47,
+      "reprises_total": 61,
+      "reprises_canceled": 11,
+      "reprises_valid": 50
+    },
+    {
+      "month": "2023-04",
+      "signups": 19,
+      "reprises_total": 19,
+      "reprises_canceled": 6,
+      "reprises_valid": 13
+    },
+    {
+      "month": "2023-05",
+      "signups": 22,
+      "reprises_total": 26,
+      "reprises_canceled": 7,
+      "reprises_valid": 19
+    },
+    {
+      "month": "2023-06",
+      "signups": 38,
+      "reprises_total": 36,
+      "reprises_canceled": 17,
+      "reprises_valid": 19
+    },
+    {
+      "month": "2023-07",
+      "signups": 18,
+      "reprises_total": 40,
+      "reprises_canceled": 10,
+      "reprises_valid": 30
+    },
+    {
+      "month": "2023-08",
+      "signups": 36,
+      "reprises_total": 57,
+      "reprises_canceled": 20,
+      "reprises_valid": 37
+    },
+    {
+      "month": "2023-09",
+      "signups": 90,
+      "reprises_total": 89,
+      "reprises_canceled": 26,
+      "reprises_valid": 63
+    },
+    {
+      "month": "2023-10",
+      "signups": 78,
+      "reprises_total": 61,
+      "reprises_canceled": 14,
+      "reprises_valid": 47
+    },
+    {
+      "month": "2023-11",
+      "signups": 47,
+      "reprises_total": 51,
+      "reprises_canceled": 17,
+      "reprises_valid": 34
+    },
+    {
+      "month": "2023-12",
+      "signups": 39,
+      "reprises_total": 68,
+      "reprises_canceled": 17,
+      "reprises_valid": 51
+    },
+    {
+      "month": "2024-01",
+      "signups": 453,
+      "reprises_total": 281,
+      "reprises_canceled": 204,
+      "reprises_valid": 77
+    },
+    {
+      "month": "2024-02",
+      "signups": 397,
+      "reprises_total": 209,
+      "reprises_canceled": 141,
+      "reprises_valid": 68
+    },
+    {
+      "month": "2024-03",
+      "signups": 427,
+      "reprises_total": 244,
+      "reprises_canceled": 182,
+      "reprises_valid": 62
+    },
+    {
+      "month": "2024-04",
+      "signups": 548,
+      "reprises_total": 269,
+      "reprises_canceled": 214,
+      "reprises_valid": 55
+    },
+    {
+      "month": "2024-05",
+      "signups": 2304,
+      "reprises_total": 785,
+      "reprises_canceled": 649,
+      "reprises_valid": 136
+    },
+    {
+      "month": "2024-06",
+      "signups": 1632,
+      "reprises_total": 1451,
+      "reprises_canceled": 1302,
+      "reprises_valid": 149
+    },
+    {
+      "month": "2024-07",
+      "signups": 2139,
+      "reprises_total": 2684,
+      "reprises_canceled": 2434,
+      "reprises_valid": 250
+    },
+    {
+      "month": "2024-08",
+      "signups": 1724,
+      "reprises_total": 2036,
+      "reprises_canceled": 1834,
+      "reprises_valid": 202
+    },
+    {
+      "month": "2024-09",
+      "signups": 2205,
+      "reprises_total": 2451,
+      "reprises_canceled": 2189,
+      "reprises_valid": 262
+    },
+    {
+      "month": "2024-10",
+      "signups": 2528,
+      "reprises_total": 2088,
+      "reprises_canceled": 1852,
+      "reprises_valid": 236
+    },
+    {
+      "month": "2024-11",
+      "signups": 2835,
+      "reprises_total": 2054,
+      "reprises_canceled": 1771,
+      "reprises_valid": 283
+    },
+    {
+      "month": "2024-12",
+      "signups": 2760,
+      "reprises_total": 1981,
+      "reprises_canceled": 1723,
+      "reprises_valid": 258
+    },
+    {
+      "month": "2025-01",
+      "signups": 2288,
+      "reprises_total": 1406,
+      "reprises_canceled": 1135,
+      "reprises_valid": 271
+    },
+    {
+      "month": "2025-02",
+      "signups": 2405,
+      "reprises_total": 1424,
+      "reprises_canceled": 1167,
+      "reprises_valid": 257
+    },
+    {
+      "month": "2025-03",
+      "signups": 2171,
+      "reprises_total": 960,
+      "reprises_canceled": 801,
+      "reprises_valid": 159
+    },
+    {
+      "month": "2025-04",
+      "signups": 2194,
+      "reprises_total": 1059,
+      "reprises_canceled": 891,
+      "reprises_valid": 168
+    },
+    {
+      "month": "2025-05",
+      "signups": 1580,
+      "reprises_total": 894,
+      "reprises_canceled": 703,
+      "reprises_valid": 191
+    },
+    {
+      "month": "2025-06",
+      "signups": 1422,
+      "reprises_total": 790,
+      "reprises_canceled": 589,
+      "reprises_valid": 201
+    },
+    {
+      "month": "2025-07",
+      "signups": 1838,
+      "reprises_total": 1069,
+      "reprises_canceled": 792,
+      "reprises_valid": 277
+    },
+    {
+      "month": "2025-08",
+      "signups": 1681,
+      "reprises_total": 1108,
+      "reprises_canceled": 813,
+      "reprises_valid": 295
+    },
+    {
+      "month": "2025-09",
+      "signups": 3145,
+      "reprises_total": 2037,
+      "reprises_canceled": 1641,
+      "reprises_valid": 396
+    },
+    {
+      "month": "2025-10",
+      "signups": 1977,
+      "reprises_total": 1160,
+      "reprises_canceled": 922,
+      "reprises_valid": 238
+    },
+    {
+      "month": "2025-11",
+      "signups": 2397,
+      "reprises_total": 1434,
+      "reprises_canceled": 1116,
+      "reprises_valid": 318
+    },
+    {
+      "month": "2025-12",
+      "signups": 1841,
+      "reprises_total": 1190,
+      "reprises_canceled": 910,
+      "reprises_valid": 280
+    },
+    {
+      "month": "2026-01",
+      "signups": 2061,
+      "reprises_total": 1353,
+      "reprises_canceled": 1019,
+      "reprises_valid": 334
+    },
+    {
+      "month": "2026-02",
+      "signups": 534,
+      "reprises_total": 87,
+      "reprises_canceled": 57,
+      "reprises_valid": 30
+    },
+    {
+      "month": "2026-03",
+      "signups": 412,
+      "reprises_total": 50,
+      "reprises_canceled": 23,
+      "reprises_valid": 27
+    },
+    {
+      "month": "2026-04",
+      "signups": 273,
+      "reprises_total": 24,
+      "reprises_canceled": 17,
+      "reprises_valid": 7
+    },
+    {
+      "month": "2026-05",
+      "signups": 311,
+      "reprises_total": 34,
+      "reprises_canceled": 27,
+      "reprises_valid": 7
+    },
+    {
+      "month": "2026-06",
+      "signups": 50,
+      "reprises_total": 50,
+      "reprises_canceled": 37,
+      "reprises_valid": 13
+    },
+    {
+      "month": "2026-07",
+      "signups": 67,
+      "reprises_total": 48,
+      "reprises_canceled": 26,
+      "reprises_valid": 22
+    },
+    {
+      "month": "2026-08",
+      "signups": 88,
+      "reprises_total": 74,
+      "reprises_canceled": 49,
+      "reprises_valid": 25
+    },
+    {
+      "month": "2026-09",
+      "signups": 4,
+      "reprises_total": 4,
+      "reprises_canceled": 3,
+      "reprises_valid": 1
+    }
+  ],
+  "distribution_all": {
+    "0": 26169,
+    "1": 19705,
+    "2": 3368,
+    "3-5": 1696,
+    "6-10": 232,
+    "11+": 61
+  },
+  "distribution_valid": {
+    "0": 44958,
+    "1": 5591,
+    "2": 502,
+    "3-5": 157,
+    "6-10": 20,
+    "11+": 3
+  },
+  "channels": {
+    "Cdiscount V3": 31609,
+    "Orange BE BOL": 1562,
+    "Cdiscount V2": 1270,
+    "Orange BE BOL V3": 971
+  },
+  "statuses": {
+    "canceled": 28066,
+    "pending": 6614,
+    "draft": 724,
+    "ended": 8
+  }
+}
