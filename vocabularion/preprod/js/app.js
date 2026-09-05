@@ -131,6 +131,11 @@ function renderTable(resetPage = true) {
 
     const list = db.languages[currentLang].vocabulary || [];
     const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+    
+    // [A035] Récupération du filtre de score sélectionné
+    const scoreFilterElement = document.getElementById('filter-score-input');
+    const selectedScore = scoreFilterElement ? scoreFilterElement.value : 'all';
+
     const tbody = document.getElementById('vocab-table-body');
     const mobileList = document.getElementById('vocab-mobile-list');
     const emptyState = document.getElementById('empty-state');
@@ -141,19 +146,25 @@ function renderTable(resetPage = true) {
     tbody.innerHTML = '';
     mobileList.innerHTML = '';
 
-    // 1. Filtrage global sur TOUTE la base (Recherche prédictive + Statuts)
-    // [A017] Filtrage sur le terme et la traduction uniquement
+    // 1. Filtrage global sur TOUTE la base (Recherche + Statuts + Score [A035])
     const filtered = list.filter(item => {
         const itemStatus = item.status || 'unstudied';
+        const itemScore = item.score || 1;
 
         if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
         if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
         if (filterView === 'known' && itemStatus !== 'known') return false;
 
+        // [A035] Condition de filtrage par score
+        if (selectedScore !== 'all' && parseInt(itemScore, 10) !== parseInt(selectedScore, 10)) {
+            return false;
+        }
+
+        // [A017] Filtrage sur le terme et la traduction
         if (searchQuery) {
             const matchTerm = (item.term || '').toLowerCase().includes(searchQuery);
             const matchTrans = (item.translation || '').toLowerCase().includes(searchQuery);
-            return matchTerm || matchTrans; // Retrait de matchSent
+            return matchTerm || matchTrans;
         }
 
         return true;

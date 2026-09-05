@@ -180,12 +180,29 @@
                 </div>
             </div>
 
-            <!-- View Filter Tabs & Search -->
+            <!-- View Filter Tabs, Score Filter & Search -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <!-- Search input -->
                 <div class="relative w-full sm:w-auto">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                     <input type="text" id="search-input" oninput="renderTable()" placeholder="Rechercher un mot, traduction..." class="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white w-full sm:w-52">
+                </div>
+
+                <!-- [A035] Filtre par Score (1 à 10) -->
+                <div class="relative w-full sm:w-auto">
+                    <select id="filter-score-input" onchange="renderTable()" class="pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white w-full sm:w-auto cursor-pointer">
+                        <option value="all">Tous les scores</option>
+                        <option value="1">Score 1</option>
+                        <option value="2">Score 2</option>
+                        <option value="3">Score 3</option>
+                        <option value="4">Score 4</option>
+                        <option value="5">Score 5</option>
+                        <option value="6">Score 6</option>
+                        <option value="7">Score 7</option>
+                        <option value="8">Score 8</option>
+                        <option value="9">Score 9</option>
+                        <option value="10">Score 10</option>
+                    </select>
                 </div>
 
                 <!-- Filter Mode Switcher -->
