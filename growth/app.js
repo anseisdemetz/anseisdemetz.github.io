@@ -1,13 +1,9 @@
-// Trade-in Analytics - Application Logic avec Cohorte & Filtre par Canaux
-
 let rawData = null;
-let currentTimelineData = [];
 let excludedChannels = new Set();
+let selectedStartMonth = null;
+let selectedEndMonth = null;
 
 let timelineChartInstance = null;
-let distChartInstance = null;
-let channelChartInstance = null;
-let statusChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     if (window.lucide) lucide.createIcons();
@@ -19,7 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             rawData = data;
-            initDropdownAndFilter(data.channels);
+            initPeriodFilter(data.timeline);
+            initExclusionCheckboxes(data.channels);
+            initExportButton();
             updateDashboard();
         })
         .catch(error => {
@@ -28,129 +26,121 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 });
 
-function initDropdownAndFilter(channelsObj) {
-    const dropdownBtn = document.getElementById('dropdown-btn');
-    const dropdownMenu = document.getElementById('dropdown-menu');
-    const searchInput = document.getElementById('search-input');
-    const checkboxesContainer = document.getElementById('checkboxes-container');
+// Filtre de sélection de la période (Mois Début / Mois Fin)
+function initPeriodFilter(timelineArray) {
+    const startSelect = document.getElementById('start-month');
+    const endSelect = document.getElementById('end-month');
+
+    if (!startSelect || !endSelect || !timelineArray || timelineArray.length === 0) return;
+
+    startSelect.innerHTML = '';
+    endSelect.innerHTML = '';
+
+    const months = timelineArray.map(item => item.month);
+    
+    months.forEach((m) => {
+        const optStart = document.createElement('option');
+        optStart.value = m;
+        optStart.textContent = m;
+        startSelect.appendChild(optStart);
+
+        const optEnd = document.createElement('option');
+        optEnd.value = m;
+        optEnd.textContent = m;
+        endSelect.appendChild(optEnd);
+    });
+
+    selectedStartMonth = months[0];
+    selectedEndMonth = months[months.length - 1];
+
+    startSelect.value = selectedStartMonth;
+    endSelect.value = selectedEndMonth;
+
+    startSelect.addEventListener('change', (e) => {
+        selectedStartMonth = e.target.value;
+        if (selectedStartMonth > selectedEndMonth) {
+            selectedEndMonth = selectedStartMonth;
+            endSelect.value = selectedEndMonth;
+        }
+        updateDashboard();
+    });
+
+    endSelect.addEventListener('change', (e) => {
+        selectedEndMonth = e.target.value;
+        if (selectedEndMonth < selectedStartMonth) {
+            selectedStartMonth = selectedEndMonth;
+            startSelect.value = selectedStartMonth;
+        }
+        updateDashboard();
+    });
+}
+
+// Liste tous les affiliés directement avec une case à cocher dans le cadre
+function initExclusionCheckboxes(channelsObj) {
+    const container = document.getElementById('checkboxes-container');
     const resetBtn = document.getElementById('reset-filters-btn');
 
-    if (!dropdownBtn || !dropdownMenu || !checkboxesContainer) return;
+    if (!container || !channelsObj) return;
 
-    dropdownBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdownMenu.classList.toggle('hidden');
-    });
+    container.innerHTML = '';
 
-    document.addEventListener('click', (e) => {
-        if (!dropdownMenu.contains(e.target) && !dropdownBtn.contains(e.target)) {
-            dropdownMenu.classList.add('hidden');
-        }
-    });
-
-    checkboxesContainer.innerHTML = '';
     Object.keys(channelsObj).forEach(channel => {
         const itemLabel = document.createElement('label');
-        itemLabel.className = 'checkbox-item flex items-center justify-between p-2 rounded hover:bg-slate-700/60 cursor-pointer transition select-none';
+        itemLabel.className = 'inline-flex items-center gap-2 bg-slate-900/80 border border-slate-700/80 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:border-indigo-500 cursor-pointer select-none transition';
         
         itemLabel.innerHTML = `
-            <span class="text-slate-200 truncate pr-2">${channel}</span>
-            <input type="checkbox" value="${channel}" class="w-4 h-4 accent-indigo-600 rounded bg-slate-900 border-slate-700 cursor-pointer">
+            <input type="checkbox" value="${channel}" class="w-4 h-4 accent-rose-500 rounded bg-slate-900 border-slate-700 cursor-pointer">
+            <span>Exclure ${channel}</span>
         `;
 
         const checkbox = itemLabel.querySelector('input');
         checkbox.addEventListener('change', (e) => {
             if (e.target.checked) {
                 excludedChannels.add(channel);
+                itemLabel.classList.add('border-rose-500/80', 'bg-rose-950/20', 'text-rose-200');
             } else {
                 excludedChannels.delete(channel);
+                itemLabel.classList.remove('border-rose-500/80', 'bg-rose-950/20', 'text-rose-200');
             }
-            renderTags();
             updateDashboard();
         });
 
-        checkboxesContainer.appendChild(itemLabel);
+        container.appendChild(itemLabel);
     });
-
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            checkboxesContainer.querySelectorAll('.checkbox-item').forEach(item => {
-                item.style.display = item.textContent.toLowerCase().includes(term) ? 'flex' : 'none';
-            });
-        });
-    }
 
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
             excludedChannels.clear();
-            checkboxesContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            renderTags();
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+                cb.parentElement.classList.remove('border-rose-500/80', 'bg-rose-950/20', 'text-rose-200');
+            });
             updateDashboard();
         });
     }
-}
-
-function renderTags() {
-    const tagsBar = document.getElementById('tags-bar');
-    const tagsContainer = document.getElementById('tags-container');
-    if (!tagsBar || !tagsContainer) return;
-
-    if (excludedChannels.size === 0) {
-        tagsBar.classList.add('hidden');
-        tagsBar.classList.remove('flex');
-        tagsContainer.innerHTML = '';
-        return;
-    }
-
-    tagsBar.classList.remove('hidden');
-    tagsBar.classList.add('flex');
-    tagsContainer.innerHTML = '';
-
-    excludedChannels.forEach(channel => {
-        const tag = document.createElement('span');
-        tag.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-950 text-indigo-200 border border-indigo-700/60 shadow-sm';
-        tag.innerHTML = `
-            <span>${channel}</span>
-            <button type="button" class="text-indigo-400 hover:text-white transition font-bold" aria-label="Supprimer ${channel}">
-                &times;
-            </button>
-        `;
-
-        tag.querySelector('button').addEventListener('click', () => {
-            excludedChannels.delete(channel);
-            const cb = document.querySelector(`#checkboxes-container input[value="${CSS.escape(channel)}"]`);
-            if (cb) cb.checked = false;
-            renderTags();
-            updateDashboard();
-        });
-
-        tagsContainer.appendChild(tag);
-    });
 }
 
 function updateDashboard() {
     if (!rawData) return;
 
-    // 1. Filtrer les canaux globaux pour le camembert
-    const filteredChannels = {};
-    let totalFilteredReprises = 0;
-
-    Object.entries(rawData.channels).forEach(([channel, count]) => {
-        if (!excludedChannels.has(channel)) {
-            filteredChannels[channel] = count;
-            totalFilteredReprises += count;
-        }
+    // 1. Filtrer la timeline selon la période
+    const timelineInPeriod = rawData.timeline.filter(item => {
+        return item.month >= selectedStartMonth && item.month <= selectedEndMonth;
     });
 
-    // 2. Filtrer les reprises de cohorte dynamiquement
-    currentTimelineData = rawData.timeline.map(item => {
-        let cohortReprisesFiltered = 0;
+    // 2. Calculer les statistiques et la timeline filtrée selon les exclusions
+    let periodUsers = 0;
+    let periodFilteredReprises = 0;
 
+    const filteredTimeline = timelineInPeriod.map(item => {
+        periodUsers += item.signups;
+
+        let cohortReprisesFiltered = 0;
         if (item.cohort_channels) {
             Object.entries(item.cohort_channels).forEach(([channel, count]) => {
                 if (!excludedChannels.has(channel)) {
                     cohortReprisesFiltered += count;
+                    periodFilteredReprises += count;
                 }
             });
         }
@@ -162,19 +152,15 @@ function updateDashboard() {
     });
 
     // 3. Mise à jour des cartes KPI
-    setElementText('stat-users', rawData.summary.total_users ? rawData.summary.total_users.toLocaleString('fr-FR') : '--');
-    setElementText('stat-reprises', totalFilteredReprises.toLocaleString('fr-FR'));
+    const avgUser = periodUsers > 0 ? (periodFilteredReprises / periodUsers).toFixed(2) : '0.00';
+    setElementText('stat-users', periodUsers.toLocaleString('fr-FR'));
+    setElementText('stat-reprises', periodFilteredReprises.toLocaleString('fr-FR'));
     setElementText('stat-cancel-rate', rawData.summary.cancel_rate !== undefined ? rawData.summary.cancel_rate + '%' : '--');
     setElementText('stat-canceled-cnt', rawData.summary.canceled_reprises ? rawData.summary.canceled_reprises.toLocaleString('fr-FR') : '--');
-    setElementText('stat-avg-user', rawData.summary.avg_reprises_per_active_user !== undefined ? rawData.summary.avg_reprises_per_active_user : '--');
+    setElementText('stat-avg-user', avgUser);
 
-    // 4. Rendu des graphiques
-    renderTimelineChart(currentTimelineData);
-    setupTimelineZoomControls();
-
-    if (rawData.distribution_all) renderDistributionChart(rawData.distribution_all);
-    renderChannelChart(filteredChannels);
-    if (rawData.statuses) renderStatusChart(rawData.statuses);
+    // 4. Rendu de la courbe principale
+    renderTimelineChart(filteredTimeline);
 }
 
 function setElementText(id, text) {
@@ -201,7 +187,7 @@ function renderTimelineChart(timelineData) {
                     tension: 0.3 
                 },
                 { 
-                    label: 'Reprises générées (Filtrées par canal)', 
+                    label: 'Reprises générées (Exclusions appliquées)', 
                     data: timelineData.map(d => d.cohort_reprises), 
                     borderColor: '#10b981', 
                     backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -224,98 +210,49 @@ function renderTimelineChart(timelineData) {
     });
 }
 
-function renderDistributionChart(distributionData) {
-    const ctx = document.getElementById('distChart');
-    if (!ctx) return;
-    if (distChartInstance) distChartInstance.destroy();
+// Exportation des données utilisateurs consolidées en fonction des filtres actifs
+function initExportButton() {
+    const exportBtn = document.getElementById('export-users-btn');
+    if (!exportBtn) return;
 
-    distChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(distributionData),
-            datasets: [{
-                label: "Nombre d'utilisateurs",
-                data: Object.values(distributionData),
-                backgroundColor: ['#64748b', '#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe', '#e0e7ff'],
-                borderRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                x: { ticks: { color: '#64748b' }, grid: { display: false } },
-                y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } }
+    exportBtn.addEventListener('click', () => {
+        if (!rawData || !Array.isArray(rawData.users_data)) {
+            alert('Aucune donnée utilisateur disponible pour l\'export.');
+            return;
+        }
+
+        const filteredUsers = rawData.users_data.filter(u => {
+            return u.month >= String(selectedStartMonth) && u.month <= String(selectedEndMonth);
+        });
+
+        if (filteredUsers.length === 0) {
+            alert('Aucun utilisateur ne correspond à la plage de dates sélectionnée.');
+            return;
+        }
+
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "identifiant_utilisateur,date_inscription,mois_inscription,reprises_totales_filtrees\n";
+
+        filteredUsers.forEach(u => {
+            let totalUserReprisesFiltered = 0;
+            if (u.channels) {
+                Object.entries(u.channels).forEach(([channel, count]) => {
+                    if (!excludedChannels || !excludedChannels.has(channel)) {
+                        totalUserReprisesFiltered += count;
+                    }
+                });
             }
-        }
+            csvContent += `${u.id},${u.date_inscription},${u.month},${totalUserReprisesFiltered}\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `export_utilisateurs_consolidates_${selectedStartMonth}_a_${selectedEndMonth}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     });
-}
-
-function renderChannelChart(channelsData) {
-    const ctx = document.getElementById('channelChart');
-    if (!ctx) return;
-    if (channelChartInstance) channelChartInstance.destroy();
-
-    channelChartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(channelsData),
-            datasets: [{
-                data: Object.values(channelsData),
-                backgroundColor: ['#6366f1', '#f59e0b', '#3b82f6', '#10b981'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } } }
-        }
-    });
-}
-
-function renderStatusChart(statusesData) {
-    const ctx = document.getElementById('statusChart');
-    if (!ctx) return;
-    if (statusChartInstance) statusChartInstance.destroy();
-
-    statusChartInstance = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: Object.keys(statusesData),
-            datasets: [{
-                data: Object.values(statusesData),
-                backgroundColor: ['#f43f5e', '#3b82f6', '#f59e0b', '#10b981'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } } }
-        }
-    });
-}
-
-function setupTimelineZoomControls() {
-    const btnGlobal = document.getElementById('btn-view-global');
-    const btnZoom = document.getElementById('btn-view-zoom');
-
-    if (!btnGlobal || !btnZoom) return;
-
-    btnGlobal.onclick = () => {
-        btnGlobal.className = "px-3 py-1 rounded bg-indigo-600 text-white font-medium transition";
-        btnZoom.className = "px-3 py-1 rounded text-slate-400 hover:text-white transition";
-        renderTimelineChart(currentTimelineData);
-    };
-
-    btnZoom.onclick = () => {
-        btnZoom.className = "px-3 py-1 rounded bg-indigo-600 text-white font-medium transition";
-        btnGlobal.className = "px-3 py-1 rounded text-slate-400 hover:text-white transition";
-        const zoomedData = currentTimelineData.filter(d => d.month >= '2024-01');
-        renderTimelineChart(zoomedData);
-    };
 }
 
 function showErrorMessage() {

@@ -17,11 +17,26 @@ def generate_dashboard_data():
     reprises_csv = find_csv_file(base_dir, 'reprises')
     output_json = os.path.join(base_dir, 'data.json')
 
+    if not users_csv or not os.path.exists(users_csv):
+        raise FileNotFoundError(
+            f"Fichier CSV d'utilisateurs introuvable dans {base_dir}"
+        )
+
+    if not reprises_csv or not os.path.exists(reprises_csv):
+        raise FileNotFoundError(
+            f"Fichier CSV de reprises introuvable dans {base_dir}"
+        )
+
     df_users = pd.read_csv(users_csv, encoding='utf-8-sig')
     df_reprises = pd.read_csv(reprises_csv, encoding='utf-8-sig')
 
     df_users['date_inscription'] = pd.to_datetime(df_users['date_inscription'])
     df_reprises['date_reprise'] = pd.to_datetime(df_reprises['date_reprise'])
+
+    # [A030] Circonscrire les données au 1er janvier 2024
+    start_date = pd.Timestamp('2024-01-01')
+    df_users = df_users[df_users['date_inscription'] >= start_date].copy()
+    df_reprises = df_reprises[df_reprises['date_reprise'] >= start_date].copy()
 
     df_users['month'] = (
         df_users['date_inscription'].dt.to_period('M').astype(str)
@@ -30,7 +45,7 @@ def generate_dashboard_data():
         df_reprises['date_reprise'].dt.to_period('M').astype(str)
     )
 
-    # Joindre les reprises à la cohorte d'inscription de l'utilisateur
+    # Fusion pour calcul des cohortes
     df_merged = df_reprises.merge(
         df_users[['identifiant_utilisateur', 'month']],
         on='identifiant_utilisateur',
@@ -42,13 +57,19 @@ def generate_dashboard_data():
     total_reprises = int(len(df_reprises))
     canceled_reprises = int((df_reprises['statut_reprise'] == 'canceled').sum())
     valid_reprises = total_reprises - canceled_reprises
-    cancel_rate = round((canceled_reprises / total_reprises) * 100, 1)
+    cancel_rate = (
+        round((canceled_reprises / total_reprises) * 100, 1)
+        if total_reprises > 0
+        else 0.0
+    )
 
     reprises_per_user_all = df_reprises.groupby(
         'identifiant_utilisateur'
     ).size()
-    avg_reprises_per_active_user = round(
-        float(reprises_per_user_all.mean()), 2
+    avg_reprises_per_active_user = (
+        round(float(reprises_per_user_all.mean()), 2)
+        if len(reprises_per_user_all) > 0
+        else 0.0
     )
 
     signups_monthly = df_users.groupby('month').size().to_dict()
@@ -65,7 +86,7 @@ def generate_dashboard_data():
         .to_dict(orient='index')
     )
 
-    # Ventilation des reprises par canal pour la COHORTE d'inscription du mois
+    # Reprises regroupées par cohorte d'inscription et canal
     cohort_channel_summary = (
         df_merged.groupby(['month_user', 'bol_reprise'])
         .size()
@@ -111,17 +132,39 @@ def generate_dashboard_data():
             'cohort_channels': cohort_dict,
         })
 
+    # Liste des canaux uniques
     channels = {
         str(k): int(v)
         for k, v in df_reprises['bol_reprise'].value_counts().to_dict().items()
     }
-    statuses = {
-        str(k): int(v)
-        for k, v in df_reprises['statut_reprise']
-        .value_counts()
-        .to_dict()
-        .items()
-    }
+
+    # [A033] Dataset consolidé par utilisateur pour export CSV dynamique
+    df_user_reprises = (
+        df_reprises.groupby(['identifiant_utilisateur', 'bol_reprise'])
+        .size()
+        .unstack(fill_value=0)
+    )
+
+    users_export_list = []
+    for idx, row in df_users.iterrows():
+        u_id = row['identifiant_utilisateur']
+        u_date = row['date_inscription'].strftime('%Y-%m-%d')
+        u_month = row['month']
+
+        user_rep_channels = {}
+        if u_id in df_user_reprises.index:
+            user_rep_channels = {
+                str(k): int(v)
+                for k, v in df_user_reprises.loc[u_id].items()
+                if v > 0
+            }
+
+        users_export_list.append({
+            'id': u_id,
+            'date_inscription': u_date,
+            'month': u_month,
+            'channels': user_rep_channels,
+        })
 
     output_data = {
         'summary': {
@@ -134,11 +177,15 @@ def generate_dashboard_data():
         },
         'timeline': timeline,
         'channels': channels,
-        'statuses': statuses,
+        'users_data': users_export_list,
     }
 
     with open(output_json, 'w', encoding='utf-8') as f:
         json.dump(output_data, f, ensure_ascii=False, indent=2)
+
+    print(
+        f'data.json régénéré avec succès à partir du 2024-01-01 : {output_json}'
+    )
 
 
 if __name__ == '__main__':
