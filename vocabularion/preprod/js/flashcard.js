@@ -118,8 +118,49 @@ function renderFlashcard() {
     document.getElementById('btn-flashcard-next').disabled = (flashcardIndex === flashcardDeck.length - 1);
 }
 
-// Retourner la carte
-function flipFlashcard() {
+// Lecture audio de la synthèse vocale (Web Speech API)
+function playFlashcardAudio(event) {
+    if (event) event.stopPropagation(); // Empêche de retourner la carte lors du clic sur le bouton
+
+    if (!('speechSynthesis' in window)) {
+        alert("La synthèse vocale n'est pas supportée par votre navigateur.");
+        return;
+    }
+
+    if (flashcardDeck.length === 0) return;
+
+    const current = flashcardDeck[flashcardIndex];
+    const isTermFront = current.direction === 0;
+
+    // Détermination du texte et de la langue à prononcer
+    let textToSpeak = "";
+    let langCode = "en-US";
+
+    if (isTermFront) {
+        // Le terme est au recto -> prononcer le terme dans la langue cible
+        textToSpeak = current.word.term;
+        langCode = (currentLang === 'english') ? 'en-US' : 'it-IT';
+    } else {
+        // La traduction est au recto -> prononcer le terme français
+        textToSpeak = current.word.translation;
+        langCode = 'fr-FR';
+    }
+
+    window.speechSynthesis.cancel(); // Stoppe toute lecture en cours
+
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = langCode;
+    utterance.rate = 0.9; // Vitesse légèrement ralentie pour une meilleure diction
+
+    window.speechSynthesis.speak(utterance);
+}
+
+// Mise à jour de flipFlashcard pour filtrer les clics sur le bouton audio
+function flipFlashcard(event) {
+    if (event && event.target.closest('#flashcard-audio-btn')) {
+        return; // Ne pas retourner la carte si on a cliqué sur l'audio
+    }
+
     flashcardIsFlipped = !flashcardIsFlipped;
 
     const current = flashcardDeck[flashcardIndex];
