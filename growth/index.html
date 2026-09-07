@@ -14,7 +14,7 @@
 <body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen">
 
     <!-- Top Navigation / Header -->
-    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="flex items-center space-x-3">
             <div class="p-2 bg-indigo-600 rounded-lg text-white">
                 <i data-lucide="trending-up" class="w-6 h-6"></i>
@@ -24,12 +24,28 @@
                 <p class="text-xs text-slate-400">Suivi & Performance de la Reprise</p>
             </div>
         </div>
-        <div class="flex items-center space-x-3">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                Données synchronisées
-            </span>
-            <button onclick="window.print()" class="px-3 py-1.5 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-md border border-slate-700 transition">
+
+        <!-- Menu Déroulant à Cases à Cocher -->
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto relative">
+            <div class="relative inline-block text-left">
+                <button id="dropdown-btn" type="button" class="inline-flex items-center justify-between gap-2 w-64 px-3 py-2 text-xs font-medium bg-slate-800 text-slate-200 rounded-lg border border-slate-700 hover:bg-slate-700 focus:outline-none transition">
+                    <span class="flex items-center gap-2 truncate">
+                        <i data-lucide="filter" class="w-4 h-4 text-indigo-400 flex-shrink-0"></i>
+                        <span>Exclure des affiliés</span>
+                    </span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
+                </button>
+
+                <!-- Dropdown discret -->
+                <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-72 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl z-50 p-3 space-y-2">
+                    <input type="text" id="search-input" placeholder="Filtrer la liste..." class="w-full bg-slate-900 text-slate-200 border border-slate-700 rounded-md px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-500 placeholder-slate-500">
+                    <div id="checkboxes-container" class="max-h-48 overflow-y-auto space-y-1 text-xs pr-1">
+                        <!-- Généré dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="window.print()" class="px-3 py-2 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-md border border-slate-700 transition">
                 Exporter PDF
             </button>
         </div>
@@ -38,6 +54,12 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
 
+    <!-- Zone de Tags d'Exclusion -->
+    <div id="tags-bar" class="hidden items-center gap-2 flex-wrap bg-slate-800/40 border border-slate-700/50 p-3 rounded-xl">
+        <span class="text-xs font-medium text-slate-400">Affiliés exclus :</span>
+        <div id="tags-container" class="flex flex-wrap gap-2"></div>
+        <button id="reset-filters-btn" class="text-xs text-rose-400 hover:text-rose-300 ml-auto font-medium transition">Réinitialiser</button>
+    </div>
         <!-- Executive Summary Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             <!-- Card 1 -->
