@@ -1,12 +1,14 @@
-// Trade-in Analytics - Application Logic [A030-A037]
+// Trade-in Analytics - Application Logic [A030-A042]
 
 let rawData = null;
 let excludedChannels = new Set();
 let selectedStartMonth = null;
 let selectedEndMonth = null;
 
+let availableYears = [];
+let currentYearIndex = 0; // Pointe sur la première année (la plus récente : 2026)
+
 let timelineChartInstance = null;
-let userActivityChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     if (window.lucide) lucide.createIcons();
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rawData = data;
             initPeriodFilter(data.timeline);
             initExclusionCheckboxes(data.channels);
+            initYearlyNavControls();
             initExportButton();
             updateDashboard();
         })
@@ -29,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 });
 
-// [A032] Filtre par période
+// Filtre par période
 function initPeriodFilter(timelineArray) {
     const startSelect = document.getElementById('start-month');
     const endSelect = document.getElementById('end-month');
@@ -78,7 +81,12 @@ function initPeriodFilter(timelineArray) {
     });
 }
 
-// [A035] Cocher par défaut TOUS les affiliés sauf CompaRecycle
+function isKeptByDefault(channel) {
+    const cleanChannel = channel.toLowerCase().replace(/\s+/g, '');
+    return cleanChannel.includes('comparecycle') || cleanChannel.includes('comparev2');
+}
+
+// Cocher par défaut TOUS les affiliés sauf CompaRecycle
 function initExclusionCheckboxes(channelsObj) {
     const container = document.getElementById('checkboxes-container');
     const resetBtn = document.getElementById('reset-filters-btn');
@@ -89,7 +97,7 @@ function initExclusionCheckboxes(channelsObj) {
     excludedChannels.clear();
 
     Object.keys(channelsObj).forEach(channel => {
-        const isComparecycle = channel.toLowerCase().replace(/\s+/g, '').includes('comparecycle');
+        const isComparecycle = isKeptByDefault(channel);
         const shouldExcludeByDefault = !isComparecycle;
 
         if (shouldExcludeByDefault) {
@@ -149,7 +157,31 @@ function initExclusionCheckboxes(channelsObj) {
     }
 }
 
-// Mise à jour globale du tableau de bord
+// [A042] Initialisation des boutons de navigation pour le carrousel annuel
+function initYearlyNavControls() {
+    const prevBtn = document.getElementById('prev-year-btn');
+    const nextBtn = document.getElementById('next-year-btn');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentYearIndex < availableYears.length - 1) {
+                currentYearIndex++; // Avancer vers l'année précédente (ex: 2026 -> 2025)
+                updateYearlyCard();
+            }
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (currentYearIndex > 0) {
+                currentYearIndex--; // Reculer vers l'année suivante (ex: 2025 -> 2026)
+                updateYearlyCard();
+            }
+        });
+    }
+}
+
+// Update Dashboard
 function updateDashboard() {
     if (!rawData) return;
 
@@ -181,7 +213,7 @@ function updateDashboard() {
         };
     });
 
-    // 3. Mise à jour des cartes KPI
+    // 3. Mise à jour des cartes KPI principales
     const avgUser = periodUsers > 0 ? (periodFilteredReprises / periodUsers).toFixed(2) : '0.00';
     setElementText('stat-users', periodUsers.toLocaleString('fr-FR'));
     setElementText('stat-reprises', periodFilteredReprises.toLocaleString('fr-FR'));
@@ -189,35 +221,9 @@ function updateDashboard() {
     setElementText('stat-canceled-cnt', rawData.summary && rawData.summary.canceled_reprises ? rawData.summary.canceled_reprises.toLocaleString('fr-FR') : '--');
     setElementText('stat-avg-user', avgUser);
 
-    // 4. Calcul robustifié pour la Répartition de l'Activité (Toutes données ou Filtre)
     const allUsers = rawData.users_data || [];
-    
-    let withReprises = 0;
-    let withoutReprises = 0;
 
-    allUsers.forEach(u => {
-        // Appliquer le filtre de mois seulement s'il existe dans l'objet utilisateur
-        if (selectedStartMonth && selectedEndMonth && u.month) {
-            if (u.month < selectedStartMonth || u.month > selectedEndMonth) return;
-        }
-
-        let userReprises = 0;
-        if (u.channels) {
-            Object.entries(u.channels).forEach(([channel, count]) => {
-                if (!excludedChannels.has(channel)) {
-                    userReprises += count;
-                }
-            });
-        }
-
-        if (userReprises > 0) {
-            withReprises++;
-        } else {
-            withoutReprises++;
-        }
-    });
-
-    // 5. Calcul KPI : Inscrits ≥ 2 ans (Global)
+    // 4. Calcul KPI : Inscrits ≥ 2 ans (Global)
     const dateLimitStr = "2024-09-07";
     const oldCohort = allUsers.filter(u => u.date_inscription && u.date_inscription <= dateLimitStr);
     const oldCohortTotal = oldCohort.length;
@@ -238,9 +244,71 @@ function updateDashboard() {
     setElementText('stat-old-users-reprise', oldCohortWithReprises.toLocaleString('fr-FR'));
     setElementText('stat-old-users-pct', `${oldCohortPct}%`);
 
-    // 6. Rendu des graphiques
+    // 5. [A042] Calcul des métriques annuelles et mise à jour de la carte active
+    processYearlyData(allUsers);
+    updateYearlyCard();
+
+    // 6. Rendu du graphique d'évolution mensuelle
     renderTimelineChart(filteredTimeline);
-    renderUserActivityChart(withReprises, withoutReprises);
+}
+
+// [A042] Traitement des données agrégées par année
+let computedYearlyStats = {};
+
+function processYearlyData(allUsers) {
+    computedYearlyStats = {};
+
+    allUsers.forEach(u => {
+        if (!u.date_inscription) return;
+        const year = u.date_inscription.substring(0, 4);
+
+        if (!computedYearlyStats[year]) {
+            computedYearlyStats[year] = {
+                signups: 0,
+                reprises: 0,
+                usersWithReprise: 0
+            };
+        }
+
+        computedYearlyStats[year].signups += 1;
+
+        let userReprises = 0;
+        if (u.channels) {
+            Object.entries(u.channels).forEach(([channel, count]) => {
+                if (!excludedChannels.has(channel)) {
+                    userReprises += count;
+                }
+            });
+        }
+
+        computedYearlyStats[year].reprises += userReprises;
+        if (userReprises > 0) {
+            computedYearlyStats[year].usersWithReprise += 1;
+        }
+    });
+
+    // Tri de la chronologie du plus récent au plus ancien (2026, 2025, 2024...)
+    availableYears = Object.keys(computedYearlyStats).sort((a, b) => b - a);
+}
+
+// [A042] Rafraîchit l'affichage de la carte annuelle sélectionnée
+function updateYearlyCard() {
+    if (availableYears.length === 0) return;
+
+    const currentYear = availableYears[currentYearIndex];
+    const data = computedYearlyStats[currentYear] || { signups: 0, reprises: 0, usersWithReprise: 0 };
+
+    setElementText('current-year-display', currentYear);
+    setElementText('yearly-signups', data.signups.toLocaleString('fr-FR'));
+    setElementText('yearly-reprises', data.reprises.toLocaleString('fr-FR'));
+    setElementText('yearly-users-with-reprise', data.usersWithReprise.toLocaleString('fr-FR'));
+
+    // Gestion de l'état des boutons de navigation (Désactivation aux extrémités)
+    const prevBtn = document.getElementById('prev-year-btn');
+    const nextBtn = document.getElementById('next-year-btn');
+
+    if (prevBtn) prevBtn.disabled = (currentYearIndex >= availableYears.length - 1);
+    if (nextBtn) nextBtn.disabled = (currentYearIndex <= 0);
 }
 
 function setElementText(id, text) {
@@ -285,56 +353,6 @@ function renderTimelineChart(timelineData) {
             scales: {
                 x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
                 y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } }
-            }
-        }
-    });
-}
-
-function renderUserActivityChart(withReprises, withoutReprises) {
-    const ctx = document.getElementById('userActivityChart');
-    if (!ctx) return;
-    if (userActivityChartInstance) userActivityChartInstance.destroy();
-
-    const total = withReprises + withoutReprises;
-    const pctWith = total > 0 ? ((withReprises / total) * 100).toFixed(1) : 0;
-    const pctWithout = total > 0 ? ((withoutReprises / total) * 100).toFixed(1) : 0;
-
-    userActivityChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Au moins 1 reprise', '0 reprise'],
-            datasets: [{
-                label: 'Inscrits',
-                data: [withReprises, withoutReprises],
-                backgroundColor: ['#2ec4b6', '#e71d36'],
-                borderRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const val = context.raw;
-                            const pct = context.dataIndex === 0 ? pctWith : pctWithout;
-                            return ` Utilisateurs : ${val.toLocaleString('fr-FR')} (${pct}%)`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
-                y: { 
-                    beginAtZero: true,
-                    ticks: { 
-                        color: '#64748b',
-                        precision: 0
-                    }, 
-                    grid: { color: '#1e293b' } 
-                }
             }
         }
     });

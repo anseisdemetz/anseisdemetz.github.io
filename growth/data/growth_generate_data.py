@@ -34,7 +34,7 @@ def generate_dashboard_data():
     df_reprises['date_reprise'] = pd.to_datetime(df_reprises['date_reprise'])
 
     # [A030] Circonscrire les données au 1er janvier 2024
-    start_date = pd.Timestamp('2024-01-01')
+    start_date = pd.Timestamp('2020-01-01')
     df_users = df_users[df_users['date_inscription'] >= start_date].copy()
     df_reprises = df_reprises[df_reprises['date_reprise'] >= start_date].copy()
 
@@ -184,7 +184,7 @@ def generate_dashboard_data():
         json.dump(output_data, f, ensure_ascii=False, indent=2)
 
     print(
-        f'data.json régénéré avec succès à partir du 2024-01-01 : {output_json}'
+        f'data.json régénéré avec succès à partir du 2020-01-01 : {output_json}'
     )
 
 
