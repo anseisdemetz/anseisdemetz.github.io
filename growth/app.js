@@ -1,12 +1,11 @@
-// Trade-in Analytics - Application Logic [A030-A042]
+// Trade-in Analytics - Application Logic (Focus Bilan Annuel)
 
 let rawData = null;
 let excludedChannels = new Set();
-let selectedStartMonth = null;
-let selectedEndMonth = null;
 
 let availableYears = [];
-let currentYearIndex = 0; // Pointe sur la première année (la plus récente : 2026)
+let currentYearIndex = 0;
+let computedYearlyStats = {};
 
 let timelineChartInstance = null;
 
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             rawData = data;
-            initPeriodFilter(data.timeline);
             initExclusionCheckboxes(data.channels);
             initYearlyNavControls();
             initExportButton();
@@ -32,61 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 });
 
-// Filtre par période
-function initPeriodFilter(timelineArray) {
-    const startSelect = document.getElementById('start-month');
-    const endSelect = document.getElementById('end-month');
-
-    if (!startSelect || !endSelect || !timelineArray || timelineArray.length === 0) return;
-
-    startSelect.innerHTML = '';
-    endSelect.innerHTML = '';
-
-    const months = timelineArray.map(item => item.month);
-    
-    months.forEach((m) => {
-        const optStart = document.createElement('option');
-        optStart.value = m;
-        optStart.textContent = m;
-        startSelect.appendChild(optStart);
-
-        const optEnd = document.createElement('option');
-        optEnd.value = m;
-        optEnd.textContent = m;
-        endSelect.appendChild(optEnd);
-    });
-
-    selectedStartMonth = months[0];
-    selectedEndMonth = months[months.length - 1];
-
-    startSelect.value = selectedStartMonth;
-    endSelect.value = selectedEndMonth;
-
-    startSelect.addEventListener('change', (e) => {
-        selectedStartMonth = e.target.value;
-        if (selectedStartMonth > selectedEndMonth) {
-            selectedEndMonth = selectedStartMonth;
-            endSelect.value = selectedEndMonth;
-        }
-        updateDashboard();
-    });
-
-    endSelect.addEventListener('change', (e) => {
-        selectedEndMonth = e.target.value;
-        if (selectedEndMonth < selectedStartMonth) {
-            selectedStartMonth = selectedEndMonth;
-            startSelect.value = selectedStartMonth;
-        }
-        updateDashboard();
-    });
-}
-
 function isKeptByDefault(channel) {
     const cleanChannel = channel.toLowerCase().replace(/\s+/g, '');
     return cleanChannel.includes('comparecycle') || cleanChannel.includes('comparev2');
 }
 
-// Cocher par défaut TOUS les affiliés sauf CompaRecycle
 function initExclusionCheckboxes(channelsObj) {
     const container = document.getElementById('checkboxes-container');
     const resetBtn = document.getElementById('reset-filters-btn');
@@ -97,8 +45,8 @@ function initExclusionCheckboxes(channelsObj) {
     excludedChannels.clear();
 
     Object.keys(channelsObj).forEach(channel => {
-        const isComparecycle = isKeptByDefault(channel);
-        const shouldExcludeByDefault = !isComparecycle;
+        const isCompare = isKeptByDefault(channel);
+        const shouldExcludeByDefault = !isCompare;
 
         if (shouldExcludeByDefault) {
             excludedChannels.add(channel);
@@ -139,8 +87,8 @@ function initExclusionCheckboxes(channelsObj) {
             container.querySelectorAll('label').forEach(lbl => {
                 const cb = lbl.querySelector('input[type="checkbox"]');
                 const channel = cb.value;
-                const isComparecycle = channel.toLowerCase().replace(/\s+/g, '').includes('comparecycle');
-                const shouldExcludeByDefault = !isComparecycle;
+                const isCompare = isKeptByDefault(channel);
+                const shouldExcludeByDefault = !isCompare;
 
                 cb.checked = shouldExcludeByDefault;
                 if (shouldExcludeByDefault) {
@@ -157,7 +105,6 @@ function initExclusionCheckboxes(channelsObj) {
     }
 }
 
-// [A042] Initialisation des boutons de navigation pour le carrousel annuel
 function initYearlyNavControls() {
     const prevBtn = document.getElementById('prev-year-btn');
     const nextBtn = document.getElementById('next-year-btn');
@@ -165,7 +112,7 @@ function initYearlyNavControls() {
     if (prevBtn) {
         prevBtn.addEventListener('click', () => {
             if (currentYearIndex < availableYears.length - 1) {
-                currentYearIndex++; // Avancer vers l'année précédente (ex: 2026 -> 2025)
+                currentYearIndex++;
                 updateYearlyCard();
             }
         });
@@ -174,136 +121,86 @@ function initYearlyNavControls() {
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
             if (currentYearIndex > 0) {
-                currentYearIndex--; // Reculer vers l'année suivante (ex: 2025 -> 2026)
+                currentYearIndex--;
                 updateYearlyCard();
             }
         });
     }
 }
 
-// Update Dashboard
 function updateDashboard() {
     if (!rawData) return;
 
-    // 1. Timeline filtrée par période
-    const timelineInPeriod = (rawData.timeline || []).filter(item => {
-        return item.month >= selectedStartMonth && item.month <= selectedEndMonth;
-    });
+    // 1. Mise à jour du Bilan Annuel
+    processYearlyData();
+    updateYearlyCard();
 
-    // 2. Calculs KPI
-    let periodUsers = 0;
-    let periodFilteredReprises = 0;
-
-    const filteredTimeline = timelineInPeriod.map(item => {
-        periodUsers += item.signups || 0;
-
+    // 2. Mise à jour du graphique mensuel
+    const filteredTimeline = (rawData.timeline || []).map(item => {
         let cohortReprisesFiltered = 0;
         if (item.cohort_channels) {
             Object.entries(item.cohort_channels).forEach(([channel, count]) => {
                 if (!excludedChannels.has(channel)) {
                     cohortReprisesFiltered += count;
-                    periodFilteredReprises += count;
                 }
             });
         }
-
         return {
             ...item,
             cohort_reprises: cohortReprisesFiltered
         };
     });
 
-    // 3. Mise à jour des cartes KPI principales
-    const avgUser = periodUsers > 0 ? (periodFilteredReprises / periodUsers).toFixed(2) : '0.00';
-    setElementText('stat-users', periodUsers.toLocaleString('fr-FR'));
-    setElementText('stat-reprises', periodFilteredReprises.toLocaleString('fr-FR'));
-    setElementText('stat-cancel-rate', rawData.summary && rawData.summary.cancel_rate !== undefined ? rawData.summary.cancel_rate + '%' : '--');
-    setElementText('stat-canceled-cnt', rawData.summary && rawData.summary.canceled_reprises ? rawData.summary.canceled_reprises.toLocaleString('fr-FR') : '--');
-    setElementText('stat-avg-user', avgUser);
-
-    const allUsers = rawData.users_data || [];
-
-    // 4. Calcul KPI : Inscrits ≥ 2 ans (Global)
-    const dateLimitStr = "2024-09-07";
-    const oldCohort = allUsers.filter(u => u.date_inscription && u.date_inscription <= dateLimitStr);
-    const oldCohortTotal = oldCohort.length;
-
-    let oldCohortWithReprises = 0;
-    oldCohort.forEach(u => {
-        let userReprises = 0;
-        if (u.channels) {
-            Object.entries(u.channels).forEach(([channel, count]) => {
-                if (!excludedChannels.has(channel)) userReprises += count;
-            });
-        }
-        if (userReprises > 0) oldCohortWithReprises++;
-    });
-
-    const oldCohortPct = oldCohortTotal > 0 ? ((oldCohortWithReprises / oldCohortTotal) * 100).toFixed(1) : '0.0';
-
-    setElementText('stat-old-users-reprise', oldCohortWithReprises.toLocaleString('fr-FR'));
-    setElementText('stat-old-users-pct', `${oldCohortPct}%`);
-
-    // 5. [A042] Calcul des métriques annuelles et mise à jour de la carte active
-    processYearlyData(allUsers);
-    updateYearlyCard();
-
-    // 6. Rendu du graphique d'évolution mensuelle
     renderTimelineChart(filteredTimeline);
 }
 
-// [A042] Traitement des données agrégées par année
-let computedYearlyStats = {};
-
-function processYearlyData(allUsers) {
+// [A045] Calcul de l'agrégation avec reprises validées
+function processYearlyData() {
     computedYearlyStats = {};
 
-    allUsers.forEach(u => {
-        if (!u.date_inscription) return;
-        const year = u.date_inscription.substring(0, 4);
+    if (!rawData || !rawData.yearly_affiliate_stats) return;
 
-        if (!computedYearlyStats[year]) {
-            computedYearlyStats[year] = {
-                signups: 0,
-                reprises: 0,
-                usersWithReprise: 0
-            };
-        }
+    Object.entries(rawData.yearly_affiliate_stats).forEach(([channel, yearsData]) => {
+        if (excludedChannels.has(channel)) return;
 
-        computedYearlyStats[year].signups += 1;
+        Object.entries(yearsData).forEach(([year, stats]) => {
+            if (!computedYearlyStats[year]) {
+                computedYearlyStats[year] = { 
+                    signups: 0, 
+                    reprises: 0, 
+                    reprises_validated: 0, 
+                    usersWithReprise: 0 
+                };
+            }
 
-        let userReprises = 0;
-        if (u.channels) {
-            Object.entries(u.channels).forEach(([channel, count]) => {
-                if (!excludedChannels.has(channel)) {
-                    userReprises += count;
-                }
-            });
-        }
-
-        computedYearlyStats[year].reprises += userReprises;
-        if (userReprises > 0) {
-            computedYearlyStats[year].usersWithReprise += 1;
-        }
+            computedYearlyStats[year].signups += stats.signups;
+            computedYearlyStats[year].reprises += stats.reprises;
+            computedYearlyStats[year].reprises_validated += (stats.reprises_validated || 0);
+            computedYearlyStats[year].usersWithReprise += stats.users_with_reprise;
+        });
     });
 
-    // Tri de la chronologie du plus récent au plus ancien (2026, 2025, 2024...)
     availableYears = Object.keys(computedYearlyStats).sort((a, b) => b - a);
 }
 
-// [A042] Rafraîchit l'affichage de la carte annuelle sélectionnée
+// [A045] Mise à jour de la carte avec la valeur validée
 function updateYearlyCard() {
     if (availableYears.length === 0) return;
 
     const currentYear = availableYears[currentYearIndex];
-    const data = computedYearlyStats[currentYear] || { signups: 0, reprises: 0, usersWithReprise: 0 };
+    const data = computedYearlyStats[currentYear] || { 
+        signups: 0, 
+        reprises: 0, 
+        reprises_validated: 0, 
+        usersWithReprise: 0 
+    };
 
     setElementText('current-year-display', currentYear);
     setElementText('yearly-signups', data.signups.toLocaleString('fr-FR'));
     setElementText('yearly-reprises', data.reprises.toLocaleString('fr-FR'));
+    setElementText('yearly-reprises-validated', data.reprises_validated.toLocaleString('fr-FR'));
     setElementText('yearly-users-with-reprise', data.usersWithReprise.toLocaleString('fr-FR'));
 
-    // Gestion de l'état des boutons de navigation (Désactivation aux extrémités)
     const prevBtn = document.getElementById('prev-year-btn');
     const nextBtn = document.getElementById('next-year-btn');
 
@@ -327,7 +224,7 @@ function renderTimelineChart(timelineData) {
             labels: timelineData.map(d => d.month),
             datasets: [
                 { 
-                    label: 'Inscriptions du mois', 
+                    label: 'Inscriptions', 
                     data: timelineData.map(d => d.signups), 
                     borderColor: '#3b82f6', 
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -335,7 +232,7 @@ function renderTimelineChart(timelineData) {
                     tension: 0.3 
                 },
                 { 
-                    label: 'Reprises générées (Exclusions appliquées)', 
+                    label: 'Reprises (Sélection actives)', 
                     data: timelineData.map(d => d.cohort_reprises), 
                     borderColor: '#10b981', 
                     backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -364,22 +261,13 @@ function initExportButton() {
 
     exportBtn.addEventListener('click', () => {
         if (!rawData || !rawData.users_data) {
-            alert("Aucune donnée utilisateur disponible pour l'export.");
-            return;
-        }
-
-        const filteredUsers = rawData.users_data.filter(u => {
-            return u.month >= selectedStartMonth && u.month <= selectedEndMonth;
-        });
-
-        if (filteredUsers.length === 0) {
-            alert('Aucun utilisateur ne correspond à la période sélectionnée.');
+            alert("Aucune donnée utilisateur disponible.");
             return;
         }
 
         let csvContent = "identifiant_utilisateur,date_inscription,mois_inscription,reprises_totales_filtrees\n";
 
-        filteredUsers.forEach(u => {
+        rawData.users_data.forEach(u => {
             let totalUserReprisesFiltered = 0;
             if (u.channels) {
                 Object.entries(u.channels).forEach(([channel, count]) => {
@@ -395,7 +283,7 @@ function initExportButton() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.setAttribute("href", url);
-        link.setAttribute("download", `export_utilisateurs_consolidates_${selectedStartMonth}_a_${selectedEndMonth}.csv`);
+        link.setAttribute("download", `export_utilisateurs.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
