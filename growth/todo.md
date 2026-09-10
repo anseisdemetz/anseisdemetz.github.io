@@ -15,7 +15,4 @@
 ✅ [A042] modifier le [A041] en affichant qu'un seul bloc et à côté de l'année mettre une flèche pour passer à l'année d'après et une flèche pour passer à l'année d'avant. Commencer la chronologie avec la dernière année 2026
 ✅ [A043] Supprimer les bloc stat suivants : `Filtrer par Période`, `Inscrits Totaux`, `Demandes de Reprise`, `Taux d'Annulation` et `Inscrits ≥ 2 ans (Actifs)`. On va débuguer le bloc Bilan annuelle. 
 ✅ [A044] Nombre d'inscriptions correspond à la somme totale des utilisateurs contenus dans le fichier CSV `utilisateurs_bol_corrige.csv` filtré sur l'année définie dans le bloc et filtré sur les affiliés non exclus.
-
-[Aujourd'hui]
-
 ✅ [A045] Dans le bloc `Bilan Annuel des Inscriptions & Reprises`, ajouter l'encart `reprises validée` qui indique le nombre de reprises auant le statut `ended`
