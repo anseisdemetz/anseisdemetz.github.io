@@ -25,6 +25,10 @@ function changePage(direction) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // [A038] Suppression de l'inversion automatique du sens au chargement
+    dailyFocusDirection = 0;
+    localStorage.setItem('daily_focus_direction', 0);
+
     await loadInitialDatabase();
 });
 
@@ -188,7 +192,6 @@ function renderTable(resetPage = true) {
     const startIndex = (currentPage - 1) * PAGE_SIZE;
     const endIndex = Math.min(startIndex + PAGE_SIZE, totalFiltered);
 
-    // Tranche Lazy Loading
     const pageItems = filtered.slice(startIndex, endIndex);
 
     // 3. Mise à jour du composant de pagination
@@ -209,10 +212,10 @@ function renderTable(resetPage = true) {
         }
     }
 
-    // 4. Inscription dans le DOM des 100 mots de la tranche
+    // 4. Inscription dans le DOM des mots de la tranche
     pageItems.forEach((item, index) => {
         const itemStatus = item.status || 'unstudied';
-        const globalIndex = startIndex + index + 1; // Numérotation continue
+        const globalIndex = startIndex + index + 1;
         
         let rowBgClass = "hover:bg-slate-50 transition";
         let statusBadgeClass = "bg-slate-100 text-slate-600 border-slate-200";
@@ -254,7 +257,6 @@ function renderTable(resetPage = true) {
             <td class="py-3 px-4 text-slate-700">
                 <span>${escapedTrans}</span>
             </td>
-            <!-- [A014] Cellule Score sans l'indication du maximum -->
             <td class="py-3 px-3 text-center font-mono font-bold text-slate-700 select-none">
                 <span class="bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 text-xs">${item.score || 1}</span>
             </td>
@@ -473,10 +475,6 @@ let dailyFocusWords = {
 function initDailyFocus() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const todayStr = new Date().toISOString().split('T')[0];
-    
-    // [A018] Inversion systématique du sens à CHAQUE rechargement de l'application
-    dailyFocusDirection = dailyFocusDirection === 0 ? 1 : 0;
-    localStorage.setItem('daily_focus_direction', dailyFocusDirection);
 
     const savedData = localStorage.getItem(`daily_focus_${activeLang}`);
     if (savedData) {
@@ -496,25 +494,44 @@ function initDailyFocus() {
     generateDailyFocus(false);
 }
 
-// Génération de 5 mots (Pas appris + Je ne sais pas)
+// ==========================================
+// [A037] GESTION DES MOTS PUNAISÉS DU JOUR
+// ==========================================
+
+function getDailyPinnedStorage() {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const storageKey = `daily_pinned_words_${currentLang}`;
+    let pinnedData = JSON.parse(localStorage.getItem(storageKey) || '{}');
+
+    // Reset automatique chaque matin
+    if (pinnedData.date !== todayStr) {
+        pinnedData = { date: todayStr, ids: [] };
+        localStorage.setItem(storageKey, JSON.stringify(pinnedData));
+    }
+    return { storageKey, pinnedData };
+}
+
+function togglePinDailyWord(id, event) {
+    if (event) event.stopPropagation();
+
+    const { storageKey, pinnedData } = getDailyPinnedStorage();
+    const index = pinnedData.ids.indexOf(id);
+
+    if (index > -1) {
+        pinnedData.ids.splice(index, 1);
+    } else {
+        pinnedData.ids.push(id);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(pinnedData));
+    renderDailyFocus();
+}
+
+// Génération / Nouveau tirage de 5 mots (en conservant les punaisés) [A037]
 function generateDailyFocus(forceNew = false) {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const todayStr = new Date().toISOString().split('T')[0];
-
-    // Si on ne force pas le tirage et qu'un tirage du jour existe déjà
-    if (!forceNew) {
-        const savedData = localStorage.getItem(`daily_focus_${activeLang}`);
-        if (savedData) {
-            try {
-                const parsed = JSON.parse(savedData);
-                if (parsed.date === todayStr && Array.isArray(parsed.words) && parsed.words.length > 0) {
-                    dailyFocusWords[activeLang] = parsed.words;
-                    renderDailyFocus();
-                    return;
-                }
-            } catch (e) {}
-        }
-    }
+    const { pinnedData } = getDailyPinnedStorage();
 
     const allWords = (db && db.languages && db.languages[activeLang]) ? db.languages[activeLang].vocabulary : [];
     const eligibleWords = allWords.filter(x => x.status === 'unstudied' || x.status === 'unknown' || !x.status);
@@ -526,13 +543,20 @@ function generateDailyFocus(forceNew = false) {
         return;
     }
 
-    // Tirage aléatoire isolé pour la langue courante
-    const shuffled = [...eligibleWords].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 5);
+    const currentFocusIds = dailyFocusWords[activeLang] || [];
+    
+    // Identifiants des mots actuellement punaisés dans la sélection
+    const pinnedIdsToKeep = currentFocusIds.filter(id => pinnedData.ids.includes(id));
 
-    dailyFocusWords[activeLang] = selected.map(w => w.id);
+    // Mots disponibles pour compléter jusqu'à 5 slots
+    const pool = eligibleWords.filter(w => !pinnedIdsToKeep.includes(w.id));
+    const needed = Math.max(0, 5 - pinnedIdsToKeep.length);
 
-    // Enregistrement spécifique par langue dans le LocalStorage
+    const shuffled = [...pool].sort(() => 0.5 - Math.random());
+    const newSelectedIds = shuffled.slice(0, needed).map(w => w.id);
+
+    dailyFocusWords[activeLang] = [...pinnedIdsToKeep, ...newSelectedIds];
+
     localStorage.setItem(`daily_focus_${activeLang}`, JSON.stringify({
         date: todayStr,
         words: dailyFocusWords[activeLang]
@@ -552,8 +576,8 @@ function renderDailyFocus() {
     const allWords = (db && db.languages && db.languages[activeLang]) ? db.languages[activeLang].vocabulary : [];
     
     const activeFocusIds = dailyFocusWords[activeLang] || [];
+    const { pinnedData } = getDailyPinnedStorage();
 
-    // [A013] Ne conserve dans l'affichage que les mots qui ne sont PAS marqués comme "known"
     const currentFocusItems = activeFocusIds
         .map(id => allWords.find(w => w.id === id))
         .filter(item => item && item.status !== 'known');
@@ -565,8 +589,8 @@ function renderDailyFocus() {
 
     currentFocusItems.forEach((item) => {
         const isKnown = item.status === 'known';
+        const isPinned = pinnedData.ids.includes(item.id);
         
-        // [A018] Détermination du texte à afficher en face avant et en masqué
         const showTermAsPrompt = (dailyFocusDirection === 0);
         const displayPrompt = showTermAsPrompt ? item.term : item.translation;
         const hiddenAnswer = showTermAsPrompt ? item.translation : item.term;
@@ -579,21 +603,29 @@ function renderDailyFocus() {
 
         card.innerHTML = `
             <div class="space-y-1.5">
-                <div class="flex justify-between items-start gap-2 pr-7">
+                <div class="flex justify-between items-start gap-2 pr-16">
                     <div class="flex items-center space-x-2">
                         <button onclick="speakTerm('${escapedTermJs}', '${db.languages[activeLang].code}')" class="text-indigo-300 hover:text-white transition shrink-0 p-0.5" title="Écouter">
                             <i class="fa-solid fa-volume-high text-xs"></i>
                         </button>
-                        <!-- Affichage du terme ou de la traduction selon le sens actuel -->
                         <span class="font-bold text-white text-sm ${isKnown ? 'line-through text-indigo-300' : ''}">${escapeHtml(displayPrompt)}</span>
                     </div>
 
-                    <button onclick="removeWordFromDailyFocus('${item.id}')" class="absolute top-2.5 right-2.5 w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 text-white transition flex items-center justify-center shadow-sm" title="Retirer ce mot du lot du jour">
-                        <i class="fa-solid fa-xmark text-xs"></i>
-                    </button>
+                    <div class="absolute top-2.5 right-2.5 flex items-center space-x-1.5">
+                        <!-- Punaise UX [A037] : Vert translucide -> Vert opaque si actif -->
+                        <button onclick="togglePinDailyWord('${item.id}', event)" 
+                                id="pin-btn-${item.id}"
+                                class="w-6 h-6 rounded-full flex items-center justify-center transition-all duration-150 focus:outline-none ${isPinned ? 'bg-emerald-500 text-white shadow-sm opacity-100' : 'bg-emerald-500/30 hover:bg-emerald-500/50 text-emerald-100 opacity-60'}" 
+                                title="${isPinned ? 'Dépunaiser ce mot' : 'Punaiser ce mot (garder au prochain tirage)'}">
+                            <i class="fa-solid fa-thumbtack text-[10px]"></i>
+                        </button>
+
+                        <button onclick="removeWordFromDailyFocus('${item.id}')" class="w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 text-white transition flex items-center justify-center shadow-sm" title="Retirer ce mot du lot du jour">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Masquage / Démasquage de la valeur inverse -->
                 <div onclick="toggleDailyTranslation(this, '${escapedAnswerJs}')" class="text-indigo-200 text-[11px] cursor-pointer hover:text-white transition select-none font-medium pt-1">
                     🙈 Voir traduction
                 </div>
@@ -614,10 +646,8 @@ function renderDailyFocus() {
         `;
         container.appendChild(card);
     });
-
 }
 
-// Bascule d'affichage de la traduction dans le Lot du Jour
 function toggleDailyTranslation(element, translation) {
     const hiddenLabel = "🙈 Voir traduction";
     if (element.innerText === hiddenLabel) {
@@ -629,13 +659,11 @@ function toggleDailyTranslation(element, translation) {
     }
 }
 
-// [A007] Ajouter un mot aléatoire au lot existant
 function addWordToDailyFocus() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const todayStr = new Date().toISOString().split('T')[0];
     const allWords = (db && db.languages && db.languages[activeLang]) ? db.languages[activeLang].vocabulary : [];
     
-    // Mots éligibles qui ne sont pas déjà affichés dans le lot actuel
     const currentFocusIds = dailyFocusWords[activeLang] || [];
     const eligibleWords = allWords.filter(x => 
         (x.status === 'unstudied' || x.status === 'unknown' || !x.status) && 
@@ -647,11 +675,9 @@ function addWordToDailyFocus() {
         return;
     }
 
-    // Tirage d'un mot aléatoire supplémentaire
     const randomItem = eligibleWords[Math.floor(Math.random() * eligibleWords.length)];
     dailyFocusWords[activeLang].push(randomItem.id);
 
-    // Sauvegarde de la nouvelle liste dans le LocalStorage
     localStorage.setItem(`daily_focus_${activeLang}`, JSON.stringify({
         date: todayStr,
         words: dailyFocusWords[activeLang]
@@ -660,15 +686,12 @@ function addWordToDailyFocus() {
     renderDailyFocus();
 }
 
-// [A007] Retirer une carte du lot du jour (sans altérer le mot en BDD)
 function removeWordFromDailyFocus(id) {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // On retire l'ID uniquement du tableau local
     dailyFocusWords[activeLang] = (dailyFocusWords[activeLang] || []).filter(wordId => wordId !== id);
 
-    // Mise à jour du LocalStorage
     localStorage.setItem(`daily_focus_${activeLang}`, JSON.stringify({
         date: todayStr,
         words: dailyFocusWords[activeLang]
