@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VocabApp - Carnet de Vocabulaire</title>
+    <title>Carnet de Vocabulaire</title>
     
     <!-- Lien vers le Manifest PWA -->
     <link rel="manifest" href="manifest.json">
@@ -40,8 +40,8 @@
                         <i class="fa-solid fa-book-bookmark text-xl sm:text-2xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-lg sm:text-xl font-bold leading-tight">VocabApp</h1>
-                        <p class="text-xs text-indigo-200">Gestionnaire de vocabulaire de lecture</p>
+                        <h1 class="text-lg sm:text-xl font-bold leading-tight">Carnet de Vocabulaire</h1>
+                        <p class="text-xs text-indigo-200">Apprendre des mots en lisant</p>
                     </div>
                 </div>
             </div>
@@ -438,5 +438,15 @@
     <script src="js/flashcard.js"></script>
     <script src="js/quiz.js"></script>
     <script src="js/app.js"></script>
+    <!-- Enregistrement du Service Worker PWA -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker PWA enregistré !', reg.scope))
+            .catch(err => console.error('Échec enregistrement Service Worker:', err));
+        });
+      }
+    </script>
 </body>
 </html>
