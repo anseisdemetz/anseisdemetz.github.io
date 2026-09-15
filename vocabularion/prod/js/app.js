@@ -5,6 +5,20 @@ let currentPage = 1;
 // [A018] Variable globale pour gérer le sens d'affichage du Lot du Jour (0: Terme -> Trad, 1: Trad -> Terme)
 let dailyFocusDirection = parseInt(localStorage.getItem('daily_focus_direction') || '0', 10);
 
+// Variable globale isolée par langue
+let dailyFocusWords = {
+    english: [],
+    italian: []
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // [A038] Suppression de l'inversion automatique du sens au chargement
+    dailyFocusDirection = 0;
+    localStorage.setItem('daily_focus_direction', 0);
+
+    await loadInitialDatabase();
+});
+
 // [A018] Fonction pour inverser manuellement le sens via le bouton dédié
 function toggleDailyFocusDirection() {
     dailyFocusDirection = dailyFocusDirection === 0 ? 1 : 0;
@@ -17,20 +31,11 @@ function changePage(direction) {
     currentPage += direction;
     renderTable(false); // false = conserve la page choisie
     
-    // Remonte vers le haut de la liste de vocabulaire
     const container = document.getElementById('search-input') || document.getElementById('vocab-table-body');
     if (container) {
         container.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
-
-document.addEventListener('DOMContentLoaded', async () => {
-    // [A038] Suppression de l'inversion automatique du sens au chargement
-    dailyFocusDirection = 0;
-    localStorage.setItem('daily_focus_direction', 0);
-
-    await loadInitialDatabase();
-});
 
 async function loadInitialDatabase() {
     const { data, error } = await supabaseClient.from('vocabulary').select('*');
@@ -55,7 +60,7 @@ async function loadInitialDatabase() {
 
 function switchLanguage(lang) {
     currentLang = lang;
-    currentPage = 1; // Réinitialise la pagination à la page 1
+    currentPage = 1;
     
     const btnEn = document.getElementById('btn-lang-english');
     const btnIt = document.getElementById('btn-lang-italian');
@@ -73,7 +78,7 @@ function switchLanguage(lang) {
 
 function setFilterView(view) {
     filterView = view;
-    currentPage = 1; // Réinitialise la pagination à la page 1
+    currentPage = 1;
     
     const btnUnstudied = document.getElementById('filter-unstudied');
     const btnUnknown = document.getElementById('filter-unknown');
@@ -126,178 +131,6 @@ function renderApp() {
     if (typeof updateQuizHeaderButton === 'function') {
         updateQuizHeaderButton();
     }
-}
-
-function renderTable(resetPage = true) {
-    if (resetPage) {
-        currentPage = 1;
-    }
-
-    const list = db.languages[currentLang].vocabulary || [];
-    const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-    
-    // [A035] Récupération du filtre de score sélectionné
-    const scoreFilterElement = document.getElementById('filter-score-input');
-    const selectedScore = scoreFilterElement ? scoreFilterElement.value : 'all';
-
-    const tbody = document.getElementById('vocab-table-body');
-    const mobileList = document.getElementById('vocab-mobile-list');
-    const emptyState = document.getElementById('empty-state');
-    const paginationContainer = document.getElementById('pagination-container');
-
-    if (!tbody || !mobileList) return;
-
-    tbody.innerHTML = '';
-    mobileList.innerHTML = '';
-
-    // 1. Filtrage global sur TOUTE la base (Recherche + Statuts + Score [A035])
-    const filtered = list.filter(item => {
-        const itemStatus = item.status || 'unstudied';
-        const itemScore = item.score || 1;
-
-        if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
-        if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
-        if (filterView === 'known' && itemStatus !== 'known') return false;
-
-        // [A035] Condition de filtrage par score
-        if (selectedScore !== 'all' && parseInt(itemScore, 10) !== parseInt(selectedScore, 10)) {
-            return false;
-        }
-
-        // [A017] Filtrage sur le terme et la traduction
-        if (searchQuery) {
-            const matchTerm = (item.term || '').toLowerCase().includes(searchQuery);
-            const matchTrans = (item.translation || '').toLowerCase().includes(searchQuery);
-            return matchTerm || matchTrans;
-        }
-
-        return true;
-    });
-
-    const totalFiltered = filtered.length;
-
-    if (totalFiltered === 0) {
-        if (emptyState) emptyState.classList.remove('hidden');
-        if (paginationContainer) paginationContainer.classList.add('hidden');
-        return;
-    } else {
-        if (emptyState) emptyState.classList.add('hidden');
-    }
-
-    // 2. Calculs de la pagination
-    const totalPages = Math.ceil(totalFiltered / PAGE_SIZE);
-    if (currentPage > totalPages) currentPage = totalPages;
-    if (currentPage < 1) currentPage = 1;
-
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    const endIndex = Math.min(startIndex + PAGE_SIZE, totalFiltered);
-
-    const pageItems = filtered.slice(startIndex, endIndex);
-
-    // 3. Mise à jour du composant de pagination
-    if (paginationContainer) {
-        if (totalFiltered > PAGE_SIZE) {
-            paginationContainer.classList.remove('hidden');
-            
-            document.getElementById('page-start').innerText = startIndex + 1;
-            document.getElementById('page-end').innerText = endIndex;
-            document.getElementById('page-total').innerText = totalFiltered;
-            document.getElementById('current-page-num').innerText = currentPage;
-            document.getElementById('total-pages-num').innerText = totalPages;
-
-            document.getElementById('btn-page-prev').disabled = (currentPage === 1);
-            document.getElementById('btn-page-next').disabled = (currentPage === totalPages);
-        } else {
-            paginationContainer.classList.add('hidden');
-        }
-    }
-
-    // 4. Inscription dans le DOM des mots de la tranche
-    pageItems.forEach((item, index) => {
-        const itemStatus = item.status || 'unstudied';
-        const globalIndex = startIndex + index + 1;
-        
-        let rowBgClass = "hover:bg-slate-50 transition";
-        let statusBadgeClass = "bg-slate-100 text-slate-600 border-slate-200";
-        let statusLabel = "Pas encore appris";
-
-        if (itemStatus === 'known') {
-            rowBgClass = "status-known transition hover:bg-emerald-100/60";
-            statusBadgeClass = "bg-emerald-100/80 text-emerald-800 border-emerald-300";
-            statusLabel = "✅ Je sais";
-        } else if (itemStatus === 'unknown') {
-            rowBgClass = "status-unknown transition hover:bg-rose-100/60";
-            statusBadgeClass = "bg-rose-100/80 text-rose-800 border-rose-300";
-            statusLabel = "❌ Je ne sais pas";
-        }
-
-        const escapedTerm = escapeHtml(item.term);
-        const escapedTermJs = escapeJsString(item.term);
-        const escapedTrans = escapeHtml(item.translation);
-
-        // Ligne Tableau Ordinateur
-        const tr = document.createElement('tr');
-        tr.className = rowBgClass;
-
-        tr.innerHTML = `
-            <td class="py-3 px-3 text-center font-mono text-xs text-slate-400 font-semibold">${globalIndex}</td>
-            <td class="py-3 px-3 text-center select-none">
-                <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold border ${statusBadgeClass}">
-                    ${statusLabel}
-                </span>
-            </td>
-            <td class="py-3 px-4 font-semibold text-slate-900">
-                <div class="flex items-center space-x-2">
-                    <span>${escapedTerm}</span>
-                    <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition p-1" title="Écouter">
-                        <i class="fa-solid fa-volume-high text-xs"></i>
-                    </button>
-                </div>
-            </td>
-            <td class="py-3 px-4 text-slate-700">
-                <span>${escapedTrans}</span>
-            </td>
-            <td class="py-3 px-3 text-center font-mono font-bold text-slate-700 select-none">
-                <span class="bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 text-xs">${item.score || 1}</span>
-            </td>
-            <td class="py-3 px-4 text-slate-600 italic text-xs leading-relaxed max-w-xs sm:max-w-md">
-                ${item.sentence ? `"${escapeHtml(item.sentence)}"` : '<span class="text-slate-300">-</span>'}
-            </td>
-        `;
-        tbody.appendChild(tr);
-
-        // Carte Vue Mobile
-        const card = document.createElement('div');
-        card.className = `p-4 space-y-3 ${rowBgClass}`;
-
-        card.innerHTML = `
-            <div class="flex justify-between items-start gap-2">
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <span class="font-mono text-xs text-slate-400 font-bold bg-slate-200/60 px-1.5 py-0.5 rounded">#${globalIndex}</span>
-                        <span class="font-bold text-base text-slate-900">${escapedTerm}</span>
-                        <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
-                            <i class="fa-solid fa-volume-high text-sm"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-sm font-medium text-slate-700 border-l-2 border-indigo-500 pl-2 py-0.5">
-                ${escapedTrans}
-            </div>
-
-            ${item.sentence ? `<p class="text-xs italic text-slate-600 bg-slate-50/80 p-2 rounded-lg border border-slate-100">"${escapeHtml(item.sentence)}"</p>` : ''}
-
-            <div class="flex justify-between items-center pt-1">
-                <span class="text-[11px] text-slate-400">Statut :</span>
-                <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusBadgeClass}">
-                    ${statusLabel}
-                </span>
-            </div>
-        `;
-        mobileList.appendChild(card);
-    });
 }
 
 async function setStatus(id, newStatus, newScore = null) {
@@ -465,12 +298,6 @@ function closeModal(id) {
     if (el) el.classList.add('hidden');
 }
 
-// Variable globale isolée par langue
-let dailyFocusWords = {
-    english: [],
-    italian: []
-};
-
 // Initialisation du lot du jour
 function initDailyFocus() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
@@ -490,79 +317,7 @@ function initDailyFocus() {
         }
     }
 
-    // Génération automatique si aucun tirage valide aujourd'hui
     generateDailyFocus(false);
-}
-
-// ==========================================
-// [A037] GESTION DES MOTS PUNAISÉS DU JOUR
-// ==========================================
-
-function getDailyPinnedStorage() {
-    const todayStr = new Date().toISOString().split('T')[0];
-    const storageKey = `daily_pinned_words_${currentLang}`;
-    let pinnedData = JSON.parse(localStorage.getItem(storageKey) || '{}');
-
-    // Reset automatique chaque matin
-    if (pinnedData.date !== todayStr) {
-        pinnedData = { date: todayStr, ids: [] };
-        localStorage.setItem(storageKey, JSON.stringify(pinnedData));
-    }
-    return { storageKey, pinnedData };
-}
-
-function togglePinDailyWord(id, event) {
-    if (event) event.stopPropagation();
-
-    const { storageKey, pinnedData } = getDailyPinnedStorage();
-    const index = pinnedData.ids.indexOf(id);
-
-    if (index > -1) {
-        pinnedData.ids.splice(index, 1);
-    } else {
-        pinnedData.ids.push(id);
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(pinnedData));
-    renderDailyFocus();
-}
-
-// Génération / Nouveau tirage de 5 mots (en conservant les punaisés) [A037]
-function generateDailyFocus(forceNew = false) {
-    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
-    const todayStr = new Date().toISOString().split('T')[0];
-    const { pinnedData } = getDailyPinnedStorage();
-
-    const allWords = (db && db.languages && db.languages[activeLang]) ? db.languages[activeLang].vocabulary : [];
-    const eligibleWords = allWords.filter(x => x.status === 'unstudied' || x.status === 'unknown' || !x.status);
-
-    if (eligibleWords.length === 0) {
-        dailyFocusWords[activeLang] = [];
-        localStorage.removeItem(`daily_focus_${activeLang}`);
-        renderDailyFocus();
-        return;
-    }
-
-    const currentFocusIds = dailyFocusWords[activeLang] || [];
-    
-    // Identifiants des mots actuellement punaisés dans la sélection
-    const pinnedIdsToKeep = currentFocusIds.filter(id => pinnedData.ids.includes(id));
-
-    // Mots disponibles pour compléter jusqu'à 5 slots
-    const pool = eligibleWords.filter(w => !pinnedIdsToKeep.includes(w.id));
-    const needed = Math.max(0, 5 - pinnedIdsToKeep.length);
-
-    const shuffled = [...pool].sort(() => 0.5 - Math.random());
-    const newSelectedIds = shuffled.slice(0, needed).map(w => w.id);
-
-    dailyFocusWords[activeLang] = [...pinnedIdsToKeep, ...newSelectedIds];
-
-    localStorage.setItem(`daily_focus_${activeLang}`, JSON.stringify({
-        date: todayStr,
-        words: dailyFocusWords[activeLang]
-    }));
-
-    renderDailyFocus();
 }
 
 // Affichage des cartes compactes du lot du jour
@@ -612,7 +367,6 @@ function renderDailyFocus() {
                     </div>
 
                     <div class="absolute top-2.5 right-2.5 flex items-center space-x-1.5">
-                        <!-- Punaise UX [A037] : Vert translucide -> Vert opaque si actif -->
                         <button onclick="togglePinDailyWord('${item.id}', event)" 
                                 id="pin-btn-${item.id}"
                                 class="w-6 h-6 rounded-full flex items-center justify-center transition-all duration-150 focus:outline-none ${isPinned ? 'bg-emerald-500 text-white shadow-sm opacity-100' : 'bg-emerald-500/30 hover:bg-emerald-500/50 text-emerald-100 opacity-60'}" 
@@ -659,33 +413,6 @@ function toggleDailyTranslation(element, translation) {
     }
 }
 
-function addWordToDailyFocus() {
-    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
-    const todayStr = new Date().toISOString().split('T')[0];
-    const allWords = (db && db.languages && db.languages[activeLang]) ? db.languages[activeLang].vocabulary : [];
-    
-    const currentFocusIds = dailyFocusWords[activeLang] || [];
-    const eligibleWords = allWords.filter(x => 
-        (x.status === 'unstudied' || x.status === 'unknown' || !x.status) && 
-        !currentFocusIds.includes(x.id)
-    );
-
-    if (eligibleWords.length === 0) {
-        alert("Aucun autre mot disponible à ajouter pour aujourd'hui.");
-        return;
-    }
-
-    const randomItem = eligibleWords[Math.floor(Math.random() * eligibleWords.length)];
-    dailyFocusWords[activeLang].push(randomItem.id);
-
-    localStorage.setItem(`daily_focus_${activeLang}`, JSON.stringify({
-        date: todayStr,
-        words: dailyFocusWords[activeLang]
-    }));
-
-    renderDailyFocus();
-}
-
 function removeWordFromDailyFocus(id) {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const todayStr = new Date().toISOString().split('T')[0];
@@ -698,4 +425,324 @@ function removeWordFromDailyFocus(id) {
     }));
 
     renderDailyFocus();
+}
+
+// ==========================================
+// [A037][A039][A040] GESTION DES MOTS PUNAISÉS ET INTÉGRATION AU LOT DU JOUR
+// ==========================================
+
+function getDailyPinnedStorage() {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const storageKey = `daily_pinned_words_${currentLang}`;
+    let pinnedData = JSON.parse(localStorage.getItem(storageKey) || '{}');
+
+    // Réinitialisation automatique des punaises chaque matin
+    if (pinnedData.date !== todayStr) {
+        pinnedData = { date: todayStr, ids: [] };
+        localStorage.setItem(storageKey, JSON.stringify(pinnedData));
+    }
+    return { storageKey, pinnedData };
+}
+
+// Action de punaiser/dépunaiser un mot
+function togglePinDailyWord(id, event) {
+    if (event) event.stopPropagation();
+
+    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+    const todayStr = new Date().toISOString().split('T')[0];
+    const { storageKey, pinnedData } = getDailyPinnedStorage();
+    const index = pinnedData.ids.indexOf(id);
+
+    if (index > -1) {
+        // 1. Dépunaiser
+        pinnedData.ids.splice(index, 1);
+    } else {
+        // 2. Punaiser et injecter immédiatement dans le Lot du Jour [A040]
+        pinnedData.ids.push(id);
+        
+        if (!dailyFocusWords[activeLang].includes(id)) {
+            dailyFocusWords[activeLang].unshift(id); // Ajout en tête du lot
+            localStorage.setItem(`daily_focus_${activeLang}`, JSON.stringify({
+                date: todayStr,
+                words: dailyFocusWords[activeLang]
+            }));
+        }
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(pinnedData));
+    renderDailyFocus();
+}
+
+// [A040] Action sur le bouton "+1 mot" en priorisant les punaisés non affichés
+function addWordToDailyFocus() {
+    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+    const todayStr = new Date().toISOString().split('T')[0];
+    const allWords = (db && db.languages && db.languages[activeLang]) ? db.languages[activeLang].vocabulary : [];
+    const { pinnedData } = getDailyPinnedStorage();
+    
+    const currentFocusIds = dailyFocusWords[activeLang] || [];
+    
+    // 1. Chercher s'il existe des mots punaisés qui ne sont pas encore dans le lot
+    const unselectedPinned = pinnedData.ids.filter(id => !currentFocusIds.includes(id));
+    
+    let wordIdToAdd = null;
+
+    if (unselectedPinned.length > 0) {
+        wordIdToAdd = unselectedPinned[0];
+    } else {
+        // 2. Sinon, tirage aléatoire parmi les mots non acquis hors du lot
+        const eligibleWords = allWords.filter(x => 
+            (x.status === 'unstudied' || x.status === 'unknown' || !x.status) && 
+            !currentFocusIds.includes(x.id)
+        );
+
+        if (eligibleWords.length === 0) {
+            alert("Aucun autre mot disponible à ajouter pour aujourd'hui.");
+            return;
+        }
+
+        const randomItem = eligibleWords[Math.floor(Math.random() * eligibleWords.length)];
+        wordIdToAdd = randomItem.id;
+    }
+
+    dailyFocusWords[activeLang].push(wordIdToAdd);
+
+    localStorage.setItem(`daily_focus_${activeLang}`, JSON.stringify({
+        date: todayStr,
+        words: dailyFocusWords[activeLang]
+    }));
+
+    renderDailyFocus();
+}
+
+// [A040] Génération / Nouveau tirage de 5 mots (Garantit la présence de TOUS les mots punaisés)
+function generateDailyFocus(forceNew = false) {
+    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+    const todayStr = new Date().toISOString().split('T')[0];
+    const { pinnedData } = getDailyPinnedStorage();
+
+    const allWords = (db && db.languages && db.languages[activeLang]) ? db.languages[activeLang].vocabulary : [];
+    const eligibleWords = allWords.filter(x => x.status === 'unstudied' || x.status === 'unknown' || !x.status);
+
+    // [A040] Mots punaisés existants en base (indépendamment du lot actuel)
+    const allPinnedIds = pinnedData.ids.filter(id => allWords.some(w => w.id === id));
+
+    if (eligibleWords.length === 0 && allPinnedIds.length === 0) {
+        dailyFocusWords[activeLang] = [];
+        localStorage.removeItem(`daily_focus_${activeLang}`);
+        renderDailyFocus();
+        return;
+    }
+
+    // Calcul du nombre de slots restants à remplir pour atteindre 5
+    const pool = eligibleWords.filter(w => !allPinnedIds.includes(w.id));
+    const needed = Math.max(0, 5 - allPinnedIds.length);
+
+    const shuffled = [...pool].sort(() => 0.5 - Math.random());
+    const newSelectedIds = shuffled.slice(0, needed).map(w => w.id);
+
+    // Le nouveau lot inclut TOUS les punaisés + le complément tiré au sort
+    dailyFocusWords[activeLang] = [...allPinnedIds, ...newSelectedIds];
+
+    localStorage.setItem(`daily_focus_${activeLang}`, JSON.stringify({
+        date: todayStr,
+        words: dailyFocusWords[activeLang]
+    }));
+
+    renderDailyFocus();
+}
+
+// [A039][A040] Action punaise depuis la liste principale / mobile
+function togglePinWordFromList(id, event) {
+    togglePinDailyWord(id, event);
+    renderTable(false); // Synchronise l'affichage du tableau et remonte le mot punaisé
+}
+
+// [A039] RENDER TABLE AVEC TRI ET BOUTON PUNAISE
+function renderTable(resetPage = true) {
+    if (resetPage) {
+        currentPage = 1;
+    }
+
+    const list = db.languages[currentLang].vocabulary || [];
+    const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+    const scoreFilterElement = document.getElementById('filter-score-input');
+    const selectedScore = scoreFilterElement ? scoreFilterElement.value : 'all';
+
+    const tbody = document.getElementById('vocab-table-body');
+    const mobileList = document.getElementById('vocab-mobile-list');
+    const emptyState = document.getElementById('empty-state');
+    const paginationContainer = document.getElementById('pagination-container');
+
+    if (!tbody || !mobileList) return;
+
+    tbody.innerHTML = '';
+    mobileList.innerHTML = '';
+
+    const { pinnedData } = getDailyPinnedStorage();
+
+    // 1. Filtrage global
+    let filtered = list.filter(item => {
+        const itemStatus = item.status || 'unstudied';
+        const itemScore = item.score || 1;
+
+        if (filterView === 'unstudied' && itemStatus !== 'unstudied') return false;
+        if (filterView === 'unknown' && itemStatus !== 'unknown') return false;
+        if (filterView === 'known' && itemStatus !== 'known') return false;
+
+        if (selectedScore !== 'all' && parseInt(itemScore, 10) !== parseInt(selectedScore, 10)) {
+            return false;
+        }
+
+        if (searchQuery) {
+            const matchTerm = (item.term || '').toLowerCase().includes(searchQuery);
+            const matchTrans = (item.translation || '').toLowerCase().includes(searchQuery);
+            return matchTerm || matchTrans;
+        }
+
+        return true;
+    });
+
+    // [A039] TRI PRIORITAIRE : placer les mots punaisés en tête de liste
+    filtered.sort((a, b) => {
+        const aPinned = pinnedData.ids.includes(a.id) ? 1 : 0;
+        const bPinned = pinnedData.ids.includes(b.id) ? 1 : 0;
+        return bPinned - aPinned;
+    });
+
+    const totalFiltered = filtered.length;
+
+    if (totalFiltered === 0) {
+        if (emptyState) emptyState.classList.remove('hidden');
+        if (paginationContainer) paginationContainer.classList.add('hidden');
+        return;
+    } else {
+        if (emptyState) emptyState.classList.add('hidden');
+    }
+
+    // 2. Calculs de pagination
+    const totalPages = Math.ceil(totalFiltered / PAGE_SIZE);
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const endIndex = Math.min(startIndex + PAGE_SIZE, totalFiltered);
+    const pageItems = filtered.slice(startIndex, endIndex);
+
+    // 3. Mise à jour de la pagination
+    if (paginationContainer) {
+        if (totalFiltered > PAGE_SIZE) {
+            paginationContainer.classList.remove('hidden');
+            document.getElementById('page-start').innerText = startIndex + 1;
+            document.getElementById('page-end').innerText = endIndex;
+            document.getElementById('page-total').innerText = totalFiltered;
+            document.getElementById('current-page-num').innerText = currentPage;
+            document.getElementById('total-pages-num').innerText = totalPages;
+
+            document.getElementById('btn-page-prev').disabled = (currentPage === 1);
+            document.getElementById('btn-page-next').disabled = (currentPage === totalPages);
+        } else {
+            paginationContainer.classList.add('hidden');
+        }
+    }
+
+    // 4. Inscription dans le DOM
+    pageItems.forEach((item, index) => {
+        const itemStatus = item.status || 'unstudied';
+        const globalIndex = startIndex + index + 1;
+        const isPinned = pinnedData.ids.includes(item.id);
+        
+        let rowBgClass = "hover:bg-slate-50 transition";
+        let statusBadgeClass = "bg-slate-100 text-slate-600 border-slate-200";
+        let statusLabel = "Pas encore appris";
+
+        if (itemStatus === 'known') {
+            rowBgClass = "status-known transition hover:bg-emerald-100/60";
+            statusBadgeClass = "bg-emerald-100/80 text-emerald-800 border-emerald-300";
+            statusLabel = "✅ Je sais";
+        } else if (itemStatus === 'unknown') {
+            rowBgClass = "status-unknown transition hover:bg-rose-100/60";
+            statusBadgeClass = "bg-rose-100/80 text-rose-800 border-rose-300";
+            statusLabel = "❌ Je ne sais pas";
+        }
+
+        const escapedTerm = escapeHtml(item.term);
+        const escapedTermJs = escapeJsString(item.term);
+        const escapedTrans = escapeHtml(item.translation);
+
+        // Ligne Tableau Ordinateur
+        const tr = document.createElement('tr');
+        tr.className = `${rowBgClass} ${isPinned ? 'bg-amber-50/40 font-medium' : ''}`;
+
+        tr.innerHTML = `
+            <td class="py-3 px-3 text-center font-mono text-xs text-slate-400 font-semibold">${globalIndex}</td>
+            
+            <td class="py-3 px-3 text-center select-none">
+                <button onclick="togglePinWordFromList('${item.id}', event)" 
+                        class="w-6 h-6 rounded-full inline-flex items-center justify-center transition-all duration-150 focus:outline-none ${isPinned ? 'bg-emerald-500 text-white shadow-sm opacity-100' : 'bg-slate-200 hover:bg-emerald-500/30 text-slate-400 hover:text-emerald-800 opacity-60'}"
+                        title="${isPinned ? 'Dépunaiser ce mot' : 'Punaiser ce mot (prioriser dans la liste)'}">
+                    <i class="fa-solid fa-thumbtack text-[10px]"></i>
+                </button>
+            </td>
+
+            <td class="py-3 px-3 text-center select-none">
+                <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold border ${statusBadgeClass}">
+                    ${statusLabel}
+                </span>
+            </td>
+            <td class="py-3 px-4 font-semibold text-slate-900">
+                <div class="flex items-center space-x-2">
+                    <span>${escapedTerm}</span>
+                    <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition p-1" title="Écouter">
+                        <i class="fa-solid fa-volume-high text-xs"></i>
+                    </button>
+                </div>
+            </td>
+            <td class="py-3 px-4 text-slate-700">
+                <span>${escapedTrans}</span>
+            </td>
+            <td class="py-3 px-3 text-center font-mono font-bold text-slate-700 select-none">
+                <span class="bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 text-xs">${item.score || 1}</span>
+            </td>
+            <td class="py-3 px-4 text-slate-600 italic text-xs leading-relaxed max-w-xs sm:max-w-md">
+                ${item.sentence ? `"${escapeHtml(item.sentence)}"` : '<span class="text-slate-300">-</span>'}
+            </td>
+        `;
+        tbody.appendChild(tr);
+
+        // Carte Vue Mobile
+        const card = document.createElement('div');
+        card.className = `p-4 space-y-3 ${rowBgClass} ${isPinned ? 'bg-amber-50/40' : ''}`;
+
+        card.innerHTML = `
+            <div class="flex justify-between items-start gap-2">
+                <div class="flex items-center space-x-2">
+                    <span class="font-mono text-xs text-slate-400 font-bold bg-slate-200/60 px-1.5 py-0.5 rounded">#${globalIndex}</span>
+                    <span class="font-bold text-base text-slate-900">${escapedTerm}</span>
+                    <button onclick="speakTerm('${escapedTermJs}', '${db.languages[currentLang].code}')" class="text-slate-400 hover:text-indigo-600 transition" title="Écouter">
+                        <i class="fa-solid fa-volume-high text-sm"></i>
+                    </button>
+                </div>
+
+                <button onclick="togglePinWordFromList('${item.id}', event)" 
+                        class="w-7 h-7 rounded-full inline-flex items-center justify-center transition-all duration-150 focus:outline-none ${isPinned ? 'bg-emerald-500 text-white shadow-sm opacity-100' : 'bg-slate-200 hover:bg-emerald-500/30 text-slate-400 hover:text-emerald-800 opacity-60'}">
+                    <i class="fa-solid fa-thumbtack text-xs"></i>
+                </button>
+            </div>
+
+            <div class="text-sm font-medium text-slate-700 border-l-2 border-indigo-500 pl-2 py-0.5">
+                ${escapedTrans}
+            </div>
+
+            ${item.sentence ? `<p class="text-xs italic text-slate-600 bg-slate-50/80 p-2 rounded-lg border border-slate-100">"${escapeHtml(item.sentence)}"</p>` : ''}
+
+            <div class="flex justify-between items-center pt-1">
+                <span class="text-[11px] text-slate-400">Statut :</span>
+                <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusBadgeClass}">
+                    ${statusLabel}
+                </span>
+            </div>
+        `;
+        mobileList.appendChild(card);
+    });
 }
