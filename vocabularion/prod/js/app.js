@@ -3,7 +3,9 @@ const PAGE_SIZE = 100;
 let currentPage = 1;
 
 // [A018] Variable globale pour gérer le sens d'affichage du Lot du Jour (0: Terme -> Trad, 1: Trad -> Terme)
+// [A042] Récupération de la préférence enregistrée ou valeur par défaut (0: Langue -> Fr)
 let dailyFocusDirection = parseInt(localStorage.getItem('daily_focus_direction') || '0', 10);
+
 
 // Variable globale isolée par langue
 let dailyFocusWords = {
@@ -13,13 +15,14 @@ let dailyFocusWords = {
 
 document.addEventListener('DOMContentLoaded', async () => {
     // [A038] Suppression de l'inversion automatique du sens au chargement
-    dailyFocusDirection = 0;
-    localStorage.setItem('daily_focus_direction', 0);
+    // [A042] On ne réinitialise plus dailyFocusDirection à 0 ici 
+    // afin de conserver le sens choisi par l'utilisateur lors des sessions précédentes.
 
     await loadInitialDatabase();
 });
 
 // [A018] Fonction pour inverser manuellement le sens via le bouton dédié
+// [A042] Fonction d'inversion manuelle avec sauvegarde persistante
 function toggleDailyFocusDirection() {
     dailyFocusDirection = dailyFocusDirection === 0 ? 1 : 0;
     localStorage.setItem('daily_focus_direction', dailyFocusDirection);
@@ -299,6 +302,7 @@ function closeModal(id) {
 }
 
 // Initialisation du lot du jour
+// Initialisation du lot du jour [A042]
 function initDailyFocus() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const todayStr = new Date().toISOString().split('T')[0];
