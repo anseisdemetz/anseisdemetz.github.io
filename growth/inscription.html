@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription Newsletter</title>
+    <style>
+        /* Style général de la page */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        /* Bouton d'ouverture */
+        .btn-open {
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #0092ff; /* Couleur personnalisable */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 4px 12px rgba(0, 146, 255, 0.25);
+        }
+
+        .btn-open:hover {
+            background-color: #0077d6;
+        }
+
+        .btn-open:active {
+            transform: scale(0.98);
+        }
+
+        /* Arrière-plan sombre de la modale (Overlay) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        /* État actif de la modale */
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Boîte de la modale */
+        .modal-container {
+            position: relative;
+            background: #ffffff;
+            width: 100%;
+            max-width: 580px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Bouton de fermeture (Croix) */
+        .btn-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f0f2f5;
+            color: #555;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-close:hover {
+            background: #e4e6eb;
+            color: #111;
+        }
+
+        /* Conteneur de l'iframe Brevo */
+        .iframe-wrapper {
+            width: 100%;
+            padding: 20px 10px 10px 10px;
+            box-sizing: border-box;
+        }
+
+        .iframe-wrapper iframe {
+            width: 100%;
+            height: 550px;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Bouton pour déclencher la modale -->
+    <button class="btn-open" id="openModalBtn">S'inscrire à la newsletter</button>
+
+    <!-- Structure de la modale -->
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
+        <div class="modal-container">
+            <button class="btn-close" id="closeModalBtn" aria-label="Fermer">&times;</button>
+            <div class="iframe-wrapper">
+                <iframe 
+                    src="https://2404b215.sibforms.com/v2/serve/MUIFAOEWsT5kdmo1b_DPBetTE5ytBYJYpOzEt1DWXrfviuCdLfiDtEj29B3jkVkdr1Wbd0mQdNG_zeu8MICjYWbUCWl713dAWYbt8Bw_tDuulu5BZwNspA7PODbHcOMorsH9Ib0wkE6PXBX5zHQ451x0J4toX1yNZWby0vL_unRK5ppZj8KKt6c-fHIlPUVBZrTwuVgeP9ddqCy-9w==" 
+                    height="320"
+                    frameborder="0" 
+                    scrolling="auto" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JavaScript -->
+    <script>
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const modal = document.getElementById('modalOverlay');
+
+        function openModal() {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Empêche le défilement de la page arrière
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // Rétablit le défilement
+        }
+
+        // Événements
+        openBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+
+        // Fermer en cliquant à l'extérieur du bloc blanc
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Fermer avec la touche Échap (Escape)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
