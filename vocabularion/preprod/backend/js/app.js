@@ -8,22 +8,44 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Chargement initial des données depuis Supabase
+// Chargement initial complet des données depuis Supabase (Outrepasser la limite de 500/1000 mots)
 async function loadBackendData() {
     try {
         const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
+        
+        let allData = [];
+        let page = 0;
+        const pageSize = 1000; // Demande par paquets de 1000
+        let fetchMore = true;
 
-        const { data, error } = await supabaseClient
-            .from(tableName)
-            .select('*')
-            .order('created_at', { ascending: false });
+        // Boucle de récupération tant qu'il reste des enregistrements en BDD
+        while (fetchMore) {
+            const { data, error } = await supabaseClient
+                .from(tableName)
+                .select('*')
+                .order('created_at', { ascending: false })
+                .range(page * pageSize, (page + 1) * pageSize - 1);
 
-        if (error) throw error;
+            if (error) throw error;
+
+            if (data && data.length > 0) {
+                allData = allData.concat(data);
+                // Si le paquet reçu est inférieur à 1000, on a atteint la fin de la BDD
+                if (data.length < pageSize) {
+                    fetchMore = false;
+                } else {
+                    page++;
+                }
+            } else {
+                fetchMore = false;
+            }
+        }
 
         if (!window.db) window.db = { languages: { english: { vocabulary: [] }, italian: { vocabulary: [] } } };
         db.languages.english.vocabulary = [];
         db.languages.italian.vocabulary = [];
 
-        (data || []).forEach(item => {
+        allData.forEach(item => {
             const langKey = item.language === 'english' ? 'english' : 'italian';
             db.languages[langKey].vocabulary.push(item);
         });
