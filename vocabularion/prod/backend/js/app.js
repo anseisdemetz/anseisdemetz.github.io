@@ -1,4 +1,4 @@
-// --- ÉTAT DE LA PAGINATION BACKEND ---
+// --- ÉTAT DE LA PAGINATION BACKEND V2 Prod ---
 const PAGE_SIZE = 100;
 let currentBackendPage = 1;
 
