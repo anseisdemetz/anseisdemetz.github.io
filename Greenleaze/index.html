@@ -3,156 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prédiction Argus & Dépréciation - Modèle Linéaire</title>
-  <!-- Chart.js pour les graphiques -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Analyse & Projections Argus Long Terme</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Highcharts -->
+  <script src="https://cdn.jsdelivr.net/npm/highcharts@11/highcharts.js"></script>
+  <!-- MathJax Configuration & Engine -->
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['\\(', '\\)']],
-        displayMath: [['\\[', '\\]']]
-      }
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
-    .container { max-width: 1100px; margin: 0 auto; }
-    h1 { color: #1e293b; text-align: center; margin-bottom: 25px; }
-    
-    .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    
-    .controls { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
-    .control-group { flex: 1; min-width: 200px; }
-    label { font-weight: 600; display: block; margin-bottom: 6px; font-size: 0.9em; }
-    select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; font-size: 1em; }
-    
-    .chart-container { position: relative; height: 450px; width: 100%; }
-    
-    .table-container { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
-    th, td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
-    th { background-color: #f8fafc; font-weight: 600; color: #475569; }
-    tr:hover { background-color: #f1f5f9; }
-    .badge-grade { font-weight: bold; padding: 4px 8px; border-radius: 4px; background: #e2e8f0; }
-  </style>
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body>
-
-  <div class="container">
-    <h1>Projection de Cote & Dépréciation Linéaire (3, 6, 12, 24, 36 mois)</h1>
-
-    <!-- Filtres de sélection (Sélecteur de modèle supprimé) -->
-    <div class="card controls">
-      <div class="control-group">
-        <label for="manufacturerSelect">Constructeur / Marque :</label>
-        <select id="manufacturerSelect">
-          <option value="">-- Sélectionner une marque --</option>
-        </select>
-      </div>
-      <div class="control-group">
-        <label for="productSelect">Modèle / Produit :</label>
-        <select id="productSelect" disabled>
-          <option value="">-- Sélectionner un produit --</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- ENCART DÉPLIABLE EXPLICATIF DES CALCULS (FIXE LINÉAIRE) -->
-    <div class="card my-4">
-      <details id="mathExplanationDetails">
-        <summary style="font-weight: bold; cursor: pointer; color: #1e293b; font-size: 1.05rem;">
-          📘 Explication du modèle mathématique linéaire (Cliquer pour déplier)
-        </summary>
-        <div id="mathExplanationContent" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0; color: #334155; font-size: 0.95rem; line-height: 1.6;">
-          <h4 style="color: #475569; margin-top: 0;">Modèle Linéaire (Géométrique Pur)</h4>
-          <p>Ce modèle applique une dépréciation exponentielle classique uniforme :</p>
-          <ul>
-            <li><strong>Formule Générale :</strong> 
-              \[ P(t) = P_{\text{réf}} \times (1 - r)^{\frac{t}{12}} \]
-              où \(r\) est le taux moyen annuel historique calculé pour la marque ou le produit et \(t\) le nombre de mois.
-            </li>
-            <li><strong>Progression Constante :</strong> La perte en pourcentage est identique quel que soit le jalon de temps ou le grade concerné.</li>
-            <li><strong>Recalage sur le Réel :</strong> Lorsque des prix réels existent à M+3 ou M+6, la formule repart de ce dernier point ancré pour projeter les jalons futurs.</li>
-          </ul>
-        </div>
-      </details>
-    </div>    
-
-    <!-- BLOC MARQUE -->
-    <div class="card my-4" id="brandChartContainer" style="display: none;">
-      <h2 id="brandTitle"></h2>
-      <p id="brandRateInfo" style="font-weight: bold; color: #3b82f6; margin-bottom: 15px;"></p>
-      <div style="height: 350px;">
-        <canvas id="brandDepreciationChart"></canvas>
-      </div>
-    </div>
-
-    <!-- BLOC PRODUIT -->
-    <div class="card my-4" id="productChartContainer" style="display: none;">
-      <h2 id="selectedProductTitle"></h2>
-      <h4 id="productSubTitle" style="color: #64748b; margin-bottom: 15px;">Courbes de dépréciation par Grade</h4>
-      <div style="height: 350px;">
-        <canvas id="depreciationChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Tableau récapitulatif des projections -->
-    <div class="card">
-      <h2>Projections estimées par Grade</h2>
-      <div class="table-container">
-        <table id="projectionsTable">
-          <thead>
-            <tr>
-              <th>Grade</th>
-              <th>Prix Actuel</th>
-              <th>Projection 12 mois</th>
-              <th>Projection 24 mois</th>
-              <th>Projection 36 mois</th>
-              <th>Taux de baisse annuel moyen</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="6" style="text-align:center; color:#94a3b8;">Veuillez sélectionner un produit pour afficher les projections.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- TABLEAU COMPARATIF THÉORIQUE (M+0) VS RÉEL -->
-    <div class="card my-4" id="theoreticalTableContainer" style="display: none;">
-      <h3>📊 Projection Théorique pure depuis M+0 (et Écart avec le Réel)</h3>
-      <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">
-        Ce tableau applique le taux annuel théorique à partir de la valeur de sortie (M+0), 
-        sans recalage sur les données réelles, 
-        pour mettre en évidence l'écart entre le réel et le théorique.
-      </p>
-      <div style="overflow-x: auto;">
-        <table class="table" id="theoreticalTable">
-          <thead>
-            <!-- Injecté dynamiquement en JS -->
-          </thead>
-          <tbody>
-            <!-- Injecté dynamiquement en JS -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- CONSOLE / DONNÉES BRUTES -->
-    <div class="card my-4" id="rawDataContainer" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h3 style="margin: 0; font-size: 1.1rem; color: #334155;">💻 Inspecteur de Données Brutes (JSON)</h3>
-        <button onclick="navigator.clipboard.writeText(document.getElementById('jsonOutput').textContent)" class="btn-copy">Copier le JSON</button>
-      </div>
-      <pre id="jsonOutput" style="background-color: #0f172a; color: #38bdf8; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.85rem; overflow-x: auto; max-height: 400px;"></pre>
-    </div>
-
-  </div>
-
-  <script src="app.js"></script>
+<body class="bg-slate-100 text-slate-800 antialiased">
+  <div id="root"></div>
+  <script type="text/babel" src="./app.js"></script>
 </body>
 </html>

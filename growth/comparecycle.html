@@ -517,7 +517,13 @@
     </div>
 
     <!-- SCRIPTS -->
+    <!-- SCRIPTS EN MÉMOIRE (SANS STORAGE) -->
     <script>
+        // Variables d'état en mémoire
+        let isSubscribed = false;
+        let isToastDismissed = false;
+        let isTopBannerDismissed = false;
+
         // Carousel Scroll
         function scrollCarousel(offset) {
             const container = document.getElementById('reprises-carousel');
@@ -526,7 +532,7 @@
             }
         }
 
-        // Calcule dynamiquement le decalage pour coller le menu principal juste sous le bandeau haut
+        // Calcule le décalage pour coller le header sous le bandeau supérieur
         function updateHeaderOffset() {
             const banner = document.getElementById('top-newsletter-banner');
             const header = document.getElementById('main-header');
@@ -541,52 +547,41 @@
         // Afficher la Top Banner
         function showTopBanner() {
             const banner = document.getElementById('top-newsletter-banner');
-            if (banner && sessionStorage.getItem('top_banner_dismissed') !== 'true' && !sessionStorage.getItem('newsletter_subscribed')) {
+            if (banner && !isTopBannerDismissed && !isSubscribed) {
                 banner.classList.remove('hidden');
                 updateHeaderOffset();
             }
         }
 
-        // Fermeture manuelle du bandeau supérieur
+        // Fermer la Top Banner
         function closeTopBanner() {
             const banner = document.getElementById('top-newsletter-banner');
             if (banner) {
                 banner.classList.add('hidden');
-                sessionStorage.setItem('top_banner_dismissed', 'true');
+                isTopBannerDismissed = true;
                 updateHeaderOffset();
             }
         }
 
-        // Apparition du Toast au bout de 3 secondes
+        // Démarrage : Toast affiché après 1 seconde (1000 ms)
         window.addEventListener('DOMContentLoaded', () => {
-
-            // réinitialiser les valeurs à chaque chargement de la page
-            sessionStorage.setItem('toast_dismissed', 'false');
-            sessionStorage.setItem('top_banner_dismissed', 'false');
-
-            // Si la bannière supérieure était déjà active lors d'une session précédente
-            if (sessionStorage.getItem('toast_dismissed') === 'true' && sessionStorage.getItem('top_banner_dismissed') !== 'true' && !sessionStorage.getItem('newsletter_subscribed')) {
-                showTopBanner();
-            } else {
-                setTimeout(() => {
-                    const widget = document.getElementById('sticky-newsletter-widget');
-                    if (widget && !sessionStorage.getItem('newsletter_subscribed') && sessionStorage.getItem('toast_dismissed') !== 'true') {
-                        widget.classList.remove('translate-y-full', 'opacity-0');
-                    }
-                }, 3000);
-            }
+            setTimeout(() => {
+                const widget = document.getElementById('sticky-newsletter-widget');
+                if (widget && !isSubscribed && !isToastDismissed) {
+                    widget.classList.remove('translate-y-full', 'opacity-0');
+                }
+            }, 1000);
         });
 
-        // Recalcule le décalage si la fenêtre est redimensionnée
+        // Recalcul de la hauteur au redimensionnement
         window.addEventListener('resize', updateHeaderOffset);
 
-        // Fermeture du Toast -> Déclenche le bandeau supérieur de façon permanente
+        // Fermeture du Toast -> Déclenche le bandeau supérieur
         function dismissWidget() {
             const widget = document.getElementById('sticky-newsletter-widget');
             if (widget) {
                 widget.classList.add('translate-y-full', 'opacity-0');
-                sessionStorage.setItem('toast_dismissed', 'true');
-                // Fait apparaître le bandeau en haut
+                isToastDismissed = true;
                 showTopBanner();
             }
         }
@@ -594,21 +589,21 @@
         // Soumission via le Toast
         function handleWidgetSubmit(event) {
             event.preventDefault();
+            isSubscribed = true;
             document.getElementById('widget-step-1').classList.add('hidden');
             document.getElementById('widget-step-2').classList.remove('hidden');
-            sessionStorage.setItem('newsletter_subscribed', 'true');
             
             setTimeout(() => {
                 const widget = document.getElementById('sticky-newsletter-widget');
                 if (widget) widget.classList.add('translate-y-full', 'opacity-0');
-            }, 3000);
+            }, 2500);
         }
 
         // Soumission via le Top Banner
         function handleNewsletterSubmit(event, source) {
             event.preventDefault();
+            isSubscribed = true;
             alert('Merci ! Votre e-mail a bien été enregistré pour nos alertes.');
-            sessionStorage.setItem('newsletter_subscribed', 'true');
             if (source === 'banner') closeTopBanner();
         }
     </script>

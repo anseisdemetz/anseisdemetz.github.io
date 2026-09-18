@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Timeline & Projections Argus</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React & ReactDOM CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    function TimelineApp() {
+      const [data08, setData08] = useState([]);
+      const [data09, setData09] = useState([]);
+      const [searchTerm, setSearchTerm] = useState("");
+      const [selectedId, setSelectedId] = useState("");
+      const [selectedGrade, setSelectedGrade] = useState("A");
+      const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+      
+      const dropdownRef = useRef(null);
+      const inputRef = useRef(null);
+      const gradesList = ["A", "B", "C", "D-"];
+
+      // Chargement simultané des deux fichiers JSON (Août et Septembre)
+      useEffect(() => {
+        Promise.all([
+          fetch("timeline_data_08.json").then((res) => res.json()).catch(() => []),
+          fetch("timeline_data_09.json").then((res) => res.json()).catch(() => [])
+        ]).then(([d08, d09]) => {
+          setData08(d08);
+          setData09(d09);
+
+          const baseList = d09.length > 0 ? d09 : d08;
+          if (baseList.length > 0) {
+            const sortedBase = [...baseList].sort(
+              (a, b) => new Date(a.launch_date) - new Date(b.launch_date)
+            );
+            setSelectedId(sortedBase[0].idproduct);
+            setSearchTerm(`${sortedBase[0].product} (${sortedBase[0].idproduct})`);
+          }
+        });
+      }, []);
+
+      // Liste unique des produits triée du plus ancien au plus récent
+      const productsList = useMemo(() => {
+        const uniqueMap = new Map();
+        [...data09, ...data08].forEach((item) => {
+          if (!uniqueMap.has(item.idproduct)) {
+            uniqueMap.set(item.idproduct, {
+              id: item.idproduct,
+              name: item.product,
+              brand: item.manufacturer,
+              launchDate: item.launch_date
+            });
+          }
+        });
+
+        return Array.from(uniqueMap.values()).sort((a, b) => {
+          const dateA = new Date(a.launchDate || 0);
+          const dateB = new Date(b.launchDate || 0);
+          return dateA - dateB;
+        });
+      }, [data08, data09]);
+
+      // Filtrage prédictif : si le terme correspond exactement au produit sélectionné, on affiche toute la liste au clic
+      const filteredProducts = useMemo(() => {
+        if (!searchTerm.trim()) return productsList;
+
+        const selectedProd = productsList.find((p) => p.id === selectedId);
+        const selectedString = selectedProd ? `${selectedProd.name} (${selectedProd.id})` : "";
+
+        // Si l'utilisateur clique sur le champ sans modifier le produit déjà sélectionné, on affiche tous les produits
+        if (searchTerm === selectedString) {
+          return productsList;
+        }
+
+        const term = searchTerm.toLowerCase();
+        return productsList.filter(
+          (p) => p.name.toLowerCase().includes(term) || p.id.toLowerCase().includes(term)
+        );
+      }, [productsList, searchTerm, selectedId]);
+
+      // Fermeture du menu au clic extérieur
+      useEffect(() => {
+        const handleClickOutside = (e) => {
+          if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setIsDropdownOpen(false);
+          }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+      }, []);
+
+      const item08 = useMemo(() => {
+        return data08.find((i) => i.idproduct === selectedId && i.grade === selectedGrade);
+      }, [data08, selectedId, selectedGrade]);
+
+      const item09 = useMemo(() => {
+        return data09.find((i) => i.idproduct === selectedId && i.grade === selectedGrade);
+      }, [data09, selectedId, selectedGrade]);
+
+      // Table comparative des horizons
+      const comparisonTable = useMemo(() => {
+        const refItem = item09 || item08;
+        if (!refItem || !refItem.horizons) return [];
+
+        return refItem.horizons.map((hRef, idx) => {
+          const h08 = item08 && item08.horizons ? item08.horizons[idx] : null;
+          const h09 = item09 && item09.horizons ? item09.horizons[idx] : null;
+
+          const p08 = h08 ? h08.price : null;
+          const p09 = h09 ? h09.price : null;
+
+          let delta = null;
+          if (p08 !== null && p09 !== null) {
+            delta = Number((p09 - p08).toFixed(2));
+          }
+
+          return {
+            monthLabel: hRef.monthLabel,
+            date: h09 ? h09.date : (h08 ? h08.date : hRef.date),
+            p08: p08,
+            isReal08: h08 ? h08.isReal : false,
+            p09: p09,
+            isReal09: h09 ? h09.isReal : false,
+            delta: delta,
+            valorizationPct: h09 ? h09.valorizationPct : (h08 ? h08.valorizationPct : 0)
+          };
+        });
+      }, [item08, item09]);
+
+      const activeItem = item09 || item08;
+
+      const handleSelect = (prod) => {
+        setSelectedId(prod.id);
+        setSearchTerm(`${prod.name} (${prod.id})`);
+        setIsDropdownOpen(false);
+      };
+
+      return (
+        <div className="max-w-6xl mx-auto p-6 space-y-8">
+          <header className="border-b border-slate-800 pb-4">
+            <h1 className="text-2xl font-bold text-emerald-400">Comparatif Réel / Projeté (Août vs Septembre)</h1>
+            <p className="text-slate-400 text-sm">Analyse des écarts de prix entre les données d'août (timeline_data_08.json) et septembre (timeline_data_09.json)</p>
+          </header>
+
+          {/* Recherche Prédictive Produit */}
+          <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
+            <div className="relative" ref={dropdownRef}>
+              <label className="block text-xs font-medium text-slate-400 mb-1">
+                Rechercher un Produit (triés du plus ancien au plus récent)
+              </label>
+              <div className="relative">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Rechercher 'iPhone 16' ou '44882'..."
+                  value={searchTerm}
+                  onFocus={(e) => {
+                    setIsDropdownOpen(true);
+                    e.target.select(); // Surligne le texte au clic pour pouvoir taper directement un nouveau nom sans effacer
+                  }}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setIsDropdownOpen(true);
+                  }}
+                  className="w-full bg-slate-900 border border-slate-700 p-2.5 pr-8 rounded text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => {
+                      setSearchTerm("");
+                      setSelectedId("");
+                      setIsDropdownOpen(true);
+                      if (inputRef.current) inputRef.current.focus();
+                    }}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Menu Déroulant */}
+              {isDropdownOpen && (
+                <div className="absolute z-50 left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-slate-900 border border-slate-700 rounded-lg shadow-2xl divide-y divide-slate-800">
+                  {filteredProducts.length > 0 ? (
+                    filteredProducts.map((p) => (
+                      <div
+                        key={p.id}
+                        onClick={() => handleSelect(p)}
+                        className={`p-2.5 text-sm hover:bg-slate-800 cursor-pointer flex justify-between items-center ${
+                          p.id === selectedId ? "bg-slate-800/80 text-emerald-400 font-semibold" : "text-slate-200"
+                        }`}
+                      >
+                        <span>{p.name}</span>
+                        <div className="flex items-center gap-2">
+                          {p.launchDate && (
+                            <span className="text-[11px] font-mono text-emerald-300 bg-emerald-950/80 border border-emerald-800/60 px-2 py-0.5 rounded">
+                              {new Date(p.launchDate).toLocaleDateString("fr-FR")}
+                            </span>
+                          )}
+                          <span className="text-xs font-mono text-slate-400 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800">
+                            ID: {p.id}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-3 text-xs text-slate-500 text-center">
+                      Aucun produit trouvé pour "{searchTerm}"
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Onglets Grade + Tableau */}
+          <div className="space-y-0">
+            <div className="flex space-x-1 border-b border-slate-800 px-2">
+              {gradesList.map((g) => {
+                const isActive = selectedGrade === g;
+                return (
+                  <button
+                    key={g}
+                    onClick={() => setSelectedGrade(g)}
+                    className={`px-5 py-2.5 text-xs font-bold rounded-t-lg transition-colors border-t border-x ${
+                      isActive
+                        ? "bg-slate-950 text-emerald-400 border-slate-800 border-b-slate-950 -mb-px z-10"
+                        : "bg-slate-900/60 text-slate-400 border-transparent hover:bg-slate-800 hover:text-slate-200"
+                    }`}
+                  >
+                    Grade {g}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Tableau comparatif */}
+            <div className="bg-slate-950 rounded-b-xl rounded-tr-xl border border-slate-800 shadow-xl overflow-hidden">
+              <div className="bg-slate-900 px-6 py-3 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                <h2 className="font-semibold text-sm text-slate-200 flex items-center gap-2">
+                  Valeurs aux horizons +3, +6, +12, +24, +36 mois
+                  <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-xs font-bold">
+                    Grade {selectedGrade}
+                  </span>
+                </h2>
+
+                {activeItem && (
+                  <div className="text-xs font-mono text-slate-400 flex items-center gap-4">
+                    <span>Date de lancement : <b className="text-slate-200">{new Date(activeItem.launch_date).toLocaleDateString("fr-FR")}</b></span>
+                    <span>Prix de Lancement P0 : <b className="text-emerald-400">{activeItem.p0} €</b></span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="overflow-x-auto">
+                {comparisonTable.length > 0 ? (
+                  <table className="w-full text-left text-xs whitespace-nowrap">
+                    <thead className="bg-slate-900/60 text-slate-400 border-b border-slate-800">
+                      <tr>
+                        <th className="p-3">Mois relatif</th>
+                        <th className="p-3">Date liée au mois relatif</th>
+                        <th className="p-3">Prix 08 (€)</th>
+                        <th className="p-3">Prix 09 (€)</th>
+                        <th className="p-3">Écart 09 vs 08 (€)</th>
+                        <th className="p-3">% de valorisation (vs P0)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60 font-mono">
+                      {comparisonTable.map((row, idx) => {
+                        const hasDelta = row.delta !== null;
+                        const isPositiveDelta = hasDelta && row.delta > 0;
+                        const isNegativeDelta = hasDelta && row.delta < 0;
+
+                        return (
+                          <tr key={idx} className="hover:bg-slate-900/40">
+                            <td className="p-3">
+                              <span className="px-2.5 py-1 bg-slate-800 text-emerald-400 rounded font-bold text-xs">
+                                {row.monthLabel}
+                              </span>
+                            </td>
+                            <td className="p-3 text-slate-300">
+                              {new Date(row.date).toLocaleDateString("fr-FR")}
+                            </td>
+
+                            <td className={`p-3 font-semibold ${row.isReal08 ? 'text-emerald-400' : 'text-blue-400'}`}>
+                              {row.p08 !== null ? `${row.p08.toFixed(2)} €` : "-"}
+                            </td>
+
+                            <td className={`p-3 font-semibold ${row.isReal09 ? 'text-emerald-400' : 'text-blue-400'}`}>
+                              {row.p09 !== null ? `${row.p09.toFixed(2)} €` : "-"}
+                            </td>
+
+                            <td className="p-3 font-bold">
+                              {!hasDelta ? (
+                                <span className="text-slate-500">-</span>
+                              ) : isPositiveDelta ? (
+                                <span className="text-emerald-400">+{row.delta.toFixed(2)} €</span>
+                              ) : isNegativeDelta ? (
+                                <span className="text-rose-400">{row.delta.toFixed(2)} €</span>
+                              ) : (
+                                <span className="text-slate-400">0.00 €</span>
+                              )}
+                            </td>
+
+                            <td className="p-3 font-bold text-slate-200">
+                              {row.valorizationPct.toFixed(1)} %
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="p-8 text-center text-xs text-slate-500">
+                    Aucune donnée disponible pour ce produit au Grade {selectedGrade}.
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<TimelineApp />);
+  </script>
+</body>
+</html>
