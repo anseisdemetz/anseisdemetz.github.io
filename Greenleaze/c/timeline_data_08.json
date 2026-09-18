@@ -10,18 +10,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-04",
-        "price": 1624.06,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-04",
-        "price": 1391.31,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -60,18 +60,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-04",
-        "price": 1604.64,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-04",
-        "price": 1358.42,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 71.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -110,18 +110,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-04",
-        "price": 1597.81,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-04",
-        "price": 1346.94,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -160,18 +160,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-04",
-        "price": 1597.81,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-04",
-        "price": 1346.94,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -210,18 +210,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 970.16,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 88.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 857.6,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 78.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -260,18 +260,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 958.62,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 837.44,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 76.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -310,18 +310,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 950.94,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 824.14,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -360,18 +360,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 924.69,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 779.51,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -410,18 +410,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1067.02,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 89.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 950.79,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 79.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -460,18 +460,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1055.87,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 88.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 931.13,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 77.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -510,18 +510,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1040.52,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 904.4,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -560,18 +560,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1008.83,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 850.44,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -610,18 +610,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 897.04,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 92.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 831.12,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -660,18 +660,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 894.64,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 92.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 826.71,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -710,18 +710,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 888.56,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 91.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 815.58,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -760,18 +760,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 840.04,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 729.39,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -810,18 +810,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1220.14,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 89.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1096.77,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 80.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -860,18 +860,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1215.28,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 89.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1088.1,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 80.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -910,18 +910,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1204.26,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 88.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1068.56,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 78.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -960,18 +960,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1147.07,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 969.99,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 71.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1010,18 +1010,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1018.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 91.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 928.57,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 83.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1060,18 +1060,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1010.1,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 90.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 912.83,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 81.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1110,18 +1110,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1003.54,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 89.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 901.07,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 80.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1160,18 +1160,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 954.78,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 816.08,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 72.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1210,18 +1210,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1147.64,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 93.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1072.48,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1260,18 +1260,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1136.06,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 92.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1051.06,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1310,18 +1310,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1127.33,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 91.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1035.05,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1360,18 +1360,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1057.25,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 911.01,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1410,18 +1410,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1373.03,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 92.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1275.7,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1460,18 +1460,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1356.25,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 91.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1244.87,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1510,18 +1510,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1348.01,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 91.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1229.88,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 83.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1560,18 +1560,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-09",
-        "price": 1266.7,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-09",
-        "price": 1086.72,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1610,18 +1610,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-10",
-        "price": 103.41,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-10",
-        "price": 90.0,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1660,18 +1660,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-10",
-        "price": 100.13,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-10",
-        "price": 84.41,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1710,18 +1710,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-10",
-        "price": 100.13,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-10",
-        "price": 84.41,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1760,18 +1760,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 653.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 571.76,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 76.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1810,18 +1810,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 646.2,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 558.42,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1860,18 +1860,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 640.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 549.21,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1910,18 +1910,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 630.21,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 531.26,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -1960,18 +1960,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 715.81,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 88.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 634.21,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 78.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2010,18 +2010,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 707.85,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 620.26,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 76.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2060,18 +2060,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 701.97,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 610.06,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2110,18 +2110,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 680.69,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 573.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2160,18 +2160,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 808.31,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 704.38,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2210,18 +2210,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 803.26,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 695.65,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2260,18 +2260,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 797.99,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 686.6,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2310,18 +2310,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-26",
-        "price": 781.66,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-26",
-        "price": 658.93,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2360,18 +2360,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 218.9,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 192.97,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 77.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2410,18 +2410,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 213.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 184.4,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2460,18 +2460,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 213.56,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 183.78,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2510,26 +2510,26 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 209.11,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 176.28,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2025-10-07",
-        "price": 124.56,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -2560,18 +2560,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 257.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 223.2,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2610,18 +2610,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 256.14,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 220.16,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2660,18 +2660,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 255.77,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 219.53,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2710,26 +2710,26 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 251.1,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 211.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2025-10-07",
-        "price": 149.57,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -2760,18 +2760,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-23",
-        "price": 276.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-23",
-        "price": 233.36,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2810,18 +2810,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-23",
-        "price": 276.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-23",
-        "price": 233.36,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2860,18 +2860,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-23",
-        "price": 276.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-23",
-        "price": 233.36,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -2910,26 +2910,26 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-23",
-        "price": 276.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-23",
-        "price": 233.36,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2025-09-23",
-        "price": 164.58,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -2960,18 +2960,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-23",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-23",
-        "price": 268.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3010,18 +3010,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-23",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-23",
-        "price": 268.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3060,18 +3060,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-23",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-23",
-        "price": 268.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3110,26 +3110,26 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-23",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-23",
-        "price": 268.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2025-09-23",
-        "price": 189.59,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -3160,18 +3160,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-17",
-        "price": 100.13,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-17",
-        "price": 84.41,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3210,18 +3210,18 @@
       {
         "monthLabel": "+3M",
         "date": "2024-12-17",
-        "price": 100.13,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-03-17",
-        "price": 84.41,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3260,18 +3260,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-21",
-        "price": 1846.72,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-21",
-        "price": 1556.77,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3310,18 +3310,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-21",
-        "price": 1846.72,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-21",
-        "price": 1556.77,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3360,18 +3360,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-21",
-        "price": 1846.72,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-21",
-        "price": 1556.77,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3410,18 +3410,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-21",
-        "price": 1846.72,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-21",
-        "price": 1556.77,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3460,18 +3460,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 173.38,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 151.51,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 76.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3510,18 +3510,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 169.52,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 144.91,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 72.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3560,18 +3560,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 167.15,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 140.93,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3610,26 +3610,26 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 167.12,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 140.88,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2025-10-07",
-        "price": 99.55,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -3660,18 +3660,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 208.79,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 182.94,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 76.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3710,18 +3710,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 207.14,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 180.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3760,18 +3760,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 206.8,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 179.51,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3810,26 +3810,26 @@
       {
         "monthLabel": "+3M",
         "date": "2025-01-07",
-        "price": 200.71,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-04-07",
-        "price": 169.2,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2025-10-07",
-        "price": 119.56,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -3860,18 +3860,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 789.91,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 693.06,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 77.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3910,18 +3910,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 783.49,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 681.78,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -3960,18 +3960,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 780.17,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 675.99,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4010,18 +4010,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 757.85,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 637.65,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4060,18 +4060,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 849.97,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 88.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 752.33,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 78.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4110,18 +4110,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 840.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 734.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 76.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4160,18 +4160,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 837.19,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 729.75,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 76.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4210,18 +4210,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 808.43,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 680.21,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4260,18 +4260,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1012.42,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 875.41,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4310,18 +4310,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1004.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 860.99,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4360,18 +4360,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 993.49,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 842.81,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 72.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4410,18 +4410,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 985.46,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 829.16,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4460,18 +4460,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1115.86,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 964.43,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4510,18 +4510,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1108.24,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 951.22,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4560,18 +4560,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1099.21,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 935.7,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 72.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4610,18 +4610,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1086.62,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 914.28,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4660,18 +4660,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1279.4,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1112.57,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4710,18 +4710,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1265.5,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1088.39,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4760,18 +4760,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1256.23,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1072.41,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4810,18 +4810,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1238.36,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1041.95,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4860,18 +4860,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1373.78,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1185.79,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4910,18 +4910,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1362.93,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1167.03,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -4960,18 +4960,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1358.6,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1159.58,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5010,18 +5010,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1339.52,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1127.06,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5060,18 +5060,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1570.52,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1346.3,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5110,18 +5110,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1566.59,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1339.51,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5160,18 +5160,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1556.31,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1321.9,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 72.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5210,18 +5210,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 1541.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 1297.29,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5260,18 +5260,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 949.6,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 88.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 834.53,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 77.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5310,18 +5310,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 938.36,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 814.78,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 75.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5360,18 +5360,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 925.97,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 793.3,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5410,18 +5410,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-04-22",
-        "price": 909.59,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-07-22",
-        "price": 765.32,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5460,18 +5460,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-14",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-14",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5510,18 +5510,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-14",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-14",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5560,18 +5560,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-14",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-14",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5610,26 +5610,26 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-14",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-14",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2026-02-14",
-        "price": 74.54,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -5660,18 +5660,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-19",
-        "price": 630.98,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 90.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-19",
-        "price": 567.61,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 81.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5710,18 +5710,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-19",
-        "price": 623.91,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 89.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-19",
-        "price": 554.76,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 79.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5760,18 +5760,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-19",
-        "price": 603.65,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-19",
-        "price": 518.73,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 74.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5810,18 +5810,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-19",
-        "price": 590.37,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-19",
-        "price": 495.79,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -5860,10 +5860,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 422.56,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 88.2
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -5910,10 +5910,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 413.26,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -5960,10 +5960,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 408.59,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6010,18 +6010,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 402.26,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-09-12",
-        "price": 337.82,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -6060,10 +6060,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 470.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 89.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6110,10 +6110,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 462.41,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6160,10 +6160,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 456.65,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6210,18 +6210,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 444.25,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-09-12",
-        "price": 373.08,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -6260,10 +6260,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 259.91,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6310,10 +6310,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 254.59,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6360,10 +6360,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 251.52,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6410,26 +6410,26 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 251.1,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-09-12",
-        "price": 210.87,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2026-03-12",
-        "price": 149.57,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -6460,10 +6460,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 301.58,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6510,10 +6510,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 294.6,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6560,10 +6560,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 293.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6610,18 +6610,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 293.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-09-12",
-        "price": 246.14,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -6660,10 +6660,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 331.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.6
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6710,10 +6710,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 327.54,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6760,10 +6760,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 321.74,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6810,18 +6810,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 318.28,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-09-12",
-        "price": 267.3,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -6860,10 +6860,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 396.58,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 88.3
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6910,10 +6910,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 381.49,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -6960,10 +6960,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 378.8,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7010,18 +7010,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-12",
-        "price": 377.07,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-09-12",
-        "price": 316.66,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7060,10 +7060,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-18",
-        "price": 183.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7110,10 +7110,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-18",
-        "price": 183.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7160,10 +7160,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-18",
-        "price": 183.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7210,10 +7210,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-18",
-        "price": 209.11,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7260,10 +7260,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-18",
-        "price": 209.11,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7310,10 +7310,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-18",
-        "price": 209.11,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7360,10 +7360,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-05",
-        "price": 108.33,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7410,10 +7410,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-05",
-        "price": 108.33,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7460,10 +7460,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-05",
-        "price": 108.33,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -7510,18 +7510,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-20",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-20",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7560,18 +7560,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-20",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-20",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7610,18 +7610,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-20",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-20",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7660,18 +7660,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-20",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-20",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7710,18 +7710,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-20",
-        "price": 144.87,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-20",
-        "price": 123.54,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 73.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7760,18 +7760,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-20",
-        "price": 144.51,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-20",
-        "price": 122.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 72.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7810,18 +7810,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-20",
-        "price": 143.77,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-20",
-        "price": 121.64,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 72.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7860,18 +7860,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-20",
-        "price": 142.74,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-20",
-        "price": 119.87,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7910,18 +7910,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-14",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-14",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -7960,18 +7960,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-14",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-14",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -8010,18 +8010,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-14",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-14",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -8060,26 +8060,26 @@
       {
         "monthLabel": "+3M",
         "date": "2025-05-14",
-        "price": 125.84,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-08-14",
-        "price": 105.68,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2026-02-14",
-        "price": 74.54,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -8110,10 +8110,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-26",
-        "price": 360.27,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8160,10 +8160,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-26",
-        "price": 360.27,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8210,10 +8210,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-26",
-        "price": 360.27,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8260,18 +8260,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-18",
-        "price": 158.72,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-09-18",
-        "price": 133.29,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -8310,10 +8310,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-19",
-        "price": 476.27,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 86.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8360,10 +8360,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-19",
-        "price": 471.01,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.8
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8410,10 +8410,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-19",
-        "price": 463.14,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8460,10 +8460,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-19",
-        "price": 461.05,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8510,10 +8510,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-19",
-        "price": 553.99,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 85.4
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8560,10 +8560,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-19",
-        "price": 549.47,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8610,10 +8610,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-19",
-        "price": 545.03,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8660,10 +8660,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-06-19",
-        "price": 545.03,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8710,10 +8710,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-13",
-        "price": 1048.91,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8760,10 +8760,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-13",
-        "price": 1048.91,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8810,10 +8810,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-13",
-        "price": 1048.91,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8860,10 +8860,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-13",
-        "price": 1048.91,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8910,10 +8910,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-13",
-        "price": 1149.69,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -8960,10 +8960,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-13",
-        "price": 1149.69,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9010,10 +9010,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-13",
-        "price": 1149.69,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9060,10 +9060,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-13",
-        "price": 1149.69,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9110,10 +9110,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9160,10 +9160,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9210,18 +9210,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-10-16",
-        "price": 267.8,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -9260,10 +9260,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 360.96,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9310,10 +9310,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 360.96,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9360,18 +9360,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 360.96,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-10-16",
-        "price": 303.13,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -9410,26 +9410,26 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 360.96,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-10-16",
-        "price": 303.13,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
         "date": "2026-04-16",
-        "price": 214.6,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 50.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+24M",
@@ -9460,10 +9460,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9510,10 +9510,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9560,18 +9560,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-10-16",
-        "price": 267.8,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -9610,18 +9610,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 318.89,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-10-16",
-        "price": 267.8,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -9660,10 +9660,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 376.07,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 87.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9710,10 +9710,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 363.28,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9760,18 +9760,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 360.96,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-10-16",
-        "price": 303.13,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -9810,18 +9810,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-07-16",
-        "price": 360.96,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2025-10-16",
-        "price": 303.13,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.7
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -9860,10 +9860,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-20",
-        "price": 276.29,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9910,10 +9910,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-20",
-        "price": 276.29,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -9960,10 +9960,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-20",
-        "price": 276.29,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -10010,10 +10010,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-20",
-        "price": 318.28,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -10060,10 +10060,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-20",
-        "price": 318.28,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -10110,10 +10110,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-08-20",
-        "price": 318.28,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -10310,10 +10310,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-10-09",
-        "price": 1006.92,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -10510,10 +10510,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-10-09",
-        "price": 1107.7,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -10710,10 +10710,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-10-09",
-        "price": 1678.76,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -10910,10 +10910,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-10-09",
-        "price": 1779.54,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -11110,10 +11110,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-10-09",
-        "price": 1981.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -11310,10 +11310,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-10-09",
-        "price": 754.98,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -11510,10 +11510,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-10-09",
-        "price": 805.37,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -11710,18 +11710,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-12-02",
-        "price": 209.51,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2026-03-02",
-        "price": 176.61,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -11910,18 +11910,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-12-02",
-        "price": 251.58,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2026-03-02",
-        "price": 212.08,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -14510,18 +14510,18 @@
       {
         "monthLabel": "+3M",
         "date": "2025-12-02",
-        "price": 167.44,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
         "date": "2026-03-02",
-        "price": 141.15,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 70.9
+        "valorizationPct": null
       },
       {
         "monthLabel": "+12M",
@@ -14710,10 +14710,10 @@
       {
         "monthLabel": "+3M",
         "date": "2025-12-02",
-        "price": 201.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.1
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -16060,10 +16060,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-02-05",
-        "price": 2098.66,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -16260,10 +16260,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-02-05",
-        "price": 2266.62,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19110,10 +19110,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-05-18",
-        "price": 142.74,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19160,10 +19160,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-05-18",
-        "price": 142.74,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19210,10 +19210,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-05-18",
-        "price": 142.74,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19260,10 +19260,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-05-18",
-        "price": 159.63,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19310,10 +19310,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-05-18",
-        "price": 159.63,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19360,10 +19360,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-05-18",
-        "price": 159.63,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.5
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19410,10 +19410,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-06-11",
-        "price": 251.1,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19460,10 +19460,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-06-11",
-        "price": 251.1,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19510,10 +19510,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-06-11",
-        "price": 251.1,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19560,10 +19560,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-06-11",
-        "price": 293.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19610,10 +19610,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-06-11",
-        "price": 293.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
@@ -19660,10 +19660,10 @@
       {
         "monthLabel": "+3M",
         "date": "2026-06-11",
-        "price": 293.09,
-        "type": "Projeté",
+        "price": null,
+        "type": "Indisponible",
         "isReal": false,
-        "valorizationPct": 84.0
+        "valorizationPct": null
       },
       {
         "monthLabel": "+6M",
