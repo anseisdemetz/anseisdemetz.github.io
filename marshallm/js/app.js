@@ -1,26 +1,31 @@
-// Initialisation Supabase (Remplacer avec vos clés d'API Supabase)
-const SUPABASE_URL = 'https://YOUR_SUPABASE_URL.supabase.co';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Initialisation Supabase (Remplacer avec vos vraies clés d'API Supabase)
+const SUPABASE_URL = 'https://zugowxfbpbpcbqhznaeb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1Z293eGZicGJwY2JxaHpuYWViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4Njg0MjAsImV4cCI6MjEwMDQ0NDQyMH0.TUmghp2tmqWeXoK8x1P_wbC5ARMeMQ3Npw_AwN8dGb4';
+
+// Utiliser 'supabaseClient' au lieu de 'supabase'
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentSelection = [];
 
 // Connexion SSO Google
 async function loginWithGoogle() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
+        options: {
+            redirectTo: window.location.origin
+        }
     });
     if (error) console.error("Erreur de connexion SSO:", error.message);
 }
 
 // Déconnexion
 async function logout() {
-    await supabase.auth.signOut();
+    await supabaseClient.auth.signOut();
     location.reload();
 }
 
 // Vérification Session
-supabase.auth.onAuthStateChange((event, session) => {
+supabaseClient.auth.onAuthStateChange((event, session) => {
     if (session) {
         document.getElementById('btn-login-google').classList.add('hidden');
         document.getElementById('user-profile').classList.remove('hidden');
