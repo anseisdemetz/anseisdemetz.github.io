@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-[#1a1412]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marshall Mémoire - Narco-Locking</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cinzel & Special Elite (Vintage Style) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Special+Elite&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client (SSO) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="css/custom.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sepia: {
+                            50: '#fbf9f1',
+                            100: '#f5f0db',
+                            200: '#e6d8b3',
+                            500: '#c2a15f',
+                            800: '#4a3728',
+                            900: '#2b1e16',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        mono: ['Special Elite', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full font-serif text-sepia-900 bg-[url('assets/images/bg-parchment.png')] bg-repeat">
+
+    <!-- En-tête -->
+    <header class="border-b-2 border-sepia-800/30 p-4 bg-sepia-900/10 backdrop-blur-sm flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-black tracking-widest text-sepia-900 uppercase">Marshall Mémoire</h1>
+            <p class="text-xs font-mono text-sepia-800">Les Chroniques du Narco-Locking</p>
+        </div>
+        
+        <!-- Connexion SSO / Profil -->
+        <div id="auth-section">
+            <button id="btn-login-google" onclick="loginWithGoogle()" class="flex items-center gap-2 px-4 py-2 bg-sepia-800 text-sepia-100 rounded border border-sepia-500 hover:bg-sepia-900 transition-all font-mono text-xs shadow-md">
+                <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="currentColor" d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.761H12.545z"/></svg>
+                Connexion Google
+            </button>
+            <div id="user-profile" class="hidden flex items-center gap-3">
+                <span id="user-email" class="text-xs font-mono text-sepia-900"></span>
+                <button onclick="logout()" class="text-xs text-red-800 underline">Déconnexion</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Zone Principale -->
+    <main class="max-w-4xl mx-auto p-4 md:p-8">
+        
+        <!-- Écran Sélection d'Épisodes -->
+        <section id="episode-select" class="space-y-6">
+            <h2 class="text-xl font-bold border-b border-sepia-800/20 pb-2">Sélectionnez un Épisode</h2>
+            <div id="episodes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Généré dynamiquement via JS -->
+            </div>
+        </section>
+
+        <!-- Écran de Jeu Escape Game (Masqué au départ) -->
+        <section id="game-screen" class="hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <button onclick="showEpisodeSelect()" class="text-xs font-mono bg-sepia-800/10 px-3 py-1 rounded border border-sepia-800/30 hover:bg-sepia-800/20">← Retour aux épisodes</button>
+                <span id="game-title" class="font-bold text-lg"></span>
+            </div>
+
+            <!-- Image de Scène & Narrative -->
+            <div class="relative rounded-lg overflow-hidden border-4 border-sepia-800/40 shadow-xl bg-sepia-900">
+                <img id="game-image" src="" alt="Illustration Épisode" class="w-full h-64 object-cover opacity-80 mix-blend-luminosity">
+                <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-sepia-900 via-sepia-900/80 to-transparent p-4 text-sepia-100">
+                    <p id="game-narrative" class="font-mono text-sm leading-relaxed"></p>
+                </div>
+            </div>
+
+            <!-- Zone de Remplacement Interactif de l'Énigme -->
+            <div id="puzzle-container" class="bg-sepia-100/60 p-6 rounded-lg border-2 border-sepia-800/30 shadow-inner space-y-4">
+                <!-- L'énigme JS sera injectée ici -->
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/episodes.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
