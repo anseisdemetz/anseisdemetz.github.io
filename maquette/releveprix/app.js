@@ -84,15 +84,15 @@ function calculateCalculatedPrices(row) {
     const partenaireVal = parseFloat(row[partenaireKey]);
 
     if (!isNaN(partenaireVal) && partenaireVal > 0) {
-      const compareVal = partenaireVal * FACTOR_45_46;
-      const affilieVal = compareVal * FACTOR_45_46;
+      // const compareVal = partenaireVal * FACTOR_45_46;
+      const affilieVal = partenaireVal * FACTOR_45_46;
       const clientVal = affilieVal * FACTOR_45_46;
 
-      newRow[`Prix compare grade ${grade}`] = compareVal.toFixed(2) + ' €';
+      //newRow[`Prix compare grade ${grade}`] = compareVal.toFixed(2) + ' €';
       newRow[`Prix affilié grade ${grade}`] = affilieVal.toFixed(2) + ' €';
       newRow[`Prix client calculé grade ${grade}`] = clientVal.toFixed(2) + ' €';
     } else {
-      newRow[`Prix compare grade ${grade}`] = '-';
+      // newRow[`Prix compare grade ${grade}`] = '-';
       newRow[`Prix affilié grade ${grade}`] = '-';
       newRow[`Prix client calculé grade ${grade}`] = '-';
     }
@@ -169,7 +169,7 @@ function renderGradeDetailsTable(row) {
 
   GRADES.forEach(grade => {
     const partenairePrix = deleteEuroSymbol(row[`Prix partenaire grade ${grade}`]);
-    const comparePrix    = deleteEuroSymbol(row[`Prix compare grade ${grade}`]);
+    // const comparePrix    = deleteEuroSymbol(row[`Prix compare grade ${grade}`]);
     const affiliePrix    = deleteEuroSymbol(row[`Prix affilié grade ${grade}`]);
     const clientPrix     = deleteEuroSymbol(row[`Prix client calculé grade ${grade}`] || row[`Prix client grade ${grade}`]);
     const nomPartenaire  = row[`Partenaire grade ${grade}`] || '-';
@@ -181,7 +181,6 @@ function renderGradeDetailsTable(row) {
       <tr>
         <td style="padding: 12px 14px;"><strong>Grade ${grade}</strong></td>
         <td style="padding: 12px 14px;">${formatPrice(partenairePrix)}</td>
-        <td style="padding: 12px 14px;">${formatPrice(comparePrix)}</td>
         <td style="padding: 12px 14px;">${formatPrice(affiliePrix)}</td>
         <td style="padding: 12px 14px;">${formatPrice(clientPrix)}</td>
         <td style="padding: 12px 14px;">${nomPartenaire}</td>
@@ -195,7 +194,6 @@ function renderGradeDetailsTable(row) {
         <tr style="background-color: #f1f5f9;">
           <th style="text-align: left; padding: 12px 14px;"><strong>Grade</strong></th>
           <th style="text-align: left; padding: 12px 14px;"><strong>Prix Partenaire</strong></th>
-          <th style="text-align: left; padding: 12px 14px;"><strong>Prix Compare</strong></th>
           <th style="text-align: left; padding: 12px 14px;"><strong>Prix Affilié</strong></th>
           <th style="text-align: left; padding: 12px 14px;"><strong>Prix Client</strong></th>
           <th style="text-align: left; padding: 12px 14px;"><strong>Nom du partenaire</strong></th>
