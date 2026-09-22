@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Affiliate Dashboard - 30 Days</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/funnel.js"></script>
+
+    <style>
+        /* Styles to ensure sidebar positioning */
+        .sidebar {
+            width: 250px;
+            background-color: #333C44;
+        }
+        .main-content {
+            margin-left: 250px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex min-h-screen">
+
+    <aside class="sidebar fixed top-0 bottom-0 left-0 h-screen text-white flex flex-col z-10 shadow-lg">
+        <div class="p-6 border-b border-gray-700">
+            <div class="text-xl font-bold tracking-wider uppercase text-gray-200">Affiliate Portal</div>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-blue-600 text-white font-medium transition shadow-sm">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2zm12 0v-11a2 2 0 00-2-h-2a2 2 0 00-2 2v11a2 2 0 002 2h2a2 2 0 002-2zM11 19V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                </svg>
+                <span>Statistics</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
+                </svg>
+                <span>My Cases</span>
+            </a>
+        </nav>
+        <div class="p-4 border-t border-gray-700 text-xs text-gray-400 text-center">
+            v1.0.0 — Sandbox
+        </div>
+    </aside>
+
+    <main class="main-content flex-1 p-8">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-200 pb-5">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Trade-in Tracking & Performance</h1>
+                <p class="text-sm text-gray-500">Analysis period: Last 30 rolling days — Affiliate Profile</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex flex-wrap gap-4 items-end">
+            
+            <div class="flex-1 min-w-[150px]">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Date</label>
+                <input type="date" value="2026-05-01" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+            </div>
+
+            <div class="flex-1 min-w-[150px]">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">End Date</label>
+                <input type="date" value="2026-05-31" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+            </div>
+
+            <div class="flex-1 min-w-[180px]">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Category</label>
+                <select class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+                    <option value="all">All Categories</option>
+                    <option value="smartphone">Smartphones</option>
+                    <option value="tablette">Tablets</option>
+                    <option value="ordinateur">Laptops</option>
+                    <option value="audio">Audio & Headphones</option>
+                </select>
+            </div>
+
+            <div class="flex-1 min-w-[150px]">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Brand</label>
+                <select class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+                    <option value="all">All Brands</option>
+                    <option value="apple">Apple</option>
+                    <option value="samsung">Samsung</option>
+                    <option value="xiaomi">Xiaomi</option>
+                    <option value="sony">Sony</option>
+                </select>
+            </div>
+
+            <div class="flex-1 min-w-[180px]">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Model</label>
+                <select class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 focus:outline-none focus:border-blue-500">
+                    <option value="all">All Models</option>
+                    <option value="iphone15">iPhone 15 Pro</option>
+                    <option value="iphone14">iPhone 14</option>
+                    <option value="galaxys24">Galaxy S24 Ultra</option>
+                    <option value="galaxya55">Galaxy A55</option>
+                </select>
+            </div>
+
+            <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm shadow-sm transition h-[38px]">
+                Filter
+            </button>
+        </div>        
+
+<!-- KPI Cards -->
+
+<div style="display: flex; flex-direction: row; gap: 24px; margin-bottom: 32px; flex-wrap: wrap;">
+    
+    <div style="flex: 1; min-w: 300px; display: flex; flex-direction: column; gap: 20px;">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Entries</span>
+                <div class="text-3xl font-extrabold text-gray-900 mt-1">1,240</div>
+                <p class="text-xs text-gray-500 mt-1">Drafts, canceled, finalized</p>
+                <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Total</span>
+                        <span class="text-sm font-bold text-gray-700">€229,400</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Avg Price</span>
+                        <span class="text-sm font-bold text-gray-700">€185</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Canceled</span>
+                <div class="text-3xl font-extrabold text-red-600 mt-1">175</div>
+                <p class="text-xs text-red-500 font-medium mt-1">Cancellation rate: 14.1%</p>
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <span class="text-[10px] uppercase text-gray-400 block">Origin</span>
+                    <span class="text-sm font-bold text-gray-700">Customer: 68% | Automatic: 32%</span>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Received Trade-ins</span>
+                <div class="text-3xl font-extrabold text-green-600 mt-1">900</div>
+                <p class="text-xs text-green-500 font-medium mt-1">Reception rate vs entries: 72.5%</p>
+                <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Received</span>
+                        <span class="text-sm font-bold text-gray-700">€166,500</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Avg Price</span>
+                        <span class="text-sm font-bold text-gray-700">€185</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Pending Transactions</span>
+                <div class="text-3xl font-extrabold text-yellow-500 mt-1">165</div>
+                <p class="text-xs text-yellow-600 font-medium mt-1">Finalized trade-ins not received</p>
+                <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Locked</span>
+                        <span class="text-sm font-bold text-gray-700">€30,525</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Avg Price</span>
+                        <span class="text-sm font-bold text-gray-700">€185</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Counter-Offers</span>
+                <div class="text-3xl font-extrabold text-indigo-600 mt-1">150</div>
+                <p class="text-xs text-indigo-500 font-medium mt-1">Counter-offer rate on received: 16.7%</p>
+                <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
+                    <div>
+                        <span class="text-[10px] uppercase text-red-500 font-semibold block">Value Deficit</span>
+                        <span class="text-sm font-bold text-red-600">-€7,425</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase text-gray-400 block">Status</span>
+                        <span class="text-xs font-medium text-gray-700 block mt-0.5">Acc: 85 | Rej: 40</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100" style="width: 400px; min-width: 350px; display: flex; align-items: center; justify-content: center;">
+        <div id="chart-funnel" style="width: 100%; height: 290px;"></div>
+    </div>
+
+</div>
+
+<!-- Counter-Offer Charts -->
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="lg:col-span-2 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <div id="chart-evolution" style="width:100%; height:320px;"></div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <div id="chart-aging" style="width:100%; height:320px;"></div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+            <div class="border-b border-gray-100 pb-4 mb-6">
+                <h2 class="text-lg font-bold text-gray-800">Compliance & Counter-Offers</h2>
+                <p class="text-xs text-gray-400 mt-0.5">Focus on price adjustments applied after inspection</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-1">
+                    <div id="chart-cp-split" style="width:100%; height:280px;"></div>
+                </div>
+                <div class="lg:col-span-2">
+                    <div id="chart-cp-impact" style="width:100%; height:280px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            Highcharts.chart('chart-funnel', {
+                chart: { 
+                    type: 'funnel',
+                    marginRight: 100 
+                },
+                accessibility: { 
+                    enabled: false 
+                },
+                title: { 
+                    text: 'Global Conversion Funnel', 
+                    align: 'left', 
+                    style: { fontSize: '14px', fontWeight: 'bold', color: '#1f2937' } 
+                },
+                plotOptions: {
+                    funnel: {
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b><br>{point.y:,.0f} ({point.percentByTotal:.1f}%)',
+                            softConnector: true,
+                            style: { fontSize: '10px' }
+                        },
+                        center: ['40%', '50%'],
+                        width: '70%'
+                    }
+                },
+                series: [{
+                    name: 'Conversion Volume',
+                    data: [
+                        {
+                            name: 'Entries (Initial)',
+                            y: 1240,
+                            color: '#3b82f6',
+                            percentByTotal: 100
+                        },
+                        {
+                            name: 'Received (Logistics)',
+                            y: 900,
+                            color: '#10b981',
+                            percentByTotal: 72.5
+                        },
+                        {
+                            name: 'Validated (Paid)',
+                            y: 835,
+                            color: '#6366f1',
+                            percentByTotal: 67.3
+                        }
+                    ]
+                }],
+                tooltip: {
+                    formatter: function () {
+                        if (this.point.index === 0) {
+                            return '<b>' + this.point.name + '</b>: ' + this.point.y + ' cases';
+                        }
+                        if (this.point.index === 1) {
+                            return '<b>' + this.point.name + '</b>: ' + this.point.y + ' cases<br>• ' + (this.point.y / 1240 * 100).toFixed(1) + '% of total entered';
+                        }
+                        if (this.point.index === 2) {
+                            return '<b>' + this.point.name + '</b>: ' + this.point.y + ' cases<br>• ' + (this.point.y / 900 * 100).toFixed(1) + '% of total received<br>• ' + (this.point.y / 1240 * 100).toFixed(1) + '% of total entered';
+                        }
+                    }
+                },
+                credits: { 
+                    enabled: false 
+                }
+            });            
+
+
+            // Chart 1: Time evolution
+            Highcharts.chart('chart-evolution', {
+                chart: { 
+                    type: 'column' 
+                },
+                title: { 
+                    text: 'Daily Logistics Flow Evolution — May', 
+                    align: 'left', 
+                    style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } 
+                },
+                xAxis: { 
+                    categories: [
+                        'May 1', 'May 2', 'May 3', 'May 4', 'May 5', 'May 6', 'May 7', 'May 8', 'May 9', 'May 10', 
+                        'May 11', 'May 12', 'May 13', 'May 14', 'May 15', 'May 16', 'May 17', 'May 18', 'May 19', 'May 20', 
+                        'May 21', 'May 22', 'May 23', 'May 24', 'May 25', 'May 26', 'May 27', 'May 28', 'May 29', 'May 30', 'May 31'
+                    ],
+                    labels: {
+                        rotation: -45,
+                        style: { fontSize: '10px' }
+                    }
+                },
+                yAxis: { 
+                    min: 0, 
+                    title: { text: 'Entry Volume' } 
+                },
+                tooltip: {
+                    shared: true,
+                    headerFormat: '<b>{point.x}</b><br/>'
+                },
+                plotOptions: { 
+                    column: { 
+                        stacking: 'normal',
+                        borderWidth: 0,
+                        pointPadding: 0.1
+                    } 
+                },
+                series: [
+                    { 
+                        name: 'Received', 
+                        data: [
+                            38, 5, 2, 42, 45, 39, 41, 37, 4, 1, 
+                            44, 48, 40, 38, 42, 6, 2, 35, 31, 28, 
+                            25, 22, 3, 1, 15, 12, 8, 5, 2, 0, 0
+                        ], 
+                        color: '#10b981' 
+                    },
+                    { 
+                        name: 'Pending', 
+                        data: [
+                            0, 0, 0, 1, 0, 2, 1, 3, 0, 0, 
+                            2, 1, 3, 4, 5, 1, 0, 8, 12, 15, 
+                            18, 21, 4, 2, 24, 28, 33, 31, 35, 8, 4
+                        ], 
+                        color: '#f59e0b' 
+                    },
+                    { 
+                        name: 'Canceled', 
+                        data: [
+                            7, 2, 1, 8, 6, 7, 5, 9, 2, 1, 
+                            6, 8, 7, 6, 9, 3, 1, 7, 5, 8, 
+                            6, 7, 2, 1, 9, 6, 7, 8, 5, 2, 1
+                        ], 
+                        color: '#ef4444' 
+                    }
+                ],
+                credits: { enabled: false }
+            });
+
+            // Chart 2: Aging of pending items
+            Highcharts.chart('chart-aging', {
+                chart: { type: 'bar' },
+                title: { text: 'Focus on Pending Transactions', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
+                xAxis: { categories: ['0-5 days', '6-10 days', '+10 days'] },
+                yAxis: { title: { text: 'No. of Products' } },
+                plotOptions: { bar: { colorByPoint: true } },
+                colors: ['#34d399', '#fbbf24', '#f87171'],
+                legend: { enabled: false },
+                series: [{ name: 'Volume', data: [100, 45, 20] }],
+                credits: { enabled: false }
+            });
+
+            // Chart 3: Counter-Offer Decisions Breakdown
+            Highcharts.chart('chart-cp-split', {
+                chart: { type: 'pie' },
+                title: { text: 'Counter-Offer Decision Status', align: 'left', style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } },
+                plotOptions: { pie: { innerSize: '55%', dataLabels: { enabled: true, format: '{point.name}: {point.y}' } } },
+                series: [{
+                    name: 'Cases',
+                    data: [
+                        { name: 'Accepted', y: 85, color: '#10b981' },
+                        { name: 'Rejected', y: 40, color: '#ef4444' },
+                        { name: 'Pending', y: 25, color: '#9ca3af' }
+                    ]
+                }],
+                credits: { enabled: false }
+            });
+
+            // Chart 4: Average Price Impact Gap
+            Highcharts.chart('chart-cp-impact', {
+                    chart: { 
+                        type: 'column' 
+                    },
+                    accessibility: { 
+                        enabled: false 
+                    },
+                    title: { 
+                        text: 'Average Price Gap (Initial vs Proposed)', 
+                        align: 'left', 
+                        style: { fontSize: '15px', fontWeight: 'bold', color: '#1f2937' } 
+                    },
+                    xAxis: { 
+                        categories: ['Accepted CO', 'Rejected CO'] 
+                    },
+                    yAxis: { 
+                        title: { text: 'Average Amount (€)' } 
+                    },
+                    tooltip: {
+                        shared: true,
+                        formatter: function () {
+                            let s = '<b>' + this.x + '</b>';
+                            let initialPrice, currentPrice;
+                            
+                            this.points.forEach(function (point) {
+                                s += '<br/>' + point.series.name + ': <b>€' + point.y + '</b>';
+                                if (point.series.index === 0) initialPrice = point.y;
+                                if (point.series.index === 1) currentPrice = point.y;
+                            });
+                            
+                            if (initialPrice && currentPrice) {
+                                let change = ((currentPrice - initialPrice) / initialPrice * 100).toFixed(1);
+                                s += '<br/><span style="color:#ef4444; font-weight:bold;">Variation: ' + change + '%</span>';
+                            }
+                            return s;
+                        }
+                    },
+                    series: [
+                        { 
+                            name: 'Average Initial Price', 
+                            data: [190, 210], 
+                            color: '#3b82f6' 
+                        }, 
+                        { 
+                            name: 'Price After Inspection', 
+                            data: [145, 120], 
+                            color: '#6366f1',
+                            dataLabels: {
+                                enabled: true,
+                                inside: false,
+                                style: {
+                                    fontSize: '11px',
+                                    fontWeight: 'bold',
+                                    textOutline: 'none'
+                                },
+                                formatter: function () {
+                                    let initialData = this.series.chart.series[0].data[this.point.index].y;
+                                    let currentData = this.y;
+                                    let pctChange = ((currentData - initialData) / initialData * 100).toFixed(1);
+                                    
+                                    return '€' + this.y + ' (' + pctChange + '%)';
+                                }
+                            }
+                        }
+                    ],
+                    credits: { 
+                        enabled: false 
+                    }
+                });
+        });
+    </script>
+</body>
+</html>
