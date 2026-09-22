@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation d'inscription - CompaRecycle</title>
+    <style type="text/css">
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        table { border-collapse: collapse !important; }
+        body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        
+        /* Mobile styles */
+        @media screen and (max-width: 600px) {
+            .email-container { width: 100% !important; padding: 10px !important; }
+            .content-box { padding: 20px !important; }
+            .cta-button { width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8fafc;">
+
+    <!-- Conteneur principal -->
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" class="email-container" style="max-w-width: 600px; width: 600px; background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+
+                    <!-- Corps de l'e-mail -->
+                    <tr>
+                        <td class="content-box" style="padding: 24px 32px 32px 32px; color: #334155; font-size: 15px; line-height: 1.6;">
+                            
+                            <h1 style="color: #183544; font-size: 22px; font-weight: 800; margin: 0 0 16px 0; tracking-tight: -0.025em;">
+                                Bienvenue ! Plus qu'une étape...
+                            </h1>
+                            
+                            <p style="margin: 0 0 16px 0;">
+                                Bonjour <strong>Jérôme</strong>,
+                            </p>
+                            
+                            <p style="margin: 0 0 24px 0; color: #475569;">
+                                Vous avez demandé à vous inscrire au <strong>Baromètre CompaRecycle</strong> pour suivre les tendances du marché de la revente et identifier les meilleures opportunités de reprise high-tech.
+                            </p>
+                            
+                            <p style="margin: 0 0 24px 0; color: #475569;">
+                                Afin de valider votre adresse e-mail et confirmer votre inscription, merci de cliquer sur le bouton ci-dessous :
+                            </p>
+
+                            <!-- Bouton CTA -->
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 28px 0;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{{ doubleoptin }}" target="_blank" class="cta-button" style="background-color: #22c55e; color: #ffffff; font-size: 15px; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 12px; display: inline-block; shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.3);">
+                                            CONFIRMER MON INSCRIPTION
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Bloc "Ce que vous allez recevoir" -->
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border-radius: 12px; border: 1px solid #f1f5f9; margin: 28px 0 24px 0;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <p style="margin: 0 0 12px 0; font-weight: 700; color: #183544; font-size: 14px;">
+                                            💡 Ce que vous allez recevoir :
+                                        </p>
+                                        <ul style="margin: 0; padding-left: 20px; color: #475569; font-size: 14px; line-height: 1.7;">
+                                            <li style="margin-bottom: 6px;"><strong>Le baromètre des prix :</strong> La cote moyenne des smartphones, tablettes et consoles.</li>
+                                            <li style="margin-bottom: 6px;"><strong>Les tops de la revente :</strong> Les équipements dont la valeur est au plus haut du marché.</li>
+                                            <li style="margin-bottom: 0;"><strong>Alertes opportunités :</strong> Des conseils simples pour revendre vos équipements au meilleur moment.</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Note de sécurité -->
+                            <p style="margin: 0 0 24px 0; font-size: 13px; color: #94a3b8; font-style: italic; line-height: 1.5;">
+                                Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail. Aucune inscription ne sera prise en compte sans votre confirmation.
+                            </p>
+
+                            <p style="margin: 0; color: #183544; font-weight: 600;">
+                                À très vite sur <a href="https://www.comparecycle.com" target="_blank" style="color: #22c55e; text-decoration: none;">CompaRecycle.com</a> !<br>
+                                <span style="color: #64748b; font-weight: 400; font-size: 14px;">L'équipe CompaRecycle</span>
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <!-- Pied de page -->
+                    <tr>
+                        <td style="background-color: #f1f5f9; padding: 20px 32px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; line-height: 1.5;">
+                            Vous recevez cet e-mail suite à une demande d'inscription sur CompaRecycle.<br>
+                            Conforme RGPD – Gestion sécurisée de vos données.
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

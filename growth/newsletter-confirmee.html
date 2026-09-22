@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription confirmée - CompaRecycle</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#183544',
+                            green: '#22c55e',
+                            'green-hover': '#16a34a',
+                            blue: '#169dd4',
+                            slate: '#f8fafc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="flex flex-col min-h-full font-sans text-slate-800 antialiased selection:bg-brand-green selection:text-white">
+
+    <!-- HEADER SIMPLIFIÉ -->
+    <header class="py-4 px-4 sm:px-8 border-b border-slate-200/60 bg-white/80 backdrop-blur-md sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-2">
+                <span class="text-xl font-extrabold tracking-tight text-brand-navy">Compa<span class="text-brand-green">Recycle</span></span>
+            </a>
+            <a href="/" class="text-xs sm:text-sm font-semibold text-slate-500 hover:text-brand-navy transition flex items-center gap-1.5">
+                <i class="fa-solid fa-house text-xs"></i> Accueil
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-xl w-full space-y-8">
+            
+            <!-- CARD DE CONFIRMATION -->
+            <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/80 text-center relative overflow-hidden">
+                
+                <!-- Baffle décoratif en arrière-plan -->
+                <div class="absolute -top-12 -right-12 w-32 h-32 bg-emerald-50 rounded-full blur-2xl pointer-events-none"></div>
+
+                <!-- Badge Succès -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-100/80 text-brand-green rounded-full text-xs font-bold uppercase tracking-wider mb-6">
+                    <i class="fa-solid fa-circle-check"></i> Enregistré avec succès
+                </div>
+
+                <!-- Titre & Message de confirmation -->
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-brand-navy tracking-tight mb-3">
+                    Votre inscription est confirmée !
+                </h1>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed mb-8">
+                    Merci ! Vous faites désormais partie des membres informés des meilleures opportunités de reprise high-tech et des évolutions du marché.
+                </p>
+
+                <!-- Bloc d'information (Prochaine étape) -->
+                <div class="bg-slate-50 rounded-2xl p-4 sm:p-5 text-left border border-slate-200/60 mb-8 space-y-2">
+                    <div class="flex items-center gap-2 text-brand-navy font-bold text-xs sm:text-sm">
+                        <i class="fa-solid fa-envelope-open-text text-brand-green text-base"></i>
+                        <span>Prochaine étape</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Vous recevrez très prochainement notre tout premier <b>Baromètre des prix de reprise</b> directement dans votre boîte mail.
+                    </p>
+                    <p class="text-[11px] text-slate-400 italic pt-1">
+                        Pensez à vérifier votre dossier spams si vous ne le voyez pas arriver et ajoutez notre adresse à vos contacts favoris.
+                    </p>
+                </div>
+
+                <!-- Séparateur -->
+                <div class="relative my-8">
+                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-100"></div></div>
+                    <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-3 text-slate-400 font-medium">Et maintenant ?</span></div>
+                </div>
+
+                <!-- Bloc Incitation à l'action immédiate -->
+                <div class="space-y-4">
+                    <h2 class="text-lg font-bold text-brand-navy">
+                        Découvrez la valeur de vos appareils dès aujourd'hui
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
+                        Des dizaines d'euros sommeillent peut-être dans vos tiroirs. Obtenez une estimation gratuite et sans engagement en moins de 2 minutes.
+                    </p>
+
+                    <!-- Bouton CTA Principal -->
+                    <div class="pt-2">
+                        <a href="/" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto bg-brand-green hover:bg-brand-green-hover text-white font-bold text-sm px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
+                            <i class="fa-solid fa-calculator"></i> Estimer mon appareil maintenant
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Lien secondaire de retour -->
+            <div class="text-center">
+                <a href="/" class="text-xs font-semibold text-slate-400 hover:text-brand-navy transition inline-flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i> Retourner à l'accueil de CompaRecycle
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER MINIMALISTE -->
+    <footer class="py-6 border-t border-slate-200/60 text-center text-xs text-slate-400 bg-white">
+        <p>Copyright © 2026 CompaRecycle. Tous droits réservés.</p>
+    </footer>
+
+</body>
+</html>
