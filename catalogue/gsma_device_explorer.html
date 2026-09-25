@@ -243,7 +243,7 @@
                 <!-- Informations Textuelles -->
                 <div id="modal-fields" class="space-y-3 text-sm"></div>
 
-                <!-- Section SEO Générée par IA -->
+                <!-- Section SEO & Configuration Clé API Gemini -->
                 <div class="border-t border-slate-200 pt-4 space-y-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
@@ -256,10 +256,24 @@
                         </button>
                     </div>
 
+                    <!-- Champ Masqué Sécurisé pour la Clé API Gemini -->
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1.5">
+                        <label class="block text-xs font-semibold text-slate-700 flex items-center gap-1">
+                            <i data-lucide="key" class="w-3.5 h-3.5 text-slate-500"></i>
+                            <span>Clé API Gemini (stockée dans votre navigateur)</span>
+                        </label>
+                        <div class="flex gap-2">
+                            <input type="password" id="modal-gemini-key-input" placeholder="Collez votre clé API Gemini ici..." class="flex-1 px-3 py-1.5 text-xs border border-slate-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none bg-white font-mono">
+                            <button onclick="saveModalApiKey()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium rounded-md transition-colors">
+                                Enregistrer
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Champ 1 : Description SEO -->
                     <div class="space-y-1">
                         <label class="block text-xs font-semibold text-slate-700">Description Structurée SEO</label>
-                        <textarea id="seo-description" rows="5" placeholder="Cliquez sur 'Créer avec l'IA' pour générer la description optimisée pour le rachat/reprise..." class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none bg-slate-50 font-sans"></textarea>
+                        <textarea id="seo-description" rows="5" placeholder="Cliquez sur 'Créer avec l'IA' pour générer la description..." class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none bg-slate-50 font-sans"></textarea>
                     </div>
 
                     <!-- Champ 2 : Mots clés SEO -->
@@ -367,12 +381,6 @@
         let currentImgIndex = 0;
         let selectedImgUrl = null;
 
-        // Configuration API
-        let appConfig = {
-            "GEMINI_API_KEY": "",
-            "GEMINI_MODEL": "gemini-3.1-flash-lite"
-        };
-
         const searchInput = document.getElementById('search-input');
         const filterBrand = document.getElementById('filter-brand');
         const filterType = document.getElementById('filter-type');
@@ -393,19 +401,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             setupEventListeners();
-            loadAppConfig();
         });
 
-        // Chargement automatique du fichier config.json
-        async function loadAppConfig() {
-            try {
-                const res = await fetch('config.json');
-                if (res.ok) {
-                    appConfig = await res.json();
-                }
-            } catch (err) {
-                console.warn("Fichier config.json non détecté ou inaccessible. Utilisation de la configuration par défaut.");
+        // Gestion de la clé API Gemini via le champ masqué
+        function saveModalApiKey() {
+            const keyInput = document.getElementById('modal-gemini-key-input').value.trim();
+            if (keyInput) {
+                localStorage.setItem('GEMINI_API_KEY', keyInput);
+                alert("Clé API Gemini enregistrée de façon sécurisée dans votre navigateur !");
+            } else {
+                localStorage.removeItem('GEMINI_API_KEY');
+                alert("Clé API effacée.");
             }
+        }
+
+        function getSavedApiKey() {
+            return localStorage.getItem('GEMINI_API_KEY') || document.getElementById('modal-gemini-key-input').value.trim();
         }
 
         worker.onmessage = function(e) {
@@ -587,7 +598,10 @@
             activeProduct = product;
             resetIllustrationBox();
 
-            // Vider les champs SEO
+            // Pré-remplir le champ de clé API enregistré
+            document.getElementById('modal-gemini-key-input').value = localStorage.getItem('GEMINI_API_KEY') || '';
+
+            // Restaurer les valeurs SEO préexistantes
             document.getElementById('seo-description').value = product.seoDescription || '';
             document.getElementById('seo-keywords').value = product.seoKeywords || '';
 
@@ -639,13 +653,14 @@
             document.getElementById('detail-modal').classList.remove('hidden');
         }
 
-        // --- Moteur de génération SEO IA via l'API Gemini ---
+        // --- Moteur de génération SEO via Gemini API ---
 
-async function generateSeoWithAI() {
+        async function generateSeoWithAI() {
             if (!activeProduct) return;
 
-            if (!appConfig.GEMINI_API_KEY) {
-                alert("Veuillez renseigner votre GEMINI_API_KEY dans le fichier 'config.json'.");
+            const apiKey = getSavedApiKey();
+            if (!apiKey) {
+                alert("Veuillez saisir votre clé API Gemini dans le champ dédié ci-dessous.");
                 return;
             }
 
@@ -659,35 +674,31 @@ async function generateSeoWithAI() {
 
             const productName = activeProduct["Nom"].replace(/\(eSim-Only\)/i, '').trim();
 
-            // Prompt 1 : Description SEO avec contrainte stricte
             const promptDescription = `Fais moi un texte méga optimisé SEO pour les ${productName}, axé sur la revente, reprise et rachat au meilleur prix avec CompaRecycle avec des parties specs techniques sans picto avec un ton humoristique, ou avec un ton rassurant, ou avec une partie tips.
             IMPORTANT : Ne fais AUCUNE introduction, AUCUNE phrase de politesse et AUCUNE conclusion. Ne dis pas "Voici le texte". Renvoie UNIQUEMENT le texte brut demandé.`;
 
-            // Prompt 2 : Mots clés SEO avec contrainte stricte
             const promptKeywords = `Fais moi une liste de 350 mots clé autour de la reprise, rachat, revente, vente, meilleur prix sur le produit ${productName} SEO maximisée, formatée avec des virgules, prête à l’emploi en ayant pour objectif d'être N°1 en positionnement sur le référencement naturel du moteur de recherche Google.
             IMPORTANT : Ne fais AUCUNE introduction (ex: "Voici la liste"), AUCUNE phrase de politesse et AUCUNE conclusion. Renvoie UNIQUEMENT les mots-clés séparés par des virgules et absolument rien d'autre.`;
 
             try {
-                // Appel API 1 : Description
-                const descResult = await callGeminiAPI(promptDescription);
+                const descResult = await callGeminiAPI(apiKey, promptDescription);
                 descArea.value = descResult;
                 activeProduct.seoDescription = descResult;
 
-                // Appel API 2 : Mots-clés
-                const kwResult = await callGeminiAPI(promptKeywords);
+                const kwResult = await callGeminiAPI(apiKey, promptKeywords);
                 kwArea.value = kwResult;
                 activeProduct.seoKeywords = kwResult;
 
             } catch (err) {
-                alert("Erreur lors de la génération avec l'IA Gemini : " + err.message);
+                alert("Erreur lors de la génération Gemini : " + err.message);
             } finally {
                 btn.disabled = false;
                 btnText.textContent = "Créer avec l'IA";
             }
         }
 
-        async function callGeminiAPI(promptText) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${appConfig.GEMINI_MODEL}:generateContent?key=${appConfig.GEMINI_API_KEY}`;
+        async function callGeminiAPI(apiKey, promptText) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
             
             const response = await fetch(url, {
                 method: 'POST',
