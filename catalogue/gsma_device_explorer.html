@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSMA Device Database Explorer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#f0f7ff',
+                100: '#e0effe',
+                500: '#0284c7',
+                600: '#0265d2',
+                700: '#0369a1',
+                900: '#0c4a6e',
+              }
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="h-full text-slate-800 antialiased font-sans flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-brand-600 rounded-lg text-white">
+                        <i data-lucide="smartphone" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight">GSMA Device Database</h1>
+                        <p class="text-xs text-slate-400">Catalogue des produits regroupés par nom standardisé</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+
+        <!-- Zone d'importation JSON -->
+        <div id="dropzone-container" class="bg-white border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-brand-500 transition-colors cursor-pointer bg-slate-50/50 relative">
+            <input type="file" id="json-file-input-drop" accept=".json" class="absolute inset-0 opacity-0 cursor-pointer z-10">
+            <div id="dropzone-prompt" class="flex flex-col items-center justify-center gap-2">
+                <div class="p-3 bg-brand-50 text-brand-600 rounded-full">
+                    <i data-lucide="file-json" class="w-6 h-6"></i>
+                </div>
+                <div class="text-sm font-medium text-slate-700">
+                    Glissez-déposez votre fichier <code class="bg-slate-200 px-1 py-0.5 rounded text-xs">devices_grouped.json</code> ici ou <span class="text-brand-600 underline">parcourez</span>
+                </div>
+                <p class="text-xs text-slate-500">Traitement haute performance via Web Worker</p>
+            </div>
+
+            <!-- Loader Progress -->
+            <div id="loading-progress" class="hidden flex flex-col items-center justify-center gap-3 py-2">
+                <div class="flex items-center gap-2 text-sm font-semibold text-brand-600">
+                    <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+                    <span id="loading-status-text">Analyse du fichier en arrière-plan...</span>
+                </div>
+                <div class="w-full max-w-md bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                    <div id="loading-bar" class="bg-brand-600 h-2.5 rounded-full w-0 transition-all duration-200"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cartes Statistiques -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-blue-50 text-blue-600 rounded-lg"><i data-lucide="database" class="w-5 h-5"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500">Produits Uniques</p>
+                    <h3 id="stat-total" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-purple-50 text-purple-600 rounded-lg"><i data-lucide="cpu" class="w-5 h-5"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500">eSim-Only (Oui)</p>
+                    <h3 id="stat-esim" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg"><i data-lucide="tag" class="w-5 h-5"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500">Marques</p>
+                    <h3 id="stat-brands" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-amber-50 text-amber-600 rounded-lg"><i data-lucide="layers" class="w-5 h-5"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500">Catégories</p>
+                    <h3 id="stat-types" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres et Recherche -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                <div class="md:col-span-4 relative">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" placeholder="Rechercher nom, marque, modèle, réf..." class="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div class="md:col-span-3">
+                    <select id="filter-brand" class="w-full py-2 px-3 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                        <option value="">Toutes les marques</option>
+                    </select>
+                </div>
+                <div class="md:col-span-3">
+                    <select id="filter-type" class="w-full py-2 px-3 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                        <option value="">Toutes les catégories</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <select id="filter-esim" class="w-full py-2 px-3 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                        <option value="">eSim-Only: Tous</option>
+                        <option value="Oui">eSim-Only: Oui</option>
+                        <option value="Non">eSim-Only: Non</option>
+                        <option value="Inconnu">eSim-Only: Inconnu</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-100 pt-3">
+                <div>Résultats : <span id="filtered-count" class="font-semibold text-slate-800">0</span> produit(s)</div>
+                <button id="reset-filters-btn" class="inline-flex items-center gap-1 text-slate-600 hover:text-brand-600 font-medium">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Réinitialiser
+                </button>
+            </div>
+        </div>
+
+        <!-- Tableau des produits -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1 flex flex-col">
+            <div class="overflow-x-auto flex-1">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium text-xs uppercase tracking-wider">
+                            <th class="py-3 px-4 cursor-pointer hover:bg-slate-100" onclick="sortTable('Nom')">
+                                <div class="flex items-center gap-1.5">Nom du produit <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-400"></i></div>
+                            </th>
+                            <th class="py-3 px-4 cursor-pointer hover:bg-slate-100" onclick="sortTable('Marque')">
+                                <div class="flex items-center gap-1.5">Marque <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-400"></i></div>
+                            </th>
+                            <th class="py-3 px-4 cursor-pointer hover:bg-slate-100" onclick="sortTable('Catégorie')">
+                                <div class="flex items-center gap-1.5">Catégorie <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-400"></i></div>
+                            </th>
+                            <th class="py-3 px-4 cursor-pointer hover:bg-slate-100" onclick="sortTable('eSim-Only')">
+                                <div class="flex items-center gap-1.5">eSim-Only <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-400"></i></div>
+                            </th>
+                            <th class="py-3 px-4">Référence GSX (TACs)</th>
+                            <th class="py-3 px-4">Modèle</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+
+            <div id="empty-state" class="hidden py-12 text-center">
+                <i data-lucide="search-x" class="w-10 h-10 text-slate-300 mx-auto mb-3"></i>
+                <h3 class="text-slate-700 font-medium">Aucun produit ne correspond</h3>
+            </div>
+
+            <!-- Pagination -->
+            <div class="bg-slate-50 border-t border-slate-200 px-4 py-3 flex items-center justify-between flex-wrap gap-4 text-xs text-slate-600">
+                <div class="flex items-center gap-2">
+                    <span>Afficher</span>
+                    <select id="page-size-select" class="py-1 px-2 border border-slate-300 rounded bg-white font-medium">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>par page</span>
+                </div>
+                <div id="pagination-info" class="font-medium">Affichage 0 - 0 sur 0</div>
+                <div class="flex items-center gap-1" id="pagination-controls"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Fiche Produit -->
+    <div id="detail-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-100 flex flex-col max-h-[92vh]">
+            
+            <!-- Modal Header -->
+            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="info" class="w-5 h-5 text-brand-500"></i>
+                    <h3 class="font-semibold text-base">Fiche Produit Unique</h3>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6 overflow-y-auto flex-1">
+                
+                <!-- Zone Studio Blanc e-commerce -->
+                <div id="illustration-box" onclick="handleIllustrationBoxClick()" class="w-full h-56 bg-white border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center relative overflow-hidden transition-colors cursor-pointer group hover:border-brand-400 shadow-inner">
+                    <div id="img-prompt" class="flex flex-col items-center gap-2 text-slate-400 group-hover:text-brand-600 transition-colors">
+                        <i data-lucide="image-plus" class="w-8 h-8"></i>
+                        <span class="text-xs font-medium">Charger le visuel studio officiel (rendu e-commerce)</span>
+                    </div>
+
+                    <div id="img-loader" class="hidden flex flex-col items-center gap-2 text-brand-600">
+                        <i data-lucide="loader-2" class="w-7 h-7 animate-spin"></i>
+                        <span class="text-xs font-semibold">Recherche du visuel officiel studio...</span>
+                    </div>
+
+                    <div id="img-carousel" class="hidden w-full h-full relative flex items-center justify-center bg-white p-4">
+                        <img id="carousel-img" referrerpolicy="no-referrer" src="" alt="Illustration Officielle" class="h-full w-full object-contain cursor-pointer transition-all duration-200 drop-shadow-md" onclick="selectCurrentImage(event)">
+
+                        <div id="selected-badge" class="hidden absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10">
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                            <span>Visuel Officiel Sélectionné</span>
+                        </div>
+
+                        <button onclick="prevImage(event)" class="absolute left-2 p-1.5 rounded-full bg-slate-800/80 text-white hover:bg-slate-900 shadow transition-colors z-10">
+                            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                        </button>
+
+                        <button onclick="nextImage(event)" class="absolute right-2 p-1.5 rounded-full bg-slate-800/80 text-white hover:bg-slate-900 shadow transition-colors z-10">
+                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                        </button>
+
+                        <div class="absolute bottom-2 bg-slate-800/80 text-white text-[11px] font-mono px-2.5 py-0.5 rounded-full backdrop-blur-sm shadow">
+                            <span id="img-index-display">1 / 1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations Textuelles -->
+                <div id="modal-fields" class="space-y-3 text-sm"></div>
+
+                <!-- Section SEO Générée par IA -->
+                <div class="border-t border-slate-200 pt-4 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-purple-600"></i>
+                            <h4 class="font-bold text-slate-900 text-sm">Optimisation SEO (CompaRecycle)</h4>
+                        </div>
+                        <button id="btn-generate-ai" onclick="generateSeoWithAI()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all">
+                            <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
+                            <span id="ai-btn-text">Créer avec l'IA</span>
+                        </button>
+                    </div>
+
+                    <!-- Champ 1 : Description SEO -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Description Structurée SEO</label>
+                        <textarea id="seo-description" rows="5" placeholder="Cliquez sur 'Créer avec l'IA' pour générer la description optimisée pour le rachat/reprise..." class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none bg-slate-50 font-sans"></textarea>
+                    </div>
+
+                    <!-- Champ 2 : Mots clés SEO -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Mots-clés SEO (350 mots-clés séparés par des virgules)</label>
+                        <textarea id="seo-keywords" rows="3" placeholder="Mots-clés générés pour viser la position N°1 Google..." class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none bg-slate-50 font-mono"></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 flex justify-end shrink-0">
+                <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-medium rounded-lg">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Web Worker embarqué -->
+    <script id="worker-script" type="text/template">
+        let dataset = [];
+
+        self.onmessage = function(e) {
+            const { type, data } = e.data;
+
+            if (type === 'PARSE') {
+                try {
+                    dataset = JSON.parse(data);
+                    const brands = new Set();
+                    const types = new Set();
+                    let esimCount = 0;
+
+                    for (let i = 0; i < dataset.length; i++) {
+                        const item = dataset[i];
+                        if (item["Marque"]) brands.add(item["Marque"]);
+                        if (item["Catégorie"]) types.add(item["Catégorie"]);
+                        if (item["eSim-Only"] === "Oui") esimCount++;
+                    }
+
+                    self.postMessage({
+                        type: 'PARSED_SUCCESS',
+                        total: dataset.length,
+                        esimCount: esimCount,
+                        brands: Array.from(brands).sort(),
+                        types: Array.from(types).sort()
+                    });
+                } catch (err) {
+                    self.postMessage({ type: 'ERROR', error: err.message });
+                }
+            } 
+            else if (type === 'FILTER') {
+                const { query, brand, category, esim, sortColumn, sortAscending } = e.data;
+                const filtered = [];
+                const q = query ? query.toLowerCase() : '';
+
+                for (let i = 0; i < dataset.length; i++) {
+                    const item = dataset[i];
+                    if (brand && item["Marque"] !== brand) continue;
+                    if (category && item["Catégorie"] !== category) continue;
+                    if (esim && item["eSim-Only"] !== esim) continue;
+
+                    if (q) {
+                        const gsxJoined = Array.isArray(item["Référence GSX"]) ? item["Référence GSX"].join(' ') : '';
+                        const match = 
+                            (item["Nom"] && item["Nom"].toLowerCase().includes(q)) ||
+                            (item["Marque"] && item["Marque"].toLowerCase().includes(q)) ||
+                            (item["Modèle"] && item["Modèle"].toLowerCase().includes(q)) ||
+                            (item["Référence"] && item["Référence"].toLowerCase().includes(q)) ||
+                            (item["DeviceAtlas ID"] && item["DeviceAtlas ID"].toLowerCase().includes(q)) ||
+                            gsxJoined.includes(q);
+                        if (!match) continue;
+                    }
+                    filtered.push(item);
+                }
+
+                filtered.sort((a, b) => {
+                    let valA = a[sortColumn] || '';
+                    let valB = b[sortColumn] || '';
+                    if (typeof valA === 'string') valA = valA.toLowerCase();
+                    if (typeof valB === 'string') valB = valB.toLowerCase();
+                    if (valA < valB) return sortAscending ? -1 : 1;
+                    if (valA > valB) return sortAscending ? 1 : -1;
+                    return 0;
+                });
+
+                self.postMessage({ type: 'FILTERED_SUCCESS', results: filtered });
+            }
+        };
+    </script>
+
+    <script>
+        const workerBlob = new Blob([document.getElementById('worker-script').textContent], { type: 'application/javascript' });
+        const worker = new Worker(URL.createObjectURL(workerBlob));
+
+        let currentFilteredResults = [];
+        let activeProduct = null;
+        let currentPage = 1;
+        let pageSize = 25;
+        let sortColumn = 'Nom';
+        let sortAscending = true;
+
+        let fetchedImages = [];
+        let currentImgIndex = 0;
+        let selectedImgUrl = null;
+
+        // Configuration API
+        let appConfig = {
+            "GEMINI_API_KEY": "AQ.Ab8RN6IGRBICr4ZGagli3zvlgE6HMkHOtVIwe47oyNBLmBlL7g",
+            "GEMINI_MODEL": "gemini-3.1-flash-lite"
+        };
+
+        const searchInput = document.getElementById('search-input');
+        const filterBrand = document.getElementById('filter-brand');
+        const filterType = document.getElementById('filter-type');
+        const filterEsim = document.getElementById('filter-esim');
+        const tableBody = document.getElementById('table-body');
+        const emptyState = document.getElementById('empty-state');
+        const filteredCountEl = document.getElementById('filtered-count');
+        const pageSizeSelect = document.getElementById('page-size-select');
+        const paginationInfo = document.getElementById('pagination-info');
+        const paginationControls = document.getElementById('pagination-controls');
+        const resetFiltersBtn = document.getElementById('reset-filters-btn');
+
+        const dropzonePrompt = document.getElementById('dropzone-prompt');
+        const loadingProgress = document.getElementById('loading-progress');
+        const loadingBar = document.getElementById('loading-bar');
+        const loadingStatusText = document.getElementById('loading-status-text');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            setupEventListeners();
+            loadAppConfig();
+        });
+
+        // Chargement automatique du fichier config.json
+        async function loadAppConfig() {
+            try {
+                const res = await fetch('config.json');
+                if (res.ok) {
+                    appConfig = await res.json();
+                }
+            } catch (err) {
+                console.warn("Fichier config.json non détecté ou inaccessible. Utilisation de la configuration par défaut.");
+            }
+        }
+
+        worker.onmessage = function(e) {
+            const { type } = e.data;
+            if (type === 'PARSED_SUCCESS') {
+                loadingBar.style.width = '100%';
+                document.getElementById('stat-total').textContent = e.data.total.toLocaleString('fr-FR');
+                document.getElementById('stat-esim').textContent = e.data.esimCount.toLocaleString('fr-FR');
+                document.getElementById('stat-brands').textContent = e.data.brands.length.toLocaleString('fr-FR');
+                document.getElementById('stat-types').textContent = e.data.types.length.toLocaleString('fr-FR');
+
+                filterBrand.innerHTML = '<option value="">Toutes les marques</option>' + 
+                    e.data.brands.map(b => `<option value="${b}">${b}</option>`).join('');
+
+                filterType.innerHTML = '<option value="">Toutes les catégories</option>' + 
+                    e.data.types.map(t => `<option value="${t}">${t}</option>`).join('');
+
+                setTimeout(() => {
+                    loadingProgress.classList.add('hidden');
+                    dropzonePrompt.classList.remove('hidden');
+                    requestFilterWorker();
+                }, 200);
+            } else if (type === 'FILTERED_SUCCESS') {
+                currentFilteredResults = e.data.results;
+                currentPage = 1;
+                filteredCountEl.textContent = currentFilteredResults.length.toLocaleString('fr-FR');
+                renderTable();
+            }
+        };
+
+        function setupEventListeners() {
+            let debounceTimer;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(requestFilterWorker, 200);
+            });
+
+            filterBrand.addEventListener('change', requestFilterWorker);
+            filterType.addEventListener('change', requestFilterWorker);
+            filterEsim.addEventListener('change', requestFilterWorker);
+            
+            pageSizeSelect.addEventListener('change', (e) => {
+                pageSize = parseInt(e.target.value);
+                currentPage = 1;
+                renderTable();
+            });
+
+            resetFiltersBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                filterBrand.value = '';
+                filterType.value = '';
+                filterEsim.value = '';
+                requestFilterWorker();
+            });
+
+            const dropInput = document.getElementById('json-file-input-drop');
+            if (dropInput) {
+                dropInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    dropzonePrompt.classList.add('hidden');
+                    loadingProgress.classList.remove('hidden');
+                    loadingBar.style.width = '30%';
+                    loadingStatusText.textContent = "Chargement du fichier...";
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        loadingBar.style.width = '70%';
+                        loadingStatusText.textContent = "Analyse en arrière-plan (Worker)...";
+                        worker.postMessage({ type: 'PARSE', data: event.target.result });
+                    };
+                    reader.readAsText(file);
+                });
+            }
+        }
+
+        function requestFilterWorker() {
+            worker.postMessage({
+                type: 'FILTER',
+                query: searchInput.value,
+                brand: filterBrand.value,
+                category: filterType.value,
+                esim: filterEsim.value,
+                sortColumn: sortColumn,
+                sortAscending: sortAscending
+            });
+        }
+
+        function sortTable(column) {
+            if (sortColumn === column) sortAscending = !sortAscending;
+            else { sortColumn = column; sortAscending = true; }
+            requestFilterWorker();
+        }
+
+        function renderTable() {
+            tableBody.innerHTML = '';
+            if (currentFilteredResults.length === 0) {
+                emptyState.classList.remove('hidden');
+                paginationInfo.textContent = 'Affichage 0 - 0 sur 0';
+                paginationControls.innerHTML = '';
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, currentFilteredResults.length);
+            const pageItems = currentFilteredResults.slice(startIndex, endIndex);
+
+            let rowsHtml = '';
+            for (let i = 0; i < pageItems.length; i++) {
+                const product = pageItems[i];
+                let esimBadge = '';
+
+                if (product["eSim-Only"] === "Oui") {
+                    esimBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-700 border border-purple-200"><i data-lucide="check-circle-2" class="w-3 h-3 mr-1"></i> Oui</span>`;
+                } else if (product["eSim-Only"] === "Non") {
+                    esimBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">Non</span>`;
+                } else {
+                    esimBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200">Inconnu</span>`;
+                }
+
+                const gsxList = Array.isArray(product["Référence GSX"]) ? product["Référence GSX"] : [];
+                const gsxDisplay = gsxList.length > 0 
+                    ? `<span class="font-mono text-xs text-slate-700">${gsxList[0]}</span> ${gsxList.length > 1 ? `<span class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded text-[10px] font-semibold">+${gsxList.length - 1}</span>` : ''}`
+                    : '-';
+
+                rowsHtml += `
+                    <tr class="hover:bg-slate-50/80 cursor-pointer transition-colors" onclick="openModalByIndex(${startIndex + i})">
+                        <td class="py-3 px-4 font-medium text-slate-900">${product["Nom"] || "N/A"}</td>
+                        <td class="py-3 px-4 text-slate-600 font-medium">${product["Marque"] || '-'}</td>
+                        <td class="py-3 px-4 text-slate-600">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">${product["Catégorie"] || '-'}</span>
+                        </td>
+                        <td class="py-3 px-4">${esimBadge}</td>
+                        <td class="py-3 px-4">${gsxDisplay}</td>
+                        <td class="py-3 px-4 text-slate-500 text-xs">${product["Modèle"] || '-'}</td>
+                    </tr>
+                `;
+            }
+
+            tableBody.innerHTML = rowsHtml;
+            lucide.createIcons();
+            renderPagination(startIndex, endIndex);
+        }
+
+        function renderPagination(startIndex, endIndex) {
+            const totalPages = Math.ceil(currentFilteredResults.length / pageSize);
+            paginationInfo.textContent = `Affichage ${startIndex + 1} - ${endIndex} sur ${currentFilteredResults.length.toLocaleString('fr-FR')}`;
+            paginationControls.innerHTML = '';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.className = `p-1.5 rounded border border-slate-300 ${currentPage === 1 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100'}`;
+            prevBtn.innerHTML = `<i data-lucide="chevron-left" class="w-4 h-4"></i>`;
+            prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderTable(); } };
+            paginationControls.appendChild(prevBtn);
+
+            const pageIndicator = document.createElement('span');
+            pageIndicator.className = "px-3 py-1 font-semibold text-xs text-slate-700";
+            pageIndicator.textContent = `Page ${currentPage} / ${totalPages}`;
+            paginationControls.appendChild(pageIndicator);
+
+            const nextBtn = document.createElement('button');
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+            nextBtn.className = `p-1.5 rounded border border-slate-300 ${currentPage === totalPages || totalPages === 0 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100'}`;
+            nextBtn.innerHTML = `<i data-lucide="chevron-right" class="w-4 h-4"></i>`;
+            nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderTable(); } };
+            paginationControls.appendChild(nextBtn);
+
+            lucide.createIcons();
+        }
+
+        function openModalByIndex(index) {
+            openModal(currentFilteredResults[index]);
+        }
+
+        function openModal(product) {
+            activeProduct = product;
+            resetIllustrationBox();
+
+            // Vider les champs SEO
+            document.getElementById('seo-description').value = product.seoDescription || '';
+            document.getElementById('seo-keywords').value = product.seoKeywords || '';
+
+            const modalFields = document.getElementById('modal-fields');
+            const gsxList = Array.isArray(product["Référence GSX"]) ? product["Référence GSX"] : [];
+            const gsxBadges = gsxList.length > 0 
+                ? gsxList.map(t => `<span class="inline-block bg-slate-100 font-mono text-xs px-2 py-1 rounded border border-slate-200 mr-1 mb-1">${t}</span>`).join('')
+                : '-';
+
+            modalFields.innerHTML = `
+                <div class="border-b border-slate-100 pb-2">
+                    <span class="text-xs text-slate-400 block">Nom complet</span>
+                    <span class="font-bold text-slate-900 text-base">${product["Nom"] || '-'}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Marque</span>
+                        <span class="font-medium text-slate-800">${product["Marque"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Catégorie</span>
+                        <span class="font-medium text-slate-800">${product["Catégorie"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Modèle</span>
+                        <span class="font-medium text-slate-800">${product["Modèle"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Référence(s)</span>
+                        <span class="font-medium text-slate-800">${product["Référence"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">eSim-Only</span>
+                        <span class="font-medium text-slate-800">${product["eSim-Only"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Code Pays</span>
+                        <span class="font-medium text-slate-800">${product["Code Pays"] || '-'}</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-400 block mb-1">Référence GSX (Codes TAC associés - ${gsxList.length})</span>
+                    <div class="max-h-24 overflow-y-auto p-2 bg-slate-50 rounded-lg border border-slate-200">
+                        ${gsxBadges}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        // --- Moteur de génération SEO IA via l'API Gemini ---
+
+async function generateSeoWithAI() {
+            if (!activeProduct) return;
+
+            if (!appConfig.GEMINI_API_KEY) {
+                alert("Veuillez renseigner votre GEMINI_API_KEY dans le fichier 'config.json'.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-generate-ai');
+            const btnText = document.getElementById('ai-btn-text');
+            const descArea = document.getElementById('seo-description');
+            const kwArea = document.getElementById('seo-keywords');
+
+            btn.disabled = true;
+            btnText.textContent = "Génération IA en cours...";
+
+            const productName = activeProduct["Nom"].replace(/\(eSim-Only\)/i, '').trim();
+
+            // Prompt 1 : Description SEO avec contrainte stricte
+            const promptDescription = `Fais moi un texte méga optimisé SEO pour les ${productName}, axé sur la revente, reprise et rachat au meilleur prix avec CompaRecycle avec des parties specs techniques sans picto avec un ton humoristique, ou avec un ton rassurant, ou avec une partie tips.
+            IMPORTANT : Ne fais AUCUNE introduction, AUCUNE phrase de politesse et AUCUNE conclusion. Ne dis pas "Voici le texte". Renvoie UNIQUEMENT le texte brut demandé.`;
+
+            // Prompt 2 : Mots clés SEO avec contrainte stricte
+            const promptKeywords = `Fais moi une liste de 350 mots clé autour de la reprise, rachat, revente, vente, meilleur prix sur le produit ${productName} SEO maximisée, formatée avec des virgules, prête à l’emploi en ayant pour objectif d'être N°1 en positionnement sur le référencement naturel du moteur de recherche Google.
+            IMPORTANT : Ne fais AUCUNE introduction (ex: "Voici la liste"), AUCUNE phrase de politesse et AUCUNE conclusion. Renvoie UNIQUEMENT les mots-clés séparés par des virgules et absolument rien d'autre.`;
+
+            try {
+                // Appel API 1 : Description
+                const descResult = await callGeminiAPI(promptDescription);
+                descArea.value = descResult;
+                activeProduct.seoDescription = descResult;
+
+                // Appel API 2 : Mots-clés
+                const kwResult = await callGeminiAPI(promptKeywords);
+                kwArea.value = kwResult;
+                activeProduct.seoKeywords = kwResult;
+
+            } catch (err) {
+                alert("Erreur lors de la génération avec l'IA Gemini : " + err.message);
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = "Créer avec l'IA";
+            }
+        }
+
+        async function callGeminiAPI(promptText) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${appConfig.GEMINI_MODEL}:generateContent?key=${appConfig.GEMINI_API_KEY}`;
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: promptText }]
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error?.message || response.statusText);
+            }
+
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text.trim();
+        }
+
+        // --- Moteur de visuels officiels ---
+
+        function resetIllustrationBox() {
+            fetchedImages = [];
+            currentImgIndex = 0;
+            selectedImgUrl = null;
+
+            document.getElementById('img-prompt').classList.remove('hidden');
+            document.getElementById('img-loader').classList.add('hidden');
+            document.getElementById('img-carousel').classList.add('hidden');
+            document.getElementById('selected-badge').classList.add('hidden');
+        }
+
+        function handleIllustrationBoxClick() {
+            if (fetchedImages.length === 0) {
+                fetchOfficialProductImages();
+            }
+        }
+
+        async function fetchOfficialProductImages() {
+            if (!activeProduct) return;
+
+            document.getElementById('img-prompt').classList.add('hidden');
+            document.getElementById('img-loader').classList.remove('hidden');
+
+            const cleanName = activeProduct["Nom"].replace(/\(eSim-Only\)/i, '').trim();
+            const brand = activeProduct["Marque"] || "";
+            
+            const slug = `${brand.toLowerCase()}-${cleanName.toLowerCase().replace(/\s+/g, '-')}`;
+            const slugNoBrand = `${cleanName.toLowerCase().replace(/\s+/g, '-')}`;
+
+            fetchedImages = [
+                `https://fdn2.gsmarena.com/vv/bigpic/${slug}.jpg`,
+                `https://fdn2.gsmarena.com/vv/bigpic/${slugNoBrand}.jpg`,
+                `https://images.weserv.nl/?url=fdn2.gsmarena.com/vv/bigpic/${slug}.jpg`,
+                `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(cleanName)}.png?width=800`
+            ];
+
+            currentImgIndex = 0;
+            loadValidImageOrNext();
+        }
+
+        function loadValidImageOrNext() {
+            if (currentImgIndex >= fetchedImages.length) {
+                alert("Impossible de charger le visuel officiel pour ce modèle.");
+                resetIllustrationBox();
+                return;
+            }
+
+            const testImg = new Image();
+            testImg.referrerPolicy = "no-referrer";
+            const targetUrl = fetchedImages[currentImgIndex];
+
+            testImg.onerror = () => {
+                currentImgIndex++;
+                loadValidImageOrNext();
+            };
+
+            testImg.onload = () => {
+                displayCurrentImage();
+                document.getElementById('img-loader').classList.add('hidden');
+                document.getElementById('img-carousel').classList.remove('hidden');
+            };
+
+            testImg.src = targetUrl;
+        }
+
+        function displayCurrentImage() {
+            const imgEl = document.getElementById('carousel-img');
+            const indexEl = document.getElementById('img-index-display');
+            const badgeEl = document.getElementById('selected-badge');
+
+            const currentUrl = fetchedImages[currentImgIndex];
+            imgEl.src = currentUrl;
+            indexEl.textContent = `${currentImgIndex + 1} / ${fetchedImages.length}`;
+
+            if (selectedImgUrl === currentUrl) {
+                badgeEl.classList.remove('hidden');
+                imgEl.classList.add('ring-4', 'ring-emerald-500');
+            } else {
+                badgeEl.classList.add('hidden');
+                imgEl.classList.remove('ring-4', 'ring-emerald-500');
+            }
+        }
+
+        function selectCurrentImage(e) {
+            e.stopPropagation();
+            selectedImgUrl = fetchedImages[currentImgIndex];
+            displayCurrentImage();
+        }
+
+        function prevImage(e) {
+            e.stopPropagation();
+            if (fetchedImages.length === 0) return;
+            currentImgIndex = (currentImgIndex - 1 + fetchedImages.length) % fetchedImages.length;
+            displayCurrentImage();
+        }
+
+        function nextImage(e) {
+            e.stopPropagation();
+            if (fetchedImages.length === 0) return;
+            currentImgIndex = (currentImgIndex + 1) % fetchedImages.length;
+            displayCurrentImage();
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+            activeProduct = null;
+        }
+    </script>
+</body>
+</html>
