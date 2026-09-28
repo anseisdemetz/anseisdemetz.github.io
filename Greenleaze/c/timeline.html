@@ -10,323 +10,374 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <!-- Babel -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased">
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect, useRef, useMemo } = React;
+    const { useState, useEffect, useMemo, useRef } = React;
 
     function TimelineApp() {
-      const [data08, setData08] = useState([]);
       const [data09, setData09] = useState([]);
       const [searchTerm, setSearchTerm] = useState("");
-      const [selectedId, setSelectedId] = useState("");
+      const [selectedBrand, setSelectedBrand] = useState("ALL");
       const [selectedGrade, setSelectedGrade] = useState("A");
-      const [isDropdownOpen, setIsDropdownOpen] = useState(false);
       
-      const dropdownRef = useRef(null);
-      const inputRef = useRef(null);
+      // Gestion de la Clé API et des analyses IA
+      const [apiKey, setApiKey] = useState("");
+      const [aiAnalyses, setAiAnalyses] = useState({});
+      const [loadingAi, setLoadingAi] = useState(false);
+
+      const chartRef = useRef(null);
+      const chartInstance = useRef(null);
+
       const gradesList = ["A", "B", "C", "D-"];
+      const targetHorizons = ["+3M", "+6M", "+12M", "+24M", "+36M"];
+      const allMonths = Array.from({ length: 37 }, (_, i) => `M${i}`);
 
       useEffect(() => {
-        Promise.all([
-          fetch("timeline_data_08.json").then((res) => res.json()).catch(() => []),
-          fetch("timeline_data_09.json").then((res) => res.json()).catch(() => [])
-        ]).then(([d08, d09]) => {
-          setData08(d08);
-          setData09(d09);
-
-          const baseList = d09.length > 0 ? d09 : d08;
-          if (baseList.length > 0) {
-            const sortedBase = [...baseList].sort(
-              (a, b) => new Date(a.launch_date) - new Date(b.launch_date)
-            );
-            setSelectedId(sortedBase[0].idproduct);
-            setSearchTerm(`${sortedBase[0].product} (${sortedBase[0].idproduct})`);
-          }
-        });
+        fetch("timeline_data_09.json")
+          .then((res) => res.json())
+          .then((data) => setData09(data))
+          .catch(() => setData09([]));
       }, []);
 
-      const productsList = useMemo(() => {
-        const uniqueMap = new Map();
-        [...data09, ...data08].forEach((item) => {
-          if (!uniqueMap.has(item.idproduct)) {
-            uniqueMap.set(item.idproduct, {
-              id: item.idproduct,
-              name: item.product,
-              brand: item.manufacturer,
-              launchDate: item.launch_date
-            });
+      const brandsList = useMemo(() => {
+        const brands = new Set();
+        data09.forEach((item) => {
+          if (item.manufacturer) brands.add(item.manufacturer);
+        });
+        return Array.from(brands).sort();
+      }, [data09]);
+
+      const filteredRows = useMemo(() => {
+        return data09.filter((item) => {
+          if (item.grade !== selectedGrade) return false;
+          if (selectedBrand !== "ALL" && item.manufacturer !== selectedBrand) return false;
+          if (searchTerm.trim()) {
+            const term = searchTerm.toLowerCase();
+            return item.product.toLowerCase().includes(term) || item.idproduct.toLowerCase().includes(term);
           }
-        });
+          return true;
+        }).sort((a, b) => new Date(a.launch_date || 0) - new Date(b.launch_date || 0));
+      }, [data09, selectedGrade, selectedBrand, searchTerm]);
 
-        return Array.from(uniqueMap.values()).sort((a, b) => {
-          const dateA = new Date(a.launchDate || 0);
-          const dateB = new Date(b.launchDate || 0);
-          return dateA - dateB;
-        });
-      }, [data08, data09]);
+      // Sélection des 5 premiers produits
+      const top5Products = useMemo(() => filteredRows.slice(0, 5), [filteredRows]);
 
-      const filteredProducts = useMemo(() => {
-        if (!searchTerm.trim()) return productsList;
-
-        const selectedProd = productsList.find((p) => p.id === selectedId);
-        const selectedString = selectedProd ? `${selectedProd.name} (${selectedProd.id})` : "";
-
-        if (searchTerm === selectedString) {
-          return productsList;
+      // Fonction d'appel à l'API Gemini avec Google Search Grounding
+      const analyzeTop5WithGemini = async () => {
+        if (!apiKey) {
+          alert("Veuillez saisir votre clé API Gemini.");
+          return;
         }
 
-        const term = searchTerm.toLowerCase();
-        return productsList.filter(
-          (p) => p.name.toLowerCase().includes(term) || p.id.toLowerCase().includes(term)
-        );
-      }, [productsList, searchTerm, selectedId]);
+        setLoadingAi(true);
+        const results = {};
 
-      useEffect(() => {
-        const handleClickOutside = (e) => {
-          if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-            setIsDropdownOpen(false);
+        for (const item of top5Products) {
+          const prompt = `
+Cherche sur le web les prix de reprise / trade-in actuels en France pour ce smartphone :
+- Nom : ${item.product}
+- Prix de lancement initial P0 : ${item.p0} €
+- Grade état : ${item.grade}
+
+Trouve les offres de reprise actuelles chez les concurrents français (ex: Back Market, Recommerce, Orange, Apple Trade-in, Bouygues, Fnac, Cash Converters).
+
+Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown) :
+{
+  "current_tradein_price": <prix_moyen_ou_max_trouve_en_nombre>,
+  "current_discount_pct": <pourcentage_de_decote_par_rapport_a_p0_en_nombre>,
+  "ai_projection_text": "<courte synthèse indiquant les sources/concurrents trouves et leurs prix de reprise>"
+}
+          `;
+
+          try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                tools: [
+                  { google_search: {} } // Activation de la recherche Web en direct
+                ]
+              })
+            });
+
+            const data = await response.json();
+            const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+            
+            // Extraction sécurisée du JSON
+            const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              results[item.idproduct] = JSON.parse(jsonMatch[0]);
+            } else {
+              results[item.idproduct] = {
+                current_tradein_price: "-",
+                current_discount_pct: "-",
+                ai_projection_text: "Impossible de structurer la réponse web."
+              };
+            }
+          } catch (err) {
+            results[item.idproduct] = {
+              current_tradein_price: "-",
+              current_discount_pct: "-",
+              ai_projection_text: "Erreur lors de la recherche Web."
+            };
           }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-      }, []);
+        }
 
-      const item08 = useMemo(() => {
-        return data08.find((i) => i.idproduct === selectedId && i.grade === selectedGrade);
-      }, [data08, selectedId, selectedGrade]);
-
-      const item09 = useMemo(() => {
-        return data09.find((i) => i.idproduct === selectedId && i.grade === selectedGrade);
-      }, [data09, selectedId, selectedGrade]);
-
-      const comparisonTable = useMemo(() => {
-        const refItem = item09 || item08;
-        if (!refItem || !refItem.horizons) return [];
-
-        return refItem.horizons.map((hRef, idx) => {
-          const h08 = item08 && item08.horizons ? item08.horizons[idx] : null;
-          const h09 = item09 && item09.horizons ? item09.horizons[idx] : null;
-
-          const p08 = h08 && h08.price !== null ? h08.price : null;
-          const p09 = h09 && h09.price !== null ? h09.price : null;
-
-          let delta = null;
-          if (p08 !== null && p09 !== null) {
-            delta = Number((p09 - p08).toFixed(2));
-          }
-
-          const valorizationPct = h09 && h09.valorizationPct !== null 
-            ? h09.valorizationPct 
-            : (h08 && h08.valorizationPct !== null ? h08.valorizationPct : null);
-
-          return {
-            monthLabel: hRef.monthLabel,
-            date: h09 ? h09.date : (h08 ? h08.date : hRef.date),
-            p08: p08,
-            isReal08: h08 ? h08.isReal : false,
-            p09: p09,
-            isReal09: h09 ? h09.isReal : false,
-            delta: delta,
-            valorizationPct: valorizationPct
-          };
-        });
-      }, [item08, item09]);
-
-      const activeItem = item09 || item08;
-
-      const handleSelect = (prod) => {
-        setSelectedId(prod.id);
-        setSearchTerm(`${prod.name} (${prod.id})`);
-        setIsDropdownOpen(false);
+        setAiAnalyses(results);
+        setLoadingAi(false);
       };
 
+      const getColor = (index) => {
+        const colors = ["#10b981", "#3b82f6", "#f59e0b", "#ec4899", "#8b5cf6", "#06b6d4", "#f97316", "#14b8a6", "#6366f1", "#a855f7"];
+        return colors[index % colors.length];
+      };
+
+      // Courbe des Prix Moyens (€)
+      useEffect(() => {
+        if (!chartRef.current) return;
+        const ctx = chartRef.current.getContext("2d");
+        if (chartInstance.current) chartInstance.current.destroy();
+
+        const datasets = [];
+
+        filteredRows.forEach((item, idx) => {
+          if (!item.monthly_data) return;
+
+          const baseColor = getColor(idx);
+          const realPriceData = new Array(37).fill(null);
+          const projPriceData = new Array(37).fill(null);
+
+          item.monthly_data.forEach((mObj) => {
+            const mNum = mObj.month;
+            if (mNum > 36) return;
+
+            if (mObj.price !== null) {
+              if (mObj.isReal) {
+                realPriceData[mNum] = mObj.price;
+              } else {
+                projPriceData[mNum] = mObj.price;
+              }
+            }
+          });
+
+          datasets.push({
+            label: `${item.product} (Réel)`,
+            data: realPriceData,
+            borderColor: baseColor,
+            backgroundColor: baseColor,
+            borderWidth: 2.5,
+            spanGaps: true,
+            tension: 0.2,
+            pointRadius: 3
+          });
+
+          datasets.push({
+            label: `${item.product} (Projeté)`,
+            data: projPriceData,
+            borderColor: baseColor,
+            backgroundColor: baseColor,
+            borderWidth: 1.8,
+            borderDash: [5, 5],
+            spanGaps: true,
+            tension: 0.2,
+            pointRadius: 2
+          });
+        });
+
+        chartInstance.current = new Chart(ctx, {
+          type: "line",
+          data: { labels: allMonths, datasets: datasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: "bottom", labels: { color: "#94a3b8", font: { size: 10 }, boxWidth: 12 } },
+              tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${context.raw} €` } }
+            },
+            scales: {
+              x: { grid: { color: "#1e293b" }, ticks: { color: "#94a3b8" } },
+              y: { grid: { color: "#1e293b" }, ticks: { color: "#94a3b8", callback: (v) => `${v} €` } }
+            }
+          }
+        });
+
+        return () => { if (chartInstance.current) chartInstance.current.destroy(); };
+      }, [filteredRows]);
+
       return (
-        <div className="max-w-6xl mx-auto p-6 space-y-8">
-          <header className="border-b border-slate-800 pb-4">
-            <h1 className="text-2xl font-bold text-emerald-400">Comparatif Réel / Projeté (Août vs Septembre)</h1>
-            <p className="text-slate-400 text-sm">Analyse des écarts de prix entre les données d'août (timeline_data_08.json) et septembre (timeline_data_09.json)</p>
+        <div className="max-w-7xl mx-auto p-6 space-y-8">
+          <header className="border-b border-slate-800 pb-4 flex justify-between items-center flex-wrap gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-emerald-400">Projections & Valorisation Argus</h1>
+              <p className="text-slate-400 text-sm">Évolution mensuelle des prix et horizons de valorisation (données de Septembre)</p>
+            </div>
+
+            {/* Saisie Sécurisée de la Clé API Gemini */}
+            <div className="flex items-center gap-2 bg-slate-800 p-2 rounded-lg border border-slate-700">
+              <span className="text-xs text-slate-400 font-semibold">Clé Gemini :</span>
+              <input
+                type="password"
+                placeholder="AIzaSy..."
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                className="bg-slate-900 border border-slate-700 px-2.5 py-1 rounded text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 w-44"
+              />
+            </div>
           </header>
 
-          {/* Recherche Prédictive Produit */}
-          <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-            <div className="relative" ref={dropdownRef}>
-              <label className="block text-xs font-medium text-slate-400 mb-1">
-                Rechercher un Produit (triés du plus ancien au plus récent)
-              </label>
-              <div className="relative">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Rechercher 'iPhone 16' ou '44882'..."
-                  value={searchTerm}
-                  onFocus={(e) => {
-                    setIsDropdownOpen(true);
-                    e.target.select();
-                  }}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    setIsDropdownOpen(true);
-                  }}
-                  className="w-full bg-slate-900 border border-slate-700 p-2.5 pr-8 rounded text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => {
-                      setSearchTerm("");
-                      setSelectedId("");
-                      setIsDropdownOpen(true);
-                      if (inputRef.current) inputRef.current.focus();
-                    }}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold"
-                  >
-                    ✕
-                  </button>
-                )}
+          {/* Encart IA : Recherche Concurrents Web (Top 5) */}
+          <div className="bg-slate-950 p-5 rounded-xl border border-emerald-900/50 shadow-xl space-y-4">
+            <div className="flex justify-between items-center flex-wrap gap-2">
+              <div>
+                <h2 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
+                  🔍 Prix Concurrents Web en direct (Top 5 Produits)
+                </h2>
+                <p className="text-xs text-slate-400">Recherche web en temps réel des offres de reprise chez la concurrence (via Gemini Grounding)</p>
               </div>
-
-              {isDropdownOpen && (
-                <div className="absolute z-50 left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-slate-900 border border-slate-700 rounded-lg shadow-2xl divide-y divide-slate-800">
-                  {filteredProducts.length > 0 ? (
-                    filteredProducts.map((p) => (
-                      <div
-                        key={p.id}
-                        onClick={() => handleSelect(p)}
-                        className={`p-2.5 text-sm hover:bg-slate-800 cursor-pointer flex justify-between items-center ${
-                          p.id === selectedId ? "bg-slate-800/80 text-emerald-400 font-semibold" : "text-slate-200"
-                        }`}
-                      >
-                        <span>{p.name}</span>
-                        <div className="flex items-center gap-2">
-                          {p.launchDate && (
-                            <span className="text-[11px] font-mono text-emerald-300 bg-emerald-950/80 border border-emerald-800/60 px-2 py-0.5 rounded">
-                              {new Date(p.launchDate).toLocaleDateString("fr-FR")}
-                            </span>
-                          )}
-                          <span className="text-xs font-mono text-slate-400 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800">
-                            ID: {p.id}
-                          </span>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="p-3 text-xs text-slate-500 text-center">
-                      Aucun produit trouvé pour "{searchTerm}"
-                    </div>
-                  )}
-                </div>
-              )}
+              <button
+                onClick={analyzeTop5WithGemini}
+                disabled={loadingAi}
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition-colors disabled:opacity-50"
+              >
+                {loadingAi ? "Recherche Web en cours..." : "Lancer la recherche Concurrents"}
+              </button>
             </div>
-          </div>
 
-          {/* Onglets Grade + Tableau */}
-          <div className="space-y-0">
-            <div className="flex space-x-1 border-b border-slate-800 px-2">
-              {gradesList.map((g) => {
-                const isActive = selectedGrade === g;
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3 font-sans">
+              {top5Products.map((p) => {
+                const aiData = aiAnalyses[p.idproduct];
                 return (
-                  <button
-                    key={g}
-                    onClick={() => setSelectedGrade(g)}
-                    className={`px-5 py-2.5 text-xs font-bold rounded-t-lg transition-colors border-t border-x ${
-                      isActive
-                        ? "bg-slate-950 text-emerald-400 border-slate-800 border-b-slate-950 -mb-px z-10"
-                        : "bg-slate-900/60 text-slate-400 border-transparent hover:bg-slate-800 hover:text-slate-200"
-                    }`}
-                  >
-                    Grade {g}
-                  </button>
+                  <div key={p.idproduct} className="bg-slate-900 p-3 rounded-lg border border-slate-800 flex flex-col justify-between">
+                    <div>
+                      <div className="font-semibold text-xs text-slate-200 truncate">{p.product}</div>
+                      <div className="text-[10px] font-mono text-slate-500">ID: {p.idproduct}</div>
+                    </div>
+
+                    <div className="mt-3 space-y-1.5 font-mono">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-slate-400">Reprise Web :</span>
+                        <span className="font-bold text-emerald-400">{aiData?.current_tradein_price ? `${aiData.current_tradein_price} €` : "-"}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-slate-400">Décote Web :</span>
+                        <span className="font-bold text-rose-400">{aiData?.current_discount_pct ? `-${aiData.current_discount_pct}%` : "-"}</span>
+                      </div>
+                    </div>
+
+                    {aiData?.ai_projection_text && (
+                      <div className="mt-2 text-[10px] text-slate-400 bg-slate-950 p-1.5 rounded border border-slate-800/80 leading-tight">
+                        {aiData.ai_projection_text}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
+          </div>
 
-            {/* Tableau comparatif */}
+          {/* Filtres */}
+          <div className="flex flex-col md:flex-row gap-4 bg-slate-800 p-4 rounded-xl border border-slate-700">
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-slate-400 mb-1">Filtrer par Produit ou ID</label>
+              <input
+                type="text"
+                placeholder="Rechercher 'iPhone 16' ou '44882'..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700 p-2.5 rounded text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+            <div className="w-full md:w-64">
+              <label className="block text-xs font-medium text-slate-400 mb-1">Filtrer par Marque</label>
+              <select
+                value={selectedBrand}
+                onChange={(e) => setSelectedBrand(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700 p-2.5 rounded text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+              >
+                <option value="ALL">Toutes les marques ({brandsList.length})</option>
+                {brandsList.map((b) => <option key={b} value={b}>{b}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* Graphique */}
+          <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 shadow-xl space-y-3">
+            <h2 className="text-sm font-semibold text-slate-200">Courbe de Progression des Prix Moyen par Mois (M0 à M36)</h2>
+            <div className="h-72 w-full"><canvas ref={chartRef}></canvas></div>
+          </div>
+
+          {/* Onglets + Tableau */}
+          <div className="space-y-0">
+            <div className="flex space-x-1 border-b border-slate-800 px-2">
+              {gradesList.map((g) => (
+                <button
+                  key={g}
+                  onClick={() => setSelectedGrade(g)}
+                  className={`px-5 py-2.5 text-xs font-bold rounded-t-lg transition-colors border-t border-x ${
+                    selectedGrade === g
+                      ? "bg-slate-950 text-emerald-400 border-slate-800 border-b-slate-950 -mb-px z-10"
+                      : "bg-slate-900/60 text-slate-400 border-transparent hover:bg-slate-800 hover:text-slate-200"
+                  }`}
+                >
+                  Grade {g}
+                </button>
+              ))}
+            </div>
+
             <div className="bg-slate-950 rounded-b-xl rounded-tr-xl border border-slate-800 shadow-xl overflow-hidden">
-              <div className="bg-slate-900 px-6 py-3 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                <h2 className="font-semibold text-sm text-slate-200 flex items-center gap-2">
-                  Valeurs aux horizons +3, +6, +12, +24, +36 mois
-                  <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-xs font-bold">
-                    Grade {selectedGrade}
-                  </span>
-                </h2>
-
-                {activeItem && (
-                  <div className="text-xs font-mono text-slate-400 flex items-center gap-4">
-                    <span>Date de lancement : <b className="text-slate-200">{new Date(activeItem.launch_date).toLocaleDateString("fr-FR")}</b></span>
-                    <span>Prix de Lancement P0 : <b className="text-emerald-400">{activeItem.p0} €</b></span>
-                  </div>
-                )}
-              </div>
-              
               <div className="overflow-x-auto">
-                {comparisonTable.length > 0 ? (
-                  <table className="w-full text-left text-xs whitespace-nowrap">
-                    <thead className="bg-slate-900/60 text-slate-400 border-b border-slate-800">
-                      <tr>
-                        <th className="p-3">Mois relatif</th>
-                        <th className="p-3">Date liée au mois relatif</th>
-                        <th className="p-3">Prix 08 (€)</th>
-                        <th className="p-3">Prix 09 (€)</th>
-                        <th className="p-3">Écart 09 vs 08 (€)</th>
-                        <th className="p-3">% de valorisation (vs P0)</th>
+                <table className="w-full text-left text-xs whitespace-nowrap">
+                  <thead className="bg-slate-900/60 text-slate-400 border-b border-slate-800">
+                    <tr>
+                      <th className="p-3.5 min-w-[260px]">Produit</th>
+                      {targetHorizons.map((h) => (
+                        <th key={h} className="p-3.5 text-center min-w-[130px]">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60 font-mono">
+                    {filteredRows.map((item) => (
+                      <tr key={item.idproduct} className="hover:bg-slate-900/40">
+                        <td className="p-3.5 font-sans">
+                          <div className="font-semibold text-slate-100 text-sm">
+                            {item.product} <span className="text-slate-500 text-xs font-mono">({item.idproduct})</span>
+                          </div>
+                          <div className="text-[11px] text-slate-400 font-mono mt-0.5 flex gap-3">
+                            <span>Lancement : {new Date(item.launch_date).toLocaleDateString("fr-FR")}</span>
+                            <span>Prix : <b className="text-slate-300">{item.p0} €</b></span>
+                          </div>
+                        </td>
+
+                        {targetHorizons.map((hLabel) => {
+                          const hObj = item.horizons ? item.horizons.find((h) => h.monthLabel === hLabel) : null;
+
+                          if (!hObj || hObj.price === null) {
+                            return <td key={hLabel} className="p-3.5 text-center text-slate-600 font-semibold">-</td>;
+                          }
+
+                          const varStr = hObj.variationPct !== null ? `(${hObj.variationPct > 0 ? '+' : ''}${hObj.variationPct.toFixed(1)} %)` : "";
+
+                          return (
+                            <td key={hLabel} className="p-3.5 text-center">
+                              <div className={`font-bold ${hObj.isReal ? 'text-emerald-400' : 'text-blue-400'}`}>
+                                {hObj.price.toFixed(2)} €
+                              </div>
+                              <div className="text-[11px] text-slate-400 font-normal mt-0.5">
+                                {varStr}
+                              </div>
+                            </td>
+                          );
+                        })}
                       </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800/60 font-mono">
-                      {comparisonTable.map((row, idx) => {
-                        const hasDelta = row.delta !== null;
-                        const isPositiveDelta = hasDelta && row.delta > 0;
-                        const isNegativeDelta = hasDelta && row.delta < 0;
-
-                        return (
-                          <tr key={idx} className="hover:bg-slate-900/40">
-                            <td className="p-3">
-                              <span className="px-2.5 py-1 bg-slate-800 text-emerald-400 rounded font-bold text-xs">
-                                {row.monthLabel}
-                              </span>
-                            </td>
-                            <td className="p-3 text-slate-300">
-                              {new Date(row.date).toLocaleDateString("fr-FR")}
-                            </td>
-
-                            {/* Prix 08 (Tiret si null) */}
-                            <td className={`p-3 font-semibold ${row.p08 === null ? 'text-slate-500' : (row.isReal08 ? 'text-emerald-400' : 'text-blue-400')}`}>
-                              {row.p08 !== null ? `${row.p08.toFixed(2)} €` : "-"}
-                            </td>
-
-                            {/* Prix 09 (Tiret si null) */}
-                            <td className={`p-3 font-semibold ${row.p09 === null ? 'text-slate-500' : (row.isReal09 ? 'text-emerald-400' : 'text-blue-400')}`}>
-                              {row.p09 !== null ? `${row.p09.toFixed(2)} €` : "-"}
-                            </td>
-
-                            {/* Écart 09 vs 08 (Tiret si null) */}
-                            <td className="p-3 font-bold">
-                              {!hasDelta ? (
-                                <span className="text-slate-500">-</span>
-                              ) : isPositiveDelta ? (
-                                <span className="text-emerald-400">+{row.delta.toFixed(2)} €</span>
-                              ) : isNegativeDelta ? (
-                                <span className="text-rose-400">{row.delta.toFixed(2)} €</span>
-                              ) : (
-                                <span className="text-slate-400">0.00 €</span>
-                              )}
-                            </td>
-
-                            {/* % de valorisation */}
-                            <td className="p-3 font-bold text-slate-200">
-                              {row.valorizationPct !== null ? `${row.valorizationPct.toFixed(1)} %` : "-"}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                ) : (
-                  <div className="p-8 text-center text-xs text-slate-500">
-                    Aucune donnée disponible pour ce produit au Grade {selectedGrade}.
-                  </div>
-                )}
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
