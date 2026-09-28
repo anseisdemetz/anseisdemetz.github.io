@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparecycle - Benchmark Trade-In</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Tableau de Veille Concurrentielle Trade-In</h1>
+      <p class="subtitle" id="last-update">Dernière mise à jour : --</p>
+    </header>
+
+    <section class="filters">
+      <select id="brand-filter">
+        <option value="ALL">Toutes les marques</option>
+      </select>
+      
+      <select id="grade-filter">
+        <option value="A">Grade A (Parfait état)</option>
+        <option value="B">Grade B (Très bon état)</option>
+        <option value="C">Grade C (État correct)</option>
+      </select>
+    </section>
+
+    <main id="dashboard-content">
+      <!-- Les cartes produits seront injectées dynamiquement ici -->
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

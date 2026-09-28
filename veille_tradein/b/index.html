@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CompaRecycle - European Trade-In Price Intelligence</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-section">
+        <h1>CompaRecycle <span class="badge-version">Trade-In Index v1.0</span></h1>
+      </div>
+      <div class="timestamp" id="last-update">Dernière mise à jour : Chargement...</div>
+    </header>
+
+    <!-- Panel de Filtres Combinés -->
+    <section class="filters-panel">
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label for="filter-country">Pays</label>
+          <select id="filter-country"></select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-channel">Canal</label>
+          <select id="filter-channel"></select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-category">Catégorie</label>
+          <select id="filter-category"></select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-brand">Marque</label>
+          <select id="filter-brand"></select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-product">Modèle / Capacité</label>
+          <select id="filter-product"></select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-grade">Grade</label>
+          <select id="filter-grade"></select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cartes KPI -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Prix Neuf Public</div>
+        <div class="kpi-value" id="kpi-price-new">-- €</div>
+        <div class="kpi-sub">MSRP Pays Sélectionné</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Prix Médian Canal</div>
+        <div class="kpi-value accent" id="kpi-median">-- €</div>
+        <div class="kpi-sub" id="kpi-residual">Valeur résiduelle : -- %</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Prix Moyen Canal</div>
+        <div class="kpi-value" id="kpi-average">-- €</div>
+        <div class="kpi-sub">Moyenne arithmétique</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Meilleur Prix (Max)</div>
+        <div class="kpi-value" style="color: var(--success-text);" id="kpi-max">-- €</div>
+        <div class="kpi-sub" id="kpi-max-actor">Acteur : --</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Prix Minimum</div>
+        <div class="kpi-value" style="color: var(--danger-text);" id="kpi-min">-- €</div>
+        <div class="kpi-sub">Plus basse offre</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Acteurs Actifs</div>
+        <div class="kpi-value" id="kpi-count">0</div>
+        <div class="kpi-sub">Données valides (hors N/A)</div>
+      </div>
+    </section>
+
+    <!-- Graphiques et Tableaux Principal -->
+    <div class="dashboard-grid">
+      <!-- Positionnement Marché -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Positionnement Tarifaire vs Médiane Canal</div>
+        </div>
+        <div class="chart-container">
+          <canvas id="marketPositionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Tableau Détaillé des Acteurs -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Analyse Détaillée par Acteur</div>
+          <button class="btn-export" id="btn-export-csv">Exporter en Excel (CSV)</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Acteur</th>
+                <th>Prix Sèche</th>
+                <th>Bonus</th>
+                <th>Valeur Affichée</th>
+                <th>Écart vs Médiane (€)</th>
+                <th>Écart vs Médiane (%)</th>
+                <th>Var. 7j (%)</th>
+                <th>Var. 1m (%)</th>
+                <th>Var. 3m (%)</th>
+                <th>Qualité Data</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="actors-table-body">
+              <!-- Injection dynamique -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Évolution Temporelle -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Évolution Temporelle des Prix de Reprise (M-3 → J)</div>
+        </div>
+        <div class="chart-container">
+          <canvas id="timeEvolutionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Heatmap inter-produits -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Matrice d'Écart Tarifaire Multi-Modèles vs Médiane (%)</div>
+        </div>
+        <div class="table-wrapper">
+          <table class="heatmap-table">
+            <thead>
+              <tr id="heatmap-header">
+                <th>Modèle</th>
+                <!-- Dynamique par acteur -->
+              </tr>
+            </thead>
+            <tbody id="heatmap-body">
+              <!-- Injection dynamique -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

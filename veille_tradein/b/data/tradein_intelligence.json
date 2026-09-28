@@ -1,0 +1,198 @@
+{
+"last_updated": "2026-09-28T06:00:00Z",
+"grading_referential": [
+{ "code": "A", "label": "Grade A", "description": "Excellent état" },
+{ "code": "B", "label": "Grade B", "description": "Bon état" },
+{ "code": "C", "label": "Grade C", "description": "État usagé / défauts cosmétiques visibles" },
+{ "code": "D", "label": "Grade D", "description": "Fortement usagé / endommagé mais fonctionnel" },
+{ "code": "D_MINUS", "label": "Grade D-", "description": "Cassé et/ou non fonctionnel" }
+],
+"countries": [
+{ "code": "FR", "name": "France", "currency": "EUR" },
+{ "code": "BE", "name": "Belgique", "currency": "EUR" },
+{ "code": "ES", "name": "Espagne", "currency": "EUR" },
+{ "code": "DE", "name": "Allemagne", "currency": "EUR" },
+{ "code": "IT", "name": "Italie", "currency": "EUR" }
+],
+"channels": [
+{ "code": "TELCO", "name": "Opérateurs Télécom" },
+{ "code": "RETAIL", "name": "Retailers" },
+{ "code": "ETAIL", "name": "E-tailers / Pure Players" }
+],
+"products": [
+{
+"canonical_key": "APPLE_IPHONE_16_PRO_256",
+"category": "Smartphones",
+"brand": "Apple",
+"model": "iPhone 16 Pro",
+"capacity_gb": 256,
+"prices_new": {
+"FR": 1229.0,
+"BE": 1229.0,
+"ES": 1239.0,
+"DE": 1219.0,
+"IT": 1239.0
+}
+},
+{
+"canonical_key": "SAMSUNG_GALAXY_S25_ULTRA_256",
+"category": "Smartphones",
+"brand": "Samsung",
+"model": "Galaxy S25 Ultra",
+"capacity_gb": 256,
+"prices_new": {
+"FR": 1469.0,
+"BE": 1469.0,
+"ES": 1479.0,
+"DE": 1459.0,
+"IT": 1479.0
+}
+},
+{
+"canonical_key": "GOOGLE_PIXEL_9_PRO_128",
+"category": "Smartphones",
+"brand": "Google",
+"model": "Pixel 9 Pro",
+"capacity_gb": 128,
+"prices_new": {
+"FR": 1099.0,
+"BE": 1099.0,
+"ES": 1099.0,
+"DE": 1089.0,
+"IT": 1109.0
+}
+}
+],
+"observations": [
+{
+"country": "FR",
+"channel": "TELCO",
+"actor": "Orange",
+"canonical_key": "APPLE_IPHONE_16_PRO_256",
+"grade": "B",
+"status": "AVAILABLE",
+"base_price": 520,
+"bonus": 0,
+"history": { "J_7": 510, "M_1": 500, "M_3": 480 },
+"source_url": "https://reprise.orange.fr/estimation",
+"quality_score": 98
+},
+{
+"country": "FR",
+"channel": "TELCO",
+"actor": "SFR",
+"canonical_key": "APPLE_IPHONE_16_PRO_256",
+"grade": "B",
+"status": "AVAILABLE",
+"base_price": 500,
+"bonus": 50,
+"history": { "J_7": 500, "M_1": 490, "M_3": 480 },
+"source_url": "https://sfr.fr/tradein",
+"quality_score": 100
+},
+{
+"country": "FR",
+"channel": "TELCO",
+"actor": "Bouygues Telecom",
+"canonical_key": "APPLE_IPHONE_16_PRO_256",
+"grade": "B",
+"status": "AVAILABLE",
+"base_price": 490,
+"bonus": 0,
+"history": { "J_7": 500, "M_1": 505, "M_3": 485 },
+"source_url": "https://bouyguestelecom.fr/reprise",
+"quality_score": 95
+},
+{
+"country": "FR",
+"channel": "TELCO",
+"actor": "Free",
+"canonical_key": "APPLE_IPHONE_16_PRO_256",
+"grade": "B",
+"status": "NOT_AVAILABLE",
+"base_price": null,
+"bonus": 0,
+"history": { "J_7": null, "M_1": null, "M_3": null },
+"source_url": "https://free.fr/reprise",
+"quality_score": 0
+},
+{
+"country": "FR",
+"channel": "RETAIL",
+"actor": "Apple",
+"canonical_key": "APPLE_IPHONE_16_PRO_256",
+"grade": "B",
+"status": "AVAILABLE",
+"base_price": 540,
+"bonus": 0,
+"history": { "J_7": 540, "M_1": 530, "M_3": 510 },
+"source_url": "https://apple.com/fr/shop/trade-in",
+"quality_score": 100
+},
+{
+"country": "FR",
+"channel": "RETAIL",
+"actor": "Boulanger",
+"canonical_key": "APPLE_IPHONE_16_PRO_256",
+"grade": "B",
+"status": "AVAILABLE",
+"base_price": 510,
+"bonus": 30,
+"history": { "J_7": 500, "M_1": 480, "M_3": 460 },
+"source_url": "https://boulanger.com/reprise",
+"quality_score": 92
+},
+{
+"country": "FR",
+"channel": "ETAIL",
+"actor": "Back Market",
+"canonical_key": "APPLE_IPHONE_16_PRO_256",
+"grade": "B",
+"status": "AVAILABLE",
+"base_price": 555,
+"bonus": 0,
+"history": { "J_7": 540, "M_1": 520, "M_3": 490 },
+"source_url": "https://backmarket.fr/reprise",
+"quality_score": 99
+},
+{
+"country": "FR",
+"channel": "TELCO",
+"actor": "Orange",
+"canonical_key": "SAMSUNG_GALAXY_S25_ULTRA_256",
+"grade": "B",
+"status": "AVAILABLE",
+"base_price": 680,
+"bonus": 100,
+"history": { "J_7": 670, "M_1": 650, "M_3": 600 },
+"source_url": "https://reprise.orange.fr",
+"quality_score": 97
+},
+{
+"country": "FR",
+"channel": "TELCO",
+"actor": "SFR",
+"canonical_key": "SAMSUNG_GALAXY_S25_ULTRA_256",
+"grade": "B",
+"status": "AVAILABLE",
+"base_price": 710,
+"bonus": 0,
+"history": { "J_7": 700, "M_1": 680, "M_3": 620 },
+"source_url": "https://sfr.fr/tradein",
+"quality_score": 98
+},
+{
+"country": "FR",
+"channel": "TELCO",
+"actor": "Bouygues Telecom",
+"canonical_key": "SAMSUNG_GALAXY_S25_ULTRA_256",
+"grade": "B",
+"status": "AVAILABLE",
+"base_price": 660,
+"bonus": 50,
+"history": { "J_7": 660, "M_1": 640, "M_3": 590 },
+"source_url": "https://bouyguestelecom.fr",
+"quality_score": 94
+}
+]
+}
