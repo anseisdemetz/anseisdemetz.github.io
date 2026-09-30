@@ -21,15 +21,15 @@
 
     function TimelineApp() {
       const [data09, setData09] = useState([]);
-      const [selectedId, setSelectedId] = useState("44888"); // Produit par défaut : 44888
+      const [selectedId, setSelectedId] = useState("44888");
       const [searchTerm, setSearchTerm] = useState("");
       const [selectedGrade, setSelectedGrade] = useState("A");
       const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-      // Gestion de la Clé API et de l'analyse IA
-      const [apiKey, setApiKey] = useState("");
+      const [apiKey, setApiKey] = useState(() => localStorage.getItem("gemini_api_key") || "");
       const [aiAnalysis, setAiAnalysis] = useState(null);
       const [loadingAi, setLoadingAi] = useState(false);
+      const [newProductHistory, setNewProductHistory] = useState([]);
 
       const chartRef = useRef(null);
       const chartInstance = useRef(null);
@@ -37,10 +37,24 @@
       const inputRef = useRef(null);
 
       const gradesList = ["A", "B", "C", "D-"];
-      const targetHorizons = ["+3M", "+6M", "+12M", "+24M", "+36M"];
+      const targetHorizons = [3, 6, 12, 24, 36];
+      const targetHorizonLabels = ["+3M", "+6M", "+12M", "+24M", "+36M"];
       const allMonths = Array.from({ length: 37 }, (_, i) => `M${i}`);
 
-      // Chargement du fichier de données
+      const buyersList = [
+        { key: "orange", label: "Orange", domain: "boutique.orange.fr" },
+        { key: "backmarket", label: "Back Market", domain: "backmarket.fr" },
+        { key: "apple_likewize", label: "Apple Trade In", domain: "fr-appletradein.likewize.com" },
+        { key: "vendremonmobile", label: "VendreMonMobile", domain: "vendremonmobile.com" },
+        { key: "envirofone", label: "Envirofone", domain: "envirofone.com" }
+      ];
+
+      const handleApiKeyChange = (e) => {
+        const key = e.target.value;
+        setApiKey(key);
+        localStorage.setItem("gemini_api_key", key);
+      };
+
       useEffect(() => {
         fetch("timeline_data_09.json")
           .then((res) => res.json())
@@ -54,7 +68,6 @@
           .catch(() => setData09([]));
       }, []);
 
-      // Liste unique des produits pour la recherche prédictive
       const productsList = useMemo(() => {
         const uniqueMap = new Map();
         data09.forEach((item) => {
@@ -70,7 +83,6 @@
         return Array.from(uniqueMap.values()).sort((a, b) => new Date(a.launchDate) - new Date(b.launchDate));
       }, [data09]);
 
-      // Filtrage du sélecteur
       const filteredProducts = useMemo(() => {
         if (!searchTerm.trim()) return productsList;
         const selectedProd = productsList.find((p) => p.id === selectedId);
@@ -83,7 +95,6 @@
         );
       }, [productsList, searchTerm, selectedId]);
 
-      // Fermeture du dropdown au clic extérieur
       useEffect(() => {
         const handleClickOutside = (e) => {
           if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -94,12 +105,29 @@
         return () => document.removeEventListener("mousedown", handleClickOutside);
       }, []);
 
-      // Récupération de l'item actif
       const currentItem = useMemo(() => {
         return data09.find((i) => i.idproduct === selectedId && i.grade === selectedGrade) || null;
       }, [data09, selectedId, selectedGrade]);
 
-      // Analyse du produit par Gemini
+      useEffect(() => {
+        if (!selectedId) return;
+        const storageKey = `new_price_db_${selectedId}_${selectedGrade}`;
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            setNewProductHistory(parsed.history || []);
+            setAiAnalysis(parsed.analysis || null);
+          } catch (e) {
+            setNewProductHistory([]);
+          }
+        } else {
+          setNewProductHistory([]);
+          setAiAnalysis(null);
+        }
+      }, [selectedId, selectedGrade]);
+
+      // Analyse spécifique aux 5 vitrines de rachat
       const analyzeWithGemini = async () => {
         if (!apiKey) {
           alert("Veuillez saisir votre clé API Gemini.");
@@ -110,18 +138,32 @@
         setLoadingAi(true);
 
         const prompt = `
-Cherche sur le web les prix de reprise / trade-in actuels en France pour ce smartphone :
-- Nom : ${currentItem.product}
-- Prix de lancement initial P0 : ${currentItem.p0} €
-- Grade état : ${currentItem.grade}
+Effectue une recherche sur le web pour trouver l'offre de reprise / trade-in ACTUELLE à date en France pour ce smartphone :
+- Produit : ${currentItem.product}
+- Grade / État : Grade ${currentItem.grade}
+- Prix de lancement P0 : ${currentItem.p0} €
 
-Trouve les offres de reprise actuelles chez les concurrents français (ex: Back Market, Recommerce, Orange, Apple Trade-in, Bouygues, Fnac, Cash Converters).
+Cherche spécifiquement l'offre de rachat actuelle pour les 5 vitrines de repreneurs suivantes :
+1. boutique.orange.fr (Orange Reprise)
+2. backmarket.fr (Back Market Reprise)
+3. fr-appletradein.likewize.com (Apple Trade In / Likewize)
+4. vendremonmobile.com (VendreMonMobile)
+5. envirofone.com (Envirofone)
 
-Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown) :
+Cherche également le prix du produit NEUF actuel sur le marché et l'historique estimé des prix du neuf de M0 à M36.
+
+Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
 {
-  "current_tradein_price": <prix_moyen_ou_max_trouve_en_nombre>,
-  "current_discount_pct": <pourcentage_de_decote_par_rapport_a_p0_en_nombre>,
-  "ai_projection_text": "<courte synthèse indiquant les sources/concurrents trouvés et leurs prix de reprise>"
+  "buyers": {
+    "orange": <prix_de_reprise_en_nombre_ou_null>,
+    "backmarket": <prix_de_reprise_en_nombre_ou_null>,
+    "apple_likewize": <prix_de_reprise_en_nombre_ou_null>,
+    "vendremonmobile": <prix_de_reprise_en_nombre_ou_null>,
+    "envirofone": <prix_de_reprise_en_nombre_ou_null>
+  },
+  "current_new_price": <prix_actuel_produit_neuf_en_nombre>,
+  "ai_projection_text": "<courte synthèse indiquant les sources trouvées>",
+  "estimated_new_price_curve": [<tableau_de_37_nombres_representant_le_prix_du_produit_neuf_de_M0_a_M36>]
 }
         `;
 
@@ -140,47 +182,76 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
           const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
           
           if (jsonMatch) {
-            setAiAnalysis(JSON.parse(jsonMatch[0]));
+            const parsed = JSON.parse(jsonMatch[0]);
+            setAiAnalysis(parsed);
+
+            const curve = parsed.estimated_new_price_curve || [];
+            setNewProductHistory(curve);
+
+            const storageKey = `new_price_db_${selectedId}_${selectedGrade}`;
+            localStorage.setItem(storageKey, JSON.stringify({
+              analysis: parsed,
+              history: curve,
+              updatedAt: new Date().toISOString()
+            }));
           } else {
-            setAiAnalysis({
-              current_tradein_price: "-",
-              current_discount_pct: "-",
-              ai_projection_text: "Impossible de structurer la réponse web."
-            });
+            alert("Erreur lors de la structuration des données des repreneurs.");
           }
         } catch (err) {
-          setAiAnalysis({
-            current_tradein_price: "-",
-            current_discount_pct: "-",
-            ai_projection_text: "Erreur lors de la recherche web."
-          });
+          alert("Erreur lors de la recherche web.");
         }
         setLoadingAi(false);
       };
 
-      // Rendu de la Courbe dédiée au Produit Unique
+      // Graphique Unique
       useEffect(() => {
         if (!chartRef.current) return;
         const ctx = chartRef.current.getContext("2d");
         if (chartInstance.current) chartInstance.current.destroy();
 
-        if (!currentItem || !currentItem.monthly_data) return;
+        if (!currentItem) return;
 
         const realPriceData = new Array(37).fill(null);
         const projPriceData = new Array(37).fill(null);
+        const datesMap = new Array(37).fill("");
+        const valorizationMap = new Array(37).fill(null);
 
-        currentItem.monthly_data.forEach((mObj) => {
-          const mNum = mObj.month;
-          if (mNum > 36) return;
+        const t0Date = new Date(currentItem.launch_date);
+        const p0 = currentItem.p0;
 
-          if (mObj.price !== null) {
-            if (mObj.isReal) {
-              realPriceData[mNum] = mObj.price;
-            } else {
-              projPriceData[mNum] = mObj.price;
+        for (let m = 0; m <= 36; m++) {
+          const mDate = new Date(t0Date);
+          mDate.setMonth(mDate.getMonth() + m);
+          datesMap[m] = mDate.toLocaleDateString("fr-FR");
+        }
+
+        if (currentItem.monthly_data) {
+          currentItem.monthly_data.forEach((mObj) => {
+            const mNum = mObj.month;
+            if (mNum > 36) return;
+
+            if (mObj.date) {
+              const parsedDate = new Date(mObj.date);
+              if (!isNaN(parsedDate)) {
+                datesMap[mNum] = parsedDate.toLocaleDateString("fr-FR");
+              }
             }
-          }
-        });
+
+            if (mObj.price !== null) {
+              const valPct = p0 > 0 ? (mObj.price / p0) * 100 : null;
+              valorizationMap[mNum] = valPct;
+
+              if (mObj.isReal) {
+                realPriceData[mNum] = mObj.price;
+              } else {
+                projPriceData[mNum] = mObj.price;
+              }
+            }
+          });
+        }
+
+        const defaultNewCurve = new Array(37).fill(p0);
+        const displayNewData = newProductHistory.length > 0 ? newProductHistory : defaultNewCurve;
 
         chartInstance.current = new Chart(ctx, {
           type: "line",
@@ -188,18 +259,17 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
             labels: allMonths,
             datasets: [
               {
-                label: "Prix Réel (€)",
+                label: "Prix Rachat Réel (€)",
                 data: realPriceData,
                 borderColor: "#059669",
                 backgroundColor: "#059669",
                 borderWidth: 3,
                 spanGaps: true,
                 tension: 0.2,
-                pointRadius: 4,
-                pointHoverRadius: 6
+                pointRadius: 4
               },
               {
-                label: "Prix Projeté / Calculé (€)",
+                label: "Prix Rachat Calculé (€)",
                 data: projPriceData,
                 borderColor: "#2563eb",
                 backgroundColor: "#2563eb",
@@ -207,8 +277,17 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
                 borderDash: [5, 5],
                 spanGaps: true,
                 tension: 0.2,
-                pointRadius: 3,
-                pointHoverRadius: 5
+                pointRadius: 3
+              },
+              {
+                label: "Prix Produit Neuf (€)",
+                data: displayNewData,
+                borderColor: "#94a3b8",
+                backgroundColor: "#94a3b8",
+                borderWidth: 2.5,
+                spanGaps: true,
+                tension: 0.2,
+                pointRadius: 3
               }
             ]
           },
@@ -216,12 +295,25 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: {
-                position: "top",
-                labels: { color: "#334155", font: { size: 12 }, boxWidth: 15 }
-              },
+              legend: { position: "top", labels: { color: "#334155", font: { size: 12 } } },
               tooltip: {
-                callbacks: { label: (context) => `${context.dataset.label}: ${context.raw} €` }
+                callbacks: {
+                  title: (tooltipItems) => {
+                    const idx = tooltipItems[0].dataIndex;
+                    const dateStr = datesMap[idx] ? ` (${datesMap[idx]})` : "";
+                    return `${allMonths[idx]}${dateStr}`;
+                  },
+                  label: (context) => {
+                    const idx = context.dataIndex;
+                    const val = context.raw;
+                    if (val === null) return `${context.dataset.label}: Non disponible`;
+                    const pct = p0 > 0 ? (val / p0) * 100 : 0;
+                    return [
+                      `${context.dataset.label}: ${val.toFixed(2)} €`,
+                      `${pct.toFixed(1)}% du prix de lancement`
+                    ];
+                  }
+                }
               }
             },
             scales: {
@@ -232,38 +324,34 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
         });
 
         return () => { if (chartInstance.current) chartInstance.current.destroy(); };
-      }, [currentItem]);
+      }, [currentItem, newProductHistory]);
 
       const handleSelect = (prod) => {
         setSelectedId(prod.id);
         setSearchTerm(`${prod.name} (${prod.id})`);
         setIsDropdownOpen(false);
-        setAiAnalysis(null);
       };
 
       return (
         <div className="max-w-5xl mx-auto p-6 space-y-6">
-          {/* Header */}
           <header className="flex justify-between items-center border-b border-slate-200 pb-4 flex-wrap gap-4">
             <div>
-              <h1 className="text-xl font-bold text-emerald-700">Analyse Argus Produit</h1>
-              <p className="text-slate-500 text-xs">Suivi individuel des prix de reprise et projections de décote</p>
+              <h1 className="text-xl font-bold text-emerald-700">Analyse Argus & Prix Neuf Produit</h1>
+              <p className="text-slate-500 text-xs">Suivi individuel des prix de rachat et de l'évolution du prix neuf sur le marché</p>
             </div>
 
-            {/* Clé API Gemini */}
             <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
               <span className="text-xs text-slate-500 font-medium">Clé API Gemini :</span>
               <input
                 type="password"
                 placeholder="AIzaSy..."
                 value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
+                onChange={handleApiKeyChange}
                 className="bg-slate-50 border border-slate-200 px-2 py-1 rounded text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-600 w-40"
               />
             </div>
           </header>
 
-          {/* Barre de Recherche & Sélecteur Produit */}
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative" ref={dropdownRef}>
             <label className="block text-xs font-semibold text-slate-600 mb-1.5">
               Sélectionner un produit (pré-rempli avec ID 44888)
@@ -287,18 +375,15 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
                     setSearchTerm("");
                     setSelectedId("");
                     setIsDropdownOpen(true);
-                    setAiAnalysis(null);
                     if (inputRef.current) inputRef.current.focus();
                   }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-sm font-bold"
-                  title="Effacer la sélection"
                 >
                   ✕
                 </button>
               )}
             </div>
 
-            {/* Liste Déroulante */}
             {isDropdownOpen && (
               <div className="absolute z-50 left-0 right-0 mt-2 max-h-60 overflow-y-auto bg-white border border-slate-200 rounded-lg shadow-xl divide-y divide-slate-100">
                 {filteredProducts.length > 0 ? (
@@ -323,10 +408,8 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
             )}
           </div>
 
-          {/* Synthèse du Produit Sélectionné */}
           {currentItem ? (
             <div className="space-y-6">
-              {/* Carte Principale : Métadonnées */}
               <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center flex-wrap gap-4">
                 <div>
                   <h2 className="text-lg font-bold text-slate-900">{currentItem.product}</h2>
@@ -347,14 +430,16 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
                 </div>
               </div>
 
-              {/* Encart IA spécifique au produit */}
-              <div className="bg-white p-5 rounded-xl border border-emerald-200 shadow-sm space-y-3">
+              {/* Encart IA : 5 Vitrines de Repreneurs */}
+              <div className="bg-white p-5 rounded-xl border border-emerald-200 shadow-sm space-y-4">
                 <div className="flex justify-between items-center flex-wrap gap-2">
                   <div>
                     <h3 className="text-sm font-bold text-emerald-800 flex items-center gap-2">
-                      🔍 Recherche Web Concurrents (via Gemini)
+                      🔍 Offres de Reprise en Direct (5 Vitrines Web)
                     </h3>
-                    <p className="text-xs text-slate-500">Pointe les offres réelles de reprise sur le marché (Back Market, Orange, Apple...)</p>
+                    <p className="text-xs text-slate-500">
+                      Comparatif des prix de rachat actuels chez 5 repreneurs majeurs (Grade {selectedGrade})
+                    </p>
                   </div>
                   <button
                     onClick={analyzeWithGemini}
@@ -365,26 +450,40 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
                   </button>
                 </div>
 
-                {aiAnalysis && (
-                  <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col md:flex-row gap-4 justify-between items-center font-mono">
-                    <div className="flex gap-6 text-xs">
-                      <div>
-                        <span className="text-slate-500 block">Prix Reprise Web :</span>
-                        <b className="text-emerald-700 text-base">{aiAnalysis.current_tradein_price} €</b>
+                {/* Grille des 5 Vitrines */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 font-mono">
+                  {buyersList.map((buyer) => {
+                    const price = aiAnalysis?.buyers?.[buyer.key];
+                    const p0 = currentItem.p0;
+                    const pct = (price !== null && price !== undefined && p0 > 0) ? ((price / p0) * 100).toFixed(1) : null;
+
+                    return (
+                      <div key={buyer.key} className="bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col justify-between">
+                        <div>
+                          <div className="font-bold text-xs text-slate-800 truncate">{buyer.label}</div>
+                          <div className="text-[10px] text-slate-400 truncate">{buyer.domain}</div>
+                        </div>
+
+                        <div className="mt-3 pt-2 border-t border-slate-200/80">
+                          <div className="text-sm font-extrabold text-emerald-700">
+                            {price !== null && price !== undefined ? `${price} €` : "-"}
+                          </div>
+                          <div className="text-[11px] text-slate-500 font-normal mt-0.5">
+                            {pct !== null ? `${pct} % de P0` : "-"}
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-slate-500 block">Décote Web :</span>
-                        <b className="text-rose-600 text-base">-{aiAnalysis.current_discount_pct} %</b>
-                      </div>
-                    </div>
-                    <p className="text-xs text-slate-700 font-sans italic bg-white p-2.5 rounded border border-slate-200 flex-1 shadow-sm">
-                      "{aiAnalysis.ai_projection_text}"
-                    </p>
-                  </div>
+                    );
+                  })}
+                </div>
+
+                {aiAnalysis?.ai_projection_text && (
+                  <p className="text-xs text-slate-600 font-sans italic bg-slate-50 p-2.5 rounded border border-slate-200">
+                    "{aiAnalysis.ai_projection_text}"
+                  </p>
                 )}
               </div>
 
-              {/* Onglets Grade */}
               <div className="space-y-0">
                 <div className="flex space-x-1 border-b border-slate-200 px-2">
                   {gradesList.map((g) => (
@@ -403,48 +502,70 @@ Donne-moi une réponse sous forme d'un objet JSON strict (sans balises markdown)
                 </div>
 
                 <div className="bg-white rounded-b-xl rounded-tr-xl border border-slate-200 p-5 space-y-6 shadow-sm">
-                  {/* Graphique unique */}
                   <div>
                     <h3 className="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">
-                      Trajectoire de prix M0 à M36 (Grade {selectedGrade})
+                      Trajectoires de Prix M0 à M36 (Grade {selectedGrade})
                     </h3>
                     <div className="h-72 w-full">
                       <canvas ref={chartRef}></canvas>
                     </div>
                   </div>
 
-                  {/* Tableau Synthétique des Horizons */}
                   <div>
                     <h3 className="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">
-                      Valeurs aux Horizons Clés
+                      Valeurs aux Horizons Clés (% du prix de lancement P0)
                     </h3>
                     <div className="overflow-x-auto">
                       <table className="w-full text-center text-xs whitespace-nowrap border-collapse">
                         <thead className="bg-slate-50 text-slate-500 border-b border-slate-200">
                           <tr>
-                            {targetHorizons.map((h) => (
-                              <th key={h} className="p-3">{h}</th>
+                            <th className="p-3 text-left font-semibold">Métrique</th>
+                            {targetHorizonLabels.map((h) => (
+                              <th key={h} className="p-3 font-semibold">{h}</th>
                             ))}
                           </tr>
                         </thead>
-                        <tbody className="font-mono divide-x divide-slate-200 border-b border-slate-200">
-                          <tr>
-                            {targetHorizons.map((hLabel) => {
-                              const hObj = currentItem.horizons ? currentItem.horizons.find((h) => h.monthLabel === hLabel) : null;
-
+                        <tbody className="font-mono divide-y divide-slate-200 border-b border-slate-200">
+                          <tr className="hover:bg-slate-50/50">
+                            <td className="p-3.5 text-left font-sans font-bold text-slate-700 bg-slate-50/80">
+                              Argus / Prévision
+                            </td>
+                            {targetHorizons.map((m) => {
+                              const hObj = currentItem.horizons ? currentItem.horizons.find((h) => h.monthLabel === `+${m}M`) : null;
                               if (!hObj || hObj.price === null) {
-                                return <td key={hLabel} className="p-4 text-slate-400">-</td>;
+                                return <td key={m} className="p-3.5 text-slate-400">-</td>;
                               }
-
-                              const varStr = hObj.variationPct !== null ? `(${hObj.variationPct > 0 ? '+' : ''}${hObj.variationPct.toFixed(1)} %)` : "";
-
+                              const p0 = currentItem.p0;
+                              const valPct = p0 > 0 ? (hObj.price / p0) * 100 : null;
                               return (
-                                <td key={hLabel} className="p-4 bg-slate-50/50">
-                                  <div className={`font-bold text-sm ${hObj.isReal ? 'text-emerald-700' : 'text-blue-600'}`}>
+                                <td key={m} className="p-3.5">
+                                  <div className={`font-bold ${hObj.isReal ? 'text-emerald-700' : 'text-blue-600'}`}>
                                     {hObj.price.toFixed(2)} €
                                   </div>
-                                  <div className="text-[11px] text-slate-500 mt-1 font-normal">
-                                    {varStr}
+                                  <div className="text-[11px] text-slate-500 font-normal mt-0.5">
+                                    {valPct !== null ? `(${valPct.toFixed(1)} %)` : "-"}
+                                  </div>
+                                </td>
+                              );
+                            })}
+                          </tr>
+
+                          <tr className="hover:bg-slate-50/50">
+                            <td className="p-3.5 text-left font-sans font-bold text-slate-600 bg-slate-50/80">
+                              Prix du Neuf
+                            </td>
+                            {targetHorizons.map((m) => {
+                              const p0 = currentItem.p0;
+                              const newPrice = newProductHistory.length > m ? newProductHistory[m] : p0;
+                              const valPct = p0 > 0 ? (newPrice / p0) * 100 : null;
+
+                              return (
+                                <td key={m} className="p-3.5">
+                                  <div className="font-bold text-slate-600">
+                                    {newPrice ? `${newPrice.toFixed(2)} €` : "-"}
+                                  </div>
+                                  <div className="text-[11px] text-slate-500 font-normal mt-0.5">
+                                    {valPct !== null ? `(${valPct.toFixed(1)} %)` : "-"}
                                   </div>
                                 </td>
                               );
