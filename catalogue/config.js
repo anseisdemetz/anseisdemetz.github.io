@@ -3,12 +3,12 @@ const CONFIG = {
     // Clé CORSPROXY
     CORS_KEY: "c46f8301",
 
-    // Domaine de base et Token
+    // Domaine de base et Token d'authentification
     API_DOMAIN: "https://preprod-b2b-api.comparecycle.com",
-    API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr" // Setzt hei Är X-AUTH-CR Clé an
+    API_TOKEN: "bg4v9x4C424yEhUKxwUi8yBQC8t89AX9"
 };
 
-// Fonktioun fir d'Proxy-URL korrekt opzebauen
+// Construction de l'URL proxy
 function buildProxyUrl(targetUrl) {
     return `https://corsproxy.io/?key=${CONFIG.CORS_KEY}&url=` + encodeURIComponent(targetUrl);
 }
