@@ -9,7 +9,7 @@
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800 font-sans antialiased">
 
-    <div class="max-w-3xl mx-auto px-4 py-12">
+    <div class="max-w-5xl mx-auto px-4 py-12">
         
         <!-- En-tête principal -->
         <header class="text-center mb-10">
@@ -21,7 +21,7 @@
         </header>
 
         <!-- Formulaire de recherche IMEI -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 mb-8 shadow-sm hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 mb-8 shadow-sm hover:shadow-md transition-shadow max-w-2xl mx-auto">
             <form id="searchForm" class="space-y-4">
                 <div>
                     <label for="imei" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Numéro IMEI de l'appareil</label>
@@ -46,48 +46,19 @@
         </div>
 
         <!-- Zone de message & statut -->
-        <div id="statusMessage" class="hidden p-4 rounded-xl bg-white border border-slate-200 text-center text-sm font-medium mb-8 shadow-sm"></div>
+        <div id="statusMessage" class="hidden p-4 rounded-xl bg-white border border-slate-200 text-center text-sm font-medium mb-8 shadow-sm max-w-2xl mx-auto"></div>
 
-        <!-- Carte de résultat -->
-        <div id="resultCard" class="hidden space-y-6">
+        <!-- Carte de résultat (2 colonnes) -->
+        <div id="resultCard" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             
-            <!-- Fiche Produit (Focus Visuel) -->
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm overflow-hidden">
-                <div class="flex flex-col sm:flex-row items-center gap-8">
-                    
-                    <!-- Grand visuel produit -->
-                    <div class="relative w-48 h-56 sm:w-52 sm:h-60 bg-gradient-to-b from-slate-50 to-slate-100/60 rounded-2xl border border-slate-200/60 p-4 flex items-center justify-center shrink-0 group">
-                        <img id="productImage" src="" alt="Visuel de l'appareil" class="max-h-full max-w-full object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300">
-                    </div>
-
-                    <!-- Métadonnées & Détails du produit -->
-                    <div class="flex-1 text-center sm:text-left space-y-3">
-                        <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-semibold text-xs rounded-full">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                            Appareil identifié
-                        </div>
-                        
-                        <h2 id="productName" class="text-2xl font-bold text-slate-900 tracking-tight"></h2>
-                        
-                        <!-- Badges caractéristiques -->
-                        <div class="pt-2 flex flex-wrap justify-center sm:justify-start gap-2 text-xs font-mono">
-                            <span id="productId" class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md border border-slate-200">ID: --</span>
-                            <span id="productModel" class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md border border-slate-200">Modèle: --</span>
-                            <span id="productIos" class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md border border-slate-200">iCloud/iOS: --</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Grille des Offres d'Argus -->
+            <!-- BLOC GAUCHE : Grille des Prix Argus -->
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
-                <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center justify-between mb-5 border-b border-slate-100 pb-3">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Grille tarifaire de reprise</h3>
                     <span class="text-xs text-slate-400 font-mono">Valeurs en Euros (€)</span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    
+                <div class="space-y-3">
                     <!-- Grade A -->
                     <div class="p-4 rounded-xl border border-slate-100 bg-emerald-50/30 hover:border-emerald-200 transition-colors flex items-center justify-between">
                         <div class="flex items-center gap-3">
@@ -135,8 +106,24 @@
                         </div>
                         <span id="priceDmin" class="text-xl font-extrabold text-rose-600 font-mono">-- €</span>
                     </div>
-
                 </div>
+            </div>
+
+            <!-- BLOC DROITE : Produit (Grand Visuel & Nom en-dessous) -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 p-8 shadow-sm flex flex-col items-center justify-center text-center">
+                
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-semibold text-xs rounded-full mb-6">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    Appareil identifié
+                </div>
+
+                <!-- Grand visuel produit -->
+                <div class="relative w-full h-80 bg-gradient-to-b from-slate-50 to-slate-100/60 rounded-2xl border border-slate-200/60 p-6 flex items-center justify-center mb-6 group">
+                    <img id="productImage" src="" alt="Visuel de l'appareil" class="max-h-full max-w-full object-contain drop-shadow-xl group-hover:scale-105 transition-transform duration-300">
+                </div>
+
+                <!-- Nom du produit en dessous du visuel -->
+                <h2 id="productName" class="text-2xl font-bold text-slate-900 tracking-tight"></h2>
             </div>
 
         </div>
@@ -239,22 +226,6 @@
 
             function renderResult(product, bestPrices) {
                 document.getElementById('productName').textContent = product.product || "Produit inconnu";
-                document.getElementById('productId').textContent = `ID Produit : ${product.idproduct}`;
-                
-                if (product.idproduct_model) {
-                    document.getElementById('productModel').textContent = `Modèle : ${product.idproduct_model}`;
-                    document.getElementById('productModel').classList.remove('hidden');
-                } else {
-                    document.getElementById('productModel').classList.add('hidden');
-                }
-
-                if (product.ios_lock) {
-                    document.getElementById('productIos').textContent = `iOS Lock : ${product.ios_lock}`;
-                    document.getElementById('productIos').classList.remove('hidden');
-                } else {
-                    document.getElementById('productIos').classList.add('hidden');
-                }
-
                 document.getElementById('productImage').src = product.image || '';
 
                 document.getElementById('priceA').textContent = `${bestPrices['A'] ?? 0} €`;
