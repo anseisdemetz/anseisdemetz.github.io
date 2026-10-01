@@ -159,7 +159,7 @@
                     // Récupération de la liste des résultats
                     const productsList = Array.isArray(productData) ? productData : (productData?.results || []);
                     const product = productsList[0];
-console.log(product);
+
 
                     if (!product || !product.idproduct) {
                         throw new Error("Aucun produit identifié pour cet IMEI.");

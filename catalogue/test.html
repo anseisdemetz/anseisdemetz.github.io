@@ -1,0 +1,64 @@
+<script>
+
+const API_DOMAIN = "https://preprod-b2b-api.comparecycle.com";
+const API_TOKEN = "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr";
+const CORS_KEY = "c46f8301";
+
+function buildProxyUrl(targetUrl) {
+    return `https://corsproxy.io/?key=${CORS_KEY}&url=` + encodeURIComponent(targetUrl);
+}
+
+async function loadAndDisplayCodes() {
+    imei = "350019657088940";
+    // 1. Interrogation de l'endpoint Produits
+                    const productEndpoint = `${API_DOMAIN}/Catalog/products?imei=${encodeURIComponent(imei)}`;
+                    const proxyProductUrl = buildProxyUrl(productEndpoint);
+
+                const productResp = await fetch(proxyProductUrl, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": API_TOKEN
+                        }
+                    });
+                
+                try {
+                    const productResp = await fetch(proxyProductUrl, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": API_TOKEN
+                        }
+                    });
+
+                    if (!productResp.ok) throw new Error(`Erreur HTTP: ${productResp.status}`);
+
+                    let responseData = await productResp.json();
+
+                    // Désencapsulation proxy CORS
+                    if (responseData && typeof responseData.contents === 'string') {
+                        try { responseData = JSON.parse(responseData.contents); } catch (e) {}
+                    } else if (responseData && responseData.contents) {
+                        responseData = responseData.contents;
+                    }
+
+                    console.log(responseData);
+
+                    let codesArray = [];
+                    if (Array.isArray(responseData)) {
+                        codesArray = responseData;
+                    } else if (responseData && typeof responseData === 'object') {
+                        for (const key in responseData) {
+                            if (Array.isArray(responseData[key])) {
+                                codesArray = responseData[key];
+                                break;
+                            }
+                        }
+                    }
+
+                } catch (error) {
+                    showStatus(`Erreur lors du chargement des codes : ${error.message}`, "error");
+                }
+            }
+loadAndDisplayCodes();
+</script>
