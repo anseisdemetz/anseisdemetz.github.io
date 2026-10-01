@@ -46,7 +46,7 @@
         <!-- Carte de résultat (Double bloc aligné en hauteur) -->
         <div id="resultCard" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             
-            <!-- BLOC GAUCHE : Offres de reprise -->
+            <!-- BLOC GAUCHE : Offres de reprise avec icônes -->
             <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl shadow-slate-200/40 flex flex-col justify-between h-full">
                 <div>
                     <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
@@ -55,10 +55,12 @@
                     </div>
 
                     <div class="space-y-3.5">
-                        <!-- Grade A -->
+                        <!-- Grade A (Étoile / Comme neuf) -->
                         <div class="p-4 rounded-2xl bg-emerald-50/40 border border-emerald-100/80 flex items-center justify-between hover:scale-[1.01] transition-transform">
                             <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-md shadow-emerald-200">A</div>
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-200">
+                                    <i class="fa-solid fa-star text-sm"></i>
+                                </div>
                                 <div>
                                     <p class="font-bold text-slate-900 text-sm">Excellent état</p>
                                     <p class="text-xs text-slate-500">Aucune rayure, comme neuf</p>
@@ -67,10 +69,12 @@
                             <span id="priceA" class="text-2xl font-extrabold text-emerald-600 font-mono">-- €</span>
                         </div>
 
-                        <!-- Grade B -->
+                        <!-- Grade B (Pouce levé / Bon état) -->
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between hover:scale-[1.01] transition-transform">
                             <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-md shadow-sky-200">B</div>
+                                <div class="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-sky-200">
+                                    <i class="fa-solid fa-thumbs-up text-sm"></i>
+                                </div>
                                 <div>
                                     <p class="font-bold text-slate-900 text-sm">Bon état</p>
                                     <p class="text-xs text-slate-500">Micro-rayures minimes</p>
@@ -79,10 +83,12 @@
                             <span id="priceB" class="text-2xl font-extrabold text-sky-600 font-mono">-- €</span>
                         </div>
 
-                        <!-- Grade C -->
+                        <!-- Grade C (Outils / Traces d'usure) -->
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between hover:scale-[1.01] transition-transform">
                             <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-md shadow-amber-200">C</div>
+                                <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-200">
+                                    <i class="fa-solid fa-screwdriver-wrench text-sm"></i>
+                                </div>
                                 <div>
                                     <p class="font-bold text-slate-900 text-sm">État correct</p>
                                     <p class="text-xs text-slate-500">Traces d'usure visibles</p>
@@ -91,10 +97,12 @@
                             <span id="priceC" class="text-2xl font-extrabold text-amber-600 font-mono">-- €</span>
                         </div>
 
-                        <!-- Grade D- -->
+                        <!-- Grade D- (Éclair / Cassé) -->
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between hover:scale-[1.01] transition-transform">
                             <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-md shadow-rose-200">D-</div>
+                                <div class="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-200">
+                                    <i class="fa-solid fa-bolt-lightning text-sm"></i>
+                                </div>
                                 <div>
                                     <p class="font-bold text-slate-900 text-sm">Abîmé / Cassé</p>
                                     <p class="text-xs text-slate-500">Écran ou dos cassé</p>
