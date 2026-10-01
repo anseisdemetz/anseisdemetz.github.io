@@ -1,264 +1,231 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-full bg-slate-900">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulateur de Prix - Comparecycle</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de Prix - Comparecycle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 antialiased font-sans">
+<body class="bg-slate-900 min-h-screen text-slate-100 font-sans">
 
-  <div class="max-w-2xl mx-auto px-4 py-10">
-    <!-- En-tête -->
-    <header class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Simulateur de Reprise</h1>
-      <p class="text-slate-500 mt-2 text-sm">Estimez la valeur de votre appareil en quelques secondes</p>
-    </header>
+    <div class="max-w-2xl mx-auto px-4 py-10">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-sky-400 tracking-tight">Simulateur de Reprise</h1>
+            <p class="text-slate-400 mt-2 text-sm">Estimez la valeur de votre appareil en quelques secondes</p>
+        </header>
 
-    <!-- Configuration Clé API & Proxy -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6 space-y-4">
-      <div>
-        <label for="apiKey" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Clé API (X-AUTH-CR)</label>
-        <input type="password" id="apiKey" placeholder="Saisissez votre clé d'authentification" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
-      </div>
-      <div class="flex items-center gap-2 pt-1">
-        <input type="checkbox" id="useProxy" checked class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
-        <label for="useProxy" class="text-xs text-slate-600 font-medium">Utiliser le proxy CORS (<code class="bg-slate-100 px-1 py-0.5 rounded text-indigo-600">corsproxy.io</code>)</label>
-      </div>
-    </div>
+        <!-- Formulaire IMEI -->
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6 mb-8 shadow-xl">
+            <form id="searchForm" class="space-y-4">
+                <div>
+                    <label for="imei" class="block text-sm font-medium text-slate-300 mb-2">Numéro IMEI de l'appareil</label>
+                    <div class="relative">
+                        <input type="text" id="imei" required placeholder="Ex: 351615087539771" pattern="[0-9]{15}" maxlength="15" 
+                               class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono tracking-wider">
+                        <button type="submit" id="submitBtn" class="absolute right-2 top-2 bottom-2 px-5 bg-sky-500 hover:bg-sky-600 text-slate-950 font-semibold rounded-lg text-sm transition flex items-center gap-2">
+                            <span>Estimer</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
 
-    <!-- Formulaire IMEI -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8">
-      <form id="searchForm" onsubmit="handleSearch(event)" class="space-y-4">
-        <div>
-          <label for="imei" class="block text-sm font-medium text-slate-700 mb-1">Numéro IMEI de l'appareil</label>
-          <div class="relative">
-            <input type="text" value="351615087539771" id="imei" required placeholder="Ex: 351615087539771" pattern="[0-9]{15}" maxlength="15" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono text-base tracking-wider">
-            <button type="submit" id="submitBtn" class="absolute right-2 top-2 bottom-2 px-5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm transition-colors flex items-center gap-2">
-              <span>Estimer</span>
-              <i class="fa-solid fa-arrow-right text-xs"></i>
-            </button>
-          </div>
-        </div>
-      </form>
-
-      <!-- Astuce IMEI -->
-      <div class="mt-4 pt-4 border-t border-slate-100 flex items-start gap-3 text-xs text-slate-500">
-        <i class="fa-solid fa-circle-info text-indigo-500 mt-0.5 text-sm"></i>
-        <div>
-          <span class="font-semibold text-slate-700">Comment trouver votre IMEI ?</span>
-          <p class="mt-0.5">Composez <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-slate-800">*#06#</code> sur le clavier de votre téléphone.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Zone d'erreur -->
-    <div id="errorMessage" class="hidden bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-xl mb-6 text-sm flex items-center gap-3">
-      <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
-      <span id="errorText">Une erreur est survenue.</span>
-    </div>
-
-    <!-- Indicator Statut/Chargement -->
-    <div id="status" class="hidden text-center py-8">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-r-transparent"></div>
-      <p id="statusText" class="text-sm text-slate-500 mt-3">Interrogation de l'API...</p>
-    </div>
-
-    <!-- Résultat -->
-    <div id="resultCard" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-      <!-- Info Produit -->
-      <div class="p-6 bg-slate-50/50 border-b border-slate-100 flex items-center gap-6">
-        <div class="w-24 h-24 bg-white rounded-xl border border-slate-200/80 p-2 flex items-center justify-center shrink-0">
-          <img id="productImage" src="" alt="Photo du produit" class="max-h-full max-w-full object-contain">
-        </div>
-        <div>
-          <span class="inline-block px-2.5 py-0.5 bg-indigo-50 text-indigo-700 font-semibold text-xs rounded-full mb-1">Appareil identifié</span>
-          <h2 id="productName" class="text-xl font-bold text-slate-900"></h2>
-          <p id="productId" class="text-xs text-slate-400 mt-1 font-mono"></p>
-        </div>
-      </div>
-
-      <!-- Grille des prix -->
-      <div class="p-6 space-y-3">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">Estimations de rachat</h3>
-
-        <!-- Grade A -->
-        <div class="flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-emerald-50/30 hover:border-emerald-200 transition-colors">
-          <div class="flex items-center gap-3">
-            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-            <div>
-              <p class="font-semibold text-slate-800 text-sm">Excellent état</p>
-              <p class="text-xs text-slate-400">Grade A — Aucune rayure, comme neuf</p>
+            <div class="mt-4 pt-4 border-t border-slate-700 flex items-start gap-3 text-xs text-slate-400">
+                <i class="fa-solid fa-circle-info text-sky-400 mt-0.5 text-sm"></i>
+                <div>
+                    <span class="font-semibold text-slate-300">Comment trouver votre IMEI ?</span>
+                    <p class="mt-0.5">Composez <code class="bg-slate-900 px-1.5 py-0.5 rounded font-mono text-sky-300">*#06#</code> sur le clavier de votre téléphone.</p>
+                </div>
             </div>
-          </div>
-          <span id="priceA" class="text-lg font-bold text-slate-900 font-mono">-- €</span>
         </div>
 
-        <!-- Grade B -->
-        <div class="flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-slate-200 transition-colors">
-          <div class="flex items-center gap-3">
-            <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
-            <div>
-              <p class="font-semibold text-slate-800 text-sm">Bon état</p>
-              <p class="text-xs text-slate-400">Grade B — Micro-rayures invisibles écran allumé</p>
-            </div>
-          </div>
-          <span id="priceB" class="text-lg font-bold text-slate-900 font-mono">-- €</span>
-        </div>
+        <!-- Statut / Message -->
+        <div id="statusMessage" class="hidden p-4 rounded-xl bg-slate-800 border border-slate-700 text-center text-sm mb-6"></div>
 
-        <!-- Grade C -->
-        <div class="flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-slate-200 transition-colors">
-          <div class="flex items-center gap-3">
-            <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
-            <div>
-              <p class="font-semibold text-slate-800 text-sm">État correct</p>
-              <p class="text-xs text-slate-400">Grade C — Rayures ou impacts visibles</p>
+        <!-- Resultats -->
+        <div id="resultCard" class="hidden bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
+            <!-- Info Produit -->
+            <div class="p-6 bg-slate-800/50 border-b border-slate-700 flex items-center gap-6">
+                <div class="w-24 h-24 bg-slate-900 rounded-xl border border-slate-700 p-2 flex items-center justify-center shrink-0">
+                    <img id="productImage" src="" alt="Photo du produit" class="max-h-full max-w-full object-contain">
+                </div>
+                <div>
+                    <span class="inline-block px-2.5 py-0.5 bg-sky-950 text-sky-400 border border-sky-800 font-semibold text-xs rounded-full mb-1">Appareil identifié</span>
+                    <h2 id="productName" class="text-xl font-bold text-white"></h2>
+                    <p id="productId" class="text-xs text-slate-400 mt-1 font-mono"></p>
+                </div>
             </div>
-          </div>
-          <span id="priceC" class="text-lg font-bold text-slate-900 font-mono">-- €</span>
-        </div>
 
-        <!-- Grade D- -->
-        <div class="flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-slate-200 transition-colors">
-          <div class="flex items-center gap-3">
-            <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
-            <div>
-              <p class="font-semibold text-slate-800 text-sm">État abimé / cassé</p>
-              <p class="text-xs text-slate-400">Grade D- — Écran cassé ou fonctionnalités altérées</p>
+            <!-- Grille des prix -->
+            <div class="p-6 space-y-3">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">Estimations de rachat</h3>
+
+                <!-- Grade A -->
+                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-emerald-500/50 transition">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                        <div>
+                            <p class="font-semibold text-slate-200 text-sm">Excellent état</p>
+                            <p class="text-xs text-slate-400">Grade A — Aucune rayure</p>
+                        </div>
+                    </div>
+                    <span id="priceA" class="text-lg font-bold text-emerald-400 font-mono">-- €</span>
+                </div>
+
+                <!-- Grade B -->
+                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-sky-500/50 transition">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span>
+                        <div>
+                            <p class="font-semibold text-slate-200 text-sm">Bon état</p>
+                            <p class="text-xs text-slate-400">Grade B — Micro-rayures invisibles écran allumé</p>
+                        </div>
+                    </div>
+                    <span id="priceB" class="text-lg font-bold text-sky-400 font-mono">-- €</span>
+                </div>
+
+                <!-- Grade C -->
+                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-amber-500/50 transition">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
+                        <div>
+                            <p class="font-semibold text-slate-200 text-sm">État correct</p>
+                            <p class="text-xs text-slate-400">Grade C — Rayures ou impacts visibles</p>
+                        </div>
+                    </div>
+                    <span id="priceC" class="text-lg font-bold text-amber-400 font-mono">-- €</span>
+                </div>
+
+                <!-- Grade D- -->
+                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-rose-500/50 transition">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
+                        <div>
+                            <p class="font-semibold text-slate-200 text-sm">État abimé / cassé</p>
+                            <p class="text-xs text-slate-400">Grade D- — Écran cassé ou hors service</p>
+                        </div>
+                    </div>
+                    <span id="priceDmin" class="text-lg font-bold text-rose-400 font-mono">-- €</span>
+                </div>
             </div>
-          </div>
-          <span id="priceDmin" class="text-lg font-bold text-slate-900 font-mono">-- €</span>
         </div>
-      </div>
     </div>
-  </div>
 
-  <script>
-    const API_BASE_ROOT = "https://preprod-b2b-api.comparecycle.com";
+    <!-- Configuration Script -->
+    <script src="config.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const searchForm = document.getElementById("searchForm");
+            const imeiInput = document.getElementById("imei");
+            const submitBtn = document.getElementById("submitBtn");
+            const statusMessage = document.getElementById("statusMessage");
+            const resultCard = document.getElementById("resultCard");
 
-    function getProxyUrl(targetUrl) {
-      const useProxy = document.getElementById('useProxy').checked;
-      if (useProxy) {
-        return "https://corsproxy.io/?" + encodeURIComponent(targetUrl);
-      }
-      return targetUrl;
-    }
+            searchForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const imei = imeiInput.value.trim();
+                if (!imei) return;
 
-    async function handleSearch(event) {
-      event.preventDefault();
+                showStatus("Recherche du produit en cours...", "info");
+                resultCard.classList.add("hidden");
+                submitBtn.disabled = true;
 
-      const apiKey = "bg4v9x4C424yEhUKxwUi8yBQC8t89AX9";//document.getElementById('apiKey').value.trim();
-      const imei = document.getElementById('imei').value.trim();
+                try {
+                    // 1. Rechech vum Produit duerch den IMEI
+                    const productEndpoint = `${CONFIG.API_DOMAIN}/Catalog/products?imei=${encodeURIComponent(imei)}`;
+                    const proxyProductUrl = buildProxyUrl(productEndpoint);
 
-      if (!apiKey) {
-        showError("Veuillez saisir votre clé API X-AUTH-CR.");
-        return;
-      }
+                    const productResp = await fetch(proxyProductUrl, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": CONFIG.API_TOKEN
+                        }
+                    });
 
-      resetUI();
-      updateStatus(true, "Recherche de l'appareil via l'IMEI...");
+                    if (!productResp.ok) throw new Error(`Erreur HTTP Produits: ${productResp.status}`);
 
-      try {
-        // 1. Appel Produits
-        const targetProductUrl = `${API_BASE_ROOT}/Catalog/products?imei=${encodeURIComponent(imei)}`;
-        const fetchProductUrl = getProxyUrl(targetProductUrl);
+                    let productData = await productResp.json();
+                    
+                    // Unpack Proxy CORS wann néideg
+                    if (productData && typeof productData.contents === 'string') {
+                        try { productData = JSON.parse(productData.contents); } catch (e) {}
+                    } else if (productData && productData.contents) {
+                        productData = productData.contents;
+                    }
 
-        const productResponse = await fetch(fetchProductUrl, {
-          method: 'GET',
-          headers: {
-            'X-AUTH-CR': apiKey,
-            'Accept': 'application/json'
-          }
+                    const product = productData.results?.[0];
+                    if (!product) throw new Error("Aucun produit trouvé pour cet IMEI.");
+
+                    // 2. Abfro vum Argus Präis duerch idproduct
+                    showStatus("Récupération des tarifs Argus...", "info");
+
+                    const argusEndpoint = `${CONFIG.API_DOMAIN}/Catalog/argus?idproduct=${encodeURIComponent(product.idproduct)}`;
+                    const proxyArgusUrl = buildProxyUrl(argusEndpoint);
+
+                    const argusResp = await fetch(proxyArgusUrl, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": CONFIG.API_TOKEN
+                        }
+                    });
+
+                    if (!argusResp.ok) throw new Error(`Erreur HTTP Argus: ${argusResp.status}`);
+
+                    let argusData = await argusResp.json();
+                    
+                    // Unpack Proxy CORS wann néideg
+                    if (argusData && typeof argusData.contents === 'string') {
+                        try { argusData = JSON.parse(argusData.contents); } catch (e) {}
+                    } else if (argusData && argusData.contents) {
+                        argusData = argusData.contents;
+                    }
+
+                    const argusProducts = argusData.results?.products || [];
+                    const argusProduct = argusProducts.find(p => p.idproduct === product.idproduct) || argusProducts[0];
+
+                    if (!argusProduct || !argusProduct.best) {
+                        throw new Error("Tarifs Argus non disponibles pour ce produit.");
+                    }
+
+                    // 3. Resultater weisen
+                    hideStatus();
+                    renderResult(product, argusProduct.best);
+
+                } catch (error) {
+                    showStatus(`Erreur : ${error.message}`, "error");
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+
+            function renderResult(product, bestPrices) {
+                document.getElementById('productName').textContent = product.product || "Produit inconnu";
+                document.getElementById('productId').textContent = `ID Produit : ${product.idproduct}`;
+                document.getElementById('productImage').src = product.image || '';
+
+                document.getElementById('priceA').textContent = `${bestPrices['A'] ?? 0} €`;
+                document.getElementById('priceB').textContent = `${bestPrices['B'] ?? 0} €`;
+                document.getElementById('priceC').textContent = `${bestPrices['C'] ?? 0} €`;
+                document.getElementById('priceDmin').textContent = `${bestPrices['D-'] ?? 0} €`;
+
+                resultCard.classList.remove("hidden");
+            }
+
+            function showStatus(text, type) {
+                statusMessage.textContent = text;
+                statusMessage.classList.remove("hidden", "text-rose-400", "text-sky-300");
+                if (type === "error") statusMessage.classList.add("text-rose-400");
+                else statusMessage.classList.add("text-sky-300");
+            }
+
+            function hideStatus() {
+                statusMessage.classList.add("hidden");
+            }
         });
-
-        if (!productResponse.ok) {
-          throw new Error(`Erreur Produits (HTTP ${productResponse.status})`);
-        }
-
-        const productData = await productResponse.json();
-        const product = productData.results?.[0];
-
-        if (!product) {
-          throw new Error("Aucun produit trouvé pour cet IMEI.");
-        }
-
-        const idProduct = product.idproduct;
-
-        // 2. Appel Argus
-        updateStatus(true, "Récupération de la grille tarifaire...");
-
-        const targetArgusUrl = `${API_BASE_ROOT}/Catalog/argus?idproduct=${encodeURIComponent(idProduct)}`;
-        const fetchArgusUrl = getProxyUrl(targetArgusUrl);
-
-        const argusResponse = await fetch(fetchArgusUrl, {
-          method: 'GET',
-          headers: {
-            'X-AUTH-CR': apiKey,
-            'Accept': 'application/json'
-          }
-        });
-
-        if (!argusResponse.ok) {
-          throw new Error(`Erreur Argus (HTTP ${argusResponse.status})`);
-        }
-
-        const argusData = await argusResponse.json();
-        const argusProducts = argusData.results?.products || [];
-        const argusProduct = argusProducts.find(p => p.idproduct === idProduct) || argusProducts[0];
-
-        if (!argusProduct || !argusProduct.best) {
-          throw new Error("Tarifs Argus indisponibles pour ce produit.");
-        }
-
-        // 3. Affichage
-        renderResult(product, argusProduct.best);
-
-      } catch (err) {
-        showError(err.message || "Une erreur est survenue lors de la communication avec l'API.");
-      } finally {
-        updateStatus(false);
-      }
-    }
-
-    function renderResult(product, bestPrices) {
-      document.getElementById('productName').textContent = product.product || "Produit";
-      document.getElementById('productId').textContent = `ID Produit : ${product.idproduct}`;
-      document.getElementById('productImage').src = product.image || '';
-
-      document.getElementById('priceA').textContent = `${bestPrices['A'] ?? 0} €`;
-      document.getElementById('priceB').textContent = `${bestPrices['B'] ?? 0} €`;
-      document.getElementById('priceC').textContent = `${bestPrices['C'] ?? 0} €`;
-      document.getElementById('priceDmin').textContent = `${bestPrices['D-'] ?? 0} €`;
-
-      document.getElementById('resultCard').classList.remove('hidden');
-    }
-
-    function showError(msg) {
-      document.getElementById('errorText').textContent = msg;
-      document.getElementById('errorMessage').classList.remove('hidden');
-    }
-
-    function resetUI() {
-      document.getElementById('errorMessage').classList.add('hidden');
-      document.getElementById('resultCard').classList.add('hidden');
-    }
-
-    function updateStatus(show, text = "") {
-      const statusEl = document.getElementById('status');
-      const submitBtn = document.getElementById('submitBtn');
-
-      if (show) {
-        document.getElementById('statusText').textContent = text;
-        statusEl.classList.remove('hidden');
-        submitBtn.disabled = true;
-        submitBtn.classList.add('opacity-50');
-      } else {
-        statusEl.classList.add('hidden');
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('opacity-50');
-      }
-    }
-  </script>
+    </script>
 </body>
 </html>
