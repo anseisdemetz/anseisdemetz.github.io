@@ -22,7 +22,7 @@
                 <div>
                     <label for="imei" class="block text-sm font-medium text-slate-300 mb-2">Numéro IMEI de l'appareil</label>
                     <div class="relative">
-                        <input type="text" id="imei" required placeholder="Ex: 351615087539771" pattern="[0-9]{15}" maxlength="15" 
+                        <input type="text" id="imei" required placeholder="Ex: 350019657088940" pattern="[0-9]{15}" maxlength="15" 
                                class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono tracking-wider">
                         <button type="submit" id="submitBtn" class="absolute right-2 top-2 bottom-2 px-5 bg-sky-500 hover:bg-sky-600 text-slate-950 font-semibold rounded-lg text-sm transition flex items-center gap-2">
                             <span>Estimer</span>
@@ -44,7 +44,7 @@
         <!-- Statut / Message -->
         <div id="statusMessage" class="hidden p-4 rounded-xl bg-slate-800 border border-slate-700 text-center text-sm mb-6"></div>
 
-        <!-- Resultats -->
+        <!-- Résultats -->
         <div id="resultCard" class="hidden bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
             <!-- Info Produit -->
             <div class="p-6 bg-slate-800/50 border-b border-slate-700 flex items-center gap-6">
@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    <!-- Configuration Script -->
+    <!-- Script de configuration -->
     <script src="config.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -128,12 +128,12 @@
                 const imei = imeiInput.value.trim();
                 if (!imei) return;
 
-                showStatus("Recherche du produit en cours...", "info");
+                showStatus("Recherche du produit...", "info");
                 resultCard.classList.add("hidden");
                 submitBtn.disabled = true;
 
                 try {
-                    // 1. Rechech vum Produit duerch den IMEI
+                    // 1. Interrogation de l'endpoint Produits
                     const productEndpoint = `${CONFIG.API_DOMAIN}/Catalog/products?imei=${encodeURIComponent(imei)}`;
                     const proxyProductUrl = buildProxyUrl(productEndpoint);
 
@@ -149,18 +149,23 @@
 
                     let productData = await productResp.json();
                     
-                    // Unpack Proxy CORS wann néideg
+                    // Traitement de l'encapsulation CorsProxy
                     if (productData && typeof productData.contents === 'string') {
                         try { productData = JSON.parse(productData.contents); } catch (e) {}
                     } else if (productData && productData.contents) {
                         productData = productData.contents;
                     }
 
-                    const product = productData.results?.[0];
-                    if (!product) throw new Error("Aucun produit trouvé pour cet IMEI.");
+                    // Récupération de la liste des résultats
+                    const productsList = Array.isArray(productData) ? productData : (productData?.results || []);
+                    const product = productsList[0];
 
-                    // 2. Abfro vum Argus Präis duerch idproduct
-                    showStatus("Récupération des tarifs Argus...", "info");
+                    if (!product || !product.idproduct) {
+                        throw new Error("Aucun produit identifié pour cet IMEI.");
+                    }
+
+                    // 2. Interrogation de l'endpoint Argus
+                    showStatus("Récupération de la grille tarifaire...", "info");
 
                     const argusEndpoint = `${CONFIG.API_DOMAIN}/Catalog/argus?idproduct=${encodeURIComponent(product.idproduct)}`;
                     const proxyArgusUrl = buildProxyUrl(argusEndpoint);
@@ -177,21 +182,23 @@
 
                     let argusData = await argusResp.json();
                     
-                    // Unpack Proxy CORS wann néideg
+                    // Traitement de l'encapsulation CorsProxy
                     if (argusData && typeof argusData.contents === 'string') {
                         try { argusData = JSON.parse(argusData.contents); } catch (e) {}
                     } else if (argusData && argusData.contents) {
                         argusData = argusData.contents;
                     }
 
-                    const argusProducts = argusData.results?.products || [];
+                    // Extraction du bloc "results"
+                    const argusResults = argusData?.results || argusData;
+                    const argusProducts = argusResults?.products || [];
                     const argusProduct = argusProducts.find(p => p.idproduct === product.idproduct) || argusProducts[0];
 
                     if (!argusProduct || !argusProduct.best) {
-                        throw new Error("Tarifs Argus non disponibles pour ce produit.");
+                        throw new Error("Grille de prix Argus introuvable pour ce produit.");
                     }
 
-                    // 3. Resultater weisen
+                    // 3. Affichage
                     hideStatus();
                     renderResult(product, argusProduct.best);
 
