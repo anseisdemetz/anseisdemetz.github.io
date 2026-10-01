@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de Prix - Comparecycle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-slate-100 via-slate-50 to-slate-100 min-h-screen text-slate-800 antialiased">
+
+    <div class="max-w-5xl mx-auto px-4 py-16">
+        
+        <!-- En-tête principal -->
+        <header class="text-center mb-12">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100">Estimation en ligne</span>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-4">Combien vaut votre téléphone ?</h1>
+            <p class="text-slate-500 mt-3 text-base max-w-lg mx-auto font-normal">Saisissez le numéro IMEI de votre appareil pour découvrir sa valeur de rachat instantanée.</p>
+        </header>
+
+        <!-- Formulaire de recherche IMEI -->
+        <div class="bg-white/80 backdrop-blur-xl rounded-3xl border border-slate-200/80 p-4 sm:p-5 mb-10 shadow-xl shadow-slate-200/50 max-w-xl mx-auto">
+            <form id="searchForm" class="flex flex-col sm:flex-row items-center gap-2">
+                <div class="relative w-full">
+                    <input type="text" id="imei" required placeholder="Saisissez votre IMEI (15 chiffres)" pattern="[0-9]{15}" maxlength="15" 
+                           class="w-full bg-slate-50 border border-slate-200/80 rounded-2xl px-5 py-4 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 font-mono tracking-wider transition-all text-sm font-medium">
+                </div>
+                <button type="submit" id="submitBtn" class="w-full sm:w-auto shrink-0 px-7 py-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Estimer</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </form>
+
+            <div class="mt-4 pt-3 border-t border-slate-100/80 text-center text-xs text-slate-400">
+                <span>Astuce : obtenez votre IMEI en composant <code class="text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded-md font-mono">*#06#</code></span>
+            </div>
+        </div>
+
+        <!-- Zone de message & statut -->
+        <div id="statusMessage" class="hidden p-5 rounded-2xl bg-white border border-slate-200/80 text-center text-sm font-semibold mb-8 shadow-md max-w-xl mx-auto"></div>
+
+        <!-- Carte de résultat (Double bloc aligné en hauteur) -->
+        <div id="resultCard" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            
+            <!-- BLOC GAUCHE : Offres de reprise avec icônes -->
+            <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl shadow-slate-200/40 flex flex-col justify-between h-full">
+                <div>
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                        <h2 class="text-lg font-bold text-slate-900">Valeurs de reprise</h2>
+                        <span class="text-xs font-semibold text-slate-400">Paiement garanti</span>
+                    </div>
+
+                    <div class="space-y-3.5">
+                        <!-- Grade A (Étoile / Comme neuf) -->
+                        <div class="p-4 rounded-2xl bg-emerald-50/40 border border-emerald-100/80 flex items-center justify-between hover:scale-[1.01] transition-transform">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-200">
+                                    <i class="fa-solid fa-star text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-900 text-sm">Excellent état</p>
+                                    <p class="text-xs text-slate-500">Aucune rayure, comme neuf</p>
+                                </div>
+                            </div>
+                            <span id="priceA" class="text-2xl font-extrabold text-emerald-600 font-mono">-- €</span>
+                        </div>
+
+                        <!-- Grade B (Pouce levé / Bon état) -->
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between hover:scale-[1.01] transition-transform">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-sky-200">
+                                    <i class="fa-solid fa-thumbs-up text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-900 text-sm">Bon état</p>
+                                    <p class="text-xs text-slate-500">Micro-rayures minimes</p>
+                                </div>
+                            </div>
+                            <span id="priceB" class="text-2xl font-extrabold text-sky-600 font-mono">-- €</span>
+                        </div>
+
+                        <!-- Grade C (Outils / Traces d'usure) -->
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between hover:scale-[1.01] transition-transform">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-200">
+                                    <i class="fa-solid fa-screwdriver-wrench text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-900 text-sm">État correct</p>
+                                    <p class="text-xs text-slate-500">Traces d'usure visibles</p>
+                                </div>
+                            </div>
+                            <span id="priceC" class="text-2xl font-extrabold text-amber-600 font-mono">-- €</span>
+                        </div>
+
+                        <!-- Grade D- (Éclair / Cassé) -->
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between hover:scale-[1.01] transition-transform">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-200">
+                                    <i class="fa-solid fa-bolt-lightning text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-900 text-sm">Abîmé / Cassé</p>
+                                    <p class="text-xs text-slate-500">Écran ou dos cassé</p>
+                                </div>
+                            </div>
+                            <span id="priceDmin" class="text-2xl font-extrabold text-rose-600 font-mono">-- €</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-[11px] text-slate-400 text-center mt-6">Paiement sécurisé après vérification de l'appareil en atelier.</p>
+            </div>
+
+            <!-- BLOC DROITE : Visuel du produit grand format -->
+            <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl shadow-slate-200/40 flex flex-col justify-between items-center text-center h-full">
+                
+                <div class="w-full flex-1 flex items-center justify-center py-4">
+                    <div class="relative w-full h-80 sm:h-96 rounded-2xl bg-slate-50/80 border border-slate-100 p-6 flex items-center justify-center group">
+                        <img id="productImage" src="" alt="Visuel du téléphone" class="max-h-full max-w-full object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-100 w-full">
+                    <h3 id="productName" class="text-2xl font-black text-slate-900 tracking-tight"></h3>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Configuration Script -->
+    <script src="config.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const searchForm = document.getElementById("searchForm");
+            const imeiInput = document.getElementById("imei");
+            const submitBtn = document.getElementById("submitBtn");
+            const statusMessage = document.getElementById("statusMessage");
+            const resultCard = document.getElementById("resultCard");
+
+            searchForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const imei = imeiInput.value.trim();
+                if (!imei) return;
+
+                showStatus("<i class='fa-solid fa-spinner animate-spin text-indigo-600 mr-2'></i> Analyse de l'appareil...", "info");
+                resultCard.classList.add("hidden");
+                submitBtn.disabled = true;
+
+                try {
+                    // 1. Interrogation de l'endpoint Produits
+                    const productEndpoint = `${CONFIG.API_DOMAIN}/Catalog/products?imei=${encodeURIComponent(imei)}`;
+                    const proxyProductUrl = buildProxyUrl(productEndpoint);
+
+                    const productResp = await fetch(proxyProductUrl, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": CONFIG.API_TOKEN
+                        }
+                    });
+
+                    if (!productResp.ok) throw new Error(`Erreur HTTP Produits: ${productResp.status}`);
+
+                    let productData = await productResp.json();
+                    
+                    if (productData && typeof productData.contents === 'string') {
+                        try { productData = JSON.parse(productData.contents); } catch (e) {}
+                    } else if (productData && productData.contents) {
+                        productData = productData.contents;
+                    }
+
+                    const productsList = Array.isArray(productData) ? productData : (productData?.results || []);
+                    const product = productsList[0];
+
+                    if (!product || !product.idproduct) {
+                        throw new Error("Aucun produit identifié pour cet IMEI.");
+                    }
+
+                    // 2. Interrogation de l'endpoint Argus
+                    showStatus("<i class='fa-solid fa-spinner animate-spin text-indigo-600 mr-2'></i> Calcul des meilleures offres...", "info");
+
+                    const argusEndpoint = `${CONFIG.API_DOMAIN}/Catalog/argus?idproduct=${encodeURIComponent(product.idproduct)}`;
+                    const proxyArgusUrl = buildProxyUrl(argusEndpoint);
+
+                    const argusResp = await fetch(proxyArgusUrl, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": CONFIG.API_TOKEN
+                        }
+                    });
+
+                    if (!argusResp.ok) throw new Error(`Erreur HTTP Argus: ${argusResp.status}`);
+
+                    let argusData = await argusResp.json();
+                    
+                    if (argusData && typeof argusData.contents === 'string') {
+                        try { argusData = JSON.parse(argusData.contents); } catch (e) {}
+                    } else if (argusData && argusData.contents) {
+                        argusData = argusData.contents;
+                    }
+
+                    const argusResults = argusData?.results || argusData;
+                    const argusProducts = argusResults?.products || [];
+                    const argusProduct = argusProducts.find(p => p.idproduct === product.idproduct) || argusProducts[0];
+
+                    if (!argusProduct || !argusProduct.best) {
+                        throw new Error("Grille de prix Argus introuvable pour ce produit.");
+                    }
+
+                    hideStatus();
+                    renderResult(product, argusProduct.best);
+
+                } catch (error) {
+                    showStatus(`<i class='fa-solid fa-circle-exclamation text-rose-500 mr-2'></i> ${error.message}`, "error");
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+
+            function renderResult(product, bestPrices) {
+                document.getElementById('productName').textContent = product.product || "Produit inconnu";
+                document.getElementById('productImage').src = product.image || '';
+
+                document.getElementById('priceA').textContent = `${bestPrices['A'] ?? 0} €`;
+                document.getElementById('priceB').textContent = `${bestPrices['B'] ?? 0} €`;
+                document.getElementById('priceC').textContent = `${bestPrices['C'] ?? 0} €`;
+                document.getElementById('priceDmin').textContent = `${bestPrices['D-'] ?? 0} €`;
+
+                resultCard.classList.remove("hidden");
+            }
+
+            function showStatus(htmlContent, type) {
+                statusMessage.innerHTML = htmlContent;
+                statusMessage.classList.remove("hidden", "text-rose-600", "text-slate-700", "border-rose-200", "bg-rose-50");
+                if (type === "error") {
+                    statusMessage.classList.add("text-rose-600", "bg-rose-50", "border-rose-200");
+                } else {
+                    statusMessage.classList.add("text-slate-700");
+                }
+            }
+
+            function hideStatus() {
+                statusMessage.classList.add("hidden");
+            }
+        });
+    </script>
+</body>
+</html>
