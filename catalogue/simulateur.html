@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full bg-slate-900">
+<html lang="fr" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,24 +7,28 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-900 min-h-screen text-slate-100 font-sans">
+<body class="bg-slate-50 min-h-screen text-slate-800 font-sans antialiased">
 
-    <div class="max-w-2xl mx-auto px-4 py-10">
-        <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-sky-400 tracking-tight">Simulateur de Reprise</h1>
-            <p class="text-slate-400 mt-2 text-sm">Estimez la valeur de votre appareil en quelques secondes</p>
+    <div class="max-w-3xl mx-auto px-4 py-12">
+        
+        <!-- En-tête principal -->
+        <header class="text-center mb-10">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 mb-4 shadow-sm border border-indigo-100">
+                <i class="fa-solid fa-mobile-screen-button text-xl"></i>
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Simulateur de Reprise</h1>
+            <p class="text-slate-500 mt-2 text-sm max-w-md mx-auto">Obtenez instantanément la valeur d'estimation de votre appareil grâce à son numéro IMEI.</p>
         </header>
 
-        <!-- Formulaire IMEI -->
-        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6 mb-8 shadow-xl">
+        <!-- Formulaire de recherche IMEI -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 mb-8 shadow-sm hover:shadow-md transition-shadow">
             <form id="searchForm" class="space-y-4">
                 <div>
-                    <label for="imei" class="block text-sm font-medium text-slate-300 mb-2">Numéro IMEI de l'appareil</label>
-                    <div class="relative">
+                    <label for="imei" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Numéro IMEI de l'appareil</label>
+                    <div class="relative flex items-center">
                         <input type="text" id="imei" required placeholder="Ex: 350019657088940" pattern="[0-9]{15}" maxlength="15" 
-                               class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono tracking-wider">
-                        <button type="submit" id="submitBtn" class="absolute right-2 top-2 bottom-2 px-5 bg-sky-500 hover:bg-sky-600 text-slate-950 font-semibold rounded-lg text-sm transition flex items-center gap-2">
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-36 py-3.5 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono tracking-wider transition-all">
+                        <button type="submit" id="submitBtn" class="absolute right-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-lg text-sm transition-colors flex items-center gap-2 shadow-sm">
                             <span>Estimer</span>
                             <i class="fa-solid fa-arrow-right text-xs"></i>
                         </button>
@@ -32,88 +36,114 @@
                 </div>
             </form>
 
-            <div class="mt-4 pt-4 border-t border-slate-700 flex items-start gap-3 text-xs text-slate-400">
-                <i class="fa-solid fa-circle-info text-sky-400 mt-0.5 text-sm"></i>
+            <div class="mt-4 pt-4 border-t border-slate-100 flex items-start gap-3 text-xs text-slate-500">
+                <i class="fa-solid fa-circle-info text-indigo-500 mt-0.5 text-sm"></i>
                 <div>
-                    <span class="font-semibold text-slate-300">Comment trouver votre IMEI ?</span>
-                    <p class="mt-0.5">Composez <code class="bg-slate-900 px-1.5 py-0.5 rounded font-mono text-sky-300">*#06#</code> sur le clavier de votre téléphone.</p>
+                    <span class="font-semibold text-slate-700">Comment trouver votre IMEI ?</span>
+                    <p class="mt-0.5">Composez <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-indigo-600 font-medium">*#06#</code> sur le clavier de votre téléphone ou vérifiez dans le tiroir SIM.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Statut / Message -->
-        <div id="statusMessage" class="hidden p-4 rounded-xl bg-slate-800 border border-slate-700 text-center text-sm mb-6"></div>
+        <!-- Zone de message & statut -->
+        <div id="statusMessage" class="hidden p-4 rounded-xl bg-white border border-slate-200 text-center text-sm font-medium mb-8 shadow-sm"></div>
 
-        <!-- Résultats -->
-        <div id="resultCard" class="hidden bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
-            <!-- Info Produit -->
-            <div class="p-6 bg-slate-800/50 border-b border-slate-700 flex items-center gap-6">
-                <div class="w-24 h-24 bg-slate-900 rounded-xl border border-slate-700 p-2 flex items-center justify-center shrink-0">
-                    <img id="productImage" src="" alt="Photo du produit" class="max-h-full max-w-full object-contain">
-                </div>
-                <div>
-                    <span class="inline-block px-2.5 py-0.5 bg-sky-950 text-sky-400 border border-sky-800 font-semibold text-xs rounded-full mb-1">Appareil identifié</span>
-                    <h2 id="productName" class="text-xl font-bold text-white"></h2>
-                    <p id="productId" class="text-xs text-slate-400 mt-1 font-mono"></p>
+        <!-- Carte de résultat -->
+        <div id="resultCard" class="hidden space-y-6">
+            
+            <!-- Fiche Produit (Focus Visuel) -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm overflow-hidden">
+                <div class="flex flex-col sm:flex-row items-center gap-8">
+                    
+                    <!-- Grand visuel produit -->
+                    <div class="relative w-48 h-56 sm:w-52 sm:h-60 bg-gradient-to-b from-slate-50 to-slate-100/60 rounded-2xl border border-slate-200/60 p-4 flex items-center justify-center shrink-0 group">
+                        <img id="productImage" src="" alt="Visuel de l'appareil" class="max-h-full max-w-full object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300">
+                    </div>
+
+                    <!-- Métadonnées & Détails du produit -->
+                    <div class="flex-1 text-center sm:text-left space-y-3">
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-semibold text-xs rounded-full">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Appareil identifié
+                        </div>
+                        
+                        <h2 id="productName" class="text-2xl font-bold text-slate-900 tracking-tight"></h2>
+                        
+                        <!-- Badges caractéristiques -->
+                        <div class="pt-2 flex flex-wrap justify-center sm:justify-start gap-2 text-xs font-mono">
+                            <span id="productId" class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md border border-slate-200">ID: --</span>
+                            <span id="productModel" class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md border border-slate-200">Modèle: --</span>
+                            <span id="productIos" class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md border border-slate-200">iCloud/iOS: --</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Grille des prix -->
-            <div class="p-6 space-y-3">
-                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">Estimations de rachat</h3>
-
-                <!-- Grade A -->
-                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-emerald-500/50 transition">
-                    <div class="flex items-center gap-3">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                        <div>
-                            <p class="font-semibold text-slate-200 text-sm">Excellent état</p>
-                            <p class="text-xs text-slate-400">Grade A — Aucune rayure</p>
-                        </div>
-                    </div>
-                    <span id="priceA" class="text-lg font-bold text-emerald-400 font-mono">-- €</span>
+            <!-- Grille des Offres d'Argus -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-5">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Grille tarifaire de reprise</h3>
+                    <span class="text-xs text-slate-400 font-mono">Valeurs en Euros (€)</span>
                 </div>
 
-                <!-- Grade B -->
-                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-sky-500/50 transition">
-                    <div class="flex items-center gap-3">
-                        <span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span>
-                        <div>
-                            <p class="font-semibold text-slate-200 text-sm">Bon état</p>
-                            <p class="text-xs text-slate-400">Grade B — Micro-rayures invisibles écran allumé</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    
+                    <!-- Grade A -->
+                    <div class="p-4 rounded-xl border border-slate-100 bg-emerald-50/30 hover:border-emerald-200 transition-colors flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-emerald-500 shrink-0"></div>
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm">Excellent état</p>
+                                <p class="text-xs text-slate-500">Grade A — Comme neuf</p>
+                            </div>
                         </div>
+                        <span id="priceA" class="text-xl font-extrabold text-emerald-600 font-mono">-- €</span>
                     </div>
-                    <span id="priceB" class="text-lg font-bold text-sky-400 font-mono">-- €</span>
-                </div>
 
-                <!-- Grade C -->
-                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-amber-500/50 transition">
-                    <div class="flex items-center gap-3">
-                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
-                        <div>
-                            <p class="font-semibold text-slate-200 text-sm">État correct</p>
-                            <p class="text-xs text-slate-400">Grade C — Rayures ou impacts visibles</p>
+                    <!-- Grade B -->
+                    <div class="p-4 rounded-xl border border-slate-100 bg-sky-50/30 hover:border-sky-200 transition-colors flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-sky-500 shrink-0"></div>
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm">Bon état</p>
+                                <p class="text-xs text-slate-500">Grade B — Micro-rayures</p>
+                            </div>
                         </div>
+                        <span id="priceB" class="text-xl font-extrabold text-sky-600 font-mono">-- €</span>
                     </div>
-                    <span id="priceC" class="text-lg font-bold text-amber-400 font-mono">-- €</span>
-                </div>
 
-                <!-- Grade D- -->
-                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-rose-500/50 transition">
-                    <div class="flex items-center gap-3">
-                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
-                        <div>
-                            <p class="font-semibold text-slate-200 text-sm">État abimé / cassé</p>
-                            <p class="text-xs text-slate-400">Grade D- — Écran cassé ou hors service</p>
+                    <!-- Grade C -->
+                    <div class="p-4 rounded-xl border border-slate-100 bg-amber-50/30 hover:border-amber-200 transition-colors flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-amber-500 shrink-0"></div>
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm">État correct</p>
+                                <p class="text-xs text-slate-500">Grade C — Rayures visibles</p>
+                            </div>
                         </div>
+                        <span id="priceC" class="text-xl font-extrabold text-amber-600 font-mono">-- €</span>
                     </div>
-                    <span id="priceDmin" class="text-lg font-bold text-rose-400 font-mono">-- €</span>
+
+                    <!-- Grade D- -->
+                    <div class="p-4 rounded-xl border border-slate-100 bg-rose-50/30 hover:border-rose-200 transition-colors flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-rose-500 shrink-0"></div>
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm">Abîmé / Cassé</p>
+                                <p class="text-xs text-slate-500">Grade D- — Écran/Châssis cassé</p>
+                            </div>
+                        </div>
+                        <span id="priceDmin" class="text-xl font-extrabold text-rose-600 font-mono">-- €</span>
+                    </div>
+
                 </div>
             </div>
+
         </div>
+
     </div>
 
-    <!-- Script de configuration -->
+    <!-- Configuration Script -->
     <script src="config.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -128,7 +158,7 @@
                 const imei = imeiInput.value.trim();
                 if (!imei) return;
 
-                showStatus("Recherche du produit...", "info");
+                showStatus("<i class='fa-solid fa-spinner animate-spin text-indigo-600 mr-2'></i> Recherche du produit...", "info");
                 resultCard.classList.add("hidden");
                 submitBtn.disabled = true;
 
@@ -149,24 +179,22 @@
 
                     let productData = await productResp.json();
                     
-                    // Traitement de l'encapsulation CorsProxy
+                    // Désencapsulation CorsProxy
                     if (productData && typeof productData.contents === 'string') {
                         try { productData = JSON.parse(productData.contents); } catch (e) {}
                     } else if (productData && productData.contents) {
                         productData = productData.contents;
                     }
 
-                    // Récupération de la liste des résultats
                     const productsList = Array.isArray(productData) ? productData : (productData?.results || []);
                     const product = productsList[0];
-
 
                     if (!product || !product.idproduct) {
                         throw new Error("Aucun produit identifié pour cet IMEI.");
                     }
 
                     // 2. Interrogation de l'endpoint Argus
-                    showStatus("Récupération de la grille tarifaire...", "info");
+                    showStatus("<i class='fa-solid fa-spinner animate-spin text-indigo-600 mr-2'></i> Récupération des tarifs Argus...", "info");
 
                     const argusEndpoint = `${CONFIG.API_DOMAIN}/Catalog/argus?idproduct=${encodeURIComponent(product.idproduct)}`;
                     const proxyArgusUrl = buildProxyUrl(argusEndpoint);
@@ -183,14 +211,13 @@
 
                     let argusData = await argusResp.json();
                     
-                    // Traitement de l'encapsulation CorsProxy
+                    // Désencapsulation CorsProxy
                     if (argusData && typeof argusData.contents === 'string') {
                         try { argusData = JSON.parse(argusData.contents); } catch (e) {}
                     } else if (argusData && argusData.contents) {
                         argusData = argusData.contents;
                     }
 
-                    // Extraction du bloc "results"
                     const argusResults = argusData?.results || argusData;
                     const argusProducts = argusResults?.products || [];
                     const argusProduct = argusProducts.find(p => p.idproduct === product.idproduct) || argusProducts[0];
@@ -204,7 +231,7 @@
                     renderResult(product, argusProduct.best);
 
                 } catch (error) {
-                    showStatus(`Erreur : ${error.message}`, "error");
+                    showStatus(`<i class='fa-solid fa-circle-exclamation text-rose-500 mr-2'></i> ${error.message}`, "error");
                 } finally {
                     submitBtn.disabled = false;
                 }
@@ -213,6 +240,21 @@
             function renderResult(product, bestPrices) {
                 document.getElementById('productName').textContent = product.product || "Produit inconnu";
                 document.getElementById('productId').textContent = `ID Produit : ${product.idproduct}`;
+                
+                if (product.idproduct_model) {
+                    document.getElementById('productModel').textContent = `Modèle : ${product.idproduct_model}`;
+                    document.getElementById('productModel').classList.remove('hidden');
+                } else {
+                    document.getElementById('productModel').classList.add('hidden');
+                }
+
+                if (product.ios_lock) {
+                    document.getElementById('productIos').textContent = `iOS Lock : ${product.ios_lock}`;
+                    document.getElementById('productIos').classList.remove('hidden');
+                } else {
+                    document.getElementById('productIos').classList.add('hidden');
+                }
+
                 document.getElementById('productImage').src = product.image || '';
 
                 document.getElementById('priceA').textContent = `${bestPrices['A'] ?? 0} €`;
@@ -223,11 +265,14 @@
                 resultCard.classList.remove("hidden");
             }
 
-            function showStatus(text, type) {
-                statusMessage.textContent = text;
-                statusMessage.classList.remove("hidden", "text-rose-400", "text-sky-300");
-                if (type === "error") statusMessage.classList.add("text-rose-400");
-                else statusMessage.classList.add("text-sky-300");
+            function showStatus(htmlContent, type) {
+                statusMessage.innerHTML = htmlContent;
+                statusMessage.classList.remove("hidden", "text-rose-600", "text-slate-700", "border-rose-200", "bg-rose-50");
+                if (type === "error") {
+                    statusMessage.classList.add("text-rose-600", "bg-rose-50", "border-rose-200");
+                } else {
+                    statusMessage.classList.add("text-slate-700");
+                }
             }
 
             function hideStatus() {
