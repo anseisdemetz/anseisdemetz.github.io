@@ -13,13 +13,13 @@
 </head>
 <body class="bg-gradient-to-b from-slate-100 via-slate-50 to-slate-100 min-h-screen text-slate-800 antialiased">
 
-    <div class="max-w-5xl mx-auto px-4 py-16">
+    <div class="max-w-4xl mx-auto px-4 py-12">
         
         <!-- En-tête principal -->
-        <header class="text-center mb-12">
+        <header class="text-center mb-10">
             <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100">Estimation en ligne</span>
             <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-4">Combien vaut votre téléphone ?</h1>
-            <p class="text-slate-500 mt-3 text-base max-w-lg mx-auto font-normal">Saisissez le numéro IMEI de votre appareil pour découvrir sa valeur de rachat instantanée.</p>
+            <p class="text-slate-500 mt-3 text-base max-w-lg mx-auto font-normal">Saisissez votre numéro IMEI pour obtenir les tarifs de reprise selon la capacité.</p>
         </header>
 
         <!-- Formulaire de recherche IMEI -->
@@ -43,93 +43,36 @@
         <!-- Zone de message & statut -->
         <div id="statusMessage" class="hidden p-5 rounded-2xl bg-white border border-slate-200/80 text-center text-sm font-semibold mb-8 shadow-md max-w-xl mx-auto"></div>
 
-        <!-- Carte de résultat (Double bloc aligné en hauteur) -->
-        <div id="resultCard" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+        <!-- Tableau comparatif direct avec Visuel en-tête -->
+        <div id="resultCard" class="hidden bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xl shadow-slate-200/40 overflow-hidden">
             
-            <!-- BLOC GAUCHE : Offres de reprise avec icônes -->
-            <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl shadow-slate-200/40 flex flex-col justify-between h-full">
-                <div>
-                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-                        <h2 class="text-lg font-bold text-slate-900">Valeurs de reprise</h2>
-                        <span class="text-xs font-semibold text-slate-400">Paiement garanti</span>
-                    </div>
-
-                    <div class="space-y-3.5">
-                        <!-- Grade A (Étoile / Comme neuf) -->
-                        <div class="p-4 rounded-2xl bg-emerald-50/40 border border-emerald-100/80 flex items-center justify-between hover:scale-[1.01] transition-transform">
-                            <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-200">
-                                    <i class="fa-solid fa-star text-sm"></i>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-900 text-sm">Excellent état</p>
-                                    <p class="text-xs text-slate-500">Aucune rayure, comme neuf</p>
-                                </div>
-                            </div>
-                            <span id="priceA" class="text-2xl font-extrabold text-emerald-600 font-mono">-- €</span>
-                        </div>
-
-                        <!-- Grade B (Pouce levé / Bon état) -->
-                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between hover:scale-[1.01] transition-transform">
-                            <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-sky-200">
-                                    <i class="fa-solid fa-thumbs-up text-sm"></i>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-900 text-sm">Bon état</p>
-                                    <p class="text-xs text-slate-500">Micro-rayures minimes</p>
-                                </div>
-                            </div>
-                            <span id="priceB" class="text-2xl font-extrabold text-sky-600 font-mono">-- €</span>
-                        </div>
-
-                        <!-- Grade C (Outils / Traces d'usure) -->
-                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between hover:scale-[1.01] transition-transform">
-                            <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-200">
-                                    <i class="fa-solid fa-screwdriver-wrench text-sm"></i>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-900 text-sm">État correct</p>
-                                    <p class="text-xs text-slate-500">Traces d'usure visibles</p>
-                                </div>
-                            </div>
-                            <span id="priceC" class="text-2xl font-extrabold text-amber-600 font-mono">-- €</span>
-                        </div>
-
-                        <!-- Grade D- (Éclair / Cassé) -->
-                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between hover:scale-[1.01] transition-transform">
-                            <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-200">
-                                    <i class="fa-solid fa-bolt-lightning text-sm"></i>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-900 text-sm">Abîmé / Cassé</p>
-                                    <p class="text-xs text-slate-500">Écran ou dos cassé</p>
-                                </div>
-                            </div>
-                            <span id="priceDmin" class="text-2xl font-extrabold text-rose-600 font-mono">-- €</span>
-                        </div>
-                    </div>
+            <!-- En-tête du tableau : Photo + Nom -->
+            <div class="flex flex-col sm:flex-row items-center gap-5 mb-8 pb-6 border-b border-slate-100">
+                <div class="w-24 h-24 rounded-2xl bg-slate-50 border border-slate-100 p-2 flex items-center justify-center shrink-0 shadow-sm">
+                    <img id="productImage" src="" alt="Visuel du téléphone" class="max-h-full max-w-full object-contain drop-shadow-md">
                 </div>
-
-                <p class="text-[11px] text-slate-400 text-center mt-6">Paiement sécurisé après vérification de l'appareil en atelier.</p>
-            </div>
-
-            <!-- BLOC DROITE : Visuel du produit grand format -->
-            <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl shadow-slate-200/40 flex flex-col justify-between items-center text-center h-full">
-                
-                <div class="w-full flex-1 flex items-center justify-center py-4">
-                    <div class="relative w-full h-80 sm:h-96 rounded-2xl bg-slate-50/80 border border-slate-100 p-6 flex items-center justify-center group">
-                        <img id="productImage" src="" alt="Visuel du téléphone" class="max-h-full max-w-full object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                </div>
-
-                <div class="pt-4 border-t border-slate-100 w-full">
-                    <h3 id="productName" class="text-2xl font-black text-slate-900 tracking-tight"></h3>
+                <div class="text-center sm:text-left">
+                    <h2 id="modelBaseName" class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"></h2>
+                    <p class="text-xs text-slate-400 mt-1 font-medium">Grille des prix de reprise estimés en euros (€)</p>
                 </div>
             </div>
 
+            <!-- Conteneur défilant pour mobile -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr id="tableHeader" class="border-b border-slate-200/60">
+                            <th class="pb-4 pt-2 font-bold text-slate-400 text-xs uppercase tracking-wider min-w-[200px]">État de l'appareil</th>
+                            <!-- Les capacités (Ex: 64Go, 128Go, 256Go) s'insèrent ici -->
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-slate-100 font-medium">
+                        <!-- Les 4 rangées d'états sont générées dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="text-[11px] text-slate-400 text-center mt-6 pt-4 border-t border-slate-100">Paiement sécurisé après vérification physique et fonctionnelle de l'appareil en atelier.</p>
         </div>
 
     </div>
@@ -177,46 +120,53 @@
                     }
 
                     const productsList = Array.isArray(productData) ? productData : (productData?.results || []);
-                    const product = productsList[0];
 
-                    if (!product || !product.idproduct) {
+                    if (!productsList || productsList.length === 0) {
                         throw new Error("Aucun produit identifié pour cet IMEI.");
                     }
 
-                    // 2. Interrogation de l'endpoint Argus
-                    showStatus("<i class='fa-solid fa-spinner animate-spin text-indigo-600 mr-2'></i> Calcul des meilleures offres...", "info");
+                    showStatus("<i class='fa-solid fa-spinner animate-spin text-indigo-600 mr-2'></i> Récupération des offres de reprise...", "info");
 
-                    const argusEndpoint = `${CONFIG.API_DOMAIN}/Catalog/argus?idproduct=${encodeURIComponent(product.idproduct)}`;
-                    const proxyArgusUrl = buildProxyUrl(argusEndpoint);
+                    // 2. Interrogation de l'endpoint Argus pour chaque déclinaison
+                    const productsWithPrices = await Promise.all(
+                        productsList.map(async (prod) => {
+                            try {
+                                const argusEndpoint = `${CONFIG.API_DOMAIN}/Catalog/argus?idproduct=${encodeURIComponent(prod.idproduct)}`;
+                                const proxyArgusUrl = buildProxyUrl(argusEndpoint);
 
-                    const argusResp = await fetch(proxyArgusUrl, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-AUTH-CR": CONFIG.API_TOKEN
-                        }
-                    });
+                                const argusResp = await fetch(proxyArgusUrl, {
+                                    method: "GET",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "X-AUTH-CR": CONFIG.API_TOKEN
+                                    }
+                                });
 
-                    if (!argusResp.ok) throw new Error(`Erreur HTTP Argus: ${argusResp.status}`);
+                                if (!argusResp.ok) return { ...prod, best: null };
 
-                    let argusData = await argusResp.json();
-                    
-                    if (argusData && typeof argusData.contents === 'string') {
-                        try { argusData = JSON.parse(argusData.contents); } catch (e) {}
-                    } else if (argusData && argusData.contents) {
-                        argusData = argusData.contents;
-                    }
+                                let argusData = await argusResp.json();
+                                if (argusData && typeof argusData.contents === 'string') {
+                                    try { argusData = JSON.parse(argusData.contents); } catch (e) {}
+                                } else if (argusData && argusData.contents) {
+                                    argusData = argusData.contents;
+                                }
 
-                    const argusResults = argusData?.results || argusData;
-                    const argusProducts = argusResults?.products || [];
-                    const argusProduct = argusProducts.find(p => p.idproduct === product.idproduct) || argusProducts[0];
+                                const argusResults = argusData?.results || argusData;
+                                const argusProducts = argusResults?.products || [];
+                                const matchedArgus = argusProducts.find(p => p.idproduct === prod.idproduct) || argusProducts[0];
 
-                    if (!argusProduct || !argusProduct.best) {
-                        throw new Error("Grille de prix Argus introuvable pour ce produit.");
-                    }
+                                return {
+                                    ...prod,
+                                    best: matchedArgus?.best || null
+                                };
+                            } catch (err) {
+                                return { ...prod, best: null };
+                            }
+                        })
+                    );
 
                     hideStatus();
-                    renderResult(product, argusProduct.best);
+                    renderResultTable(productsWithPrices);
 
                 } catch (error) {
                     showStatus(`<i class='fa-solid fa-circle-exclamation text-rose-500 mr-2'></i> ${error.message}`, "error");
@@ -225,14 +175,81 @@
                 }
             });
 
-            function renderResult(product, bestPrices) {
-                document.getElementById('productName').textContent = product.product || "Produit inconnu";
-                document.getElementById('productImage').src = product.image || '';
+            function parseProductName(rawName) {
+                const capacityRegex = /\b(\d+\s*(?:Go|GB|To|TB))\b/i;
+                const match = rawName.match(capacityRegex);
 
-                document.getElementById('priceA').textContent = `${bestPrices['A'] ?? 0} €`;
-                document.getElementById('priceB').textContent = `${bestPrices['B'] ?? 0} €`;
-                document.getElementById('priceC').textContent = `${bestPrices['C'] ?? 0} €`;
-                document.getElementById('priceDmin').textContent = `${bestPrices['D-'] ?? 0} €`;
+                let capacity = match ? match[1].replace(/\s+/g, '') : "Standard";
+                let baseName = rawName.replace(capacityRegex, '').trim();
+
+                return { baseName, capacity };
+            }
+
+            function renderResultTable(products) {
+                const firstProduct = products[0];
+                const { baseName } = parseProductName(firstProduct.product || "Appareil");
+
+                document.getElementById('productImage').src = firstProduct.image || '';
+                document.getElementById('modelBaseName').textContent = baseName;
+
+                const processedProducts = products.map(p => {
+                    const parsed = parseProductName(p.product || "");
+                    return { ...p, capacity: parsed.capacity };
+                });
+
+                const tableHeader = document.getElementById('tableHeader');
+                const tableBody = document.getElementById('tableBody');
+
+                tableHeader.innerHTML = '<th class="pb-4 pt-2 font-bold text-slate-400 text-xs uppercase tracking-wider min-w-[200px]">État de l\'appareil</th>';
+                
+                processedProducts.forEach(p => {
+                    const th = document.createElement('th');
+                    th.className = "pb-4 pt-2 font-extrabold text-slate-900 text-base text-center font-mono min-w-[100px]";
+                    th.textContent = p.capacity;
+                    tableHeader.appendChild(th);
+                });
+
+                const grades = [
+                    { key: 'A', label: 'Excellent état', desc: 'Aucune rayure', icon: 'fa-star', bgColor: 'bg-emerald-500', textColor: 'text-emerald-600' },
+                    { key: 'B', label: 'Bon état', desc: 'Micro-rayures', icon: 'fa-thumbs-up', bgColor: 'bg-sky-500', textColor: 'text-sky-600' },
+                    { key: 'C', label: 'État correct', desc: 'Traces d\'usure', icon: 'fa-screwdriver-wrench', bgColor: 'bg-amber-500', textColor: 'text-amber-600' },
+                    { key: 'D-', label: 'Abîmé / Cassé', desc: 'Écran ou dos cassé', icon: 'fa-bolt-lightning', bgColor: 'bg-rose-500', textColor: 'text-rose-600' }
+                ];
+
+                tableBody.innerHTML = '';
+
+                grades.forEach(grade => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-50/80 transition-colors";
+
+                    let rowHtml = `
+                        <td class="py-4 pr-4">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-9 h-9 rounded-xl ${grade.bgColor} text-white flex items-center justify-center shrink-0 shadow-sm">
+                                    <i class="fa-solid ${grade.icon} text-xs"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-900 text-sm">${grade.label}</p>
+                                    <p class="text-[11px] text-slate-400 font-normal">${grade.desc}</p>
+                                </div>
+                            </div>
+                        </td>
+                    `;
+
+                    processedProducts.forEach(p => {
+                        const price = p.best ? p.best[grade.key] : null;
+                        const displayPrice = (price !== null && price !== undefined) ? `${price} €` : '-- €';
+
+                        rowHtml += `
+                            <td class="py-4 px-2 text-center font-extrabold ${grade.textColor} font-mono text-xl">
+                                ${displayPrice}
+                            </td>
+                        `;
+                    });
+
+                    tr.innerHTML = rowHtml;
+                    tableBody.appendChild(tr);
+                });
 
                 resultCard.classList.remove("hidden");
             }
