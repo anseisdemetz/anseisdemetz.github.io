@@ -3,231 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur de Prix - Comparecycle</title>
+    <title>Vérification des Codes d'Homologation</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-900 min-h-screen text-slate-100 font-sans">
+<body class="h-full text-slate-100 flex flex-col justify-between">
 
-    <div class="max-w-2xl mx-auto px-4 py-10">
+    <div class="max-w-5xl w-full mx-auto p-6 space-y-6">
         <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-sky-400 tracking-tight">Simulateur de Reprise</h1>
-            <p class="text-slate-400 mt-2 text-sm">Estimez la valeur de votre appareil en quelques secondes</p>
+        <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-sky-400">Référentiel des Codes</h1>
+                <p class="text-sm text-slate-400">Visualisation, filtrage et contrôle de présence (ALLOWED_CODES)</p>
+            </div>
+            <button id="reloadBtn" class="bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 px-3 py-1.5 rounded-md text-xs font-mono transition flex items-center gap-2">
+                🔄 Recharger les codes
+            </button>
         </header>
 
-        <!-- Formulaire IMEI -->
-        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6 mb-8 shadow-xl">
-            <form id="searchForm" class="space-y-4">
-                <div>
-                    <label for="imei" class="block text-sm font-medium text-slate-300 mb-2">Numéro IMEI de l'appareil</label>
-                    <div class="relative">
-                        <input type="text" id="imei" required placeholder="Ex: 350019657088940" pattern="[0-9]{15}" maxlength="15" 
-                               class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono tracking-wider">
-                        <button type="submit" id="submitBtn" class="absolute right-2 top-2 bottom-2 px-5 bg-sky-500 hover:bg-sky-600 text-slate-950 font-semibold rounded-lg text-sm transition flex items-center gap-2">
-                            <span>Estimer</span>
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <div class="mt-4 pt-4 border-t border-slate-700 flex items-start gap-3 text-xs text-slate-400">
-                <i class="fa-solid fa-circle-info text-sky-400 mt-0.5 text-sm"></i>
-                <div>
-                    <span class="font-semibold text-slate-300">Comment trouver votre IMEI ?</span>
-                    <p class="mt-0.5">Composez <code class="bg-slate-900 px-1.5 py-0.5 rounded font-mono text-sky-300">*#06#</code> sur le clavier de votre téléphone.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Statut / Message -->
-        <div id="statusMessage" class="hidden p-4 rounded-xl bg-slate-800 border border-slate-700 text-center text-sm mb-6"></div>
-
-        <!-- Résultats -->
-        <div id="resultCard" class="hidden bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
-            <!-- Info Produit -->
-            <div class="p-6 bg-slate-800/50 border-b border-slate-700 flex items-center gap-6">
-                <div class="w-24 h-24 bg-slate-900 rounded-xl border border-slate-700 p-2 flex items-center justify-center shrink-0">
-                    <img id="productImage" src="" alt="Photo du produit" class="max-h-full max-w-full object-contain">
-                </div>
-                <div>
-                    <span class="inline-block px-2.5 py-0.5 bg-sky-950 text-sky-400 border border-sky-800 font-semibold text-xs rounded-full mb-1">Appareil identifié</span>
-                    <h2 id="productName" class="text-xl font-bold text-white"></h2>
-                    <p id="productId" class="text-xs text-slate-400 mt-1 font-mono"></p>
-                </div>
+        <main class="space-y-6">
+            
+            <!-- Message de statut / chargement -->
+            <div id="statusMessage" class="p-4 rounded-lg bg-slate-800 border border-slate-700 text-center text-sm text-slate-300">
+                Chargement des codes en cours...
             </div>
 
-            <!-- Grille des prix -->
-            <div class="p-6 space-y-3">
-                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">Estimations de rachat</h3>
-
-                <!-- Grade A -->
-                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-emerald-500/50 transition">
-                    <div class="flex items-center gap-3">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                        <div>
-                            <p class="font-semibold text-slate-200 text-sm">Excellent état</p>
-                            <p class="text-xs text-slate-400">Grade A — Aucune rayure</p>
-                        </div>
-                    </div>
-                    <span id="priceA" class="text-lg font-bold text-emerald-400 font-mono">-- €</span>
-                </div>
-
-                <!-- Grade B -->
-                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-sky-500/50 transition">
-                    <div class="flex items-center gap-3">
-                        <span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span>
-                        <div>
-                            <p class="font-semibold text-slate-200 text-sm">Bon état</p>
-                            <p class="text-xs text-slate-400">Grade B — Micro-rayures invisibles écran allumé</p>
-                        </div>
-                    </div>
-                    <span id="priceB" class="text-lg font-bold text-sky-400 font-mono">-- €</span>
-                </div>
-
-                <!-- Grade C -->
-                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-amber-500/50 transition">
-                    <div class="flex items-center gap-3">
-                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
-                        <div>
-                            <p class="font-semibold text-slate-200 text-sm">État correct</p>
-                            <p class="text-xs text-slate-400">Grade C — Rayures ou impacts visibles</p>
-                        </div>
-                    </div>
-                    <span id="priceC" class="text-lg font-bold text-amber-400 font-mono">-- €</span>
-                </div>
-
-                <!-- Grade D- -->
-                <div class="flex items-center justify-between p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-rose-500/50 transition">
-                    <div class="flex items-center gap-3">
-                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
-                        <div>
-                            <p class="font-semibold text-slate-200 text-sm">État abimé / cassé</p>
-                            <p class="text-xs text-slate-400">Grade D- — Écran cassé ou hors service</p>
-                        </div>
-                    </div>
-                    <span id="priceDmin" class="text-lg font-bold text-rose-400 font-mono">-- €</span>
-                </div>
+            <!-- Légende -->
+            <div id="legend" class="hidden bg-slate-800/60 p-3 rounded-lg border border-slate-700 text-xs flex gap-6 text-slate-300 font-mono">
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Présent dans ALLOWED_CODES
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span> Absent de ALLOWED_CODES (Alerte)
+                </span>
             </div>
-        </div>
+
+            <div id="contentBlocks" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
+                
+                <!-- Bloc Pre-check -->
+                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col space-y-4">
+                    <div class="flex justify-between items-center pb-2 border-b border-slate-700 shrink-0">
+                        <h2 class="text-lg font-semibold text-sky-400"># Pre-check</h2>
+                        <span id="preCheckBadge" class="text-xs bg-slate-700 text-sky-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
+                    </div>
+
+                    <!-- Champ de recherche multiple Pre-check -->
+                    <div class="shrink-0">
+                        <input type="text" id="preCheckSearch" placeholder="Filtrer par codes (ex: 5020, 1050 3010)..." 
+                               class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono">
+                    </div>
+
+                    <div id="preCheckList" class="space-y-2 max-h-[550px] overflow-y-auto pr-2 flex-1">
+                        <!-- Code - Libellé générés en JS -->
+                    </div>
+                </section>
+
+                <!-- Bloc Check -->
+                <section class="bg-slate-800 p-5 rounded-lg border border-slate-700 shadow-md flex flex-col space-y-4">
+                    <div class="flex justify-between items-center pb-2 border-b border-slate-700 shrink-0">
+                        <h2 class="text-lg font-semibold text-emerald-400"># Check</h2>
+                        <span id="checkBadge" class="text-xs bg-slate-700 text-emerald-400 font-mono px-2.5 py-1 rounded-full border border-slate-600">0 codes</span>
+                    </div>
+
+                    <!-- Champ de recherche multiple Check -->
+                    <div class="shrink-0">
+                        <input type="text" id="checkSearch" placeholder="Filtrer par codes (ex: 3030, 3040 3060)..." 
+                               class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono">
+                    </div>
+
+                    <div id="checkList" class="space-y-2 max-h-[550px] overflow-y-auto pr-2 flex-1">
+                        <!-- Code - Libellé générés en JS -->
+                    </div>
+                </section>
+
+            </div>
+        </main>
     </div>
 
+    <!-- Script de configuration -->
     <script src="config.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const searchForm = document.getElementById("searchForm");
-            const imeiInput = document.getElementById("imei");
-            const submitBtn = document.getElementById("submitBtn");
             const statusMessage = document.getElementById("statusMessage");
-            const resultCard = document.getElementById("resultCard");
+            const legend = document.getElementById("legend");
+            const contentBlocks = document.getElementById("contentBlocks");
+            
+            const preCheckList = document.getElementById("preCheckList");
+            const checkList = document.getElementById("checkList");
+            const preCheckBadge = document.getElementById("preCheckBadge");
+            const checkBadge = document.getElementById("checkBadge");
+            const reloadBtn = document.getElementById("reloadBtn");
 
-            searchForm.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const imei = imeiInput.value.trim();
-                if (!imei) return;
+            const preCheckSearch = document.getElementById("preCheckSearch");
+            const checkSearch = document.getElementById("checkSearch");
 
-                showStatus("Recherche du produit...", "info");
-                resultCard.classList.add("hidden");
-                submitBtn.disabled = true;
+            // Listes de référence pour la comparaison
+            const ALLOWED_PRECHECK_CODES = [
+                "5020", "5010", "5030", "1050", "1060", "1070", "1080", "1090", 
+                "1100", "1110", "1130", "1150", "999", "1000", "1120", "3010", "3020",
+                "2010", "2020", "2030", "2031", "2032", "2033", "2034", "2035", "2036", 
+                "2029", "2037", "2038", "2039", "2041", "3301", "2040", "2050", "2060", 
+                "2061", "2062", "2063", "2070", "2071", "2072", "2080", "2090", "2091", 
+                "2101", "2111", "2112", "2121", "2122", "2123", "2124", "2125", "5041", 
+                "1170", "5110", "3320", "3321", "5060", "5070", "3341", "3342", "3343", 
+                "3344", "3345", "3346", "3357", "3405", "3406", "3407", "3348", "5040", 
+                "5080", "5100"
+            ];
+
+            const ALLOWED_CHECK_CODES = [
+                "3030", "3040", "3050", "3060", "3091", "3110", "3120", "3130", 
+                "3140", "3150", "3160", "3170", "3180", "3190", "3200", "3210", 
+                "3220", "3230", "3240", "3250", "3260", "3280", "3290", "3300", 
+                "3092", "3323", "3324", "3325", "3326", "3327", "3328", "3329", 
+                "3347", "3351", "3408", "3090", "3100", "3340", "3411"
+            ];
+
+            let rawPreCheckCodes = [];
+            let rawCheckCodes = [];
+
+            // Chargement initial
+            loadAndDisplayCodes();
+
+            if (reloadBtn) {
+                reloadBtn.addEventListener("click", () => loadAndDisplayCodes());
+            }
+
+            // Écouteurs recherche
+            preCheckSearch.addEventListener("input", () => filterAndRender("precheck"));
+            checkSearch.addEventListener("input", () => filterAndRender("check"));
+
+            async function loadAndDisplayCodes() {
+                showStatus("Récupération des codes d'homologation...", "info");
+                contentBlocks.classList.add("hidden");
+                legend.classList.add("hidden");
 
                 try {
-                    // 1. Interrogation de l'endpoint Produits
-                    const productEndpoint = `${CONFIG.API_DOMAIN}/Catalog/products?imei=${encodeURIComponent(imei)}`;
-                    const proxyProductUrl = buildProxyUrl(productEndpoint);
-
-                    const productResp = await fetch(proxyProductUrl, {
+                    const response = await fetch(CONFIG.CODES_API_URL, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
-                            "X-AUTH-CR": CONFIG.API_TOKEN
+                            "X-AUTH-CR": CONFIG.CODES_API_TOKEN
                         }
                     });
 
-                    if (!productResp.ok) throw new Error(`Erreur HTTP Produits: ${productResp.status}`);
+                    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
 
-                    let productData = await productResp.json();
-                    
-                    // Désencapsulation CorsProxy
-                    if (productData && typeof productData.contents === 'string') {
-                        try { productData = JSON.parse(productData.contents); } catch (e) {}
-                    } else if (productData && productData.contents) {
-                        productData = productData.contents;
+                    let responseData = await response.json();
+
+                    // Désencapsulation proxy CORS
+                    if (responseData && typeof responseData.contents === 'string') {
+                        try { responseData = JSON.parse(responseData.contents); } catch (e) {}
+                    } else if (responseData && responseData.contents) {
+                        responseData = responseData.contents;
                     }
 
-                    const productsList = Array.isArray(productData) ? productData : (productData?.results || []);
-                    const product = productsList[0];
-
-                    if (!product || !product.idproduct) {
-                        throw new Error("Aucun produit identifié pour cet IMEI.");
-                    }
-
-                    // 2. Interrogation de l'endpoint Argus
-                    showStatus("Récupération de la grille tarifaire...", "info");
-
-                    const argusEndpoint = `${CONFIG.API_DOMAIN}/Catalog/argus?idproduct=${encodeURIComponent(product.idproduct)}`;
-                    const proxyArgusUrl = buildProxyUrl(argusEndpoint);
-
-                    const argusResp = await fetch(proxyArgusUrl, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-AUTH-CR": CONFIG.API_TOKEN
+                    let codesArray = [];
+                    if (Array.isArray(responseData)) {
+                        codesArray = responseData;
+                    } else if (responseData && typeof responseData === 'object') {
+                        for (const key in responseData) {
+                            if (Array.isArray(responseData[key])) {
+                                codesArray = responseData[key];
+                                break;
+                            }
                         }
-                    });
-
-                    if (!argusResp.ok) throw new Error(`Erreur HTTP Argus: ${argusResp.status}`);
-
-                    let argusData = await argusResp.json();
-                    
-                    // Désencapsulation CorsProxy
-                    if (argusData && typeof argusData.contents === 'string') {
-                        try { argusData = JSON.parse(argusData.contents); } catch (e) {}
-                    } else if (argusData && argusData.contents) {
-                        argusData = argusData.contents;
                     }
 
-                    const argusResults = argusData?.results || argusData;
-                    const argusProducts = argusResults?.products || [];
-                    const argusProduct = argusProducts.find(p => p.idproduct === product.idproduct) || argusProducts[0];
+                    // Stockage des listes d'origines (quand pre_check / check = true dans l'API)
+                    rawPreCheckCodes = codesArray.filter(item => isTrue(item?.steps?.pre_check));
+                    rawCheckCodes = codesArray.filter(item => isTrue(item?.steps?.check));
 
-                    if (!argusProduct || !argusProduct.best) {
-                        throw new Error("Grille de prix Argus introuvable pour ce produit.");
-                    }
+                    // Premier rendu
+                    filterAndRender("precheck");
+                    filterAndRender("check");
 
-                    // 3. Affichage
                     hideStatus();
-                    renderResult(product, argusProduct.best);
+                    legend.classList.remove("hidden");
+                    contentBlocks.classList.remove("hidden");
 
                 } catch (error) {
-                    showStatus(`Erreur : ${error.message}`, "error");
-                } finally {
-                    submitBtn.disabled = false;
+                    showStatus(`Erreur lors du chargement des codes : ${error.message}`, "error");
                 }
-            });
+            }
 
-            function renderResult(product, bestPrices) {
-                document.getElementById('productName').textContent = product.product || "Produit inconnu";
-                document.getElementById('productId').textContent = `ID Produit : ${product.idproduct}`;
-                document.getElementById('productImage').src = product.image || '';
+            function filterAndRender(type) {
+                if (type === "precheck") {
+                    const searchTerms = extractCodesFromInput(preCheckSearch.value);
+                    const filtered = filterCodesByList(rawPreCheckCodes, searchTerms);
+                    renderList(filtered, preCheckList, preCheckBadge, "sky", ALLOWED_PRECHECK_CODES);
+                } else {
+                    const searchTerms = extractCodesFromInput(checkSearch.value);
+                    const filtered = filterCodesByList(rawCheckCodes, searchTerms);
+                    renderList(filtered, checkList, checkBadge, "emerald", ALLOWED_CHECK_CODES);
+                }
+            }
 
-                document.getElementById('priceA').textContent = `${bestPrices['A'] ?? 0} €`;
-                document.getElementById('priceB').textContent = `${bestPrices['B'] ?? 0} €`;
-                document.getElementById('priceC').textContent = `${bestPrices['C'] ?? 0} €`;
-                document.getElementById('priceDmin').textContent = `${bestPrices['D-'] ?? 0} €`;
+            function extractCodesFromInput(inputValue) {
+                return inputValue
+                    .split(/[\s,]+/)
+                    .map(term => term.trim())
+                    .filter(term => term.length > 0);
+            }
 
-                resultCard.classList.remove("hidden");
+            function filterCodesByList(codesList, searchTerms) {
+                if (searchTerms.length === 0) return codesList;
+                return codesList.filter(item => {
+                    const itemCode = String(item?.code || "").toLowerCase();
+                    return searchTerms.some(term => itemCode.includes(term.toLowerCase()));
+                });
+            }
+
+            // Rendu de la liste avec comparaison d'appartenance
+            function renderList(codes, container, badge, colorScheme, allowedList) {
+                container.innerHTML = "";
+                badge.textContent = `${codes.length} code(s)`;
+
+                if (codes.length === 0) {
+                    container.innerHTML = `<div class="text-xs text-slate-500 italic p-3">Aucun code correspondant.</div>`;
+                    return;
+                }
+
+                const textColorClass = colorScheme === "sky" ? "text-sky-300" : "text-emerald-300";
+
+                codes.forEach(item => {
+                    const codeVal = String(item.code || "");
+                    const labelFr = (item.label && item.label.fr) ? item.label.fr : "Libellé FR non disponible";
+
+                    // Comparaison : Est-ce que le code fait partie de la liste ALLOWED de l'étape ?
+                    const isAllowed = allowedList.includes(codeVal);
+
+                    // Pastille témoin : vert si autorisé, rouge clignotant/lumineux si absent
+                    const statusDot = isAllowed 
+                        ? `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 mt-1" title="Présent dans ALLOWED_CODES"></span>` 
+                        : `<span class="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0 mt-1 shadow-[0_0_8px_rgba(244,63,94,0.8)]" title="ATTENTION: Absent de la liste ALLOWED_CODES !"></span>`;
+
+                    const card = document.createElement("div");
+                    card.className = `p-2.5 bg-slate-900/80 rounded border ${isAllowed ? 'border-slate-700/60' : 'border-rose-900/80 bg-rose-950/20'} flex items-start gap-2.5 text-sm transition`;
+                    
+                    card.innerHTML = `
+                        ${statusDot}
+                        <div class="flex items-start gap-2 flex-1">
+                            <span class="font-mono font-bold ${textColorClass} shrink-0">${escapeHtml(codeVal)}</span>
+                            <span class="text-slate-400 font-mono shrink-0">-</span>
+                            <span class="text-slate-200">${escapeHtml(labelFr)}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            function isTrue(value) {
+                return value === true || value === "true" || value === 1;
             }
 
             function showStatus(text, type) {
                 statusMessage.textContent = text;
-                statusMessage.classList.remove("hidden", "text-rose-400", "text-sky-300");
-                if (type === "error") statusMessage.classList.add("text-rose-400");
-                else statusMessage.classList.add("text-sky-300");
+                statusMessage.classList.remove("hidden", "text-red-400", "text-amber-400", "text-slate-300");
+                if (type === "error") statusMessage.classList.add("text-red-400");
+                else if (type === "warning") statusMessage.classList.add("text-amber-400");
+                else statusMessage.classList.add("text-slate-300");
             }
 
             function hideStatus() {
                 statusMessage.classList.add("hidden");
+            }
+
+            function escapeHtml(str) {
+                return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
             }
         });
     </script>
