@@ -1,107 +1,385 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="light">
 <head>
     <meta charset="UTF-8">
-    <title>Générateur d'IMEI - Produits Mobiles avec TAC</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; max-width: 900px; color: #333; }
-        .filter-section { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        select, input[type="text"], input[type="number"] { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; flex: 1; min-width: 200px; }
-        .qty-section { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .qty-section input[type="number"] { max-width: 100px; min-width: auto; }
-        .card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-top: 15px; background: #fafafa; }
-        .results-list { border: 1px solid #ccc; border-radius: 4px; max-height: 400px; overflow-y: auto; margin-top: 10px; }
-        .product-item { padding: 10px 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .product-item:hover { background-color: #eef5ff; }
-        .badge { background: #007bff; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; }
-        button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
-        button:hover { background: #218838; }
-        button:disabled { background: #6c757d; cursor: not-allowed; }
-        .btn-copy { background: #17a2b8; padding: 4px 10px; font-size: 0.85em; }
-        .btn-copy:hover { background: #138496; }
-        .tac-tag { display: inline-block; background: #e2e3e5; padding: 4px 8px; margin: 2px; border-radius: 4px; font-family: monospace; }
-        
-        .status-msg { padding: 10px; border-radius: 4px; margin-bottom: 15px; font-weight: bold; }
-        .status-loading { background-color: #fff3cd; color: #856404; }
-        .status-error { background-color: #f8d7da; color: #721c24; }
-        .status-success { background-color: #d4edda; color: #155724; }
-
-        /* Terminal Console */
-        .page-console {
-            background-color: #1e1e1e;
-            color: #4af626;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 15px;
-            max-height: 250px;
-            overflow-y: auto;
-            box-shadow: inset 0 0 10px #000;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'IMEI - Pro Suite Studio (Light Edition)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#1e1b4b',
+                        },
+                        lightBg: '#f8fafc',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'glass-sm': '0 2px 8px 0 rgba(99, 102, 241, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                        'glass-md': '0 10px 25px -5px rgba(99, 102, 241, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03)',
+                        'glass-lg': '0 20px 35px -10px rgba(99, 102, 241, 0.12), 0 10px 15px -5px rgba(0, 0, 0, 0.04)',
+                        'glow': '0 0 20px -3px rgba(79, 70, 229, 0.25)',
+                    }
+                }
+            }
         }
-        .page-console .log-header { display: flex; justify-content: space-between; align-items: center; color: #569cd6; font-weight: bold; margin-bottom: 5px; }
-        .page-console .log-item { margin-left: 15px; color: #dcdcdc; }
-        .page-console .log-time { color: #808080; font-size: 0.85em; }
+    </script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Light Theme Styles -->
+    <style>
+        body {
+            background-color: #f1f5f9;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.1) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 10px 30px -5px rgba(148, 163, 184, 0.12);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.7);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -6px rgba(99, 102, 241, 0.12);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+            transition: all 0.2s ease;
+        }
+
+        .glass-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+            outline: none;
+            background: #ffffff;
+        }
+
+        /* Custom Light Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(241, 245, 249, 0.8);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.6);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            transition: all 0.25s ease;
+        }
+
+        .gradient-btn:hover {
+            background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+            box-shadow: 0 8px 20px -3px rgba(79, 70, 229, 0.35);
+        }
+
+        @keyframes pulse-light {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        .animate-aura-light {
+            animation: pulse-light 6s infinite ease-in-out;
+        }
     </style>
 </head>
-<body>
+<body class="font-sans antialiased p-4 md:p-8 relative min-h-screen">
 
-    <h2>Générateur d'IMEI - Produits Mobiles</h2>
-
-    <div id="statusMessage" class="status-msg status-loading">Chargement du fichier response.json...</div>
-
-    <!-- Fallback si ouvert sans serveur local (file://) -->
-    <div id="filePickerContainer" style="display: none; margin-bottom: 15px;">
-        <label for="fileInput"><strong>Sélectionnez manuellement le fichier response.json :</strong> </label>
-        <input type="file" id="fileInput" accept=".json" onchange="handleFileSelect(event)">
-    </div>
-
-    <!-- Filtres -->
-    <div class="filter-section">
-        <select id="manufacturerFilter" onchange="applyFilters()" disabled>
-            <option value="">-- Chargement des marques... --</option>
-        </select>
-
-        <input type="text" id="searchInput" placeholder="Rechercher par nom de produit..." onkeyup="applyFilters()" disabled>
-    </div>
-
-    <!-- Compteur et Résultats -->
-    <div id="resultsCount" style="font-size: 0.9em; color: #555;"></div>
-    <div id="searchResults" class="results-list" style="display: none;"></div>
-
-    <!-- Fiche du produit sélectionné -->
-    <div id="productDetailCard" class="card" style="display: none;">
-        <h3 id="prodModel"></h3>
-        <p><strong>Marque :</strong> <span id="prodBrand"></span> | <strong>Type :</strong> <span id="prodType"></span></p>
-        
+    <!-- Toast Notification Container -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-5 py-3.5 rounded-2xl glass-panel border border-emerald-500/30 shadow-glass-lg text-slate-800">
+        <div class="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+            <i class="fa-solid fa-circle-check text-lg"></i>
+        </div>
         <div>
-            <strong>TACs associés à ce produit :</strong>
-            <div id="tacList" style="margin-top: 5px;"></div>
+            <p id="toastTitle" class="text-xs font-bold text-slate-900">Succès</p>
+            <p id="toastMsg" class="font-medium text-xs text-slate-600">Action effectuée</p>
         </div>
-
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
-
-        <!-- Section de choix de la quantité -->
-        <div class="qty-section">
-            <label for="imeiQuantity"><strong>Nombre d'IMEI à générer :</strong></label>
-            <input type="number" id="imeiQuantity" value="5" min="1" max="1000">
-        </div>
-
-        <button onclick="generateAndLogIMEIs()">Générer les IMEI</button>
-
-        <div id="pageConsole" class="page-console" style="display: none;"></div>
     </div>
 
+    <!-- Main Outer Container -->
+    <div class="max-w-6xl mx-auto space-y-6">
+
+        <header class="glass-panel rounded-3xl p-6 md:p-8 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-white/80">
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-200/40 rounded-full blur-3xl pointer-events-none animate-aura-light"></div>
+            <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-sky-200/40 rounded-full blur-3xl pointer-events-none animate-aura-light"></div>
+            
+            <div class="z-10 flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-2xl shadow-glass-md">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight gradient-text">Générateur IMEI Pro</h1>
+                        <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-indigo-50 border border-indigo-200/60 text-indigo-700 shadow-sm">TAC Suite v2.0</span>
+                    </div>
+                    <p class="text-slate-500 text-sm mt-1 font-medium">Générez et validez vos identifiants matériels selon la formule de Luhn</p>
+                </div>
+            </div>
+
+            <div class="z-10 flex items-center gap-3 w-full md:w-auto justify-end">
+                <div id="statusBadge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold glass-panel border border-amber-200 text-amber-700 bg-amber-50/80 shadow-sm">
+                    <i class="fa-solid fa-spinner animate-spin text-amber-500"></i>
+                    <span id="statusText">Initialisation...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Status Message Banner -->
+        <div id="statusMessage" class="hidden rounded-2xl p-4 text-sm font-medium flex items-center justify-between transition-all duration-300"></div>
+
+        <div id="filePickerContainer" class="hidden glass-panel rounded-2xl p-6 border border-amber-200/80 bg-amber-50/40 animate-fade-in shadow-glass-sm">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
+                        <i class="fa-solid fa-file-arrow-up text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Chargement manuel requis</h3>
+                        <p class="text-xs text-slate-500">Sélectionnez le fichier <code class="bg-white border border-slate-200 px-1.5 py-0.5 rounded text-indigo-600 font-mono">response.json</code> local</p>
+                    </div>
+                </div>
+                <label class="cursor-pointer gradient-btn text-white text-xs font-semibold px-5 py-3 rounded-xl flex items-center gap-2 shadow-md hover:scale-105 active:scale-95 transition-all">
+                    <i class="fa-solid fa-folder-open"></i> Parcourir
+                    <input type="file" id="fileInput" accept=".json" onchange="handleFileSelect(event)" class="hidden">
+                </label>
+            </div>
+        </div>
+
+        <section class="glass-panel rounded-2xl p-5 space-y-4 shadow-glass-sm">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                
+                <!-- Brand Dropdown Filter -->
+                <div class="md:col-span-5 relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-industry text-xs"></i>
+                    </div>
+                    <select id="manufacturerFilter" onchange="applyFilters()" disabled class="glass-input w-full pl-10 pr-10 py-3 rounded-xl text-sm appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed font-medium text-slate-700">
+                        <option value="" class="bg-white text-slate-700">-- Chargement des marques... --</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
+                </div>
+
+                <!-- Text Search Filter -->
+                <div class="md:col-span-7 relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </div>
+                    <input type="text" id="searchInput" placeholder="Rechercher par nom de produit..." onkeyup="applyFilters()" disabled class="glass-input w-full pl-10 pr-4 py-3 rounded-xl text-sm placeholder-slate-400 disabled:opacity-50 disabled:cursor-not-allowed font-medium">
+                </div>
+
+            </div>
+
+            <!-- Counter badge -->
+            <div class="flex items-center justify-between text-xs text-slate-500 px-1 pt-1 font-medium">
+                <span class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-filter text-indigo-500"></i>
+                    Résultats de recherche
+                </span>
+                <span id="resultsCount" class="font-mono text-indigo-700 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100 font-semibold shadow-xs">0 produit(s) trouvé(s)</span>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Product Catalog Results Box -->
+            <div id="searchResults" class="lg:col-span-5 max-h-[520px] overflow-y-auto space-y-2 pr-1 hidden transition-all">
+                <!-- Product item cards dynamically rendered here -->
+            </div>
+
+            <!-- Empty State Placeholder when no product selected -->
+            <div id="emptyCatalogState" class="lg:col-span-12 glass-panel rounded-2xl p-12 text-center text-slate-500 space-y-3 shadow-glass-sm">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-50/80 mx-auto flex items-center justify-center text-indigo-400 text-2xl border border-indigo-100 shadow-inner">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <p class="font-bold text-slate-700 text-base">Aucun produit sélectionné</p>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto">Veuillez charger la base de données ou effectuer une recherche pour sélectionner un appareil mobile.</p>
+            </div>
+
+            <!-- Product Detail Card & Generator Options -->
+            <div id="productDetailCard" class="lg:col-span-7 glass-panel rounded-2xl p-6 hidden space-y-6 flex flex-col justify-between border-t-4 border-t-indigo-600 shadow-glass-md">
+                
+                <div class="space-y-4">
+                    <!-- Title & Badges -->
+                    <div class="flex items-start justify-between gap-4 border-b border-slate-200/80 pb-4">
+                        <div>
+                            <div class="text-xs uppercase tracking-wider text-indigo-600 font-bold mb-1" id="prodBrand">Marque</div>
+                            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight" id="prodModel">Nom du Modèle</h2>
+                        </div>
+                        <span id="prodType" class="px-3 py-1 rounded-full text-xs font-bold bg-sky-50 border border-sky-200 text-sky-700 shadow-xs">
+                            Mobile
+                        </span>
+                    </div>
+
+                    <!-- TAC Badges Section avec Boîte Scrollable -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                                <i class="fa-solid fa-microchip text-indigo-500"></i> TACs (Type Allocation Code / Référence GSX) :
+                            </label>
+                            <span id="tacCountBadge" class="text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">0 TAC</span>
+                        </div>
+                        <div class="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3 max-h-[110px] overflow-y-auto">
+                            <div id="tacList" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generator Input & Trigger -->
+                <div class="bg-indigo-50/50 rounded-2xl p-4 border border-indigo-100/80 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <label for="imeiQuantity" class="text-xs font-bold text-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-hashtag text-indigo-600"></i> Quantité d'IMEIs à générer :
+                        </label>
+                        <input type="number" id="imeiQuantity" value="5" min="1" max="1000" class="glass-input px-3 py-2 rounded-xl text-sm w-full sm:w-28 text-center font-mono font-bold text-indigo-900 border-indigo-200">
+                    </div>
+
+                    <button onclick="generateAndLogIMEIs()" class="w-full gradient-btn text-white font-bold py-3.5 px-6 rounded-xl shadow-md flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer text-sm">
+                        <i class="fa-solid fa-bolt-lightning text-amber-300"></i> Générer les IMEI
+                    </button>
+                </div>
+
+                <!-- Terminal / Console Output -->
+                <div id="pageConsole" class="hidden bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl font-mono text-xs">
+                    <!-- Console toolbar generated dynamically -->
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Application Scripting Logic -->
     <script>
+        // State management variables
         let catalogProducts = [];
         let selectedProduct = null;
         let generatedImeiList = [];
 
-        // 1. Chargement du fichier response.json
+        // Helper universal Getters pour supporter les 2 formats JSON (Ancien & Nouveau)
+        function getBrand(item) {
+            return item["Marque"] || item.manufacturer || 'Marque N/A';
+        }
+
+        function getProductName(item) {
+            return item["Nom"] || item.product || 'Produit Sans Nom';
+        }
+
+        function getType(item) {
+            return item["Catégorie"] || item.type || 'Mobile';
+        }
+
+        function getTacList(item) {
+            const list = item["Référence GSX"] || item.Tac || item.tac;
+            return Array.isArray(list) ? list : [];
+        }
+
+        // UI Toast Helper
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastTitle = document.getElementById('toastTitle');
+            const iconContainer = toast.querySelector('div');
+            
+            toastMsg.innerText = message;
+            
+            if (isError) {
+                toastTitle.innerText = "Erreur";
+                iconContainer.className = "w-8 h-8 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600";
+                iconContainer.innerHTML = '<i class="fa-solid fa-circle-xmark text-lg"></i>';
+                toast.className = "fixed top-5 right-5 z-50 transform translate-y-0 opacity-100 transition-all duration-300 pointer-events-none flex items-center gap-3 px-5 py-3.5 rounded-2xl glass-panel border border-rose-300 shadow-glass-lg text-slate-800";
+            } else {
+                toastTitle.innerText = "Succès";
+                iconContainer.className = "w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600";
+                iconContainer.innerHTML = '<i class="fa-solid fa-circle-check text-lg"></i>';
+                toast.className = "fixed top-5 right-5 z-50 transform translate-y-0 opacity-100 transition-all duration-300 pointer-events-none flex items-center gap-3 px-5 py-3.5 rounded-2xl glass-panel border border-emerald-300 shadow-glass-lg text-slate-800";
+            }
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-100px]', 'opacity-0');
+            }, 3200);
+        }
+
+        // Status badge state helper
+        function updateStatusBadge(state, message) {
+            const badge = document.getElementById('statusBadge');
+            const statusText = document.getElementById('statusText');
+            statusText.innerText = message;
+
+            if (state === 'loading') {
+                badge.className = "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold glass-panel border border-amber-200 text-amber-700 bg-amber-50/80 shadow-sm";
+                badge.querySelector('i').className = "fa-solid fa-spinner animate-spin text-amber-500";
+            } else if (state === 'success') {
+                badge.className = "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold glass-panel border border-emerald-200 text-emerald-700 bg-emerald-50/80 shadow-sm";
+                badge.querySelector('i').className = "fa-solid fa-circle-check text-emerald-500";
+            } else if (state === 'error') {
+                badge.className = "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold glass-panel border border-rose-200 text-rose-700 bg-rose-50/80 shadow-sm";
+                badge.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-500";
+            }
+        }
+
+        // 1. Automatic response.json fetch
         async function loadLocalJson() {
-            const statusDiv = document.getElementById('statusMessage');
+            updateStatusBadge('loading', 'Chargement du JSON...');
             
             try {
-                const response = await fetch('./response.json');
+                const response = await fetch('../catalogue/data/devices_grouped.json');
                 if (!response.ok) {
                     throw new Error(`Fichier introuvable ou erreur de lecture (HTTP ${response.status})`);
                 }
@@ -111,12 +389,18 @@
 
             } catch (err) {
                 console.warn("Échec du fetch automatique :", err);
-                statusDiv.className = 'status-msg status-error';
-                statusDiv.innerHTML = `⚠️ Impossible de charger 'response.json' automatiquement. Veuillez choisir le fichier ci-dessous :`;
-                document.getElementById('filePickerContainer').style.display = 'block';
+                updateStatusBadge('error', 'Fichier introuvable');
+                
+                const statusDiv = document.getElementById('statusMessage');
+                statusDiv.className = 'rounded-2xl p-4 text-xs font-semibold flex items-center justify-between border border-rose-200 bg-rose-50/80 text-rose-800 shadow-xs';
+                statusDiv.innerHTML = `<span class="flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-rose-500 text-sm"></i> Impossible de charger le fichier JSON automatiquement.</span>`;
+                statusDiv.classList.remove('hidden');
+
+                document.getElementById('filePickerContainer').classList.remove('hidden');
             }
         }
 
+        // Manual file selection handler
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -126,52 +410,53 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     processData(data);
+                    document.getElementById('filePickerContainer').classList.add('hidden');
+                    document.getElementById('statusMessage').classList.add('hidden');
                 } catch (err) {
-                    alert("Le fichier sélectionné n'est pas un JSON valide.");
+                    showToast("Le fichier sélectionné n'est pas un JSON valide.", true);
                 }
             };
             reader.readAsText(file);
         }
 
-        // 2. Traitement des données et filtrages stricts
         function processData(data) {
-            const statusDiv = document.getElementById('statusMessage');
             const rawList = data.results || (Array.isArray(data) ? data : []);
 
             if (!rawList || rawList.length === 0) {
-                statusDiv.className = 'status-msg status-error';
-                statusDiv.innerText = "Aucune donnée 'results' trouvée dans le fichier JSON.";
+                updateStatusBadge('error', 'JSON Vide');
                 return;
             }
 
-            // Filtrage
+            // Filtrage hybride compatible avec l'ancien et le nouveau JSON
             catalogProducts = rawList.filter(item => {
-                const isMobileType = item.type === "Mobile";
-                const isImeiRequired = String(item.is_imei_required).toLowerCase() !== "no";
+                const category = getType(item).toLowerCase();
+                const isMobileOrSmartphone = category === "mobile" || category === "smartphone";
                 
-                const tacs = item.Tac || item.tac;
-                const hasTac = Array.isArray(tacs) && tacs.length > 0;
+                const isImeiRequired = String(item.is_imei_required || "yes").toLowerCase() !== "no";
+                const tacs = getTacList(item);
 
-                return isMobileType && isImeiRequired && hasTac;
+                return isMobileOrSmartphone && isImeiRequired && tacs.length > 0;
             });
 
-            statusDiv.className = 'status-msg status-success';
-            statusDiv.innerText = `${catalogProducts.length} produit(s) "Mobile" avec TAC chargé(s) depuis response.json.`;
+            updateStatusBadge('success', `${catalogProducts.length} Mobiles prêts`);
+            showToast(`${catalogProducts.length} produits mobiles chargés avec succès`);
 
             populateBrandDropdown();
             enableInputs();
             applyFilters();
         }
 
-        // 3. Remplissage des marques
+        // 3. Populate Manufacturers dropdown
         function populateBrandDropdown() {
             const brandSelect = document.getElementById('manufacturerFilter');
-            brandSelect.innerHTML = '<option value="">-- Toutes les Marques --</option>';
+            brandSelect.innerHTML = '<option value="" class="bg-white text-slate-700">-- Toutes les Marques --</option>';
 
-            const brands = [...new Set(catalogProducts.map(p => p.manufacturer).filter(Boolean))].sort();
+            const brands = [...new Set(catalogProducts.map(p => getBrand(p)).filter(Boolean))].sort();
 
             brands.forEach(brand => {
-                brandSelect.add(new Option(brand, brand));
+                const opt = new Option(brand, brand);
+                opt.className = "bg-white text-slate-700";
+                brandSelect.add(opt);
             });
         }
 
@@ -180,7 +465,6 @@
             document.getElementById('searchInput').disabled = false;
         }
 
-        // 4. Algorithme de Luhn
         function calculateLuhnCheckDigit(first14) {
             let sum = 0;
             for (let i = 0; i < 14; i++) {
@@ -202,15 +486,16 @@
             return first14 + checkDigit;
         }
 
-        // 5. Filtrage et affichage
         function applyFilters() {
             const selectedBrand = document.getElementById('manufacturerFilter').value;
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
 
             const filtered = catalogProducts.filter(p => {
-                const matchBrand = !selectedBrand || p.manufacturer === selectedBrand;
-                const productName = p.product || "";
-                const matchQuery = !query || productName.toLowerCase().includes(query);
+                const brand = getBrand(p);
+                const name = getProductName(p);
+
+                const matchBrand = !selectedBrand || brand === selectedBrand;
+                const matchQuery = !query || name.toLowerCase().includes(query);
 
                 return matchBrand && matchQuery;
             });
@@ -221,67 +506,100 @@
         function renderList(products) {
             const resultsDiv = document.getElementById('searchResults');
             const countDiv = document.getElementById('resultsCount');
+            const emptyState = document.getElementById('emptyCatalogState');
+            
             resultsDiv.innerHTML = '';
-
-            countDiv.innerText = `${products.length} produit(s) affiché(s).`;
+            countDiv.innerText = `${products.length} produit(s) affiché(s)`;
 
             if (products.length === 0) {
-                resultsDiv.style.display = 'none';
+                resultsDiv.classList.add('hidden');
+                if (!selectedProduct) {
+                    emptyState.classList.remove('hidden');
+                }
                 return;
             }
 
+            if (selectedProduct) {
+                emptyState.classList.add('hidden');
+            } else {
+                emptyState.classList.remove('hidden');
+            }
+
             products.forEach(p => {
+                const name = getProductName(p);
+                const brand = getBrand(p);
+                const isSelected = selectedProduct && getProductName(selectedProduct) === name;
+
                 const item = document.createElement('div');
-                item.className = 'product-item';
+                item.className = `glass-card p-4 rounded-xl cursor-pointer flex items-center justify-between border transition-all ${
+                    isSelected 
+                    ? 'border-indigo-500 bg-indigo-50/90 text-indigo-950 font-semibold shadow-glass-sm ring-1 ring-indigo-400' 
+                    : 'border-slate-200/80 text-slate-700 hover:border-indigo-300 hover:bg-white/80'
+                }`;
+                
                 item.innerHTML = `
-                    <span><strong>${p.manufacturer || 'Marque N/A'}</strong> - ${p.product}</span>
-                    <span class="badge">${p.type}</span>
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="w-8 h-8 rounded-lg ${isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'} flex items-center justify-center shrink-0 text-xs shadow-xs">
+                            <i class="fa-solid fa-mobile-button"></i>
+                        </div>
+                        <div class="truncate">
+                            <div class="text-xs ${isSelected ? 'text-indigo-600' : 'text-slate-400'} font-bold truncate">${brand}</div>
+                            <div class="text-sm font-semibold text-slate-800 truncate">${name}</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs ${isSelected ? 'text-indigo-600' : 'text-slate-300'}"></i>
                 `;
                 item.onclick = () => selectProduct(p);
                 resultsDiv.appendChild(item);
             });
 
-            resultsDiv.style.display = 'block';
+            resultsDiv.classList.remove('hidden');
         }
 
-        // 6. Sélection d'un produit
         function selectProduct(product) {
             selectedProduct = product;
             
-            document.getElementById('prodModel').innerText = product.product;
-            document.getElementById('prodBrand').innerText = product.manufacturer || 'N/A';
-            document.getElementById('prodType').innerText = product.type;
+            document.getElementById('prodModel').innerText = getProductName(product);
+            document.getElementById('prodBrand').innerText = getBrand(product);
+            document.getElementById('prodType').innerText = getType(product);
 
             const tacContainer = document.getElementById('tacList');
-            let tacs = product.Tac || product.tac || [];
+            const tacCountBadge = document.getElementById('tacCountBadge');
+            let tacs = getTacList(product);
 
-            tacContainer.innerHTML = tacs.map(t => `<span class="tac-tag">${t}</span>`).join(' ');
+            tacCountBadge.innerText = `${tacs.length} TAC`;
 
-            document.getElementById('pageConsole').style.display = 'none';
-            document.getElementById('productDetailCard').style.display = 'block';
+            tacContainer.innerHTML = tacs.map(t => `
+                <span class="inline-flex items-center gap-1.5 bg-white border border-slate-200 text-indigo-700 font-mono text-xs px-2.5 py-1 rounded-lg font-bold shadow-xs">
+                    <i class="fa-solid fa-barcode text-[11px] text-indigo-500"></i> ${t}
+                </span>
+            `).join('');
+
+            document.getElementById('pageConsole').classList.add('hidden');
+            document.getElementById('productDetailCard').classList.remove('hidden');
+            document.getElementById('emptyCatalogState').classList.add('hidden');
+
+            applyFilters();
         }
 
-        // 7. Génération du nombre d'IMEIs demandé
         function generateAndLogIMEIs() {
             if (!selectedProduct) return;
 
             const qtyInput = document.getElementById('imeiQuantity');
             const quantity = parseInt(qtyInput.value, 10);
 
-            // Gestion de l'alerte si 0 ou invalide
             if (isNaN(quantity) || quantity <= 0) {
-                alert("⚠️ Erreur : Le nombre d'IMEI à générer doit être supérieur à 0.");
+                showToast("Le nombre d'IMEI doit être supérieur à 0", true);
                 return;
             }
 
-            // Sécurité technique
             const MAX_ALLOWED = 1000;
             if (quantity > MAX_ALLOWED) {
-                alert(`⚠️ Impossible de générer autant d'IMEI à la fois. La limite maximale est fixée à ${MAX_ALLOWED} pour préserver les performances.`);
+                showToast(`Limite maximale fixée à ${MAX_ALLOWED} IMEI(s)`, true);
                 return;
             }
 
-            let tacs = selectedProduct.Tac || selectedProduct.tac || [];
+            let tacs = getTacList(selectedProduct);
             generatedImeiList = [];
 
             for (let i = 0; i < quantity; i++) {
@@ -291,39 +609,102 @@
 
             const consoleBox = document.getElementById('pageConsole');
             const time = new Date().toLocaleTimeString();
+            const prodName = getProductName(selectedProduct);
 
             let consoleOutput = `
-                <div class="log-header">
-                    <span><span class="log-time">[${time}]</span> > ${quantity} IMEI(s) généré(s) pour "${selectedProduct.product}"</span>
-                    <button class="btn-copy" onclick="copyImeiToClipboard(this)">Copier les IMEI</button>
+                <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                        <span class="text-slate-400 text-xs ml-2 font-mono"><i class="fa-solid fa-terminal text-indigo-400 mr-1.5"></i> Output Console</span>
+                    </div>
+                    <button onclick="copyImeiToClipboard(this)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-sans font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95">
+                        <i class="fa-regular fa-copy"></i> Copier les IMEI
+                    </button>
                 </div>
-                <div style="margin-left: 10px; color: #aaa; margin-bottom: 8px;">TAC(s) utilisé(s) : ${tacs.join(', ')}</div>
+                
+                <div class="p-4 space-y-2 max-h-60 overflow-y-auto">
+                    <div class="text-slate-400 text-[11px]">
+                        <span class="text-indigo-400 font-semibold">[${time}]</span> Génération de <span class="text-cyan-400 font-bold">${quantity}</span> IMEI(s) pour "${prodName}"
+                    </div>
+                    <div class="text-slate-500 text-[10px] pb-2 border-b border-slate-800/80">
+                        TAC(s) utilisé(s) : <span class="text-slate-300 font-semibold">${tacs.join(', ')}</span>
+                    </div>
+                    <div class="space-y-1 pt-1 font-mono">
             `;
 
             generatedImeiList.forEach((imei, idx) => {
-                consoleOutput += `<div class="log-item">${idx + 1}. ${imei}</div>`;
+                consoleOutput += `
+                    <div class="flex items-center gap-3 hover:bg-slate-800/60 px-2 py-0.5 rounded transition-colors">
+                        <span class="text-slate-600 select-none w-8 text-right font-medium">${idx + 1}.</span>
+                        <span class="text-emerald-400 select-all tracking-wider font-semibold">${imei}</span>
+                    </div>
+                `;
             });
 
+            consoleOutput += `
+                    </div>
+                </div>
+            `;
+
             consoleBox.innerHTML = consoleOutput;
-            consoleBox.style.display = 'block';
-            consoleBox.scrollTop = consoleBox.scrollHeight;
+            consoleBox.classList.remove('hidden');
+            
+            const logsContainer = consoleBox.querySelector('.max-h-60');
+            if (logsContainer) {
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+            }
+
+            showToast(`${quantity} IMEI(s) généré(s) avec succès !`);
         }
 
-        // 8. Copie brute des IMEI dans le presse-papier
         function copyImeiToClipboard(btnElement) {
             if (!generatedImeiList || generatedImeiList.length === 0) return;
 
             const rawText = generatedImeiList.join('\n');
 
-            navigator.clipboard.writeText(rawText).then(() => {
-                const originalText = btnElement.innerText;
-                btnElement.innerText = "Copie effectuée !";
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(rawText).then(() => {
+                    notifyCopySuccess(btnElement);
+                }).catch(() => {
+                    fallbackCopy(rawText, btnElement);
+                });
+            } else {
+                fallbackCopy(rawText, btnElement);
+            }
+        }
+
+        function fallbackCopy(text, btnElement) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                notifyCopySuccess(btnElement);
+            } catch (err) {
+                showToast("Échec de la copie", true);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        function notifyCopySuccess(btnElement) {
+            showToast("Copie effectuée dans le presse-papier !");
+            if (btnElement) {
+                const originalText = btnElement.innerHTML;
+                btnElement.innerHTML = `<i class="fa-solid fa-check text-emerald-300"></i> Copié !`;
+                btnElement.classList.replace('bg-indigo-600', 'bg-emerald-600');
+                
                 setTimeout(() => {
-                    btnElement.innerText = originalText;
+                    btnElement.innerHTML = originalText;
+                    btnElement.classList.replace('bg-emerald-600', 'bg-indigo-600');
                 }, 2000);
-            }).catch(err => {
-                alert("Échec de la copie dans le presse-papier : " + err);
-            });
+            }
         }
 
         window.onload = loadLocalJson;

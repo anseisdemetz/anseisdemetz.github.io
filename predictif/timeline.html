@@ -414,17 +414,17 @@ Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
                 <div>
                   <h2 className="text-lg font-bold text-slate-900">{currentItem.product}</h2>
                   <p className="text-xs text-slate-500 mt-0.5 font-mono">
-                    Constructeur : <b className="text-slate-700">{currentItem.manufacturer}</b> | ID : <b className="text-slate-700">{currentItem.idproduct}</b>
+                    Marque : <b className="text-slate-700">{currentItem.manufacturer}</b> | ID : <b className="text-slate-700">{currentItem.idproduct}</b>
                   </p>
                 </div>
 
                 <div className="flex gap-6 font-mono text-xs">
                   <div className="bg-slate-50 px-4 py-2 rounded-lg border border-slate-200 text-center">
-                    <span className="text-slate-400 block text-[10px]">Lancement</span>
+                    <span className="text-slate-400 block text-[10px]">Date de lancement</span>
                     <b className="text-slate-700 text-sm">{new Date(currentItem.launch_date).toLocaleDateString("fr-FR")}</b>
                   </div>
                   <div className="bg-slate-50 px-4 py-2 rounded-lg border border-slate-200 text-center">
-                    <span className="text-slate-400 block text-[10px]">Prix P0 Initial</span>
+                    <span className="text-slate-400 block text-[10px]">Prix de lancement</span>
                     <b className="text-emerald-700 text-sm">{currentItem.p0} €</b>
                   </div>
                 </div>
