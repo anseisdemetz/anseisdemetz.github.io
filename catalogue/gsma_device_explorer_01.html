@@ -48,14 +48,28 @@
 
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
 
-        <!-- Barre de progression pour le chargement automatique -->
-        <div id="loading-progress" class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-3">
-            <div class="flex items-center gap-2 text-sm font-semibold text-brand-600">
-                <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
-                <span id="loading-status-text">Chargement automatique de la base de données...</span>
+        <!-- Zone d'importation JSON -->
+        <div id="dropzone-container" class="bg-white border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-brand-500 transition-colors cursor-pointer bg-slate-50/50 relative">
+            <input type="file" id="json-file-input-drop" accept=".json" class="absolute inset-0 opacity-0 cursor-pointer z-10">
+            <div id="dropzone-prompt" class="flex flex-col items-center justify-center gap-2">
+                <div class="p-3 bg-brand-50 text-brand-600 rounded-full">
+                    <i data-lucide="file-json" class="w-6 h-6"></i>
+                </div>
+                <div class="text-sm font-medium text-slate-700">
+                    Glissez-déposez votre fichier <code class="bg-slate-200 px-1 py-0.5 rounded text-xs">devices_grouped.json</code> ici ou <span class="text-brand-600 underline">parcourez</span>
+                </div>
+                <p class="text-xs text-slate-500">Traitement haute performance via Web Worker</p>
             </div>
-            <div class="w-full max-w-md bg-slate-200 rounded-full h-2.5 overflow-hidden">
-                <div id="loading-bar" class="bg-brand-600 h-2.5 rounded-full w-0 transition-all duration-200"></div>
+
+            <!-- Loader Progress -->
+            <div id="loading-progress" class="hidden flex flex-col items-center justify-center gap-3 py-2">
+                <div class="flex items-center gap-2 text-sm font-semibold text-brand-600">
+                    <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+                    <span id="loading-status-text">Analyse du fichier en arrière-plan...</span>
+                </div>
+                <div class="w-full max-w-md bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                    <div id="loading-bar" class="bg-brand-600 h-2.5 rounded-full w-0 transition-all duration-200"></div>
+                </div>
             </div>
         </div>
 
@@ -289,7 +303,7 @@
 
             if (type === 'PARSE') {
                 try {
-                    dataset = typeof data === 'string' ? JSON.parse(data) : data;
+                    dataset = JSON.parse(data);
                     const brands = new Set();
                     const types = new Set();
                     let esimCount = 0;
@@ -353,9 +367,6 @@
     </script>
 
     <script>
-        // Chemin relatif du fichier JSON
-        const JSON_PATH = 'data/devices_grouped.json';
-
         const workerBlob = new Blob([document.getElementById('worker-script').textContent], { type: 'application/javascript' });
         const worker = new Worker(URL.createObjectURL(workerBlob));
 
@@ -382,6 +393,7 @@
         const paginationControls = document.getElementById('pagination-controls');
         const resetFiltersBtn = document.getElementById('reset-filters-btn');
 
+        const dropzonePrompt = document.getElementById('dropzone-prompt');
         const loadingProgress = document.getElementById('loading-progress');
         const loadingBar = document.getElementById('loading-bar');
         const loadingStatusText = document.getElementById('loading-status-text');
@@ -389,42 +401,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             setupEventListeners();
-            autoLoadJson();
         });
 
-        // Chargement automatique du JSON via fetch()
-        async function autoLoadJson() {
-            try {
-                loadingProgress.classList.remove('hidden');
-                loadingBar.style.width = '30%';
-                loadingStatusText.textContent = `Chargement de ${JSON_PATH}...`;
-
-                const response = await fetch(JSON_PATH);
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP ${response.status}`);
-                }
-
-                loadingBar.style.width = '60%';
-                loadingStatusText.textContent = "Lecture des données...";
-                const jsonData = await response.text();
-
-                loadingBar.style.width = '85%';
-                loadingStatusText.textContent = "Analyse en arrière-plan (Worker)...";
-                worker.postMessage({ type: 'PARSE', data: jsonData });
-
-            } catch (err) {
-                console.error("Impossible de charger le fichier JSON :", err);
-                loadingStatusText.textContent = `Erreur : Vérifiez que ${JSON_PATH} existe et est servi par un serveur web HTTP.`;
-                loadingStatusText.classList.add('text-red-600');
-            }
-        }
-
-        // Gestion de la clé API Gemini
+        // Gestion de la clé API Gemini via le champ masqué
         function saveModalApiKey() {
             const keyInput = document.getElementById('modal-gemini-key-input').value.trim();
             if (keyInput) {
                 localStorage.setItem('GEMINI_API_KEY', keyInput);
-                alert("Clé API Gemini enregistrée de façon sécurisée !");
+                alert("Clé API Gemini enregistrée de façon sécurisée dans votre navigateur !");
             } else {
                 localStorage.removeItem('GEMINI_API_KEY');
                 alert("Clé API effacée.");
@@ -452,8 +436,9 @@
 
                 setTimeout(() => {
                     loadingProgress.classList.add('hidden');
+                    dropzonePrompt.classList.remove('hidden');
                     requestFilterWorker();
-                }, 300);
+                }, 200);
             } else if (type === 'FILTERED_SUCCESS') {
                 currentFilteredResults = e.data.results;
                 currentPage = 1;
@@ -486,6 +471,27 @@
                 filterEsim.value = '';
                 requestFilterWorker();
             });
+
+            const dropInput = document.getElementById('json-file-input-drop');
+            if (dropInput) {
+                dropInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    dropzonePrompt.classList.add('hidden');
+                    loadingProgress.classList.remove('hidden');
+                    loadingBar.style.width = '30%';
+                    loadingStatusText.textContent = "Chargement du fichier...";
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        loadingBar.style.width = '70%';
+                        loadingStatusText.textContent = "Analyse en arrière-plan (Worker)...";
+                        worker.postMessage({ type: 'PARSE', data: event.target.result });
+                    };
+                    reader.readAsText(file);
+                });
+            }
         }
 
         function requestFilterWorker() {
@@ -592,8 +598,10 @@
             activeProduct = product;
             resetIllustrationBox();
 
+            // Pré-remplir le champ de clé API enregistré
             document.getElementById('modal-gemini-key-input').value = localStorage.getItem('GEMINI_API_KEY') || '';
 
+            // Restaurer les valeurs SEO préexistantes
             document.getElementById('seo-description').value = product.seoDescription || '';
             document.getElementById('seo-keywords').value = product.seoKeywords || '';
 
@@ -645,7 +653,7 @@
             document.getElementById('detail-modal').classList.remove('hidden');
         }
 
-        // --- Moteur SEO via Gemini API ---
+        // --- Moteur de génération SEO via Gemini API ---
 
         async function generateSeoWithAI() {
             if (!activeProduct) return;
