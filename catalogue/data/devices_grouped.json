@@ -15139,9 +15139,9 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2513-1, XT2513V",
+    "Modèle": "XT2513-1, XT2513-2, XT2513-3, XT2513V",
     "Référence": "",
-    "Nom": "Motorola Moto G (2025)",
+    "Nom": "Motorola moto g 2025",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -15152,15 +15152,19 @@
       "35189494",
       "35198858",
       "35202459",
+      "35212952",
       "35229142",
+      "35246765",
       "35249628",
       "35275380",
+      "35309962",
       "35358367",
       "35364695",
       "35381568",
       "35405377",
       "35453662",
       "35455427",
+      "35499048",
       "35542785",
       "35577368",
       "35586889",
@@ -15171,11 +15175,13 @@
       "35824253",
       "35831596",
       "35866174",
+      "35876383",
       "35922452",
-      "35963686"
+      "35963686",
+      "35986293"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "83801516, 84168573"
+    "DeviceAtlas ID": "83801516, 84168573, 86112886, 86112983"
   },
   {
     "Catégorie": "Smartphone",
@@ -15447,7 +15453,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2523-6, XT2523-7, XT2523-8",
     "Référence": "",
-    "Nom": "Motorola Moto E15",
+    "Nom": "Motorola moto e15",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -22575,7 +22581,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2345-1, XT2345-2, XT2345-3, XT2345-4, XT2345-6",
     "Référence": "",
-    "Nom": "Motorola Moto e13",
+    "Nom": "Motorola moto e13",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -29504,7 +29510,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2615-2, XT2615-3, XT2615V",
     "Référence": "",
-    "Nom": "Motorola Moto G Play (2026)",
+    "Nom": "Motorola moto g play 2026",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -31091,7 +31097,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2165-1, XT2165-2, XT2165-3, XT2165-3PP, XT2165-5",
     "Référence": "",
-    "Nom": "Motorola moto g power (2022)",
+    "Nom": "Motorola moto g power 2022",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -31195,7 +31201,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2619-1, XT2619-2, XT2619-3, XT2619V",
     "Référence": "",
-    "Nom": "Motorola moto g stylus - 2026",
+    "Nom": "Motorola moto g stylus 2026",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -31790,6 +31796,22 @@
     "DeviceAtlas ID": "75161115"
   },
   {
+    "Catégorie": "Tablet",
+    "Modèle": "SM-X846B, SM-X846E, SM-X846N, SM-X848U",
+    "Référence": "",
+    "Nom": "Samsung Galaxy Tab S12+ 5G",
+    "Marque": "Samsung",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "35021086",
+      "35270486",
+      "35353827",
+      "35565231"
+    ],
+    "Code Pays": "450",
+    "DeviceAtlas ID": "97872357, 97872473, 97872589, 97872705"
+  },
+  {
     "Catégorie": "Mobile Phone/Feature phone",
     "Modèle": "Z320",
     "Référence": "",
@@ -31832,7 +31854,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2417-1, XT2417-2, XT2417-4, XT2417D",
     "Référence": "",
-    "Nom": "Motorola Moto G 5G 2024",
+    "Nom": "Motorola moto g 5g 2024",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -31916,22 +31938,32 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2515-3, XT2515V",
+    "Modèle": "XT2515-1, XT2515-2, XT2515-3, XT2515V",
     "Référence": "",
-    "Nom": "Motorola Moto G Power 2025",
+    "Nom": "Motorola moto g power 2025",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
       "35021373",
       "35350217",
       "35388375",
+      "35395756",
       "35500326",
       "35532172",
+      "35607218",
+      "35685937",
       "35733831",
-      "35878027"
+      "35788428",
+      "35825078",
+      "35878027",
+      "35898716",
+      "35899255",
+      "35921756",
+      "35967388",
+      "35990663"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "86113080, 86113177"
+    "DeviceAtlas ID": "84168815, 85590125, 86113080, 86113177"
   },
   {
     "Catégorie": "Smartphone",
@@ -32704,7 +32736,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2239-17, XT2239-18, XT2239-19, XT2239-20",
     "Référence": "",
-    "Nom": "Motorola Moto E22i",
+    "Nom": "Motorola moto e22i",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -33620,7 +33652,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2229-5",
     "Référence": "",
-    "Nom": "Motorola Moto E22s",
+    "Nom": "Motorola moto e22s",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -38490,7 +38522,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2113-1, XT2113-3, XT2113-5, XT2213-2",
     "Référence": "",
-    "Nom": "Motorola moto g 5G",
+    "Nom": "Motorola moto g 5g",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -42750,7 +42782,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2097-12, XT2097-14",
     "Référence": "",
-    "Nom": "Motorola Moto E7i Power",
+    "Nom": "Motorola moto e7i power",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -43960,16 +43992,20 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2311-4",
+    "Modèle": "XT2311-3, XT2311-4",
     "Référence": "",
-    "Nom": "Motorola Moto G Power 5G (2023)",
+    "Nom": "Motorola moto g power 5g 2023",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
-      "35053901"
+      "35053901",
+      "35481096",
+      "35748480",
+      "35837330",
+      "35845816"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "73860465"
+    "DeviceAtlas ID": "73860465, 76171450"
   },
   {
     "Catégorie": "Smartphone",
@@ -50118,7 +50154,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2413-1, XT2413-2, XT2413-3, XT2413V",
     "Référence": "",
-    "Nom": "Motorola Moto G Play (2024)",
+    "Nom": "Motorola moto g play 2024",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -52560,7 +52596,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2617-1, XT2617-2, XT2617-3, XT2617V",
     "Référence": "",
-    "Nom": "Motorola Moto G Power (2026)",
+    "Nom": "Motorola moto g power 2026",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -54355,7 +54391,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2311DL",
     "Référence": "",
-    "Nom": "TracFone Moto G Power 5G (2023)",
+    "Nom": "TracFone moto g power 5g 2023",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -54693,7 +54729,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2415-5",
     "Référence": "",
-    "Nom": "Motorola moto g power - 2024",
+    "Nom": "Motorola moto g power 2024",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -54809,9 +54845,9 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2117-1, XT2117-2, XT2117-3, XT2117-4",
+    "Modèle": "XT2117-1, XT2117-2, XT2117-3, XT2117-4, XT2117DL",
     "Référence": "",
-    "Nom": "Motorola moto g power (2021)",
+    "Nom": "Motorola moto g power 2021",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -54823,11 +54859,12 @@
       "35689211",
       "35689311",
       "35689611",
+      "35689711",
       "35689811",
       "35779561"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "62944696, 62944746, 62944796, 62944846"
+    "DeviceAtlas ID": "62944696, 62944746, 62944796, 62944846, 62944896"
   },
   {
     "Catégorie": "Smartphone",
@@ -55007,19 +55044,29 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2271-1, XT2271DL",
+    "Modèle": "XT2271-1, XT2271-1PP, XT2271-3, XT2271-4, XT2271-5, XT2271DL",
     "Référence": "",
-    "Nom": "Motorola Moto G Play (2023)",
+    "Nom": "Motorola moto g play 2023",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
       "35102310",
       "35117410",
+      "35184677",
+      "35263853",
+      "35386859",
       "35421568",
-      "35500562"
+      "35500562",
+      "35534482",
+      "35585381",
+      "35731637",
+      "35776014",
+      "35839090",
+      "35908822",
+      "35968721"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "73598508, 78741972"
+    "DeviceAtlas ID": "71269690, 71269752, 71269814, 73598508, 74257089, 78741972"
   },
   {
     "Catégorie": "Smartphone",
@@ -55656,7 +55703,7 @@
     "Catégorie": "Mobile Phone/Feature phone",
     "Modèle": "IL1806",
     "Référence": "",
-    "Nom": "Motorola Moto A10V",
+    "Nom": "Motorola moto a10v",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -59539,7 +59586,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2213-1, XT2213-3, XT2213DL",
     "Référence": "",
-    "Nom": "Motorola Moto G (2022)",
+    "Nom": "Motorola moto g 2022",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -60383,7 +60430,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2097-5, XT2097-6, XT2097-7",
     "Référence": "",
-    "Nom": "Motorola Moto E7 Power",
+    "Nom": "Motorola moto e7 power",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -60776,17 +60823,22 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2309-1, XT2309-3",
+    "Modèle": "XT2309-1, XT2309-2, XT2309-3",
     "Référence": "",
     "Nom": "Motorola ThinkPhone",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
       "35134772",
-      "35533798"
+      "35412517",
+      "35533798",
+      "35808782",
+      "35855473",
+      "35952112",
+      "35953678"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "79530602, 79547976"
+    "DeviceAtlas ID": "79530602, 79547976, 92679960"
   },
   {
     "Catégorie": "Smartphone",
@@ -61492,7 +61544,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2165DL",
     "Référence": "",
-    "Nom": "TracFone Moto G Power",
+    "Nom": "TracFone moto g power",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -61809,7 +61861,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2415-1",
     "Référence": "",
-    "Nom": "Motorola Moto G Power 5G",
+    "Nom": "Motorola moto g power 5g",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -63010,7 +63062,7 @@
     "Catégorie": "Mobile Phone/Feature phone",
     "Modèle": "OD 1802",
     "Référence": "",
-    "Nom": "Motorola Moto A200",
+    "Nom": "Motorola moto a200",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -63710,7 +63762,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2613-1, XT2613-2, XT2613-3, XT2613V",
     "Référence": "",
-    "Nom": "Motorola Moto G (2026)",
+    "Nom": "Motorola moto g 2026",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -72501,7 +72553,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2052-1, XT2052-2, XT2052-3, XT2095-1, XT2095-2, XT2095-3",
     "Référence": "",
-    "Nom": "Motorola Moto E7",
+    "Nom": "Motorola moto e7",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -72831,21 +72883,19 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2051-2, XT2051-3, XT2052-6, XT2052DL",
+    "Modèle": "XT2051-2, XT2051-3, XT2052-5, XT2052DL",
     "Référence": "",
-    "Nom": "Motorola Moto E (2020)",
+    "Nom": "Motorola moto e 2020",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
       "35160711",
       "35160811",
-      "35163811",
-      "35358711",
-      "35359211",
-      "35359311"
+      "35163711",
+      "35163811"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "55907232, 61722024, 72354832, 77968113"
+    "DeviceAtlas ID": "55907154, 61722024, 72354832, 77968113"
   },
   {
     "Catégorie": "Mobile Phone/Feature phone",
@@ -73281,6 +73331,20 @@
     "DeviceAtlas ID": "67954526, 72372235"
   },
   {
+    "Catégorie": "Tablet",
+    "Modèle": "SM-X946B, SM-X946N",
+    "Référence": "",
+    "Nom": "Samsung Galaxy Tab S12 Ultra 5G",
+    "Marque": "Samsung",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "35161372",
+      "35207895"
+    ],
+    "Code Pays": "450",
+    "DeviceAtlas ID": "97872821, 97872937"
+  },
+  {
     "Catégorie": "Portable(include PDA)",
     "Modèle": "LG-LU8300",
     "Référence": "",
@@ -73540,7 +73604,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2025-1",
     "Référence": "",
-    "Nom": "Motorola Moto E6 Plus",
+    "Nom": "Motorola moto e6 plus",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -74296,7 +74360,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2053-2",
     "Référence": "",
-    "Nom": "Motorola Moto E6s",
+    "Nom": "Motorola moto e6s",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -75061,19 +75125,6 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2052-5",
-    "Référence": "",
-    "Nom": "Motorola moto e 2020",
-    "Marque": "Motorola",
-    "eSim-Only": "Non",
-    "Référence GSX": [
-      "35163711"
-    ],
-    "Code Pays": "310",
-    "DeviceAtlas ID": "55907154"
-  },
-  {
-    "Catégorie": "Smartphone",
     "Modèle": "D2004, D2005, D2005 Xperia E1",
     "Référence": "",
     "Nom": "Sony Xperia E1",
@@ -75779,7 +75830,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2093-1, XT2093-2, XT2093-3, XT2093-4, XT2093DL",
     "Référence": "",
-    "Nom": "Motorola moto g play (2021)",
+    "Nom": "Motorola moto g play 2021",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -88994,7 +89045,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1770, XT1771, XT1772, XT1773, XT1774, XT1775, XT1776",
     "Référence": "",
-    "Nom": "Motorola Moto E4 Plus",
+    "Nom": "Motorola moto e4 plus",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -89329,7 +89380,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1721, XT1723, XT1724, XT1725, XT1726",
     "Référence": "",
-    "Nom": "Motorola Moto C Plus",
+    "Nom": "Motorola moto c plus",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -89689,7 +89740,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1750, XT1754, XT1755, XT1756, XT1757, XT1758",
     "Référence": "",
-    "Nom": "Motorola Moto C",
+    "Nom": "Motorola moto c",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -89975,7 +90026,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1920-16, XT1920-19, XT1921-1, XT1921-5, XT1921-7",
     "Référence": "",
-    "Nom": "Motorola Moto E5 Play",
+    "Nom": "Motorola moto e5 play",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -90555,28 +90606,6 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2271-1PP, XT2271-3, XT2271-4, XT2271-5",
-    "Référence": "",
-    "Nom": "Motorola moto g play 2023",
-    "Marque": "Motorola",
-    "eSim-Only": "Non",
-    "Référence GSX": [
-      "35184677",
-      "35263853",
-      "35386859",
-      "35534482",
-      "35585381",
-      "35731637",
-      "35776014",
-      "35839090",
-      "35908822",
-      "35968721"
-    ],
-    "Code Pays": "310",
-    "DeviceAtlas ID": "71269690, 71269752, 71269814, 74257089"
-  },
-  {
-    "Catégorie": "Smartphone",
     "Modèle": "ST26i",
     "Référence": "",
     "Nom": "Sony Xperia J",
@@ -90868,7 +90897,7 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT1540, XT1540, XT947BL, CA12424745, XT1540, XT947BL, CA12558845, XT1541, XT1541, CA12459445, XT1541, CA12558645, XT1542, CA12459545, XT1543, XT1543, CA12459645, XT1543, CA12558945, XT1543, CA12591845, XT1544, XT1544, CA12459745, XT1544, CA12591745, XT1548, XT1549, XT951VL, GR12100245, XT1550, XT1550, CA12459845, XT1550, INDR001245",
+    "Modèle": "XT1540, XT1540, XT947BL, CA12424745, XT1540, XT947BL, CA12558845, XT1541, XT1541, CA12459445, XT1541, CA12558645, XT1542, CA12459545, XT1543, XT1543, CA12459645, XT1543, CA12558945, XT1543, CA12591845, XT1544, XT1544, CA12459745, XT1544, CA12591745, XT1548, XT1550, XT1550, CA12459845, XT1550, INDR001245",
     "Référence": "",
     "Nom": "Motorola Moto G (3rd Gen)",
     "Marque": "Motorola",
@@ -90910,11 +90939,10 @@
       "35899406",
       "35899706",
       "35899806",
-      "99000575",
-      "99000576"
+      "99000575"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "9807259, 9807305, 9807351, 9807397, 9807443, 9807489, 9807535, 9807581"
+    "DeviceAtlas ID": "9807259, 9807305, 9807351, 9807397, 9807443, 9807489, 9807581"
   },
   {
     "Catégorie": "Mobile Phone/Feature phone",
@@ -92222,7 +92250,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1924-1, XT1924-2, XT1924-3, XT1924-4, XT1924-5, XT1924-6, XT1924-7, XT1924-9",
     "Référence": "",
-    "Nom": "Motorola Moto E5 Plus",
+    "Nom": "Motorola moto e5 plus",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -92395,7 +92423,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1924-3, XT1924-5, XT1924-8",
     "Référence": "",
-    "Nom": "Motorola Moto E5 Plus",
+    "Nom": "Motorola moto e5 plus",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -93262,7 +93290,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1924-6",
     "Référence": "",
-    "Nom": "Cricket Moto E5 SUPRA",
+    "Nom": "Cricket moto e5 supra",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -101856,7 +101884,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2415-3, XT2415V",
     "Référence": "",
-    "Nom": "Motorola Moto g Power 5G 2024",
+    "Nom": "Motorola moto g power 5g 2024",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -102533,7 +102561,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2053-5, XT2053-6",
     "Référence": "",
-    "Nom": "Motorola Moto E6i",
+    "Nom": "Motorola moto e6i",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -107278,24 +107306,6 @@
     "DeviceAtlas ID": "18742506"
   },
   {
-    "Catégorie": "Smartphone",
-    "Modèle": "XT2513-2, XT2513-3",
-    "Référence": "",
-    "Nom": "Motorola Moto G 2025",
-    "Marque": "Motorola",
-    "eSim-Only": "Non",
-    "Référence GSX": [
-      "35212952",
-      "35246765",
-      "35309962",
-      "35499048",
-      "35876383",
-      "35986293"
-    ],
-    "Code Pays": "310",
-    "DeviceAtlas ID": "86112886, 86112983"
-  },
-  {
     "Catégorie": "Mobile Phone/Feature phone",
     "Modèle": "Hanofer axiom",
     "Référence": "",
@@ -109679,7 +109689,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2005-1, XT2005-1PP, XT2005-3, XT2005-4, XT2005-5, XT2005DL",
     "Référence": "",
-    "Nom": "Motorola Moto E6",
+    "Nom": "Motorola moto e6",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -110913,7 +110923,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2005-3, XT2005-5, XT2005DL",
     "Référence": "",
-    "Nom": "Motorola Moto E6",
+    "Nom": "Motorola moto e6",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -119196,7 +119206,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1063, XT943G, XT1063, XT943G, Raptor, XT1063, XT943G, TI12402645, XT1064, XT1064, TI12402745, XT1068, XT1068, INDR000145, XT1068, INDR000645, XT1068, INDR000745, XT1068, TI12402545, XT1069, XT1069, M0FB7, XT1069, TI12402345, XT1072, XT1072, TI12410745, XT1077, Thea, XT1078, XT1078, Thea, XT1079, XT1079, Thea",
     "Référence": "",
-    "Nom": "Motorola Moto G 2nd Gen",
+    "Nom": "Motorola moto g 2nd gen",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -119319,7 +119329,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "CA12694645",
     "Référence": "",
-    "Nom": "Motorola Moto G 4G (2nd Gen)",
+    "Nom": "Motorola moto g 4g 2nd gen",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -120129,7 +120139,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1514, XT1514, ST12424445, XT1521, INDR000945, XT1521, ST12424645, XT1523, ST12424545, XT1524, ST12406045, XT1527, XT1527, ST12405945, XT1528PP, XT1529, XT838L, XT1528, GR12100545, XT1528PP, XT1529, XT838L, XT1528, Surina LTE",
     "Référence": "",
-    "Nom": "Motorola Moto E 2nd Gen 4G",
+    "Nom": "Motorola moto e 2nd Gen 4G",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -128242,7 +128252,7 @@
     "Catégorie": "Mobile Phone/Feature phone",
     "Modèle": "MSLB-MKZ900, MSLB-MKZ900i",
     "Référence": "",
-    "Nom": "Motorola Mototorbo Ion",
+    "Nom": "Motorola MOTOTRBO Ion Portable Smart Radio",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -142851,7 +142861,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2081-1, XT2081-2, XT2081-3",
     "Référence": "",
-    "Nom": "Motorola Moto E7 Plus",
+    "Nom": "Motorola moto e7 plus",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -143286,7 +143296,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2043-4",
     "Référence": "",
-    "Nom": "Motorola Moto G Stylus",
+    "Nom": "Motorola moto g stylus",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -164137,7 +164147,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "Moto G, XT1032, Moto G, XT939G, XT1034, XT1032, XT1032, M0DEB, XT1032, M0DEB, DV12359245, XT1033, XT1033, INDR000845, XT1033, M0DEB, XT1033, M0DEB, DV12356445, XT1040, XT1040, M0FA5, XT1045, XT1045, DV12400645, XT1045, M0FA6, XT939G, XT1034",
     "Référence": "",
-    "Nom": "Motorola Moto G",
+    "Nom": "Motorola moto g",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -164516,7 +164526,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "Moto G with 4G, XT1029, Moto G with 4G, XT1042, XT1039",
     "Référence": "",
-    "Nom": "Motorola Moto G 4G",
+    "Nom": "Motorola moto g 4g",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -164673,7 +164683,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1021, XT1022, XT1022, INDR000245, XT1023",
     "Référence": "",
-    "Nom": "Motorola Moto E",
+    "Nom": "Motorola moto e",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -164728,16 +164738,17 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT1002",
+    "Modèle": "XT1002, XT1003, DV12404545",
     "Référence": "",
-    "Nom": "Motorola Moto G Ferraru Edutuib",
+    "Nom": "Motorola moto g ferrari edition",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
-      "35331906"
+      "35331906",
+      "35931705"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "8303916"
+    "DeviceAtlas ID": "7509042, 8303916"
   },
   {
     "Catégorie": "Smartphone",
@@ -165716,7 +165727,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2517-3",
     "Référence": "",
-    "Nom": "Motorola moto g stylus - 2025",
+    "Nom": "Motorola moto g stylus 2025",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -176859,7 +176870,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2043-7",
     "Référence": "",
-    "Nom": "Motorola Moto G Pro",
+    "Nom": "Motorola moto g pro",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -177167,6 +177178,21 @@
     ],
     "Code Pays": "454",
     "DeviceAtlas ID": "27998724"
+  },
+  {
+    "Catégorie": "Smartphone",
+    "Modèle": "XT2052-6",
+    "Référence": "",
+    "Nom": "Motorola moto e (2020)",
+    "Marque": "Motorola",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "35358711",
+      "35359211",
+      "35359311"
+    ],
+    "Code Pays": "310",
+    "DeviceAtlas ID": "55907232"
   },
   {
     "Catégorie": "Smartphone",
@@ -178798,7 +178824,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2075-3",
     "Référence": "",
-    "Nom": "Motorola Moto G 5G Plus",
+    "Nom": "Motorola moto g 5g plus",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -183974,7 +184000,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2115-1, XT2115-2, XT2115-3, XT2115-4, XT2115DL",
     "Référence": "",
-    "Nom": "Motorola moto g stylus (2021)",
+    "Nom": "Motorola moto g stylus 2021",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -192335,28 +192361,6 @@
     "DeviceAtlas ID": "13544456"
   },
   {
-    "Catégorie": "Smartphone",
-    "Modèle": "XT2515-1, XT2515-2",
-    "Référence": "",
-    "Nom": "Motorola Moto G Power (2025)",
-    "Marque": "Motorola",
-    "eSim-Only": "Non",
-    "Référence GSX": [
-      "35395756",
-      "35607218",
-      "35685937",
-      "35788428",
-      "35825078",
-      "35898716",
-      "35899255",
-      "35921756",
-      "35967388",
-      "35990663"
-    ],
-    "Code Pays": "310",
-    "DeviceAtlas ID": "84168815, 85590125"
-  },
-  {
     "Catégorie": "Tablet",
     "Modèle": "ULTIMATE 10Pro",
     "Référence": "",
@@ -198760,7 +198764,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1920DL, XT1944-1, XT1944-2, XT1944-3, XT1944-4",
     "Référence": "",
-    "Nom": "Motorola Moto E5",
+    "Nom": "Motorola moto e5",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -198941,23 +198945,6 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2309-2",
-    "Référence": "",
-    "Nom": "Motorola ThinkPhone by motorola",
-    "Marque": "Motorola",
-    "eSim-Only": "Non",
-    "Référence GSX": [
-      "35412517",
-      "35808782",
-      "35855473",
-      "35952112",
-      "35953678"
-    ],
-    "Code Pays": "310",
-    "DeviceAtlas ID": "92679960"
-  },
-  {
-    "Catégorie": "Smartphone",
     "Modèle": "XT1970-5",
     "Référence": "",
     "Nom": "Motorola P50",
@@ -199132,7 +199119,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1944-5, XT1944-6",
     "Référence": "",
-    "Nom": "Motorola Moto E (5th Gen)",
+    "Nom": "Motorola moto e 5th Gen",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -199177,7 +199164,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1944-3, XT1944-4",
     "Référence": "",
-    "Nom": "Motorola Moto E5",
+    "Nom": "Motorola moto e5",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -199375,7 +199362,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1750",
     "Référence": "",
-    "Nom": "Motorola Moto C",
+    "Nom": "Motorola moto c",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -214453,6 +214440,19 @@
     "DeviceAtlas ID": "57960586, 58229426, 73809338"
   },
   {
+    "Catégorie": "Smartphone",
+    "Modèle": "C17 Lite",
+    "Référence": "",
+    "Nom": "FOSSiBOT C17 Lite",
+    "Marque": "fossibot",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "35451844"
+    ],
+    "Code Pays": "454",
+    "DeviceAtlas ID": "97895754"
+  },
+  {
     "Catégorie": "Tablet",
     "Modèle": "ENV TAB PRO MAX",
     "Référence": "",
@@ -226588,22 +226588,6 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2311-3",
-    "Référence": "",
-    "Nom": "Motorola Moto g Power 5G 2023",
-    "Marque": "Motorola",
-    "eSim-Only": "Non",
-    "Référence GSX": [
-      "35481096",
-      "35748480",
-      "35837330",
-      "35845816"
-    ],
-    "Code Pays": "310",
-    "DeviceAtlas ID": "76171450"
-  },
-  {
-    "Catégorie": "Smartphone",
     "Modèle": "Vowney",
     "Référence": "",
     "Nom": "Elephone Vowney",
@@ -226671,7 +226655,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2313-4",
     "Référence": "",
-    "Nom": "Motorola Moto G 5G (2023)",
+    "Nom": "Motorola moto g 5g 2023",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -249932,9 +249916,9 @@
   },
   {
     "Catégorie": "Smartphone",
-    "Modèle": "XT2211-2, XT2211DL",
+    "Modèle": "XT2211-2",
     "Référence": "",
-    "Nom": "Motorola moto g stylus (2022)",
+    "Nom": "Motorola moto g stylus 2022",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -249942,11 +249926,10 @@
       "35657454",
       "35888262",
       "35903827",
-      "35989258",
-      "35995773"
+      "35989258"
     ],
     "Code Pays": "310",
-    "DeviceAtlas ID": "67965460, 97688574"
+    "DeviceAtlas ID": "67965460"
   },
   {
     "Catégorie": "Mobile Phone/Feature phone",
@@ -252386,7 +252369,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1920-17",
     "Référence": "",
-    "Nom": "Motorola Moto E Play 5th Gen",
+    "Nom": "Motorola moto e play 5th Gen",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -253504,7 +253487,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "MD1005G",
     "Référence": "",
-    "Nom": "Motorola 5G Moto Mod",
+    "Nom": "Motorola 5G moto mod",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -254572,7 +254555,7 @@
     "Catégorie": "Mobile Phone/Feature phone",
     "Modèle": "OD1803",
     "Référence": "",
-    "Nom": "Motorola Moto A300",
+    "Nom": "Motorola moto a300",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -296957,6 +296940,19 @@
     "DeviceAtlas ID": "40887370"
   },
   {
+    "Catégorie": "Mobile Phone/Feature phone",
+    "Modèle": "G510S",
+    "Référence": "",
+    "Nom": "Haexc SP207Ex",
+    "Marque": "HAEXC",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "35688097"
+    ],
+    "Code Pays": "525",
+    "DeviceAtlas ID": "97890373"
+  },
+  {
     "Catégorie": "Smartphone",
     "Modèle": "iQW503",
     "Référence": "",
@@ -297433,19 +297429,6 @@
     ],
     "Code Pays": "450",
     "DeviceAtlas ID": "55905323"
-  },
-  {
-    "Catégorie": "Smartphone",
-    "Modèle": "XT2117DL",
-    "Référence": "",
-    "Nom": "Motorola moto g power (2021",
-    "Marque": "Motorola",
-    "eSim-Only": "Non",
-    "Référence GSX": [
-      "35689711"
-    ],
-    "Code Pays": "310",
-    "DeviceAtlas ID": "62944896"
   },
   {
     "Catégorie": "Smartphone",
@@ -332410,7 +332393,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1768",
     "Référence": "",
-    "Nom": "Motorola Moto E4",
+    "Nom": "Motorola moto e4",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -334831,7 +334814,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1700",
     "Référence": "",
-    "Nom": "Motorola Moto E3",
+    "Nom": "Motorola moto e3",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -360618,7 +360601,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT2045-3",
     "Référence": "",
-    "Nom": "Motorola Moto G Fast",
+    "Nom": "Motorola moto g fast",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -365365,7 +365348,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1039, M0FA8",
     "Référence": "",
-    "Nom": "Motorola Moto G 4G",
+    "Nom": "Motorola moto g 4g",
     "Marque": "Motorola",
     "eSim-Only": "Non",
     "Référence GSX": [
@@ -366429,19 +366412,6 @@
     ],
     "Code Pays": "655",
     "DeviceAtlas ID": "72120769"
-  },
-  {
-    "Catégorie": "Smartphone",
-    "Modèle": "XT1003, DV12404545",
-    "Référence": "",
-    "Nom": "Motorola Moto G Ferrari Edition",
-    "Marque": "Motorola",
-    "eSim-Only": "Inconnu",
-    "Référence GSX": [
-      "35931705"
-    ],
-    "Code Pays": "310",
-    "DeviceAtlas ID": "7509042"
   },
   {
     "Catégorie": "Smartphone",
@@ -373471,7 +373441,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1921-8",
     "Référence": "",
-    "Nom": "Motorola Moto E5 Go",
+    "Nom": "Motorola moto e5 go",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -374162,7 +374132,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1799-2",
     "Référence": "",
-    "Nom": "Motorola Moto E5 Cruise",
+    "Nom": "Motorola moto e5 cruise",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -387638,6 +387608,19 @@
     ],
     "Code Pays": "410",
     "DeviceAtlas ID": "13127374"
+  },
+  {
+    "Catégorie": "Smartphone",
+    "Modèle": "XT2211DL",
+    "Référence": "",
+    "Nom": "Motorola moto g stylus (2022)",
+    "Marque": "Motorola",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "35995773"
+    ],
+    "Code Pays": "310",
+    "DeviceAtlas ID": "97688574"
   },
   {
     "Catégorie": "Mobile Phone/Feature phone",
@@ -443709,6 +443692,19 @@
   },
   {
     "Catégorie": "Smartphone",
+    "Modèle": "HLS-AL00",
+    "Référence": "",
+    "Nom": "Huawei Mate 90",
+    "Marque": "HUAWEI",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "86135609"
+    ],
+    "Code Pays": "460",
+    "DeviceAtlas ID": "97873053"
+  },
+  {
+    "Catégorie": "Smartphone",
     "Modèle": "lephone C7",
     "Référence": "",
     "Nom": "China Telecom C7",
@@ -461211,6 +461207,20 @@
     ],
     "Code Pays": "460",
     "DeviceAtlas ID": "17591111"
+  },
+  {
+    "Catégorie": "Smartphone",
+    "Modèle": "CMM-AL00, CMM-AL10",
+    "Référence": "",
+    "Nom": "Huawei Mate 90 Pro Max",
+    "Marque": "HUAWEI",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "86233508",
+      "86891609"
+    ],
+    "Code Pays": "460",
+    "DeviceAtlas ID": "97873278, 97873385"
   },
   {
     "Catégorie": "Tablet",
@@ -497814,6 +497824,19 @@
   },
   {
     "Catégorie": "Smartphone",
+    "Modèle": "Philips S706P",
+    "Référence": "",
+    "Nom": "Philips S706P",
+    "Marque": "PHILIPS",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "86452508"
+    ],
+    "Code Pays": "460",
+    "DeviceAtlas ID": "97825619"
+  },
+  {
+    "Catégorie": "Smartphone",
     "Modèle": "MF286R1",
     "Référence": "",
     "Nom": "ZTE MF286R1",
@@ -501824,6 +501847,19 @@
     ],
     "Code Pays": "460",
     "DeviceAtlas ID": "44362125"
+  },
+  {
+    "Catégorie": "Smartphone",
+    "Modèle": "CMU-AL10",
+    "Référence": "",
+    "Nom": "Huawei Mate 90 RS Ultimate",
+    "Marque": "HUAWEI",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "86477808"
+    ],
+    "Code Pays": "460",
+    "DeviceAtlas ID": "97873492"
   },
   {
     "Catégorie": "Mobile Phone/Feature phone",
@@ -551876,6 +551912,19 @@
   },
   {
     "Catégorie": "Smartphone",
+    "Modèle": "CMS-AL20",
+    "Référence": "",
+    "Nom": "Huawei Mate 90 Pro",
+    "Marque": "HUAWEI",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "86849009"
+    ],
+    "Code Pays": "460",
+    "DeviceAtlas ID": "97873170"
+  },
+  {
+    "Catégorie": "Smartphone",
     "Modèle": "KAILITONG X6",
     "Référence": "",
     "Nom": "Kliton X6",
@@ -552042,6 +552091,19 @@
     ],
     "Code Pays": "460",
     "DeviceAtlas ID": "11107701"
+  },
+  {
+    "Catégorie": "Smartphone",
+    "Modèle": "NX888J",
+    "Référence": "",
+    "Nom": "Nubia NaviX Ultra",
+    "Marque": "nubia",
+    "eSim-Only": "Non",
+    "Référence GSX": [
+      "86850208"
+    ],
+    "Code Pays": "460",
+    "DeviceAtlas ID": "97823720"
   },
   {
     "Catégorie": "Smartphone",
@@ -608020,7 +608082,7 @@
     "Catégorie": "Smartphone",
     "Modèle": "XT1526, GR12100445, XT1526, Surina LTE",
     "Référence": "",
-    "Nom": "Sprint Moto E 2nd Gen",
+    "Nom": "Sprint moto e 2nd Gen",
     "Marque": "Motorola",
     "eSim-Only": "Inconnu",
     "Référence GSX": [
@@ -608029,6 +608091,19 @@
     ],
     "Code Pays": "310",
     "DeviceAtlas ID": "8441270"
+  },
+  {
+    "Catégorie": "Smartphone",
+    "Modèle": "XT1549, XT951VL, GR12100245",
+    "Référence": "",
+    "Nom": "Motorola moto g 3rd gen",
+    "Marque": "Motorola",
+    "eSim-Only": "Inconnu",
+    "Référence GSX": [
+      "99000576"
+    ],
+    "Code Pays": "310",
+    "DeviceAtlas ID": "9807535"
   },
   {
     "Catégorie": "Smartphone",

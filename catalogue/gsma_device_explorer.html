@@ -4,15 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GSMA Device Database Explorer</title>
-    
-    <!-- Script du Conteneur Tag Commander (Remplacez VOTRE_SITE_ID et VOTRE_CONTAINER_ID) -->
-    <script type="text/javascript" src="simulateur.js"></script>
-
-    <!-- FontAwesome requis pour le simulateur -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tailwind CSS & Lucide -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       tailwind.config = {
@@ -36,23 +30,21 @@
 <body class="h-full text-slate-800 antialiased font-sans flex flex-col">
 
     <!-- Header Navigation -->
-<!-- Header Navigation -->
-<header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-            <div class="flex items-center gap-3">
-                <div class="p-2 bg-brand-600 rounded-lg text-white">
-                    <i data-lucide="smartphone" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg leading-tight">GSMA Device Database</h1>
-                    <p class="text-xs text-slate-400">Catalogue des produits regroupés par nom standardisé</p>
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-brand-600 rounded-lg text-white">
+                        <i data-lucide="smartphone" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight">GSMA Device Database</h1>
+                        <p class="text-xs text-slate-400">Catalogue des produits regroupés par nom standardisé</p>
+                    </div>
                 </div>
             </div>
-            
         </div>
-    </div>
-</header>
+    </header>
 
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
 
@@ -611,11 +603,29 @@
                 ? gsxList.map(t => `<span class="inline-block bg-slate-100 font-mono text-xs px-2 py-1 rounded border border-slate-200 mr-1 mb-1">${t}</span>`).join('')
                 : '-';
 
+            const launchInfoBox = (product.releaseDate || product.launchPrice) 
+                ? `<div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-3 flex items-center justify-between text-xs">
+                     <div class="flex items-center gap-2">
+                       <i data-lucide="calendar" class="w-4 h-4 text-brand-600"></i>
+                       <span class="text-slate-600">Sortie :</span>
+                       <span class="font-semibold text-slate-900">${product.releaseDate || 'Non spécifiée'}</span>
+                     </div>
+                     <div class="flex items-center gap-2">
+                       <i data-lucide="tag" class="w-4 h-4 text-indigo-600"></i>
+                       <span class="text-slate-600">Prix de lancement :</span>
+                       <span class="font-semibold text-slate-900">${product.launchPrice || 'Non spécifié'}</span>
+                     </div>
+                   </div>`
+                : `<div id="launch-info-placeholder" class="hidden"></div>`;
+
             modalFields.innerHTML = `
                 <div class="border-b border-slate-100 pb-2">
                     <span class="text-xs text-slate-400 block">Nom complet</span>
                     <span class="font-bold text-slate-900 text-base">${product["Nom"] || '-'}</span>
                 </div>
+
+                ${launchInfoBox}
+
                 <div class="grid grid-cols-2 gap-4">
                     <div class="border-b border-slate-100 pb-2">
                         <span class="text-xs text-slate-400 block">Marque</span>
@@ -651,6 +661,7 @@
             `;
 
             document.getElementById('detail-modal').classList.remove('hidden');
+            lucide.createIcons();
         }
 
         // --- Moteur SEO via Gemini API ---
@@ -674,6 +685,14 @@
 
             const productName = activeProduct["Nom"].replace(/\(eSim-Only\)/i, '').trim();
 
+            const promptInfo = `Pour le produit high-tech "${productName}", donne-moi :
+1. Sa date officielle de lancement ou d'annonce (mois et année ou année).
+2. Son prix indicatif de lancement (en Euros € ou $ USD).
+
+Réponds EXCLUSIVEMENT au format JSON strict avec exactement ces clés :
+{"releaseDate": "Mois Année", "launchPrice": "XXX €"}
+Sans aucun markdown, sans guillemets de code, sans texte additionnel.`;
+
             const promptDescription = `Fais moi un texte méga optimisé SEO pour les ${productName}, axé sur la revente, reprise et rachat au meilleur prix avec CompaRecycle avec des parties specs techniques sans picto avec un ton humoristique, ou avec un ton rassurant, ou avec une partie tips.
             IMPORTANT : Ne fais AUCUNE introduction, AUCUNE phrase de politesse et AUCUNE conclusion. Ne dis pas "Voici le texte". Renvoie UNIQUEMENT le texte brut demandé.`;
 
@@ -681,10 +700,26 @@
             IMPORTANT : Ne fais AUCUNE introduction (ex: "Voici la liste"), AUCUNE phrase de politesse et AUCUNE conclusion. Renvoie UNIQUEMENT les mots-clés séparés par des virgules et absolument rien d'autre.`;
 
             try {
+                // 1. Récupération Date et Prix
+                try {
+                    const infoRaw = await callGeminiAPI(apiKey, promptInfo);
+                    const cleanedJson = infoRaw.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const infoParsed = JSON.parse(cleanedJson);
+                    
+                    activeProduct.releaseDate = infoParsed.releaseDate || 'Inconnue';
+                    activeProduct.launchPrice = infoParsed.launchPrice || 'Inconnu';
+
+                    openModal(activeProduct); // Rafraîchit l'encart avec la date et le prix
+                } catch (e) {
+                    console.warn("Échec de la récupération date/prix :", e);
+                }
+
+                // 2. Génération Description SEO
                 const descResult = await callGeminiAPI(apiKey, promptDescription);
                 descArea.value = descResult;
                 activeProduct.seoDescription = descResult;
 
+                // 3. Génération Mots-clés
                 const kwResult = await callGeminiAPI(apiKey, promptKeywords);
                 kwArea.value = kwResult;
                 activeProduct.seoKeywords = kwResult;
