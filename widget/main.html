@@ -197,7 +197,8 @@
 
                     <div class="text-right flex-shrink-0 ml-3">
                         <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Valeur de reprise</div>
-                        <div class="text-2xl font-black text-green-600">300 €</div>
+                        <!-- Prix affiché dynamiquement -->
+                        <div id="est-trade-price" class="text-2xl font-black text-green-600">-- €</div>
                         <span class="inline-block bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-semibold mt-1">Prix garanti 14j</span>
                     </div>
                 </div>
@@ -245,7 +246,7 @@
                 </div>
 
                 <div class="bg-blue-50/50 p-3 rounded-lg text-xs space-y-2 border border-blue-100">
-                    <p class="text-gray-700">Pour confirmer votre demande de reprise, nous créons une empreinte bancaire d'un montant de <strong>300 €</strong> via Swikly. Aucun montant n'est débité maintenant.</p>
+                    <p class="text-gray-700">Pour confirmer votre demande de reprise, nous créons une empreinte bancaire d'un montant de <strong id="swikly-amount-summary">-- €</strong> via Swikly. Aucun montant n'est débité maintenant.</p>
                     
                     <div class="space-y-1 pt-1 text-gray-700">
                         <div class="flex items-center"><i class="fa-solid fa-circle-check text-brand-600 mr-2"></i> 0 € aujourd'hui</div>
@@ -317,7 +318,8 @@
             selectedProductName: null,
             selectedProductImage: null,
             surveyAnswers: {},
-            grade: null
+            grade: null,
+            price: null
         };
 
         let productCache = [];
@@ -899,7 +901,7 @@
             btnElement.className = `survey-ans-btn-${idQuestion} border-2 border-brand-600 bg-brand-50/20 text-brand-700 font-semibold rounded-lg p-2.5 flex flex-col items-center justify-center text-center transition`;
         }
 
-        // 7. Concaténation et récupération du Grade depuis /Diagnostic/matrix (Calcul et logs conservés)
+        // 7. Concaténation et récupération du Grade depuis /Diagnostic/matrix
         async function fetchGradeFromMatrix() {
             console.group("=== DIAGNOSTIC MATRIX : Récupération du Grade ===");
 
@@ -935,15 +937,21 @@
 
                 if (data && data.results && data.results.matrix) {
                     const matrixMap = data.results.matrix;
-                    console.log("Matrice des combinaisons disponible dans results.matrix :", matrixMap);
+                    console.log("Matrice des combinaisons disponible :", matrixMap);
 
                     if (matrixMap.hasOwnProperty(mappingCombination)) {
                         const calculatedGrade = matrixMap[mappingCombination];
                         appState.grade = calculatedGrade;
 
                         console.log(`%c✔ Match trouvé pour "${mappingCombination}" => Grade: ${calculatedGrade}`, "color: #16a34a; font-weight: bold; font-size: 13px;");
+
+                        // Appel pour récupérer le prix de l'Argus correspondant à ce Grade et idproduct
+                        const targetProductId = appState.selectedProductId || appState.selectedModelId;
+                        fetchPriceFromArgus(targetProductId, calculatedGrade);
+
                     } else {
                         console.warn(`⚠ La combinaison "${mappingCombination}" est introuvable dans la matrice.`);
+                        document.getElementById('est-trade-price').textContent = "Non reprise";
                     }
                 } else {
                     console.warn("⚠ Pas de matrice 'results.matrix' dans la réponse API.");
@@ -951,6 +959,67 @@
 
             } catch (error) {
                 console.error("✖ Erreur lors de la récupération de la matrice :", error);
+            }
+
+            console.groupEnd();
+        }
+
+        // 8. Récupération du Prix de reprise via /Catalog/argus
+        async function fetchPriceFromArgus(idproduct, grade) {
+            console.group("=== CATALOG ARGUS : Récupération du Prix ===");
+            console.log(`idproduct: ${idproduct}, grade: ${grade}`);
+
+            const priceElem = document.getElementById('est-trade-price');
+            const swiklyElem = document.getElementById('swikly-amount-summary');
+
+            priceElem.innerHTML = `<span class="animate-pulse text-gray-400 text-lg">Chargement...</span>`;
+
+            const idargus = 356;
+            const argusUrl = `${CONFIG.CODES_API_URL}/Catalog/argus?idargus=${idargus}&idproduct=${encodeURIComponent(idproduct)}`;
+
+            console.log(`Appel endpoint argus : ${argusUrl}`);
+
+            try {
+                const response = await fetch(argusUrl, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                    }
+                });
+
+                if (!response.ok) throw new Error(`Erreur API argus: ${response.status}`);
+
+                const data = await response.json();
+                console.log("Réponse API Argus reçue :", data);
+
+                if (data && data.results && data.results.products && data.results.products.best) {
+                    const bestPrices = data.results.products.best;
+                    console.log("Tableau des prix 'best' disponible :", bestPrices);
+
+                    if (bestPrices.hasOwnProperty(grade)) {
+                        const calculatedPrice = bestPrices[grade];
+                        appState.price = calculatedPrice;
+
+                        console.log(`%c✔ Prix trouvé pour le grade ${grade} => ${calculatedPrice} €`, "color: #16a34a; font-weight: bold; font-size: 13px;");
+
+                        // Mise à jour de l'affichage du prix
+                        const formattedPrice = `${calculatedPrice} €`;
+                        priceElem.textContent = formattedPrice;
+                        if (swiklyElem) swiklyElem.textContent = formattedPrice;
+
+                    } else {
+                        console.warn(`⚠ Grade '${grade}' non présent dans le tableau best prices.`);
+                        priceElem.textContent = "0 €";
+                    }
+                } else {
+                    console.warn("⚠ Structure 'results.products.best' introuvable dans la réponse.");
+                    priceElem.textContent = "0 €";
+                }
+
+            } catch (error) {
+                console.error("✖ Erreur lors de la récupération du prix Argus :", error);
+                priceElem.textContent = "Erreur";
             }
 
             console.groupEnd();
@@ -1032,7 +1101,8 @@
         function finishProcess() {
             const finalName = appState.selectedProductName || appState.selectedModelName;
             const finalId = appState.selectedProductId || appState.selectedModelId;
-            alert(`Félicitations ! Votre demande de reprise pour [${finalName}] (ID : ${finalId}, Grade : ${appState.grade || 'N/A'}) est confirmée.`);
+            const finalPrice = appState.price ? `${appState.price} €` : 'N/A';
+            alert(`Félicitations ! Votre demande de reprise pour [${finalName}] (ID : ${finalId}, Prix : ${finalPrice}) est confirmée.`);
             goToStep(1);
         }
 
