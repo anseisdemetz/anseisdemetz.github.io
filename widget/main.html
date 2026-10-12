@@ -429,6 +429,9 @@
             'console': 'fa-gamepad'
         };
 
+        // Catégorie de produit à ne pas afficher
+        const EXCLUDED_PRODUCT_TYPE_IDS = [9, 10, 21, 27, 43];
+
         // Chargement des catégories
         async function fetchProductTypes() {
             const container = document.getElementById('categories-container');
@@ -446,7 +449,10 @@
                 const data = await response.json();
 
                 if (data && data.results && data.results.length > 0) {
-                    renderCategories(data.results);
+                    const filteredResults = data.results.filter(
+                        cat => !EXCLUDED_PRODUCT_TYPE_IDS.includes(Number(cat.idproduct_type))
+                    );
+                    renderCategories(filteredResults);
                 } else {
                     renderFallbackCategories();
                 }
