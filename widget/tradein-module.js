@@ -1,5 +1,5 @@
 /**
- * TradeInModule - Module de reprise autonome pour Tag Commander
+ * TradeInModule - Module de reprise autonome pilotable par Tag Commander
  */
 (function (window) {
     'use strict';
@@ -21,6 +21,7 @@
     };
 
     let appState = {
+        displayType: 'popin', // 'popin' | 'drawer-right' | 'drawer-left'
         currentStep: 1,
         selectedProductTypeId: null,
         selectedProductTypeName: null,
@@ -61,6 +62,47 @@
             .tradein-step-circle-pending { background-color: white; color: #9ca3af; border-color: #d1d5db; }
             .tradein-step-line-active { background-color: #2563eb; }
             .tradein-step-line-pending { background-color: #e5e7eb; }
+            
+            /* Classes d'affichage Popin vs Drawer */
+            .tradein-container-popin {
+                max-width: 36rem;
+                border-radius: 1rem;
+                margin: auto;
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            .tradein-container-popin.tradein-active {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            .tradein-container-drawer-right {
+                position: fixed;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                height: 100vh;
+                max-width: 28rem;
+                border-radius: 1rem 0 0 1rem;
+                transform: translateX(100%);
+            }
+            .tradein-container-drawer-right.tradein-active {
+                transform: translateX(0);
+            }
+
+            .tradein-container-drawer-left {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                height: 100vh;
+                max-width: 28rem;
+                border-radius: 0 1rem 1rem 0;
+                transform: translateX(-100%);
+            }
+            .tradein-container-drawer-left.tradein-active {
+                transform: translateX(0);
+            }
         `;
         document.head.appendChild(styleTag);
     }
@@ -70,17 +112,20 @@
 
         const overlay = document.createElement('div');
         overlay.id = 'tradein-modal-overlay';
-        overlay.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden';
+        overlay.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex p-0 md:p-4 opacity-0 pointer-events-none transition-opacity duration-300 ease-out';
 
         overlay.innerHTML = `
-            <div class="w-full max-w-xl bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans max-h-[90vh] flex flex-col">
+            <div id="tradein-modal-container" class="w-full bg-white shadow-2xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans flex flex-col transition-transform duration-300 ease-out">
+                
+                <!-- HEADER DU MODAL -->
                 <div class="px-6 pt-5 pb-3 border-b border-gray-100 flex justify-between items-center bg-white flex-shrink-0">
-                    <h1 class="text-xl font-bold text-gray-900">Reprise de votre ancien appareil</h1>
-                    <button id="tradein-close-btn" type="button" class="text-gray-400 hover:text-gray-600 transition">
+                    <h1 class="text-xl font-bold text-gray-900">Reprise de votre appareil</h1>
+                    <button id="tradein-close-btn" type="button" class="text-gray-400 hover:text-gray-600 transition p-1">
                         <i class="fa-solid fa-xmark text-xl"></i>
                     </button>
                 </div>
 
+                <!-- STEPPER HORIZONTAL -->
                 <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex-shrink-0">
                     <div class="flex items-center justify-between w-full">
                         <div class="flex flex-col items-center flex-1">
@@ -108,11 +153,13 @@
                     </div>
                 </div>
 
+                <!-- CONTENU SCROLLABLE -->
                 <div class="p-6 overflow-y-auto flex-1">
+
                     <!-- ÉTAPE 1 -->
                     <div id="step-1" class="step-content space-y-5">
                         <div class="relative">
-                            <input type="text" id="tradein-search-input" placeholder="Rechercher votre appareil par son nom (ex : iPhone 11, Galaxy S23...)" 
+                            <input type="text" id="tradein-search-input" placeholder="Rechercher par nom (ex : iPhone 11, Galaxy S23...)" 
                                    class="w-full pl-4 pr-10 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 text-sm outline-none">
                             <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-400"></i>
                             <div id="search-results-dropdown" class="hidden absolute left-0 right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-xl z-20 max-h-60 overflow-y-auto divide-y divide-gray-100"></div>
@@ -199,19 +246,14 @@
 
                         <div class="flex space-x-2 pt-2">
                             <button id="btn-back-step3" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition">Retour</button>
-                            <button id="btn-continue-step3" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition">Ajouter la reprise à mon panier</button>
+                            <button id="btn-continue-step3" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition">Ajouter la reprise au panier</button>
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 4 -->
+                    <!-- ÉTAPE 4 (Formulaire Empreinte CB pur sans Swikly) -->
                     <div id="step-4" class="step-content hidden space-y-4">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
-                                <i class="fa-solid fa-infinity"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-sm text-gray-900">Empreinte bancaire sécurisée</div>
-                            </div>
+                        <div class="text-xs font-semibold text-gray-800 pb-1 border-b border-gray-100">
+                            Empreinte bancaire de garantie
                         </div>
 
                         <div class="space-y-3 pt-1">
@@ -239,7 +281,7 @@
 
                         <div class="flex items-center space-x-2 text-[10px] text-gray-500 pt-1">
                             <i class="fa-solid fa-lock text-gray-400"></i>
-                            <span>Paiement sécurisé par Swikly. Vos données sont chiffrées et jamais stockées.</span>
+                            <span>Saisie 100% sécurisée. Vos données de paiement sont chiffrées.</span>
                         </div>
 
                         <div class="flex space-x-2 pt-2">
@@ -247,12 +289,32 @@
                             <button id="btn-finish-process" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition">Valider l'empreinte &rarr;</button>
                         </div>
                     </div>
+
                 </div>
             </div>
         `;
 
         document.body.appendChild(overlay);
         attachEvents();
+    }
+
+    function applyDisplayMode(mode) {
+        const overlay = document.getElementById('tradein-modal-overlay');
+        const container = document.getElementById('tradein-modal-container');
+        if (!container || !overlay) return;
+
+        container.className = "w-full bg-white shadow-2xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans flex flex-col transition-all duration-300 ease-out ";
+
+        if (mode === 'drawer-right') {
+            overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-end p-0 opacity-0 pointer-events-none transition-opacity duration-300 ease-out";
+            container.classList.add('tradein-container-drawer-right');
+        } else if (mode === 'drawer-left') {
+            overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-start p-0 opacity-0 pointer-events-none transition-opacity duration-300 ease-out";
+            container.classList.add('tradein-container-drawer-left');
+        } else { // popin par défaut
+            overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 ease-out";
+            container.classList.add('tradein-container-popin');
+        }
     }
 
     function attachEvents() {
@@ -492,7 +554,6 @@
         updateContinueButtonState();
     }
 
-    // --- RECHERCHE MULTICRITÈRE CORRIGÉE ---
     function handleSearch(query) {
         clearTimeout(searchTimeout);
         const dropdown = document.getElementById('search-results-dropdown');
@@ -679,7 +740,6 @@
     async function fetchPriceFromArgus(idproduct, grade) {
         console.group("=== CATALOG ARGUS ===");
         const priceElem = document.getElementById('est-trade-price');
-        const swiklyElem = document.getElementById('swikly-amount-summary');
         priceElem.innerHTML = `<span class="animate-pulse text-gray-400 text-lg">Chargement...</span>`;
 
         try {
@@ -691,7 +751,6 @@
                 const price = data.results.products[0].best[grade];
                 appState.price = price;
                 priceElem.textContent = `${price} €`;
-                if (swiklyElem) swiklyElem.textContent = `${price} €`;
             }
         } catch (e) { priceElem.textContent = "Erreur"; }
         console.groupEnd();
@@ -752,26 +811,49 @@
     }
 
     function finishProcess() {
-        alert(`Félicitations ! Votre demande de reprise pour [${appState.selectedProductName || appState.selectedModelName}] (Prix : ${appState.price ? appState.price + ' €' : 'N/A'}) est confirmée.`);
+        alert(`Félicitations ! Votre demande pour [${appState.selectedProductName || appState.selectedModelName}] (Prix : ${appState.price ? appState.price + ' €' : 'N/A'}) est confirmée.`);
         TradeInModule.close();
     }
 
     window.TradeInModule = {
-        init: function () {
-            if (isInitialized) return;
-            injectDependencies();
-            injectModalDOM();
-            fetchProductTypes();
-            isInitialized = true;
+        init: function (options) {
+            const opts = options || {};
+            appState.displayType = opts.displayType || 'popin';
+
+            if (!isInitialized) {
+                injectDependencies();
+                injectModalDOM();
+                fetchProductTypes();
+                isInitialized = true;
+            }
+
+            applyDisplayMode(appState.displayType);
         },
-        open: function () {
-            if (!isInitialized) this.init();
+        open: function (options) {
+            if (options && options.displayType) {
+                appState.displayType = options.displayType;
+            }
+            this.init({ displayType: appState.displayType });
             goToStep(1);
-            document.getElementById('tradein-modal-overlay').classList.remove('hidden');
+
+            const overlay = document.getElementById('tradein-modal-overlay');
+            const container = document.getElementById('tradein-modal-container');
+
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            overlay.classList.add('opacity-100');
+
+            setTimeout(() => {
+                container.classList.add('tradein-active');
+            }, 10);
         },
         close: function () {
             const overlay = document.getElementById('tradein-modal-overlay');
-            if (overlay) overlay.classList.add('hidden');
+            const container = document.getElementById('tradein-modal-container');
+            if (!overlay || !container) return;
+
+            container.classList.remove('tradein-active');
+            overlay.classList.remove('opacity-100');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
         },
         _selectAnswer: _selectAnswer
     };
