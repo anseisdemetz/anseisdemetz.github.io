@@ -45,7 +45,7 @@
             </button>
         </div>
 
-        <!-- STEPPER HORIZONTAAL (1. Appareil, 2. Etat, 3. Estimation, 4. Confirmation) -->
+        <!-- STEPPER HORIZONTAL (1. Appareil, 2. Etat, 3. Estimation, 4. Confirmation) -->
         <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div class="flex items-center justify-between w-full">
                 
@@ -114,30 +114,11 @@
                     </div>
                 </div>
 
-                <!-- Sélecteur de marque -->
-                <div>
+                <!-- Sélecteur de marque (masqué au démarrage jusqu'à la sélection d'une catégorie) -->
+                <div id="manufacturers-block" class="hidden">
                     <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez la marque</label>
-                    <div class="grid grid-cols-5 gap-2">
-                        <button class="brand-btn border-2 border-brand-600 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50 bg-brand-50/20">
-                            <i class="fa-brands fa-apple text-2xl text-gray-900 mb-1"></i>
-                            <span class="text-[10px] font-medium text-gray-700">Apple</span>
-                        </button>
-                        <button class="brand-btn border border-gray-200 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50">
-                            <span class="font-bold text-xs text-blue-900 mb-1">SAMSUNG</span>
-                            <span class="text-[10px] font-medium text-gray-700">Samsung</span>
-                        </button>
-                        <button class="brand-btn border border-gray-200 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50">
-                            <span class="font-bold text-xs text-orange-500 mb-1">mi</span>
-                            <span class="text-[10px] font-medium text-gray-700">Xiaomi</span>
-                        </button>
-                        <button class="brand-btn border border-gray-200 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50">
-                            <i class="fa-brands fa-google text-lg text-red-500 mb-1"></i>
-                            <span class="text-[10px] font-medium text-gray-700">Google</span>
-                        </button>
-                        <button class="brand-btn border border-gray-200 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50">
-                            <i class="fa-solid fa-ellipsis text-lg text-gray-500 mb-1"></i>
-                            <span class="text-[10px] font-medium text-gray-700">Autre</span>
-                        </button>
+                    <div id="manufacturers-container" class="grid grid-cols-4 gap-2">
+                        <!-- Rempli dynamiquement -->
                     </div>
                 </div>
 
@@ -407,7 +388,6 @@
         // Configuration de l'API
         const CONFIG = {
             CODES_API_URL: "https://corsproxy.io/?key=c46f8301&url=" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com"),
-            //CODES_API_URL: "https://corsproxy.io/?" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com"),
             CODES_API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr",
         };
 
@@ -415,7 +395,9 @@
         let appState = {
             currentStep: 1,
             selectedProductTypeId: null,
-            selectedProductTypeName: 'Mobile',
+            selectedProductTypeName: null,
+            selectedManufacturerId: null,
+            selectedManufacturerName: null,
             selectedModel: 'iPhone 14 - 128 Go'
         };
 
@@ -429,15 +411,13 @@
             'console': 'fa-gamepad'
         };
 
-        // Catégorie de produit à ne pas afficher
+        // Catégories de produit à ne pas afficher
         const EXCLUDED_PRODUCT_TYPE_IDS = [9, 10, 21, 27, 43];
 
         // Chargement des catégories
         async function fetchProductTypes() {
-            const container = document.getElementById('categories-container');
-            
             try {
-                const response = await fetch(CONFIG.CODES_API_URL+"/Catalog/productTypes", {
+                const response = await fetch(CONFIG.CODES_API_URL + "/Catalog/productTypes", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -445,7 +425,7 @@
                     }
                 });
 
-                if (!response.ok) throw new Error("Erreur API");
+                if (!response.ok) throw new Error("Erreur API ProductTypes");
                 const data = await response.json();
 
                 if (data && data.results && data.results.length > 0) {
@@ -458,7 +438,7 @@
                 }
 
             } catch (error) {
-                console.warn("Utilisation du mode secours :", error);
+                console.warn("Utilisation du mode secours pour les catégories :", error);
                 renderFallbackCategories();
             }
         }
@@ -467,7 +447,7 @@
             const container = document.getElementById('categories-container');
             container.innerHTML = '';
 
-            categories.forEach((cat, index) => {
+            categories.forEach((cat) => {
                 const categoryNameFr = cat.type && cat.type.fr ? cat.type.fr : 'Appareil';
                 const categoryId = cat.idproduct_type;
                 const lowerName = categoryNameFr.toLowerCase();
@@ -480,22 +460,16 @@
                     }
                 }
 
-                const isSelected = index === 0;
-                if (isSelected) {
-                    appState.selectedProductTypeId = categoryId;
-                    appState.selectedProductTypeName = categoryNameFr;
-                }
-
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = `category-btn border ${isSelected ? 'border-2 border-brand-600 bg-brand-50/30' : 'border-gray-200'} rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition`;
+                btn.className = 'category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition';
                 btn.dataset.id = categoryId;
                 btn.dataset.name = categoryNameFr;
                 btn.onclick = () => selectCategory(btn, categoryId, categoryNameFr);
 
                 btn.innerHTML = `
-                    <i class="fa-solid ${iconClass} text-lg ${isSelected ? 'text-brand-600' : 'text-gray-500'} mb-1"></i>
-                    <span class="text-xs font-medium ${isSelected ? 'text-brand-700 font-semibold' : 'text-gray-700'}">${categoryNameFr}</span>
+                    <i class="fa-solid ${iconClass} text-lg text-gray-500 mb-1"></i>
+                    <span class="text-xs font-medium text-gray-700">${categoryNameFr}</span>
                 `;
 
                 container.appendChild(btn);
@@ -514,6 +488,8 @@
         function selectCategory(element, id, name) {
             appState.selectedProductTypeId = id;
             appState.selectedProductTypeName = name;
+            appState.selectedManufacturerId = null;
+            appState.selectedManufacturerName = null;
             
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition";
@@ -530,6 +506,89 @@
             if (text) text.className = "text-xs font-semibold text-brand-700";
 
             document.getElementById('selected-category-title').textContent = name;
+
+            // Récupération des marques pour le type de produit sélectionné
+            fetchManufacturers(id);
+        }
+
+        // Chargement dynamique des marques via l'API
+        async function fetchManufacturers(idproductType) {
+            const manufacturersBlock = document.getElementById('manufacturers-block');
+            const container = document.getElementById('manufacturers-container');
+
+            manufacturersBlock.classList.remove('hidden');
+            
+            // Affichage du squelette de chargement
+            container.innerHTML = `
+                <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
+                <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
+                <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
+                <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
+            `;
+
+            try {
+                const url = `${CONFIG.CODES_API_URL}/Catalog/manufacturers?idproduct_type=${encodeURIComponent(idproductType)}`;
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                    }
+                });
+
+                if (!response.ok) throw new Error("Erreur API Manufacturers");
+                const data = await response.json();
+
+                if (data && data.results && data.results.length > 0) {
+                    renderManufacturers(data.results);
+                } else {
+                    container.innerHTML = `<p class="text-xs text-gray-400 col-span-4 text-center py-2">Aucune marque trouvée pour cette catégorie.</p>`;
+                }
+
+            } catch (error) {
+                console.warn("Erreur lors de la récupération des marques :", error);
+                container.innerHTML = `<p class="text-xs text-red-500 col-span-4 text-center py-2">Impossible de charger les marques.</p>`;
+            }
+        }
+
+        function renderManufacturers(manufacturers) {
+            const container = document.getElementById('manufacturers-container');
+            container.innerHTML = '';
+
+            manufacturers.forEach((man) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'manufacturer-btn border border-gray-200 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50 transition h-20';
+                btn.dataset.id = man.idmanufacturer;
+                btn.dataset.name = man.manufacturer;
+                btn.onclick = () => selectManufacturer(btn, man.idmanufacturer, man.manufacturer);
+
+                const imgHtml = man.image 
+                    ? `<img src="${man.image}" alt="${man.manufacturer}" class="h-7 object-contain mb-1 max-w-full" onerror="this.style.display='none'">`
+                    : '';
+
+                btn.innerHTML = `
+                    ${imgHtml}
+                    <span class="text-[10px] font-medium text-gray-700 text-center line-clamp-1">${man.manufacturer}</span>
+                `;
+
+                container.appendChild(btn);
+            });
+        }
+
+        function selectManufacturer(element, id, name) {
+            appState.selectedManufacturerId = id;
+            appState.selectedManufacturerName = name;
+
+            document.querySelectorAll('.manufacturer-btn').forEach(btn => {
+                btn.className = "manufacturer-btn border border-gray-200 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50 transition h-20";
+                const text = btn.querySelector('span');
+                if (text) text.className = "text-[10px] font-medium text-gray-700 text-center line-clamp-1";
+            });
+
+            element.className = "manufacturer-btn border-2 border-brand-600 bg-brand-50/30 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50 transition h-20";
+            const text = element.querySelector('span');
+            if (text) text.className = "text-[10px] font-semibold text-brand-700 text-center line-clamp-1";
         }
 
         function selectModel(modelName) {
@@ -569,7 +628,7 @@
         }
 
         function finishProcess() {
-            alert(`Félicitations ! Votre demande de reprise pour [${appState.selectedModel}] (ID Type : ${appState.selectedProductTypeId}) est confirmée.`);
+            alert(`Félicitations ! Votre demande de reprise pour [${appState.selectedModel}] (ID Type : ${appState.selectedProductTypeId}, Marque : ${appState.selectedManufacturerName}) est confirmée.`);
             goToStep(1);
         }
 
