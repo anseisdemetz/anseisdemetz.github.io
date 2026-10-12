@@ -114,7 +114,7 @@
                     </div>
                 </div>
 
-                <!-- Sélecteur de marque (masqué au démarrage jusqu'à la sélection d'une catégorie) -->
+                <!-- Sélecteur de marque (masqué au démarrage) -->
                 <div id="manufacturers-block" class="hidden">
                     <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez la marque</label>
                     <div id="manufacturers-container" class="grid grid-cols-4 gap-2">
@@ -122,35 +122,15 @@
                     </div>
                 </div>
 
-                <!-- Liste des modèles -->
-                <div>
+                <!-- Liste des modèles (masquée au démarrage jusqu'à la sélection d'une marque) -->
+                <div id="models-block" class="hidden">
                     <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez le modèle</label>
-                    <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                        <button onclick="selectModel('iPhone 16')" class="model-item w-full flex items-center justify-between p-2 rounded-lg border border-gray-200 hover:border-brand-500 text-left text-sm transition">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-7 h-9 bg-purple-900 rounded flex items-center justify-center text-white text-[10px]">16</div>
-                                <span class="font-medium">iPhone 16</span>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
-                        </button>
-                        <button onclick="selectModel('iPhone 15')" class="model-item w-full flex items-center justify-between p-2 rounded-lg border border-gray-200 hover:border-brand-500 text-left text-sm transition">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-7 h-9 bg-blue-900 rounded flex items-center justify-center text-white text-[10px]">15</div>
-                                <span class="font-medium">iPhone 15</span>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
-                        </button>
-                        <button onclick="selectModel('iPhone 14 - 128 Go')" class="model-item w-full flex items-center justify-between p-2 rounded-lg border-2 border-brand-600 bg-brand-50/30 text-left text-sm transition">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-7 h-9 bg-purple-950 rounded flex items-center justify-center text-white text-[10px]">14</div>
-                                <span class="font-semibold text-brand-700">iPhone 14 - 128 Go</span>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-xs text-brand-600"></i>
-                        </button>
+                    <div id="models-container" class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                        <!-- Rempli dynamiquement -->
                     </div>
                 </div>
 
-                <button onclick="goToStep(2)" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2">
+                <button id="btn-continue-step1" onclick="goToStep(2)" disabled class="w-full py-3 bg-gray-300 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2 cursor-not-allowed">
                     <span>Continuer</span>
                     <i class="fa-solid fa-arrow-right text-xs"></i>
                 </button>
@@ -161,10 +141,12 @@
                 
                 <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center border border-gray-200">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-10 bg-purple-900 rounded flex items-center justify-center text-white text-xs">14</div>
+                        <div id="selected-model-img-container" class="w-8 h-10 bg-gray-200 rounded flex items-center justify-center text-xs overflow-hidden">
+                            <i class="fa-solid fa-mobile-screen text-gray-400"></i>
+                        </div>
                         <div>
-                            <div class="font-semibold text-sm text-gray-800" id="selected-model-title">iPhone 14 - 128 Go</div>
-                            <div class="text-xs text-gray-500" id="selected-category-title">Mobile</div>
+                            <div class="font-semibold text-sm text-gray-800" id="selected-model-title">Aucun modèle sélectionné</div>
+                            <div class="text-xs text-gray-500" id="selected-category-title">Appareil</div>
                         </div>
                     </div>
                     <button onclick="goToStep(1)" class="text-xs text-brand-600 underline font-medium hover:text-brand-700">Modifier</button>
@@ -269,9 +251,11 @@
 
                 <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-14 bg-purple-950 rounded flex items-center justify-center text-white font-bold text-xs">14</div>
+                        <div id="est-model-img-container" class="w-10 h-14 bg-gray-200 rounded flex items-center justify-center font-bold text-xs overflow-hidden">
+                            <i class="fa-solid fa-mobile-screen text-gray-400"></i>
+                        </div>
                         <div class="text-xs space-y-1">
-                            <div class="font-bold text-sm text-gray-900" id="est-model-name">iPhone 14 - 128 Go</div>
+                            <div class="font-bold text-sm text-gray-900" id="est-model-name">Modèle</div>
                             <div class="text-gray-600 flex items-center"><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Fonctionne</div>
                             <div class="text-gray-600 flex items-center"><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Écran : Intact</div>
                             <div class="text-gray-600 flex items-center"><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Contour & arrière : Bon</div>
@@ -398,7 +382,9 @@
             selectedProductTypeName: null,
             selectedManufacturerId: null,
             selectedManufacturerName: null,
-            selectedModel: 'iPhone 14 - 128 Go'
+            selectedModelId: null,
+            selectedModelName: null,
+            selectedModelImage: null
         };
 
         // Icônes par défaut
@@ -414,7 +400,7 @@
         // Catégories de produit à ne pas afficher
         const EXCLUDED_PRODUCT_TYPE_IDS = [9, 10, 21, 27, 43];
 
-        // Chargement des catégories
+        // 1. Chargement des catégories
         async function fetchProductTypes() {
             try {
                 const response = await fetch(CONFIG.CODES_API_URL + "/Catalog/productTypes", {
@@ -488,9 +474,18 @@
         function selectCategory(element, id, name) {
             appState.selectedProductTypeId = id;
             appState.selectedProductTypeName = name;
+            
+            // Réinitialiser la marque, le modèle et le bouton continuer
             appState.selectedManufacturerId = null;
             appState.selectedManufacturerName = null;
+            appState.selectedModelId = null;
+            appState.selectedModelName = null;
+            appState.selectedModelImage = null;
             
+            document.getElementById('models-block').classList.add('hidden');
+            updateContinueButtonState();
+
+            // Gestion de l'affichage actif
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition";
                 const icon = btn.querySelector('i');
@@ -511,14 +506,13 @@
             fetchManufacturers(id);
         }
 
-        // Chargement dynamique des marques via l'API
+        // 2. Chargement dynamique des marques via l'API
         async function fetchManufacturers(idproductType) {
             const manufacturersBlock = document.getElementById('manufacturers-block');
             const container = document.getElementById('manufacturers-container');
 
             manufacturersBlock.classList.remove('hidden');
             
-            // Affichage du squelette de chargement
             container.innerHTML = `
                 <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
                 <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
@@ -580,6 +574,12 @@
             appState.selectedManufacturerId = id;
             appState.selectedManufacturerName = name;
 
+            // Réinitialiser le modèle et le bouton
+            appState.selectedModelId = null;
+            appState.selectedModelName = null;
+            appState.selectedModelImage = null;
+            updateContinueButtonState();
+
             document.querySelectorAll('.manufacturer-btn').forEach(btn => {
                 btn.className = "manufacturer-btn border border-gray-200 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50 transition h-20";
                 const text = btn.querySelector('span');
@@ -589,15 +589,119 @@
             element.className = "manufacturer-btn border-2 border-brand-600 bg-brand-50/30 rounded-lg p-2 flex flex-col items-center justify-center hover:bg-gray-50 transition h-20";
             const text = element.querySelector('span');
             if (text) text.className = "text-[10px] font-semibold text-brand-700 text-center line-clamp-1";
+
+            // Récupérer les modèles pour ce type + cette marque
+            fetchModels(appState.selectedProductTypeId, id);
         }
 
-        function selectModel(modelName) {
-            appState.selectedModel = modelName;
-            document.getElementById('selected-model-title').textContent = modelName;
-            document.getElementById('est-model-name').textContent = modelName;
+        // 3. Chargement dynamique des modèles via l'API
+        async function fetchModels(idproductType, idmanufacturer) {
+            const modelsBlock = document.getElementById('models-block');
+            const container = document.getElementById('models-container');
+
+            modelsBlock.classList.remove('hidden');
+
+            container.innerHTML = `
+                <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
+                <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
+                <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
+            `;
+
+            try {
+                const url = `${CONFIG.CODES_API_URL}/Catalog/models?idproduct_type=${encodeURIComponent(idproductType)}&idmanufacturer=${encodeURIComponent(idmanufacturer)}`;
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                    }
+                });
+
+                if (!response.ok) throw new Error("Erreur API Models");
+                const data = await response.json();
+
+                if (data && data.results && data.results.length > 0) {
+                    renderModels(data.results);
+                } else {
+                    container.innerHTML = `<p class="text-xs text-gray-400 text-center py-3">Aucun modèle trouvé pour cette marque.</p>`;
+                }
+
+            } catch (error) {
+                console.warn("Erreur lors de la récupération des modèles :", error);
+                container.innerHTML = `<p class="text-xs text-red-500 text-center py-3">Impossible de charger les modèles.</p>`;
+            }
+        }
+
+        function renderModels(models) {
+            const container = document.getElementById('models-container');
+            container.innerHTML = '';
+
+            models.forEach((m) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'model-item w-full flex items-center justify-between p-2 rounded-lg border border-gray-200 hover:border-brand-500 text-left text-sm transition';
+                btn.onclick = () => selectModel(btn, m);
+
+                const imgHtml = m.image 
+                    ? `<img src="${m.image}" alt="${m.model}" class="w-7 h-9 object-contain mr-3" onerror="this.src='https://via.placeholder.com/30x40?text=Appareil'">`
+                    : `<div class="w-7 h-9 bg-gray-200 rounded flex items-center justify-center text-gray-400 mr-3"><i class="fa-solid fa-mobile-screen text-xs"></i></div>`;
+
+                btn.innerHTML = `
+                    <div class="flex items-center">
+                        ${imgHtml}
+                        <span class="font-medium text-xs text-gray-800">${m.model}</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                `;
+
+                container.appendChild(btn);
+            });
+        }
+
+        function selectModel(element, modelObj) {
+            appState.selectedModelId = modelObj.idproduct_model;
+            appState.selectedModelName = modelObj.model;
+            appState.selectedModelImage = modelObj.image;
+
+            document.querySelectorAll('.model-item').forEach(btn => {
+                btn.className = "model-item w-full flex items-center justify-between p-2 rounded-lg border border-gray-200 hover:border-brand-500 text-left text-sm transition";
+                const chevron = btn.querySelector('.fa-chevron-right');
+                if (chevron) chevron.className = "fa-solid fa-chevron-right text-xs text-gray-400";
+            });
+
+            element.className = "model-item w-full flex items-center justify-between p-2 rounded-lg border-2 border-brand-600 bg-brand-50/30 text-left text-sm transition";
+            const chevron = element.querySelector('.fa-chevron-right');
+            if (chevron) chevron.className = "fa-solid fa-chevron-right text-xs text-brand-600";
+
+            // Mise à jour des aperçus pour les étapes suivantes
+            document.getElementById('selected-model-title').textContent = modelObj.model;
+            document.getElementById('est-model-name').textContent = modelObj.model;
+
+            const imgContainer = document.getElementById('selected-model-img-container');
+            const estImgContainer = document.getElementById('est-model-img-container');
+
+            if (modelObj.image) {
+                imgContainer.innerHTML = `<img src="${modelObj.image}" class="w-full h-full object-contain p-0.5">`;
+                estImgContainer.innerHTML = `<img src="${modelObj.image}" class="w-full h-full object-contain p-0.5">`;
+            }
+
+            updateContinueButtonState();
+        }
+
+        function updateContinueButtonState() {
+            const btn = document.getElementById('btn-continue-step1');
+            if (appState.selectedModelId) {
+                btn.disabled = false;
+                btn.className = "w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2 cursor-pointer";
+            } else {
+                btn.disabled = true;
+                btn.className = "w-full py-3 bg-gray-300 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2 cursor-not-allowed";
+            }
         }
 
         function goToStep(step) {
+            if (step === 2 && !appState.selectedModelId) return;
+
             appState.currentStep = step;
 
             document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
@@ -628,7 +732,7 @@
         }
 
         function finishProcess() {
-            alert(`Félicitations ! Votre demande de reprise pour [${appState.selectedModel}] (ID Type : ${appState.selectedProductTypeId}, Marque : ${appState.selectedManufacturerName}) est confirmée.`);
+            alert(`Félicitations ! Votre demande de reprise pour [${appState.selectedModelName}] (ID Modèle : ${appState.selectedModelId}) est confirmée.`);
             goToStep(1);
         }
 
