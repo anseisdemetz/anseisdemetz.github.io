@@ -40,77 +40,99 @@
     let productCache = [];
     let searchTimeout = null;
     let isInitialized = false;
+    let initPromise = null;
 
-// --- DANS injectDependencies() : On isole les règles de départ ---
-function injectDependencies() {
-    if (document.getElementById('tradein-tailwind-cdn')) return;
+    // --- INJECTION ASYNCHRONE ET SÉCURISÉE DES DÉPENDANCES ---
+    function injectDependencies() {
+        if (initPromise) return initPromise;
 
-    const tailwindScript = document.createElement('script');
-    tailwindScript.id = 'tradein-tailwind-cdn';
-    tailwindScript.src = "https://cdn.tailwindcss.com";
-    document.head.appendChild(tailwindScript);
+        initPromise = new Promise((resolve) => {
+            let tailwindLoaded = !!document.getElementById('tradein-tailwind-cdn');
 
-    const faLink = document.createElement('link');
-    faLink.rel = 'stylesheet';
-    faLink.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
-    document.head.appendChild(faLink);
+            // FontAwesome
+            if (!document.getElementById('tradein-fontawesome-cdn')) {
+                const faLink = document.createElement('link');
+                faLink.id = 'tradein-fontawesome-cdn';
+                faLink.rel = 'stylesheet';
+                faLink.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
+                document.head.appendChild(faLink);
+            }
 
-    const styleTag = document.createElement('style');
-    styleTag.innerHTML = `
-        .tradein-step-active { color: #2563eb; font-weight: 600; }
-        .tradein-step-circle-active { background-color: #2563eb; color: white; border-color: #2563eb; }
-        .tradein-step-circle-completed { background-color: #2563eb; color: white; border-color: #2563eb; }
-        .tradein-step-circle-pending { background-color: white; color: #9ca3af; border-color: #d1d5db; }
-        .tradein-step-line-active { background-color: #2563eb; }
-        .tradein-step-line-pending { background-color: #e5e7eb; }
-        
-        /* POPIN */
-        .tradein-mode-popin {
-            max-width: 36rem;
-            border-radius: 1rem;
-            margin: auto;
-            transform: scale(0.95);
-            opacity: 0;
-        }
-        .tradein-mode-popin.tradein-active {
-            transform: scale(1);
-            opacity: 1;
-        }
+            // Styles Custom pour le Stepper & les Drawers
+            if (!document.getElementById('tradein-custom-styles')) {
+                const styleTag = document.createElement('style');
+                styleTag.id = 'tradein-custom-styles';
+                styleTag.innerHTML = `
+                    .tradein-step-active { color: #2563eb; font-weight: 600; }
+                    .tradein-step-circle-active { background-color: #2563eb; color: white; border-color: #2563eb; }
+                    .tradein-step-circle-completed { background-color: #2563eb; color: white; border-color: #2563eb; }
+                    .tradein-step-circle-pending { background-color: white; color: #9ca3af; border-color: #d1d5db; }
+                    .tradein-step-line-active { background-color: #2563eb; }
+                    .tradein-step-line-pending { background-color: #e5e7eb; }
+                    
+                    /* POPIN */
+                    .tradein-mode-popin {
+                        max-width: 36rem;
+                        border-radius: 1rem;
+                        margin: auto;
+                        transform: scale(0.95);
+                        opacity: 0;
+                    }
+                    .tradein-mode-popin.tradein-active {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
 
-        /* DRAWER DROITE */
-        .tradein-mode-drawer-right {
-            position: fixed;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            height: 100vh;
-            max-width: 28rem;
-            border-radius: 1rem 0 0 1rem;
-            transform: translateX(100%);
-            opacity: 1;
-        }
-        .tradein-mode-drawer-right.tradein-active {
-            transform: translateX(0);
-        }
+                    /* DRAWER DROITE */
+                    .tradein-mode-drawer-right {
+                        position: fixed;
+                        right: 0;
+                        top: 0;
+                        bottom: 0;
+                        height: 100vh;
+                        max-width: 28rem;
+                        border-radius: 1rem 0 0 1rem;
+                        transform: translateX(100%);
+                        opacity: 1;
+                    }
+                    .tradein-mode-drawer-right.tradein-active {
+                        transform: translateX(0);
+                    }
 
-        /* DRAWER GAUCHE */
-        .tradein-mode-drawer-left {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            height: 100vh;
-            max-width: 28rem;
-            border-radius: 0 1rem 1rem 0;
-            transform: translateX(-100%);
-            opacity: 1;
-        }
-        .tradein-mode-drawer-left.tradein-active {
-            transform: translateX(0);
-        }
-    `;
-    document.head.appendChild(styleTag);
-}
+                    /* DRAWER GAUCHE */
+                    .tradein-mode-drawer-left {
+                        position: fixed;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        height: 100vh;
+                        max-width: 28rem;
+                        border-radius: 0 1rem 1rem 0;
+                        transform: translateX(-100%);
+                        opacity: 1;
+                    }
+                    .tradein-mode-drawer-left.tradein-active {
+                        transform: translateX(0);
+                    }
+                `;
+                document.head.appendChild(styleTag);
+            }
+
+            // Tailwind CDN avec Callback Onload
+            if (!tailwindLoaded) {
+                const tailwindScript = document.createElement('script');
+                tailwindScript.id = 'tradein-tailwind-cdn';
+                tailwindScript.src = "https://cdn.tailwindcss.com";
+                tailwindScript.onload = () => resolve();
+                tailwindScript.onerror = () => resolve(); // Sécurité
+                document.head.appendChild(tailwindScript);
+            } else {
+                resolve();
+            }
+        });
+
+        return initPromise;
+    }
 
     function injectModalDOM() {
         if (document.getElementById('tradein-modal-overlay')) return;
@@ -120,7 +142,7 @@ function injectDependencies() {
         overlay.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex p-0 md:p-4 opacity-0 pointer-events-none transition-opacity duration-300 ease-out';
 
         overlay.innerHTML = `
-            <div id="tradein-modal-container" class="w-full bg-white shadow-2xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans flex flex-col transition-transform duration-300 ease-out">
+            <div id="tradein-modal-container" class="w-full bg-white shadow-2xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans flex flex-col transition-all duration-300 ease-out">
                 
                 <!-- HEADER DU MODAL -->
                 <div class="px-6 pt-5 pb-3 border-b border-gray-100 flex justify-between items-center bg-white flex-shrink-0">
@@ -312,14 +334,12 @@ function injectDependencies() {
         attachEvents();
     }
 
-    // --- DANS applyDisplayMode() : Réinitialisation stricte des positions ---
     function applyDisplayMode(mode) {
         const overlay = document.getElementById('tradein-modal-overlay');
         const container = document.getElementById('tradein-modal-container');
         if (!container || !overlay) return;
 
-        // Réinitialisation complète des classes du conteneur
-        container.className = "w-full bg-white shadow-2xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans flex flex-col transition-all duration-300 ease-out";
+        container.className = "w-full bg-white shadow-2xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans flex flex-col transition-all duration-300 ease-out ";
 
         if (mode === 'drawer-right') {
             overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-end p-0 opacity-0 pointer-events-none transition-opacity duration-300 ease-out";
@@ -779,7 +799,6 @@ function injectDependencies() {
         const id = appState.selectedProductId || appState.selectedModelId;
         const img = appState.selectedProductImage;
 
-        // Mise à jour Étape 2
         document.getElementById('selected-product-title').textContent = name || "Aucun produit sélectionné";
         document.getElementById('selected-product-id-tag').textContent = id ? `ID: ${id}` : "ID: -";
         const imgContainerStep2 = document.getElementById('selected-product-img-container');
@@ -789,7 +808,6 @@ function injectDependencies() {
                 : `<i class="fa-solid fa-mobile-screen"></i>`;
         }
 
-        // Mise à jour Étape 3
         document.getElementById('est-product-name').textContent = name || "Produit";
         const imgContainerStep3 = document.getElementById('est-product-img-container');
         if (imgContainerStep3) {
@@ -850,62 +868,61 @@ function injectDependencies() {
         TradeInModule.close();
     }
 
-// --- DANS open() : Purge du style avant l'animation ---
-window.TradeInModule = {
-    init: function (options) {
-        const opts = options || {};
-        appState.displayType = opts.displayType || 'popin';
+    window.TradeInModule = {
+        init: async function (options) {
+            const opts = options || {};
+            appState.displayType = opts.displayType || 'popin';
 
-        if (!isInitialized) {
-            injectDependencies();
-            injectModalDOM();
-            fetchProductTypes();
-            isInitialized = true;
-        }
+            await injectDependencies();
 
-        applyDisplayMode(appState.displayType);
-    },
-    open: function (options) {
-        if (options && options.displayType) {
-            appState.displayType = options.displayType;
-        }
+            if (!isInitialized) {
+                injectModalDOM();
+                fetchProductTypes();
+                isInitialized = true;
+            }
 
-        const overlay = document.getElementById('tradein-modal-overlay');
-        const container = document.getElementById('tradein-modal-container');
+            applyDisplayMode(appState.displayType);
+        },
+        open: async function (options) {
+            if (options && options.displayType) {
+                appState.displayType = options.displayType;
+            }
 
-        if (container) {
-            // Désactive temporairement la transition le temps de réinitialiser la position
-            container.style.transition = 'none';
+            await this.init({ displayType: appState.displayType });
+
+            const overlay = document.getElementById('tradein-modal-overlay');
+            const container = document.getElementById('tradein-modal-container');
+
+            if (container) {
+                container.style.transition = 'none';
+                container.classList.remove('tradein-active');
+            }
+
+            goToStep(1);
+
+            if (overlay && container) {
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100');
+
+                // Recalcul du reflow pour s'assurer que Tailwind est prêt avant de déclencher la transition CSS
+                void container.offsetHeight;
+
+                container.style.transition = '';
+                requestAnimationFrame(() => {
+                    container.classList.add('tradein-active');
+                });
+            }
+        },
+        close: function () {
+            const overlay = document.getElementById('tradein-modal-overlay');
+            const container = document.getElementById('tradein-modal-container');
+            if (!overlay || !container) return;
+
             container.classList.remove('tradein-active');
-        }
-
-        this.init({ displayType: appState.displayType });
-        goToStep(1);
-
-        if (overlay && container) {
-            overlay.classList.remove('opacity-0', 'pointer-events-none');
-            overlay.classList.add('opacity-100');
-
-            // Force le navigateur à calculer le nouvel état initial sans transition
-            void container.offsetHeight;
-
-            // Rétablit la transition CSS et applique la classe active
-            container.style.transition = '';
-            requestAnimationFrame(() => {
-                container.classList.add('tradein-active');
-            });
-        }
-    },
-    close: function () {
-        const overlay = document.getElementById('tradein-modal-overlay');
-        const container = document.getElementById('tradein-modal-container');
-        if (!overlay || !container) return;
-
-        container.classList.remove('tradein-active');
-        overlay.classList.remove('opacity-100');
-        overlay.classList.add('opacity-0', 'pointer-events-none');
-    },
-    _selectAnswer: _selectAnswer
-};
+            overlay.classList.remove('opacity-100');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        },
+        _selectAnswer: _selectAnswer
+    };
 
 })(window);
