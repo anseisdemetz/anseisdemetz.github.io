@@ -45,7 +45,7 @@
             </button>
         </div>
 
-        <!-- STEPPER HORIZONTAL (1. Appareil, 2. Etat, 3. Estimation, 4. Confirmation) -->
+        <!-- STEPPER HORIZONTAL (1. Appareil, 2. Etat, 3. Estimation, 4. Validation) -->
         <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div class="flex items-center justify-between w-full">
                 
@@ -54,7 +54,7 @@
                     <div id="circle-step-1" class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm mb-1 transition-all step-circle-active">
                         1
                     </div>
-                    <span id="text-step-1" class="text-xs text-center step-active">Votre appareil</span>
+                    <span id="text-step-1" class="text-xs text-center step-active">Appareil</span>
                 </div>
 
                 <div id="line-step-1" class="h-0.5 flex-1 transition-all step-line-pending mx-1 mb-5"></div>
@@ -64,7 +64,7 @@
                     <div id="circle-step-2" class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm mb-1 transition-all step-circle-pending">
                         2
                     </div>
-                    <span id="text-step-2" class="text-xs text-center text-gray-400">Son état</span>
+                    <span id="text-step-2" class="text-xs text-center text-gray-400">Etat</span>
                 </div>
 
                 <div id="line-step-2" class="h-0.5 flex-1 transition-all step-line-pending mx-1 mb-5"></div>
@@ -84,7 +84,7 @@
                     <div id="circle-step-4" class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm mb-1 transition-all step-circle-pending">
                         4
                     </div>
-                    <span id="text-step-4" class="text-xs text-center text-gray-400">Confirmation</span>
+                    <span id="text-step-4" class="text-xs text-center text-gray-400">Validation</span>
                 </div>
 
             </div>
@@ -118,7 +118,7 @@
                 <div id="manufacturers-block" class="hidden">
                     <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez la marque</label>
                     <div id="manufacturers-container" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                        <!-- Rempli dynamiquement sous forme de liste -->
+                        <!-- Rempli dynamiquement -->
                     </div>
                 </div>
 
@@ -126,7 +126,7 @@
                 <div id="models-block" class="hidden">
                     <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez le modèle</label>
                     <div id="models-container" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                        <!-- Rempli dynamiquement sous forme de liste -->
+                        <!-- Rempli dynamiquement -->
                     </div>
                 </div>
 
@@ -299,7 +299,7 @@
                 </div>
             </div>
 
-            <!-- ÉTAPE 4: EMPREINTE BANCAIRE (CONFIRMATION) -->
+            <!-- ÉTAPE 4: EMPREINTE BANCAIRE (VALIDATION) -->
             <div id="step-4" class="step-content hidden space-y-4">
                 
                 <div class="flex items-center space-x-2">
@@ -586,7 +586,7 @@
             fetchModels(appState.selectedProductTypeId, id);
         }
 
-        // 3. Chargement des modèles (sans visuel/images)
+        // 3. Chargement des modèles
         async function fetchModels(idproductType, idmanufacturer) {
             const modelsBlock = document.getElementById('models-block');
             const container = document.getElementById('models-container');
