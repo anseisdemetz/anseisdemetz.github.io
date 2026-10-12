@@ -182,24 +182,16 @@
             <!-- ÉTAPE 3: ESTIMATION ET OFFRE -->
             <div id="step-3" class="step-content hidden space-y-5">
                 
-                <div class="flex justify-between items-center">
-                    <h3 class="text-base font-bold text-gray-800">Votre estimation</h3>
-                    <!-- Affichage dynamique du Grade calculé -->
-                    <div id="grade-badge-container" class="hidden items-center space-x-1.5 bg-indigo-50 border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-semibold">
-                        <span>Grade :</span>
-                        <span id="grade-value" class="font-bold font-mono text-sm">--</span>
-                    </div>
-                </div>
+                <h3 class="text-base font-bold text-gray-800">Votre estimation</h3>
 
-                <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-start justify-between">
-                    <div class="flex items-start space-x-3">
-                        <div id="est-product-img-container" class="w-10 h-10 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center font-bold text-sm border border-brand-100 overflow-hidden flex-shrink-0 mt-0.5">
+                <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div id="est-product-img-container" class="w-10 h-10 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center font-bold text-sm border border-brand-100 overflow-hidden flex-shrink-0">
                             <i class="fa-solid fa-mobile-screen"></i>
                         </div>
-                        <div class="text-xs space-y-1.5">
+                        <div class="text-xs space-y-1">
                             <div class="font-bold text-sm text-gray-900" id="est-product-name">Produit</div>
-                            <!-- Résumé dynamique des réponses -->
-                            <div id="est-answers-summary" class="space-y-1 pt-0.5"></div>
+                            <div class="text-gray-500 text-xs">Diagnostic complété</div>
                         </div>
                     </div>
 
@@ -325,7 +317,7 @@
             selectedProductName: null,
             selectedProductImage: null,
             surveyAnswers: {},
-            grade: null // Stockage du grade obtenu
+            grade: null
         };
 
         let productCache = [];
@@ -907,19 +899,18 @@
             btnElement.className = `survey-ans-btn-${idQuestion} border-2 border-brand-600 bg-brand-50/20 text-brand-700 font-semibold rounded-lg p-2.5 flex flex-col items-center justify-center text-center transition`;
         }
 
-        // 7. Concaténation et récupération du Grade depuis /Diagnostic/matrix
+        // 7. Concaténation et récupération du Grade depuis /Diagnostic/matrix (Calcul et logs conservés)
         async function fetchGradeFromMatrix() {
             console.group("=== DIAGNOSTIC MATRIX : Récupération du Grade ===");
 
-            // Récupérer les clés idquestion ordonnées
             const questionKeys = Object.keys(appState.surveyAnswers);
             console.log("Toutes les réponses enregistrées :", appState.surveyAnswers);
 
-            // Prendre uniquement les 5 premières questions
             const first5Keys = questionKeys.slice(0, 5);
-            
-            // Concaténer le `mapping` des 5 premières réponses
-            const mappingCombination = first5Keys.map(k => appState.surveyAnswers[k].mapping).join('').toUpperCase();
+            const mappingCombination = first5Keys
+                .map(k => appState.surveyAnswers[k].mapping)
+                .join('')
+                .toUpperCase();
             
             console.log(`Combinaison de mapping (5 1ères questions) : "${mappingCombination}"`);
 
@@ -946,21 +937,11 @@
                     const matrixMap = data.results.matrix;
                     console.log("Matrice des combinaisons disponible dans results.matrix :", matrixMap);
 
-                    // Recherche de la combinaison
                     if (matrixMap.hasOwnProperty(mappingCombination)) {
                         const calculatedGrade = matrixMap[mappingCombination];
                         appState.grade = calculatedGrade;
 
                         console.log(`%c✔ Match trouvé pour "${mappingCombination}" => Grade: ${calculatedGrade}`, "color: #16a34a; font-weight: bold; font-size: 13px;");
-
-                        // Affichage visuel du Grade
-                        const gradeBadge = document.getElementById('grade-badge-container');
-                        const gradeVal = document.getElementById('grade-value');
-                        if (gradeBadge && gradeVal) {
-                            gradeVal.textContent = calculatedGrade;
-                            gradeBadge.classList.remove('hidden');
-                            gradeBadge.classList.add('flex');
-                        }
                     } else {
                         console.warn(`⚠ La combinaison "${mappingCombination}" est introuvable dans la matrice.`);
                     }
@@ -973,29 +954,6 @@
             }
 
             console.groupEnd();
-        }
-
-        // Rendu du récapitulatif Étape 3 avec badges "impact" et "mapping"
-        function renderAnswersSummary() {
-            const container = document.getElementById('est-answers-summary');
-            container.innerHTML = '';
-
-            for (const idQ in appState.surveyAnswers) {
-                const ansObj = appState.surveyAnswers[idQ];
-                const item = document.createElement('div');
-                item.className = "flex flex-wrap items-center gap-1.5 text-xs text-gray-700";
-                
-                item.innerHTML = `
-                    <div class="flex items-center text-gray-700">
-                        <i class="fa-solid fa-check text-green-600 mr-1.5"></i> 
-                        <span class="font-medium">${ansObj.answer_title}</span>
-                    </div>
-                    <span class="bg-blue-50 text-brand-700 border border-blue-100 text-[10px] font-mono px-1.5 py-0.2 rounded">impact: ${ansObj.question_impact}</span>
-                    <span class="bg-purple-50 text-purple-700 border border-purple-100 text-[10px] font-mono px-1.5 py-0.2 rounded">mapping: ${ansObj.mapping}</span>
-                `;
-                
-                container.appendChild(item);
-            }
         }
 
         function updatePreviewTitles() {
@@ -1039,8 +997,7 @@
             }
 
             if (step === 3) {
-                renderAnswersSummary();
-                fetchGradeFromMatrix(); // Calcul et récupération du Grade via la matrice
+                fetchGradeFromMatrix();
             }
 
             appState.currentStep = step;
