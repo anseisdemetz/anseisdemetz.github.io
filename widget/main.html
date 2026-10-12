@@ -45,7 +45,7 @@
             </button>
         </div>
 
-        <!-- STEPPER HORIZONTAL (1. Appareil, 2. Etat, 3. Estimation, 4. Validation) -->
+        <!-- STEPPER HORIZONTAL -->
         <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div class="flex items-center justify-between w-full">
                 
@@ -102,7 +102,7 @@
                            class="w-full pl-4 pr-10 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm outline-none">
                     <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-400"></i>
 
-                    <!-- Résultats autonomes de recherche instantanée (Cache) -->
+                    <!-- Résultats autonomes de recherche instantanée -->
                     <div id="search-results-dropdown" class="hidden absolute left-0 right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-xl z-20 max-h-60 overflow-y-auto divide-y divide-gray-100">
                     </div>
                 </div>
@@ -372,15 +372,12 @@
 
     </div>
 
-    <!-- SCRIPT DE GESTION DU PARCOURS ET DU CACHE APPAREILS -->
     <script>
-        // Configuration de l'API
         const CONFIG = {
             CODES_API_URL: "https://corsproxy.io/?key=c46f8301&url=" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com"),
             CODES_API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr",
         };
 
-        // État applicatif
         let appState = {
             currentStep: 1,
             selectedProductTypeId: null,
@@ -394,8 +391,8 @@
             selectedProductImage: null
         };
 
-        // Cache des produits pour la recherche instantanée
         let productCache = [];
+        let searchTimeout = null;
 
         const categoryIcons = {
             'mobile': 'fa-mobile-screen-button',
@@ -675,7 +672,7 @@
             fetchProducts(appState.selectedProductTypeId, appState.selectedManufacturerId, modelObj.idproduct_model);
         }
 
-        // 4. Chargement et Mettre en Cache des Produits
+        // 4. Chargement des produits
         async function fetchProducts(idproductType, idmanufacturer, idproductModel) {
             const productsBlock = document.getElementById('products-block');
             const container = document.getElementById('products-container');
@@ -701,7 +698,6 @@
                 const data = await response.json();
 
                 if (data && data.results && data.results.length > 0) {
-                    // Alimentation / enrichissement du cache global
                     data.results.forEach(p => {
                         if (!productCache.some(item => item.idproduct === p.idproduct)) {
                             productCache.push(p);
@@ -777,8 +773,9 @@
             updateContinueButtonState();
         }
 
-        // 5. Recherche globale basée sur le cache
+        // 5. Recherche dynamique avec requête API directe si pas en cache
         function handleSearch(query) {
+            clearTimeout(searchTimeout);
             const dropdown = document.getElementById('search-results-dropdown');
             const cleanQuery = query.trim().toLowerCase();
 
@@ -788,42 +785,76 @@
                 return;
             }
 
-            // Filtrer le cache par le champ `product`
-            const matches = productCache.filter(p => p.product && p.product.toLowerCase().includes(cleanQuery));
-
-            if (matches.length === 0) {
-                dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center">Aucun appareil trouvé dans le cache</div>`;
+            // Délais anti-rebond (debounce) de 300ms
+            searchTimeout = setTimeout(async () => {
+                dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Recherche en cours...</div>`;
                 dropdown.classList.remove('hidden');
-                return;
-            }
 
-            dropdown.innerHTML = '';
-            matches.forEach(p => {
-                const item = document.createElement('div');
-                item.className = 'p-2.5 hover:bg-brand-50 cursor-pointer flex items-center justify-between transition border-b border-gray-50 last:border-0';
-                
-                const imgHtml = p.image 
-                    ? `<img src="${p.image}" class="w-6 h-6 object-contain mr-2">`
-                    : `<i class="fa-solid fa-mobile-screen text-gray-400 mr-2"></i>`;
+                // 1. Essayer d'abord dans le cache local
+                let matches = productCache.filter(p => p.product && p.product.toLowerCase().includes(cleanQuery));
 
-                item.innerHTML = `
-                    <div class="flex items-center">
-                        ${imgHtml}
-                        <span class="text-xs font-semibold text-gray-800">${p.product}</span>
-                    </div>
-                    <span class="text-[10px] text-brand-600 font-medium">Sélectionner</span>
-                `;
+                // 2. Si non trouvé dans le cache local, interroger l'API
+                if (matches.length === 0) {
+                    try {
+                        const url = `${CONFIG.CODES_API_URL}/Catalog/products?query=${encodeURIComponent(cleanQuery)}`;
+                        const response = await fetch(url, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                            }
+                        });
 
-                item.onclick = () => {
-                    selectProduct(null, p);
-                    document.getElementById('search-input').value = p.product;
-                    dropdown.classList.add('hidden');
-                };
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data && data.results) {
+                                matches = data.results;
+                                // Ajouter au cache
+                                matches.forEach(p => {
+                                    if (!productCache.some(item => item.idproduct === p.idproduct)) {
+                                        productCache.push(p);
+                                    }
+                                });
+                            }
+                        }
+                    } catch (e) {
+                        console.warn("Erreur recherche API :", e);
+                    }
+                }
 
-                dropdown.appendChild(item);
-            });
+                // Affichage des résultats
+                if (matches.length === 0) {
+                    dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center">Aucun appareil correspondant trouvé</div>`;
+                    return;
+                }
 
-            dropdown.classList.remove('hidden');
+                dropdown.innerHTML = '';
+                matches.slice(0, 10).forEach(p => {
+                    const item = document.createElement('div');
+                    item.className = 'p-2.5 hover:bg-brand-50 cursor-pointer flex items-center justify-between transition border-b border-gray-50 last:border-0';
+                    
+                    const imgHtml = p.image 
+                        ? `<img src="${p.image}" class="w-6 h-6 object-contain mr-2">`
+                        : `<i class="fa-solid fa-mobile-screen text-gray-400 mr-2"></i>`;
+
+                    item.innerHTML = `
+                        <div class="flex items-center">
+                            ${imgHtml}
+                            <span class="text-xs font-semibold text-gray-800">${p.product}</span>
+                        </div>
+                        <span class="text-[10px] text-brand-600 font-medium">Sélectionner</span>
+                    `;
+
+                    item.onclick = () => {
+                        selectProduct(null, p);
+                        document.getElementById('search-input').value = p.product;
+                        dropdown.classList.add('hidden');
+                    };
+
+                    dropdown.appendChild(item);
+                });
+
+            }, 300);
         }
 
         function updatePreviewTitles() {
@@ -895,7 +926,7 @@
             goToStep(1);
         }
 
-        // Fermer le menu déroulant si clic à l'extérieur
+        // Fermer le menu déroulant lors d'un clic extérieur
         document.addEventListener('click', (e) => {
             const searchContainer = document.getElementById('search-input');
             const dropdown = document.getElementById('search-results-dropdown');
