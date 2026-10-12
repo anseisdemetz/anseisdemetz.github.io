@@ -993,27 +993,32 @@
                 const data = await response.json();
                 console.log("Réponse API Argus reçue :", data);
 
-                if (data && data.results && data.results.products && data.results.products.best) {
-                    const bestPrices = data.results.products.best;
-                    console.log("Tableau des prix 'best' disponible :", bestPrices);
+                // Vérification du tableau results.products
+                if (data && data.results && Array.isArray(data.results.products) && data.results.products.length > 0) {
+                    
+                    // Récupération du premier produit du tableau
+                    const productData = data.results.products[0];
+                    const bestPrices = productData.best;
 
-                    if (bestPrices.hasOwnProperty(grade)) {
+                    console.log("Objet 'best' trouvé :", bestPrices);
+
+                    if (bestPrices && bestPrices.hasOwnProperty(grade)) {
                         const calculatedPrice = bestPrices[grade];
                         appState.price = calculatedPrice;
 
                         console.log(`%c✔ Prix trouvé pour le grade ${grade} => ${calculatedPrice} €`, "color: #16a34a; font-weight: bold; font-size: 13px;");
 
-                        // Mise à jour de l'affichage du prix
+                        // Mise à jour du prix sur l'IHM
                         const formattedPrice = `${calculatedPrice} €`;
                         priceElem.textContent = formattedPrice;
                         if (swiklyElem) swiklyElem.textContent = formattedPrice;
 
                     } else {
-                        console.warn(`⚠ Grade '${grade}' non présent dans le tableau best prices.`);
-                        priceElem.textContent = "0 €";
+                        console.warn(`⚠ Grade '${grade}' introuvable dans la liste des prix.`);
+                        priceElem.textContent = "Non disponible";
                     }
                 } else {
-                    console.warn("⚠ Structure 'results.products.best' introuvable dans la réponse.");
+                    console.warn("⚠ Tableau 'results.products' vide ou absent de la réponse.");
                     priceElem.textContent = "0 €";
                 }
 
