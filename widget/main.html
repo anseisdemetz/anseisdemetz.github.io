@@ -197,32 +197,11 @@
 
                     <div class="text-right flex-shrink-0 ml-3">
                         <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Valeur de reprise</div>
-                        <!-- Prix affiché dynamiquement -->
                         <div id="est-trade-price" class="text-2xl font-black text-green-600">-- €</div>
-                        <span class="inline-block bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-semibold mt-1">Prix garanti 14j</span>
                     </div>
                 </div>
 
-                <div class="space-y-2 text-xs">
-                    <div class="flex items-center text-gray-700">
-                        <i class="fa-solid fa-circle-check text-brand-600 text-sm mr-2.5"></i>
-                        <span>Déduction immédiate sur votre panier</span>
-                    </div>
-                    <div class="flex items-center text-gray-700">
-                        <i class="fa-solid fa-circle-check text-brand-600 text-sm mr-2.5"></i>
-                        <span>Estimation gratuite et sans engagement</span>
-                    </div>
-                    <div class="flex items-center text-gray-700">
-                        <i class="fa-solid fa-circle-check text-brand-600 text-sm mr-2.5"></i>
-                        <span>Paiement sécurisé (empreinte bancaire)</span>
-                    </div>
-                    <div class="flex items-center text-gray-700">
-                        <i class="fa-solid fa-circle-check text-brand-600 text-sm mr-2.5"></i>
-                        <span>Reprise simple et rapide</span>
-                    </div>
-                </div>
-
-                <div class="flex space-x-2">
+                <div class="flex space-x-2 pt-2">
                     <button onclick="goToStep(2)" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition">
                         Retour
                     </button>
@@ -945,7 +924,6 @@
 
                         console.log(`%c✔ Match trouvé pour "${mappingCombination}" => Grade: ${calculatedGrade}`, "color: #16a34a; font-weight: bold; font-size: 13px;");
 
-                        // Appel pour récupérer le prix de l'Argus correspondant à ce Grade et idproduct
                         const targetProductId = appState.selectedProductId || appState.selectedModelId;
                         fetchPriceFromArgus(targetProductId, calculatedGrade);
 
@@ -993,10 +971,7 @@
                 const data = await response.json();
                 console.log("Réponse API Argus reçue :", data);
 
-                // Vérification du tableau results.products
                 if (data && data.results && Array.isArray(data.results.products) && data.results.products.length > 0) {
-                    
-                    // Récupération du premier produit du tableau
                     const productData = data.results.products[0];
                     const bestPrices = productData.best;
 
@@ -1008,7 +983,6 @@
 
                         console.log(`%c✔ Prix trouvé pour le grade ${grade} => ${calculatedPrice} €`, "color: #16a34a; font-weight: bold; font-size: 13px;");
 
-                        // Mise à jour du prix sur l'IHM
                         const formattedPrice = `${calculatedPrice} €`;
                         priceElem.textContent = formattedPrice;
                         if (swiklyElem) swiklyElem.textContent = formattedPrice;
