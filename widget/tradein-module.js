@@ -199,7 +199,7 @@
                     <div id="step-2" class="step-content hidden space-y-5">
                         <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center border border-gray-200">
                             <div class="flex items-center space-x-3">
-                                <div id="selected-product-img-container" class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-semibold text-xs border border-blue-100 overflow-hidden">
+                                <div id="selected-product-img-container" class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-semibold text-xs border border-blue-100 overflow-hidden flex-shrink-0">
                                     <i class="fa-solid fa-mobile-screen"></i>
                                 </div>
                                 <div>
@@ -250,10 +250,19 @@
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 4 (Formulaire Empreinte CB pur sans Swikly) -->
+                    <!-- ÉTAPE 4 -->
                     <div id="step-4" class="step-content hidden space-y-4">
-                        <div class="text-xs font-semibold text-gray-800 pb-1 border-b border-gray-100">
-                            Empreinte bancaire de garantie
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
+                                <i class="fa-solid fa-infinity"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-sm text-gray-900">Empreinte bancaire sécurisée</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50/50 p-3 rounded-lg text-xs space-y-2 border border-blue-100">
+                            <p class="text-gray-700">Pour confirmer votre demande de reprise, nous créons une empreinte bancaire d'un montant de <strong id="swikly-amount-summary">-- €</strong>. Aucun montant n'est débité maintenant.</p>
                         </div>
 
                         <div class="space-y-3 pt-1">
@@ -544,7 +553,7 @@
     function selectProduct(element, productObj) {
         appState.selectedProductId = productObj.idproduct;
         appState.selectedProductName = productObj.product;
-        appState.selectedProductImage = productObj.image;
+        appState.selectedProductImage = productObj.image || null;
 
         if (element) {
             document.querySelectorAll('.product-item').forEach(btn => btn.className = "product-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 text-left text-sm transition");
@@ -740,6 +749,7 @@
     async function fetchPriceFromArgus(idproduct, grade) {
         console.group("=== CATALOG ARGUS ===");
         const priceElem = document.getElementById('est-trade-price');
+        const summaryElem = document.getElementById('swikly-amount-summary');
         priceElem.innerHTML = `<span class="animate-pulse text-gray-400 text-lg">Chargement...</span>`;
 
         try {
@@ -751,6 +761,7 @@
                 const price = data.results.products[0].best[grade];
                 appState.price = price;
                 priceElem.textContent = `${price} €`;
+                if (summaryElem) summaryElem.textContent = `${price} €`;
             }
         } catch (e) { priceElem.textContent = "Erreur"; }
         console.groupEnd();
@@ -759,9 +770,26 @@
     function updatePreviewTitles() {
         const name = appState.selectedProductName || appState.selectedModelName;
         const id = appState.selectedProductId || appState.selectedModelId;
+        const img = appState.selectedProductImage;
+
+        // Mise à jour Étape 2
         document.getElementById('selected-product-title').textContent = name || "Aucun produit sélectionné";
         document.getElementById('selected-product-id-tag').textContent = id ? `ID: ${id}` : "ID: -";
+        const imgContainerStep2 = document.getElementById('selected-product-img-container');
+        if (imgContainerStep2) {
+            imgContainerStep2.innerHTML = img 
+                ? `<img src="${img}" class="w-full h-full object-contain p-0.5">` 
+                : `<i class="fa-solid fa-mobile-screen"></i>`;
+        }
+
+        // Mise à jour Étape 3
         document.getElementById('est-product-name').textContent = name || "Produit";
+        const imgContainerStep3 = document.getElementById('est-product-img-container');
+        if (imgContainerStep3) {
+            imgContainerStep3.innerHTML = img 
+                ? `<img src="${img}" class="w-full h-full object-contain p-0.5">` 
+                : `<i class="fa-solid fa-mobile-screen"></i>`;
+        }
     }
 
     function updateContinueButtonState() {
