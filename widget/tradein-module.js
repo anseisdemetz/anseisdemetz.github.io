@@ -4,7 +4,6 @@
 (function (window) {
     'use strict';
 
-    // Configuration globale du module
     const CONFIG = {
         CODES_API_URL: "https://corsproxy.io/?key=c46f8301&url=" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com"),
         CODES_API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr",
@@ -41,23 +40,19 @@
     let searchTimeout = null;
     let isInitialized = false;
 
-    // --- INJECTION DES RESSOURCES (Tailwind, FontAwesome, Styles) ---
     function injectDependencies() {
         if (document.getElementById('tradein-tailwind-cdn')) return;
 
-        // Tailwind CDN
         const tailwindScript = document.createElement('script');
         tailwindScript.id = 'tradein-tailwind-cdn';
         tailwindScript.src = "https://cdn.tailwindcss.com";
         document.head.appendChild(tailwindScript);
 
-        // FontAwesome CDN
         const faLink = document.createElement('link');
         faLink.rel = 'stylesheet';
         faLink.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
         document.head.appendChild(faLink);
 
-        // Styles Custom
         const styleTag = document.createElement('style');
         styleTag.innerHTML = `
             .tradein-step-active { color: #2563eb; font-weight: 600; }
@@ -70,7 +65,6 @@
         document.head.appendChild(styleTag);
     }
 
-    // --- INJECTION DU DOM POPIN ---
     function injectModalDOM() {
         if (document.getElementById('tradein-modal-overlay')) return;
 
@@ -80,8 +74,6 @@
 
         overlay.innerHTML = `
             <div class="w-full max-w-xl bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans max-h-[90vh] flex flex-col">
-                
-                <!-- HEADER DU MODAL -->
                 <div class="px-6 pt-5 pb-3 border-b border-gray-100 flex justify-between items-center bg-white flex-shrink-0">
                     <h1 class="text-xl font-bold text-gray-900">Reprise de votre ancien appareil</h1>
                     <button id="tradein-close-btn" type="button" class="text-gray-400 hover:text-gray-600 transition">
@@ -89,7 +81,6 @@
                     </button>
                 </div>
 
-                <!-- STEPPER HORIZONTAL -->
                 <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex-shrink-0">
                     <div class="flex items-center justify-between w-full">
                         <div class="flex flex-col items-center flex-1">
@@ -117,14 +108,12 @@
                     </div>
                 </div>
 
-                <!-- CONTENU SCROLLABLE -->
                 <div class="p-6 overflow-y-auto flex-1">
-
                     <!-- ÉTAPE 1 -->
                     <div id="step-1" class="step-content space-y-5">
                         <div class="relative">
                             <input type="text" id="tradein-search-input" placeholder="Rechercher votre appareil par son nom (ex : iPhone 11, Galaxy S23...)" 
-                                   class="w-full pl-4 pr-10 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
+                                   class="w-full pl-4 pr-10 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 text-sm outline-none">
                             <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-400"></i>
                             <div id="search-results-dropdown" class="hidden absolute left-0 right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-xl z-20 max-h-60 overflow-y-auto divide-y divide-gray-100"></div>
                         </div>
@@ -258,7 +247,6 @@
                             <button id="btn-finish-process" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition">Valider l'empreinte &rarr;</button>
                         </div>
                     </div>
-
                 </div>
             </div>
         `;
@@ -267,10 +255,8 @@
         attachEvents();
     }
 
-    // --- ATTACHEMENT DES ÉVÉNEMENTS ---
     function attachEvents() {
         document.getElementById('tradein-close-btn').onclick = () => TradeInModule.close();
-        
         document.getElementById('tradein-modal-overlay').onclick = (e) => {
             if (e.target.id === 'tradein-modal-overlay') TradeInModule.close();
         };
@@ -294,7 +280,6 @@
         });
     }
 
-    // --- MOTEUR & FONCTIONS API ---
     async function fetchProductTypes() {
         try {
             const response = await fetch(CONFIG.CODES_API_URL + "/Catalog/productTypes", {
@@ -306,9 +291,7 @@
                 const filtered = data.results.filter(cat => !EXCLUDED_PRODUCT_TYPE_IDS.includes(Number(cat.idproduct_type)));
                 renderCategories(filtered);
             }
-        } catch (error) {
-            console.warn("Mode secours pour les catégories :", error);
-        }
+        } catch (error) { console.warn("Mode secours catégories", error); }
     }
 
     function renderCategories(categories) {
@@ -320,7 +303,6 @@
             const nameFr = cat.type?.fr || 'Appareil';
             const catId = cat.idproduct_type;
             let iconClass = 'fa-mobile-screen-button';
-            
             for (let key in categoryIcons) {
                 if (nameFr.toLowerCase().includes(key)) { iconClass = categoryIcons[key]; break; }
             }
@@ -347,9 +329,7 @@
         document.getElementById('products-block').classList.add('hidden');
         updateContinueButtonState();
 
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative";
-        });
+        document.querySelectorAll('.category-btn').forEach(btn => btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative");
         element.className = "category-btn border-2 border-blue-600 bg-blue-50/30 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative";
         
         document.getElementById('selected-category-title').textContent = name;
@@ -512,6 +492,7 @@
         updateContinueButtonState();
     }
 
+    // --- RECHERCHE MULTICRITÈRE CORRIGÉE ---
     function handleSearch(query) {
         clearTimeout(searchTimeout);
         const dropdown = document.getElementById('search-results-dropdown');
@@ -527,50 +508,36 @@
             dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Recherche en cours...</div>`;
             dropdown.classList.remove('hidden');
 
-            // 1. Découpage de la recherche en mots-clés (ex: ["iphone", "13"])
             const keywords = cleanQuery.toLowerCase().split(/\s+/).filter(Boolean);
 
-            // 2. Recherche multicritère dans le cache local
             let matches = productCache.filter(p => {
                 if (!p.product) return false;
                 const prodName = p.product.toLowerCase();
                 return keywords.every(kw => prodName.includes(kw));
             });
 
-            // 3. Si aucun résultat local, appel de l'API
             if (matches.length === 0) {
                 try {
-                    // Endpoint direct avec le terme complet
                     let url = `${CONFIG.CODES_API_URL}/Catalog/products?query=${encodeURIComponent(cleanQuery)}`;
                     let response = await fetch(url, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-AUTH-CR": CONFIG.CODES_API_TOKEN
-                        }
+                        headers: { "Content-Type": "application/json", "X-AUTH-CR": CONFIG.CODES_API_TOKEN }
                     });
 
                     if (response.ok) {
                         const data = await response.json();
-                        if (data && data.results && data.results.length > 0) {
-                            matches = data.results;
-                        }
+                        if (data?.results?.length) matches = data.results;
                     }
 
-                    // Fallback 1: Si pas de résultat, essayer de chercher uniquement sur le premier mot (ex: "iPhone")
                     if (matches.length === 0 && keywords.length > 1) {
                         const primaryKeyword = keywords[0];
                         url = `${CONFIG.CODES_API_URL}/Catalog/products?query=${encodeURIComponent(primaryKeyword)}`;
                         response = await fetch(url, {
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-AUTH-CR": CONFIG.CODES_API_TOKEN
-                            }
+                            headers: { "Content-Type": "application/json", "X-AUTH-CR": CONFIG.CODES_API_TOKEN }
                         });
 
                         if (response.ok) {
                             const data = await response.json();
-                            if (data && data.results) {
-                                // On filtre le résultat de l'API avec tous les mots-clés
+                            if (data?.results) {
                                 matches = data.results.filter(p => {
                                     if (!p.product) return false;
                                     const prodName = p.product.toLowerCase();
@@ -580,7 +547,6 @@
                         }
                     }
 
-                    // Mise en cache des nouveaux produits trouvés pour accélérer les requêtes suivantes
                     matches.forEach(p => {
                         if (!productCache.some(item => item.idproduct === p.idproduct)) {
                             productCache.push(p);
@@ -588,11 +554,10 @@
                     });
 
                 } catch (e) {
-                    console.warn("Erreur lors de la recherche API :", e);
+                    console.warn("Erreur recherche API :", e);
                 }
             }
 
-            // 4. Affichage des résultats
             if (matches.length === 0) {
                 dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center">Aucun appareil correspondant trouvé</div>`;
                 return;
@@ -791,7 +756,6 @@
         TradeInModule.close();
     }
 
-    // --- API PUBLIQUE DU MODULE ---
     window.TradeInModule = {
         init: function () {
             if (isInitialized) return;

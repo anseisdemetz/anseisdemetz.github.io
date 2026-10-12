@@ -3,9 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Hôte - Intégration Module de Reprise</title>
-    <!-- CSS de base de la page hôte -->
+    <title>Page Hôte - Intégration Tag Commander</title>
+    <!-- CSS de la page hôte -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- SIMULATION D'INJECTION TAG COMMANDER -->
+    <script type="text/javascript">
+        (function() {
+            // Tag Commander charge dynamiquement le script du module
+            var tcScript = document.createElement('script');
+            tcScript.src = 'tradein-module.js'; // URL du CDN Tag Commander en prod
+            tcScript.async = true;
+            
+            tcScript.onload = function() {
+                // Initialisation du module dès le chargement
+                if (window.TradeInModule) {
+                    window.TradeInModule.init();
+                }
+            };
+            
+            document.head.appendChild(tcScript);
+        })();
+    </script>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-6 text-gray-800">
 
@@ -15,28 +34,17 @@
         </div>
 
         <div class="space-y-2">
-            <h1 class="text-2xl font-bold text-gray-900">E-Commerce Demo</h1>
-            <p class="text-sm text-gray-500">Test d'intégration du module de reprise via script externe (Tag Commander).</p>
+            <h1 class="text-2xl font-bold text-gray-900">Mon Site E-Commerce</h1>
+            <p class="text-sm text-gray-500">Test d'intégration du module via Tag Commander.</p>
         </div>
 
-        <!-- Bouton qui déclenche l'ouverture de la Popin -->
-        <button onclick="TradeInModule.open()" 
+        <!-- Bouton de la page hôte -->
+        <button onclick="window.TradeInModule && window.TradeInModule.open()" 
                 class="w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition flex items-center justify-center space-x-2">
             <i class="fa-solid fa-mobile-screen"></i>
             <span>Module de reprise - Popin</span>
         </button>
     </div>
 
-    <!-- SCRIPT DU MODULE REPRISE (Peut être injecté dynamiquement par Tag Commander) -->
-    <script src="tradein-module.js"></script>
-
-    <script>
-        // Initialisation automatique au chargement si nécessaire
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.TradeInModule) {
-                window.TradeInModule.init();
-            }
-        });
-    </script>
 </body>
 </html>
