@@ -1,9 +1,10 @@
 /**
- * TradeInModule - Module de reprise autonome pilotable par Tag Commander
+ * TradeInModule - Module de reprise autonome pilotable par Tag Manager / Tag Commander
  */
 (function (window) {
     'use strict';
 
+    // --- CONFIGURATION DU MODULE ---
     const CONFIG = {
         CODES_API_URL: "https://corsproxy.io/?key=c46f8301&url=" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com"),
         CODES_API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr",
@@ -42,14 +43,14 @@
     let isInitialized = false;
     let initPromise = null;
 
-    // --- INJECTION ASYNCHRONE ET SÉCURISÉE DES DÉPENDANCES ---
+    // --- INJECTION ASYNCHRONE DES DÉPENDANCES (Tailwind, FontAwesome, Styles Custom) ---
     function injectDependencies() {
         if (initPromise) return initPromise;
 
         initPromise = new Promise((resolve) => {
             let tailwindLoaded = !!document.getElementById('tradein-tailwind-cdn');
 
-            // FontAwesome
+            // FontAwesome CDN
             if (!document.getElementById('tradein-fontawesome-cdn')) {
                 const faLink = document.createElement('link');
                 faLink.id = 'tradein-fontawesome-cdn';
@@ -58,7 +59,7 @@
                 document.head.appendChild(faLink);
             }
 
-            // Styles Custom pour le Stepper & les Drawers
+            // Styles Custom (Stepper + Drawers)
             if (!document.getElementById('tradein-custom-styles')) {
                 const styleTag = document.createElement('style');
                 styleTag.id = 'tradein-custom-styles';
@@ -118,13 +119,13 @@
                 document.head.appendChild(styleTag);
             }
 
-            // Tailwind CDN avec Callback Onload
+            // Tailwind CDN
             if (!tailwindLoaded) {
                 const tailwindScript = document.createElement('script');
                 tailwindScript.id = 'tradein-tailwind-cdn';
                 tailwindScript.src = "https://cdn.tailwindcss.com";
                 tailwindScript.onload = () => resolve();
-                tailwindScript.onerror = () => resolve(); // Sécurité
+                tailwindScript.onerror = () => resolve();
                 document.head.appendChild(tailwindScript);
             } else {
                 resolve();
@@ -134,6 +135,7 @@
         return initPromise;
     }
 
+    // --- INJECTION DU DOM DE LA FENÊTRE MODALE ---
     function injectModalDOM() {
         if (document.getElementById('tradein-modal-overlay')) return;
 
@@ -183,7 +185,7 @@
                 <!-- CONTENU SCROLLABLE -->
                 <div class="p-6 overflow-y-auto flex-1">
 
-                    <!-- ÉTAPE 1 -->
+                    <!-- ÉTAPE 1 : CHOIX DU PRODUIT -->
                     <div id="step-1" class="step-content space-y-5">
                         <div class="relative">
                             <input type="text" id="tradein-search-input" placeholder="Rechercher par nom (ex : iPhone 11, Galaxy S23...)" 
@@ -222,7 +224,7 @@
                         </button>
                     </div>
 
-                    <!-- ÉTAPE 2 -->
+                    <!-- ÉTAPE 2 : QUESTIONNAIRE ÉTAT -->
                     <div id="step-2" class="step-content hidden space-y-5">
                         <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center border border-gray-200">
                             <div class="flex items-center space-x-3">
@@ -251,7 +253,7 @@
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 3 -->
+                    <!-- ÉTAPE 3 : ESTIMATION -->
                     <div id="step-3" class="step-content hidden space-y-5">
                         <h3 class="text-base font-bold text-gray-800">Votre estimation</h3>
                         <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between">
@@ -277,7 +279,7 @@
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 4 -->
+                    <!-- ÉTAPE 4 : EMPREINTE CB DE GARANTIE -->
                     <div id="step-4" class="step-content hidden space-y-4">
                         <div class="flex items-center space-x-2">
                             <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
@@ -334,6 +336,7 @@
         attachEvents();
     }
 
+    // --- APPLICATION DU MODE D'AFFICHAGE ---
     function applyDisplayMode(mode) {
         const overlay = document.getElementById('tradein-modal-overlay');
         const container = document.getElementById('tradein-modal-container');
@@ -353,6 +356,7 @@
         }
     }
 
+    // --- EVENEMENTS JS DU MODULE ---
     function attachEvents() {
         document.getElementById('tradein-close-btn').onclick = () => TradeInModule.close();
         document.getElementById('tradein-modal-overlay').onclick = (e) => {
@@ -378,6 +382,7 @@
         });
     }
 
+    // --- REQUÊTES API (CATALOGUE, QUESTIONNAIRE, ARGUS) ---
     async function fetchProductTypes() {
         try {
             const response = await fetch(CONFIG.CODES_API_URL + "/Catalog/productTypes", {
@@ -590,6 +595,7 @@
         updateContinueButtonState();
     }
 
+    // --- RECHERCHE MULTICRITÈRE AVEC FALLBACK ---
     function handleSearch(query) {
         clearTimeout(searchTimeout);
         const dropdown = document.getElementById('search-results-dropdown');
@@ -868,6 +874,24 @@
         TradeInModule.close();
     }
 
+    // --- AUTO-INITIALISATION AUTO-EXÉCUTABLE DEPUIS L'ATTRIBUT DATA-DISPLAYTYPE ---
+    function autoInitFromScriptTag() {
+        const currentScript = document.currentScript || document.querySelector('script[src*="tradein-module.js"]');
+        if (currentScript) {
+            const displayType = currentScript.getAttribute('data-displayType') || 
+                                currentScript.getAttribute('data-displaytype') || 
+                                'popin';
+            window.TradeInModule.init({ displayType: displayType });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', autoInitFromScriptTag);
+    } else {
+        autoInitFromScriptTag();
+    }
+
+    // --- API PUBLIQUE DU MODULE ---
     window.TradeInModule = {
         init: async function (options) {
             const opts = options || {};
@@ -904,7 +928,7 @@
                 overlay.classList.remove('opacity-0', 'pointer-events-none');
                 overlay.classList.add('opacity-100');
 
-                // Recalcul du reflow pour s'assurer que Tailwind est prêt avant de déclencher la transition CSS
+                // Recalcul de reflow pour valider l'état initial
                 void container.offsetHeight;
 
                 container.style.transition = '';
