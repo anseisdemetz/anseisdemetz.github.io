@@ -41,71 +41,76 @@
     let searchTimeout = null;
     let isInitialized = false;
 
-    function injectDependencies() {
-        if (document.getElementById('tradein-tailwind-cdn')) return;
+// --- DANS injectDependencies() : On isole les règles de départ ---
+function injectDependencies() {
+    if (document.getElementById('tradein-tailwind-cdn')) return;
 
-        const tailwindScript = document.createElement('script');
-        tailwindScript.id = 'tradein-tailwind-cdn';
-        tailwindScript.src = "https://cdn.tailwindcss.com";
-        document.head.appendChild(tailwindScript);
+    const tailwindScript = document.createElement('script');
+    tailwindScript.id = 'tradein-tailwind-cdn';
+    tailwindScript.src = "https://cdn.tailwindcss.com";
+    document.head.appendChild(tailwindScript);
 
-        const faLink = document.createElement('link');
-        faLink.rel = 'stylesheet';
-        faLink.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
-        document.head.appendChild(faLink);
+    const faLink = document.createElement('link');
+    faLink.rel = 'stylesheet';
+    faLink.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
+    document.head.appendChild(faLink);
 
-        const styleTag = document.createElement('style');
-        styleTag.innerHTML = `
-            .tradein-step-active { color: #2563eb; font-weight: 600; }
-            .tradein-step-circle-active { background-color: #2563eb; color: white; border-color: #2563eb; }
-            .tradein-step-circle-completed { background-color: #2563eb; color: white; border-color: #2563eb; }
-            .tradein-step-circle-pending { background-color: white; color: #9ca3af; border-color: #d1d5db; }
-            .tradein-step-line-active { background-color: #2563eb; }
-            .tradein-step-line-pending { background-color: #e5e7eb; }
-            
-            /* Classes d'affichage Popin vs Drawer */
-            .tradein-container-popin {
-                max-width: 36rem;
-                border-radius: 1rem;
-                margin: auto;
-                transform: scale(0.95);
-                opacity: 0;
-            }
-            .tradein-container-popin.tradein-active {
-                transform: scale(1);
-                opacity: 1;
-            }
+    const styleTag = document.createElement('style');
+    styleTag.innerHTML = `
+        .tradein-step-active { color: #2563eb; font-weight: 600; }
+        .tradein-step-circle-active { background-color: #2563eb; color: white; border-color: #2563eb; }
+        .tradein-step-circle-completed { background-color: #2563eb; color: white; border-color: #2563eb; }
+        .tradein-step-circle-pending { background-color: white; color: #9ca3af; border-color: #d1d5db; }
+        .tradein-step-line-active { background-color: #2563eb; }
+        .tradein-step-line-pending { background-color: #e5e7eb; }
+        
+        /* POPIN */
+        .tradein-mode-popin {
+            max-width: 36rem;
+            border-radius: 1rem;
+            margin: auto;
+            transform: scale(0.95);
+            opacity: 0;
+        }
+        .tradein-mode-popin.tradein-active {
+            transform: scale(1);
+            opacity: 1;
+        }
 
-            .tradein-container-drawer-right {
-                position: fixed;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                height: 100vh;
-                max-width: 28rem;
-                border-radius: 1rem 0 0 1rem;
-                transform: translateX(100%);
-            }
-            .tradein-container-drawer-right.tradein-active {
-                transform: translateX(0);
-            }
+        /* DRAWER DROITE */
+        .tradein-mode-drawer-right {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            height: 100vh;
+            max-width: 28rem;
+            border-radius: 1rem 0 0 1rem;
+            transform: translateX(100%);
+            opacity: 1;
+        }
+        .tradein-mode-drawer-right.tradein-active {
+            transform: translateX(0);
+        }
 
-            .tradein-container-drawer-left {
-                position: fixed;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                height: 100vh;
-                max-width: 28rem;
-                border-radius: 0 1rem 1rem 0;
-                transform: translateX(-100%);
-            }
-            .tradein-container-drawer-left.tradein-active {
-                transform: translateX(0);
-            }
-        `;
-        document.head.appendChild(styleTag);
-    }
+        /* DRAWER GAUCHE */
+        .tradein-mode-drawer-left {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            height: 100vh;
+            max-width: 28rem;
+            border-radius: 0 1rem 1rem 0;
+            transform: translateX(-100%);
+            opacity: 1;
+        }
+        .tradein-mode-drawer-left.tradein-active {
+            transform: translateX(0);
+        }
+    `;
+    document.head.appendChild(styleTag);
+}
 
     function injectModalDOM() {
         if (document.getElementById('tradein-modal-overlay')) return;
@@ -307,22 +312,24 @@
         attachEvents();
     }
 
+    // --- DANS applyDisplayMode() : Réinitialisation stricte des positions ---
     function applyDisplayMode(mode) {
         const overlay = document.getElementById('tradein-modal-overlay');
         const container = document.getElementById('tradein-modal-container');
         if (!container || !overlay) return;
 
-        container.className = "w-full bg-white shadow-2xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans flex flex-col transition-all duration-300 ease-out ";
+        // Réinitialisation complète des classes du conteneur
+        container.className = "w-full bg-white shadow-2xl overflow-hidden border border-gray-200 relative text-gray-800 font-sans flex flex-col transition-all duration-300 ease-out";
 
         if (mode === 'drawer-right') {
             overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-end p-0 opacity-0 pointer-events-none transition-opacity duration-300 ease-out";
-            container.classList.add('tradein-container-drawer-right');
+            container.classList.add('tradein-mode-drawer-right');
         } else if (mode === 'drawer-left') {
             overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-start p-0 opacity-0 pointer-events-none transition-opacity duration-300 ease-out";
-            container.classList.add('tradein-container-drawer-left');
+            container.classList.add('tradein-mode-drawer-left');
         } else { // popin par défaut
             overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 ease-out";
-            container.classList.add('tradein-container-popin');
+            container.classList.add('tradein-mode-popin');
         }
     }
 
@@ -843,47 +850,62 @@
         TradeInModule.close();
     }
 
-    window.TradeInModule = {
-        init: function (options) {
-            const opts = options || {};
-            appState.displayType = opts.displayType || 'popin';
+// --- DANS open() : Purge du style avant l'animation ---
+window.TradeInModule = {
+    init: function (options) {
+        const opts = options || {};
+        appState.displayType = opts.displayType || 'popin';
 
-            if (!isInitialized) {
-                injectDependencies();
-                injectModalDOM();
-                fetchProductTypes();
-                isInitialized = true;
-            }
+        if (!isInitialized) {
+            injectDependencies();
+            injectModalDOM();
+            fetchProductTypes();
+            isInitialized = true;
+        }
 
-            applyDisplayMode(appState.displayType);
-        },
-        open: function (options) {
-            if (options && options.displayType) {
-                appState.displayType = options.displayType;
-            }
-            this.init({ displayType: appState.displayType });
-            goToStep(1);
+        applyDisplayMode(appState.displayType);
+    },
+    open: function (options) {
+        if (options && options.displayType) {
+            appState.displayType = options.displayType;
+        }
 
-            const overlay = document.getElementById('tradein-modal-overlay');
-            const container = document.getElementById('tradein-modal-container');
+        const overlay = document.getElementById('tradein-modal-overlay');
+        const container = document.getElementById('tradein-modal-container');
 
+        if (container) {
+            // Désactive temporairement la transition le temps de réinitialiser la position
+            container.style.transition = 'none';
+            container.classList.remove('tradein-active');
+        }
+
+        this.init({ displayType: appState.displayType });
+        goToStep(1);
+
+        if (overlay && container) {
             overlay.classList.remove('opacity-0', 'pointer-events-none');
             overlay.classList.add('opacity-100');
 
-            setTimeout(() => {
-                container.classList.add('tradein-active');
-            }, 10);
-        },
-        close: function () {
-            const overlay = document.getElementById('tradein-modal-overlay');
-            const container = document.getElementById('tradein-modal-container');
-            if (!overlay || !container) return;
+            // Force le navigateur à calculer le nouvel état initial sans transition
+            void container.offsetHeight;
 
-            container.classList.remove('tradein-active');
-            overlay.classList.remove('opacity-100');
-            overlay.classList.add('opacity-0', 'pointer-events-none');
-        },
-        _selectAnswer: _selectAnswer
-    };
+            // Rétablit la transition CSS et applique la classe active
+            container.style.transition = '';
+            requestAnimationFrame(() => {
+                container.classList.add('tradein-active');
+            });
+        }
+    },
+    close: function () {
+        const overlay = document.getElementById('tradein-modal-overlay');
+        const container = document.getElementById('tradein-modal-container');
+        if (!overlay || !container) return;
+
+        container.classList.remove('tradein-active');
+        overlay.classList.remove('opacity-100');
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+    },
+    _selectAnswer: _selectAnswer
+};
 
 })(window);
