@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Démonstrateur Tag Commander - Module de Reprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen py-10 px-4 text-gray-800">
+
+    <div class="max-w-5xl mx-auto space-y-8">
+        
+        <!-- HEADER DEMO -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-200 flex items-center space-x-4">
+            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl font-bold flex-shrink-0">
+                <i class="fa-solid fa-code"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-gray-900">Démonstrateur d'Intégration Tag Commander</h1>
+                <p class="text-xs text-gray-500">Auto-initialisation du module via l'attribut data-displayType.</p>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+
+            <!-- LIGNE 1 : MODE POPIN -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row">
+                <div class="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
+                                <i class="fa-solid fa-window-maximize"></i>
+                            </span>
+                            <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">popin</span>
+                        </div>
+                        <h2 class="font-bold text-base text-gray-900">Mode Popin</h2>
+                        <p class="text-xs text-gray-500">Modale centrée au milieu de l'écran.</p>
+                    </div>
+                    <button onclick="TradeInModule.open({ displayType: 'popin' })" 
+                            class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
+                        <span>Tester la Popin</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[11px] flex flex-col justify-center overflow-x-auto">
+                    <div class="text-[10px] text-slate-400 mb-2 font-sans flex items-center">
+                        <i class="fa-solid fa-terminal mr-1.5 text-blue-400"></i> Script Tag Commander (Auto-initialisé)
+                    </div>
+                    <pre><code>&lt;script 
+    type="text/javascript" 
+    src="https://mon-cdn.com/tradein-module.js" 
+    data-displayType="popin"&gt;&lt;/script&gt;</code></pre>
+                </div>
+            </div>
+
+            <!-- LIGNE 2 : MODE DRAWER RIGHT -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row">
+                <div class="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center overflow-hidden border border-blue-200">
+                                <svg class="w-full h-full" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" fill="#DBEAFE"/>
+                                    <rect x="22" y="0" width="10" height="32" fill="#1D4ED8"/>
+                                </svg>
+                            </div>
+                            <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">drawer-right</span>
+                        </div>
+                        <h2 class="font-bold text-base text-gray-900">Drawer (Droite)</h2>
+                        <p class="text-xs text-gray-500">Tiroir latéral glissant depuis la droite.</p>
+                    </div>
+                    <button onclick="TradeInModule.open({ displayType: 'drawer-right' })" 
+                            class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
+                        <span>Tester Drawer Droite</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[11px] flex flex-col justify-center overflow-x-auto">
+                    <div class="text-[10px] text-slate-400 mb-2 font-sans flex items-center">
+                        <i class="fa-solid fa-terminal mr-1.5 text-blue-400"></i> Script Tag Commander (Auto-initialisé)
+                    </div>
+                    <pre><code>&lt;script 
+    type="text/javascript" 
+    src="https://mon-cdn.com/tradein-module.js" 
+    data-displayType="drawer-right"&gt;&lt;/script&gt;</code></pre>
+                </div>
+            </div>
+
+            <!-- LIGNE 3 : MODE DRAWER LEFT -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row">
+                <div class="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center overflow-hidden border border-blue-200">
+                                <svg class="w-full h-full" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" fill="#DBEAFE"/>
+                                    <rect x="0" y="0" width="10" height="32" fill="#1D4ED8"/>
+                                </svg>
+                            </div>
+                            <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">drawer-left</span>
+                        </div>
+                        <h2 class="font-bold text-base text-gray-900">Drawer (Gauche)</h2>
+                        <p class="text-xs text-gray-500">Tiroir latéral glissant depuis la gauche.</p>
+                    </div>
+                    <button onclick="TradeInModule.open({ displayType: 'drawer-left' })" 
+                            class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
+                        <span>Tester Drawer Gauche</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[11px] flex flex-col justify-center overflow-x-auto">
+                    <div class="text-[10px] text-slate-400 mb-2 font-sans flex items-center">
+                        <i class="fa-solid fa-terminal mr-1.5 text-blue-400"></i> Script Tag Commander (Auto-initialisé)
+                    </div>
+                    <pre><code>&lt;script 
+    type="text/javascript" 
+    src="https://mon-cdn.com/tradein-module.js" 
+    data-displayType="drawer-left"&gt;&lt;/script&gt;</code></pre>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Chargement autonome du script module -->
+    <script src="tradein-module.js" data-displayType="popin"></script>
+
+</body>
+</html>
