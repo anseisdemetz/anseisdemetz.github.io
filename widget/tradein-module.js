@@ -221,17 +221,7 @@
                                 <i class="fa-solid fa-infinity"></i>
                             </div>
                             <div>
-                                <div class="font-bold text-sm text-gray-900">Swikly</div>
-                                <div class="text-[11px] text-gray-500">Empreinte bancaire sécurisée</div>
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-50/50 p-3 rounded-lg text-xs space-y-2 border border-blue-100">
-                            <p class="text-gray-700">Pour confirmer votre demande de reprise, nous créons une empreinte bancaire d'un montant de <strong id="swikly-amount-summary">-- €</strong> via Swikly. Aucun montant n'est débité maintenant.</p>
-                            <div class="space-y-1 pt-1 text-gray-700">
-                                <div class="flex items-center"><i class="fa-solid fa-circle-check text-blue-600 mr-2"></i> 0 € aujourd'hui</div>
-                                <div class="flex items-center"><i class="fa-solid fa-circle-check text-blue-600 mr-2"></i> Empreinte uniquement (pas de prélèvement)</div>
-                                <div class="flex items-center"><i class="fa-solid fa-circle-check text-blue-600 mr-2"></i> Annulation automatique après validation</div>
+                                <div class="font-bold text-sm text-gray-900">Empreinte bancaire sécurisée</div>
                             </div>
                         </div>
 
@@ -525,47 +515,116 @@
     function handleSearch(query) {
         clearTimeout(searchTimeout);
         const dropdown = document.getElementById('search-results-dropdown');
-        const cleanQuery = query.trim().toLowerCase();
-        if (cleanQuery.length < 2) { dropdown.classList.add('hidden'); return; }
+        const cleanQuery = query.trim();
+
+        if (cleanQuery.length < 2) {
+            dropdown.classList.add('hidden');
+            dropdown.innerHTML = '';
+            return;
+        }
 
         searchTimeout = setTimeout(async () => {
-            dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Recherche...</div>`;
+            dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Recherche en cours...</div>`;
             dropdown.classList.remove('hidden');
 
-            let matches = productCache.filter(p => p.product && p.product.toLowerCase().includes(cleanQuery));
-            if (!matches.length) {
+            // 1. Découpage de la recherche en mots-clés (ex: ["iphone", "13"])
+            const keywords = cleanQuery.toLowerCase().split(/\s+/).filter(Boolean);
+
+            // 2. Recherche multicritère dans le cache local
+            let matches = productCache.filter(p => {
+                if (!p.product) return false;
+                const prodName = p.product.toLowerCase();
+                return keywords.every(kw => prodName.includes(kw));
+            });
+
+            // 3. Si aucun résultat local, appel de l'API
+            if (matches.length === 0) {
                 try {
-                    const res = await fetch(`${CONFIG.CODES_API_URL}/Catalog/products?query=${encodeURIComponent(cleanQuery)}`, {
-                        headers: { "Content-Type": "application/json", "X-AUTH-CR": CONFIG.CODES_API_TOKEN }
+                    // Endpoint direct avec le terme complet
+                    let url = `${CONFIG.CODES_API_URL}/Catalog/products?query=${encodeURIComponent(cleanQuery)}`;
+                    let response = await fetch(url, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                        }
                     });
-                    const data = await res.json();
-                    if (data?.results) matches = data.results;
-                } catch (e) {}
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data && data.results && data.results.length > 0) {
+                            matches = data.results;
+                        }
+                    }
+
+                    // Fallback 1: Si pas de résultat, essayer de chercher uniquement sur le premier mot (ex: "iPhone")
+                    if (matches.length === 0 && keywords.length > 1) {
+                        const primaryKeyword = keywords[0];
+                        url = `${CONFIG.CODES_API_URL}/Catalog/products?query=${encodeURIComponent(primaryKeyword)}`;
+                        response = await fetch(url, {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                            }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data && data.results) {
+                                // On filtre le résultat de l'API avec tous les mots-clés
+                                matches = data.results.filter(p => {
+                                    if (!p.product) return false;
+                                    const prodName = p.product.toLowerCase();
+                                    return keywords.every(kw => prodName.includes(kw));
+                                });
+                            }
+                        }
+                    }
+
+                    // Mise en cache des nouveaux produits trouvés pour accélérer les requêtes suivantes
+                    matches.forEach(p => {
+                        if (!productCache.some(item => item.idproduct === p.idproduct)) {
+                            productCache.push(p);
+                        }
+                    });
+
+                } catch (e) {
+                    console.warn("Erreur lors de la recherche API :", e);
+                }
             }
 
-            if (!matches.length) {
-                dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center">Aucun appareil trouvé</div>`;
+            // 4. Affichage des résultats
+            if (matches.length === 0) {
+                dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center">Aucun appareil correspondant trouvé</div>`;
                 return;
             }
 
             dropdown.innerHTML = '';
             matches.slice(0, 10).forEach(p => {
                 const item = document.createElement('div');
-                item.className = 'p-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between transition border-b border-gray-50';
+                item.className = 'p-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between transition border-b border-gray-50 last:border-0';
+                
+                const imgHtml = p.image 
+                    ? `<img src="${p.image}" class="w-6 h-6 object-contain mr-2">`
+                    : `<i class="fa-solid fa-mobile-screen text-gray-400 mr-2"></i>`;
+
                 item.innerHTML = `
                     <div class="flex items-center">
+                        ${imgHtml}
                         <span class="text-xs font-semibold text-gray-800 mr-2">${p.product}</span>
                         <span class="bg-gray-100 text-gray-500 text-[10px] font-mono px-1.5 py-0.5 rounded">ID: ${p.idproduct}</span>
                     </div>
                     <span class="text-[10px] text-blue-600 font-medium">Sélectionner</span>
                 `;
+
                 item.onclick = () => {
                     selectProduct(null, p);
                     document.getElementById('tradein-search-input').value = p.product;
                     dropdown.classList.add('hidden');
                 };
+
                 dropdown.appendChild(item);
             });
+
         }, 300);
     }
 
