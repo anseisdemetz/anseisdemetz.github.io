@@ -107,27 +107,28 @@
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-2">Catégorie d'appareil</label>
                     <div id="categories-container" class="grid grid-cols-3 gap-2">
-                        <!-- Squelette de chargement initial -->
                         <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
                         <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
                         <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
                     </div>
                 </div>
 
-                <!-- Sélecteur de marque (Liste avec ascenseur) -->
+                <!-- Sélecteur de marque -->
                 <div id="manufacturers-block" class="hidden">
                     <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez la marque</label>
-                    <div id="manufacturers-container" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                        <!-- Rempli dynamiquement -->
-                    </div>
+                    <div id="manufacturers-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
                 </div>
 
-                <!-- Liste des modèles (Liste avec ascenseur) -->
+                <!-- Liste des modèles -->
                 <div id="models-block" class="hidden">
                     <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez le modèle</label>
-                    <div id="models-container" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                        <!-- Rempli dynamiquement -->
-                    </div>
+                    <div id="models-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
+                </div>
+
+                <!-- Liste des produits / déclinaisons -->
+                <div id="products-block" class="hidden">
+                    <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez la variante / capacité</label>
+                    <div id="products-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
                 </div>
 
                 <button id="btn-continue-step1" onclick="goToStep(2)" disabled class="w-full py-3 bg-gray-300 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2 cursor-not-allowed">
@@ -141,11 +142,11 @@
                 
                 <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center border border-gray-200">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center font-semibold text-xs border border-brand-100">
+                        <div id="selected-product-img-container" class="w-10 h-10 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center font-semibold text-xs border border-brand-100 overflow-hidden">
                             <i class="fa-solid fa-mobile-screen"></i>
                         </div>
                         <div>
-                            <div class="font-semibold text-sm text-gray-800" id="selected-model-title">Aucun modèle sélectionné</div>
+                            <div class="font-semibold text-sm text-gray-800" id="selected-product-title">Aucun produit sélectionné</div>
                             <div class="text-xs text-gray-500" id="selected-category-title">Appareil</div>
                         </div>
                     </div>
@@ -251,11 +252,11 @@
 
                 <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center font-bold text-sm border border-brand-100">
+                        <div id="est-product-img-container" class="w-10 h-10 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center font-bold text-sm border border-brand-100 overflow-hidden">
                             <i class="fa-solid fa-mobile-screen"></i>
                         </div>
                         <div class="text-xs space-y-1">
-                            <div class="font-bold text-sm text-gray-900" id="est-model-name">Modèle</div>
+                            <div class="font-bold text-sm text-gray-900" id="est-product-name">Produit</div>
                             <div class="text-gray-600 flex items-center"><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Fonctionne</div>
                             <div class="text-gray-600 flex items-center"><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Écran : Intact</div>
                             <div class="text-gray-600 flex items-center"><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Contour & arrière : Bon</div>
@@ -383,10 +384,12 @@
             selectedManufacturerId: null,
             selectedManufacturerName: null,
             selectedModelId: null,
-            selectedModelName: null
+            selectedModelName: null,
+            selectedProductId: null,
+            selectedProductName: null,
+            selectedProductImage: null
         };
 
-        // Icônes par défaut
         const categoryIcons = {
             'mobile': 'fa-mobile-screen-button',
             'smartphone': 'fa-mobile-screen-button',
@@ -396,7 +399,6 @@
             'console': 'fa-gamepad'
         };
 
-        // Catégories de produit à ne pas afficher
         const EXCLUDED_PRODUCT_TYPE_IDS = [9, 10, 21, 27, 43];
 
         // 1. Chargement des catégories
@@ -474,16 +476,18 @@
             appState.selectedProductTypeId = id;
             appState.selectedProductTypeName = name;
             
-            // Réinitialiser la marque, le modèle et le bouton continuer
             appState.selectedManufacturerId = null;
             appState.selectedManufacturerName = null;
             appState.selectedModelId = null;
             appState.selectedModelName = null;
+            appState.selectedProductId = null;
+            appState.selectedProductName = null;
+            appState.selectedProductImage = null;
             
             document.getElementById('models-block').classList.add('hidden');
+            document.getElementById('products-block').classList.add('hidden');
             updateContinueButtonState();
 
-            // Gestion de l'affichage actif de la catégorie
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition";
                 const icon = btn.querySelector('i');
@@ -500,11 +504,10 @@
 
             document.getElementById('selected-category-title').textContent = name;
 
-            // Récupération des marques
             fetchManufacturers(id);
         }
 
-        // 2. Chargement des marques (en liste déroulante)
+        // 2. Chargement des marques
         async function fetchManufacturers(idproductType) {
             const manufacturersBlock = document.getElementById('manufacturers-block');
             const container = document.getElementById('manufacturers-container');
@@ -512,7 +515,6 @@
             manufacturersBlock.classList.remove('hidden');
             
             container.innerHTML = `
-                <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
                 <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
                 <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
             `;
@@ -567,9 +569,13 @@
             appState.selectedManufacturerId = id;
             appState.selectedManufacturerName = name;
 
-            // Réinitialiser le modèle et le bouton
             appState.selectedModelId = null;
             appState.selectedModelName = null;
+            appState.selectedProductId = null;
+            appState.selectedProductName = null;
+            appState.selectedProductImage = null;
+
+            document.getElementById('products-block').classList.add('hidden');
             updateContinueButtonState();
 
             document.querySelectorAll('.manufacturer-item').forEach(btn => {
@@ -582,7 +588,6 @@
             const chevron = element.querySelector('.fa-chevron-right');
             if (chevron) chevron.className = "fa-solid fa-chevron-right text-xs text-brand-600";
 
-            // Récupérer les modèles pour cette marque
             fetchModels(appState.selectedProductTypeId, id);
         }
 
@@ -594,7 +599,6 @@
             modelsBlock.classList.remove('hidden');
 
             container.innerHTML = `
-                <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
                 <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
                 <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
             `;
@@ -647,6 +651,10 @@
             appState.selectedModelId = modelObj.idproduct_model;
             appState.selectedModelName = modelObj.model;
 
+            appState.selectedProductId = null;
+            appState.selectedProductName = null;
+            appState.selectedProductImage = null;
+
             document.querySelectorAll('.model-item').forEach(btn => {
                 btn.className = "model-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 hover:border-brand-500 text-left text-sm transition";
                 const chevron = btn.querySelector('.fa-chevron-right');
@@ -657,16 +665,126 @@
             const chevron = element.querySelector('.fa-chevron-right');
             if (chevron) chevron.className = "fa-solid fa-chevron-right text-xs text-brand-600";
 
-            // Mise à jour des aperçus
-            document.getElementById('selected-model-title').textContent = modelObj.model;
-            document.getElementById('est-model-name').textContent = modelObj.model;
+            fetchProducts(appState.selectedProductTypeId, appState.selectedManufacturerId, modelObj.idproduct_model);
+        }
 
+        // 4. Chargement des produits (declinaisons/variantes)
+        async function fetchProducts(idproductType, idmanufacturer, idproductModel) {
+            const productsBlock = document.getElementById('products-block');
+            const container = document.getElementById('products-container');
+
+            productsBlock.classList.remove('hidden');
+
+            container.innerHTML = `
+                <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
+                <div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>
+            `;
+
+            try {
+                const url = `${CONFIG.CODES_API_URL}/Catalog/products?idproduct_type=${encodeURIComponent(idproductType)}&idmanufacturer=${encodeURIComponent(idmanufacturer)}&idproduct_model=${encodeURIComponent(idproductModel)}`;
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": CONFIG.CODES_API_TOKEN
+                    }
+                });
+
+                if (!response.ok) throw new Error("Erreur API Products");
+                const data = await response.json();
+
+                if (data && data.results && data.results.length > 0) {
+                    renderProducts(data.results);
+                } else {
+                    // Si pas de produit spécifique trouvé, utiliser le modèle directement et valider la sélection
+                    productsBlock.classList.add('hidden');
+                    appState.selectedProductId = appState.selectedModelId;
+                    appState.selectedProductName = appState.selectedModelName;
+                    appState.selectedProductImage = null;
+                    
+                    updatePreviewTitles();
+                    updateContinueButtonState();
+                }
+
+            } catch (error) {
+                console.warn("Erreur lors de la récupération des produits :", error);
+                // Si erreur, on valide par défaut au niveau modèle
+                productsBlock.classList.add('hidden');
+                appState.selectedProductId = appState.selectedModelId;
+                appState.selectedProductName = appState.selectedModelName;
+                
+                updatePreviewTitles();
+                updateContinueButtonState();
+            }
+        }
+
+        function renderProducts(products) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+
+            products.forEach((p) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'product-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 hover:border-brand-500 text-left text-sm transition';
+                btn.onclick = () => selectProduct(btn, p);
+
+                const imgHtml = p.image 
+                    ? `<img src="${p.image}" alt="${p.product}" class="w-7 h-7 object-contain mr-2.5" onerror="this.style.display='none'">`
+                    : '';
+
+                btn.innerHTML = `
+                    <div class="flex items-center">
+                        ${imgHtml}
+                        <span class="font-medium text-xs text-gray-800">${p.product}</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                `;
+
+                container.appendChild(btn);
+            });
+        }
+
+        function selectProduct(element, productObj) {
+            appState.selectedProductId = productObj.idproduct;
+            appState.selectedProductName = productObj.product;
+            appState.selectedProductImage = productObj.image;
+
+            document.querySelectorAll('.product-item').forEach(btn => {
+                btn.className = "product-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 hover:border-brand-500 text-left text-sm transition";
+                const chevron = btn.querySelector('.fa-chevron-right');
+                if (chevron) chevron.className = "fa-solid fa-chevron-right text-xs text-gray-400";
+            });
+
+            element.className = "product-item w-full flex items-center justify-between p-2.5 rounded-lg border-2 border-brand-600 bg-brand-50/30 text-left text-sm transition";
+            const chevron = element.querySelector('.fa-chevron-right');
+            if (chevron) chevron.className = "fa-solid fa-chevron-right text-xs text-brand-600";
+
+            updatePreviewTitles();
             updateContinueButtonState();
+        }
+
+        function updatePreviewTitles() {
+            const name = appState.selectedProductName || appState.selectedModelName;
+            const img = appState.selectedProductImage;
+
+            document.getElementById('selected-product-title').textContent = name;
+            document.getElementById('est-product-name').textContent = name;
+
+            const imgContainer = document.getElementById('selected-product-img-container');
+            const estImgContainer = document.getElementById('est-product-img-container');
+
+            if (img) {
+                imgContainer.innerHTML = `<img src="${img}" class="w-full h-full object-contain p-0.5">`;
+                estImgContainer.innerHTML = `<img src="${img}" class="w-full h-full object-contain p-0.5">`;
+            } else {
+                imgContainer.innerHTML = `<i class="fa-solid fa-mobile-screen"></i>`;
+                estImgContainer.innerHTML = `<i class="fa-solid fa-mobile-screen"></i>`;
+            }
         }
 
         function updateContinueButtonState() {
             const btn = document.getElementById('btn-continue-step1');
-            if (appState.selectedModelId) {
+            if (appState.selectedProductId || appState.selectedModelId) {
                 btn.disabled = false;
                 btn.className = "w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2 cursor-pointer";
             } else {
@@ -676,7 +794,7 @@
         }
 
         function goToStep(step) {
-            if (step === 2 && !appState.selectedModelId) return;
+            if (step === 2 && (!appState.selectedProductId && !appState.selectedModelId)) return;
 
             appState.currentStep = step;
 
@@ -708,7 +826,9 @@
         }
 
         function finishProcess() {
-            alert(`Félicitations ! Votre demande de reprise pour [${appState.selectedModelName}] (ID Modèle : ${appState.selectedModelId}) est confirmée.`);
+            const finalName = appState.selectedProductName || appState.selectedModelName;
+            const finalId = appState.selectedProductId || appState.selectedModelId;
+            alert(`Félicitations ! Votre demande de reprise pour [${finalName}] (ID : ${finalId}) est confirmée.`);
             goToStep(1);
         }
 
