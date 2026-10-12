@@ -406,7 +406,7 @@
     <script>
         // Configuration de l'API
         const CONFIG = {
-            CODES_API_URL: "https://corsproxy.io/?" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com/Catalog/productTypes"),
+            CODES_API_URL: "https://corsproxy.io/?" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com"),
             CODES_API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr",
         };
 
@@ -433,7 +433,7 @@
             const container = document.getElementById('categories-container');
             
             try {
-                const response = await fetch(CONFIG.CODES_API_URL, {
+                const response = await fetch(CONFIG.CODES_API_URL+"/Catalog/productTypes", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
