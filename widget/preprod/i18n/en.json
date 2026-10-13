@@ -1,0 +1,51 @@
+{
+  "header_title": "Device Trade-In",
+  "steps": {
+    "device": "Device",
+    "state": "Condition",
+    "estimation": "Estimate",
+    "validation": "Validation"
+  },
+  "step1": {
+    "search_placeholder": "Search by model (e.g. iPhone 11, Galaxy S23...)",
+    "category_label": "Device category",
+    "manufacturer_label": "Select brand",
+    "model_label": "Select model",
+    "product_label": "Select variant / capacity",
+    "btn_continue": "Continue"
+  },
+  "step2": {
+    "no_product": "No product selected",
+    "default_cat": "Device",
+    "modify": "Edit",
+    "survey_error": "Error loading survey."
+  },
+  "step3": {
+    "title": "Your estimate",
+    "completed": "Diagnostic completed",
+    "trade_value": "Trade-in value",
+    "loading": "Loading...",
+    "error": "Error",
+    "btn_add_to_cart": "Add trade-in to cart"
+  },
+  "step4": {
+    "title": "Secure credit card hold",
+    "cart_summary_title": "Order summary:",
+    "initial_cart": "Initial cart:",
+    "tradein_deduction": "Trade-in deduction:",
+    "final_cart": "New cart total:",
+    "swikly_info": "To confirm your trade-in request, a card authorization hold of <strong id=\"swikly-amount-summary\">-- €</strong> will be created. No amount is charged now.",
+    "card_number": "Card number",
+    "expiry_date": "Expiration date",
+    "cvv": "CVV",
+    "secure_info": "100% secure payment. Your payment data is encrypted.",
+    "btn_validate": "Confirm trade-in →"
+  },
+  "common": {
+    "back": "Back",
+    "id": "ID",
+    "select": "Select",
+    "searching": "Searching...",
+    "no_results": "No matching device found"
+  }
+}
