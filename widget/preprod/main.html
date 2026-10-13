@@ -97,10 +97,10 @@
                 </div>
             </div>
 
-            <!-- LIGNE 2 : MODE POPIN CLASSIC -->
+            <!-- LIGNE 2 : MODE POPIN CLASSIC AVEC SÉLECTEUR DE LANGUE (FR / EN) -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row">
                 <div class="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col justify-between space-y-4">
-                    <div class="space-y-2">
+                    <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
                                 <i class="fa-solid fa-window-maximize"></i>
@@ -109,10 +109,26 @@
                         </div>
                         <h2 class="font-bold text-base text-gray-900">Mode Popin</h2>
                         <p class="text-xs text-gray-500">Modale centrée au milieu de l'écran sans calcul d'impact panier.</p>
+
+                        <!-- SÉLECTEUR DE LANGUE FR / EN -->
+                        <div class="pt-2 space-y-1.5">
+                            <label class="block text-[11px] font-semibold text-gray-600">Choisir la langue d'affichage :</label>
+                            <div class="flex space-x-2">
+                                <button id="btn-lang-fr" type="button" 
+                                        class="flex-1 py-1.5 px-3 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-700 font-bold text-xs transition flex items-center justify-center space-x-1">
+                                    <span>🇫🇷 FR</span>
+                                </button>
+                                <button id="btn-lang-en" type="button" 
+                                        class="flex-1 py-1.5 px-3 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 font-medium text-xs transition flex items-center justify-center space-x-1">
+                                    <span>🇬🇧 EN</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <button onclick="TradeInModule.open({ displayType: 'popin', lang: 'en', showCartSummary: false })" 
+
+                    <button id="btn-open-popin" 
                             class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
-                        <span>Tester la Popin</span>
+                        <span>Tester la Popin (FR)</span>
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
@@ -122,17 +138,19 @@
                         <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
                             <i class="fa-solid fa-code mr-1.5 text-blue-400"></i> Option 1 : Tag Commander
                         </div>
-<pre><code>&lt;script type="text/javascript" 
+<pre><code id="code-popin-html">&lt;script type="text/javascript" 
     src="https://mon-cdn.com/tradein-module.js" 
-    data-displayType="popin"&gt;&lt;/script&gt;</code></pre>
+    data-displayType="popin"
+    data-lang="fr"&gt;&lt;/script&gt;</code></pre>
                     </div>
 
                     <div class="pt-2 border-t border-slate-800">
                         <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
                             <i class="fa-solid fa-terminal mr-1.5 text-green-400"></i> Option 2 : Déclenchement JS
                         </div>
-<pre><code>TradeInModule.open({ 
+<pre><code id="code-popin-js">TradeInModule.open({ 
     displayType: 'popin', 
+    lang: 'fr',
     showCartSummary: false });</code></pre>
                     </div>
                 </div>
@@ -192,6 +210,8 @@
     <!-- JS de la page de démo -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            let selectedPopinLang = 'fr';
+
             const sampleProducts = [
                 { name: "iPhone 15 Pro Max", price: 1199 },
                 { name: "Galaxy S24 Ultra", price: 1149 },
@@ -211,6 +231,41 @@
                     displayType: 'drawer-right',
                     cartAmount: initialCartValue,
                     showCartSummary: true
+                });
+            });
+
+            // GESTION DYNAMIQUE DE LA LANGUE POPIN
+            const btnFr = document.getElementById('btn-lang-fr');
+            const btnEn = document.getElementById('btn-lang-en');
+            const btnOpenPopin = document.getElementById('btn-open-popin');
+            const codePopinHtml = document.getElementById('code-popin-html');
+            const codePopinJs = document.getElementById('code-popin-js');
+
+            function updatePopinLangUI(lang) {
+                selectedPopinLang = lang;
+                if (lang === 'fr') {
+                    btnFr.className = "flex-1 py-1.5 px-3 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-700 font-bold text-xs transition flex items-center justify-center space-x-1";
+                    btnEn.className = "flex-1 py-1.5 px-3 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 font-medium text-xs transition flex items-center justify-center space-x-1";
+                    btnOpenPopin.innerHTML = `<span>Tester la Popin (FR)</span><i class="fa-solid fa-arrow-right"></i>`;
+                    codePopinHtml.textContent = `<script type="text/javascript" \n    src="https://mon-cdn.com/tradein-module.js" \n    data-displayType="popin"\n    data-lang="fr"><\/script>`;
+                    codePopinJs.textContent = `TradeInModule.open({ \n    displayType: 'popin', \n    lang: 'fr',\n    showCartSummary: false });`;
+                } else {
+                    btnEn.className = "flex-1 py-1.5 px-3 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-700 font-bold text-xs transition flex items-center justify-center space-x-1";
+                    btnFr.className = "flex-1 py-1.5 px-3 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 font-medium text-xs transition flex items-center justify-center space-x-1";
+                    btnOpenPopin.innerHTML = `<span>Test Popin (EN)</span><i class="fa-solid fa-arrow-right"></i>`;
+                    codePopinHtml.textContent = `<script type="text/javascript" \n    src="https://mon-cdn.com/tradein-module.js" \n    data-displayType="popin"\n    data-lang="en"><\/script>`;
+                    codePopinJs.textContent = `TradeInModule.open({ \n    displayType: 'popin', \n    lang: 'en',\n    showCartSummary: false });`;
+                }
+            }
+
+            btnFr.addEventListener('click', () => updatePopinLangUI('fr'));
+            btnEn.addEventListener('click', () => updatePopinLangUI('en'));
+
+            btnOpenPopin.addEventListener('click', function () {
+                window.TradeInModule.open({
+                    displayType: 'popin',
+                    lang: selectedPopinLang,
+                    showCartSummary: false
                 });
             });
 
