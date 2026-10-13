@@ -928,15 +928,29 @@
                 headers: { "Content-Type": "application/json", "X-AUTH-CR": CONFIG.CODES_API_TOKEN }
             });
             const data = await res.json();
-            if (data?.results?.products?.[0]?.best?.[grade]) {
-                const price = data.results.products[0].best[grade];
+            
+            // CORRECTION ICI : On teste si la propriété existe et n'est ni null ni undefined
+            const rawPrice = data?.results?.products?.[0]?.best?.[grade];
+
+            if (rawPrice !== undefined && rawPrice !== null) {
+                const price = Number(rawPrice);
                 appState.price = price;
+                
+                // Affichage du prix (même si 0 €)
                 priceElem.textContent = `${price} €`;
                 if (summaryElem) summaryElem.textContent = "0 €";
 
                 updateStep4CartSummary();
+            } else {
+                // Si l'API n'a pas de prix référencé pour ce grade
+                appState.price = 0;
+                priceElem.textContent = "0 €";
+                if (summaryElem) summaryElem.textContent = "0 €";
+                updateStep4CartSummary();
             }
-        } catch (e) { priceElem.textContent = t.step3.error; }
+        } catch (e) { 
+            priceElem.textContent = t.step3.error; 
+        }
     }
 
     function updateStep4CartSummary() {
