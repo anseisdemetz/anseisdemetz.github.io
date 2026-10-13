@@ -1,0 +1,51 @@
+{
+  "header_title": "Reprise de votre appareil",
+  "steps": {
+    "device": "Appareil",
+    "state": "État",
+    "estimation": "Estimation",
+    "validation": "Validation"
+  },
+  "step1": {
+    "search_placeholder": "Rechercher par nom (ex : iPhone 11, Galaxy S23...)",
+    "category_label": "Catégorie d'appareil",
+    "manufacturer_label": "Sélectionnez la marque",
+    "model_label": "Sélectionnez le modèle",
+    "product_label": "Sélectionnez la variante / capacité",
+    "btn_continue": "Continuer"
+  },
+  "step2": {
+    "no_product": "Aucun produit sélectionné",
+    "default_cat": "Appareil",
+    "modify": "Modifier",
+    "survey_error": "Erreur lors du chargement du questionnaire."
+  },
+  "step3": {
+    "title": "Votre estimation",
+    "completed": "Diagnostic complété",
+    "trade_value": "Valeur de reprise",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "btn_add_to_cart": "Ajouter la reprise au panier"
+  },
+  "step4": {
+    "title": "Empreinte bancaire sécurisée",
+    "cart_summary_title": "Récapitulatif de votre commande :",
+    "initial_cart": "Panier initial :",
+    "tradein_deduction": "Déduction de votre reprise :",
+    "final_cart": "Nouveau total panier :",
+    "swikly_info": "Pour confirmer votre demande de reprise, nous créons une empreinte bancaire d'un montant de <strong id=\"swikly-amount-summary\">-- €</strong>. Aucun montant n'est débité maintenant.",
+    "card_number": "Numéro de carte",
+    "expiry_date": "Date d'expiration",
+    "cvv": "CVV",
+    "secure_info": "Saisie 100% sécurisée. Vos données de paiement sont chiffrées.",
+    "btn_validate": "Valider la reprise →"
+  },
+  "common": {
+    "back": "Retour",
+    "id": "ID",
+    "select": "Sélectionner",
+    "searching": "Recherche en cours...",
+    "no_results": "Aucun appareil correspondant trouvé"
+  }
+}

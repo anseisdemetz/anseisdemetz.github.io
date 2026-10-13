@@ -7,6 +7,7 @@
     const CONFIG = {
         CODES_API_URL: "https://corsproxy.io/?key=c46f8301&url=" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com"),
         CODES_API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr",
+        I18N_BASE_URL: "./i18n" // Chemin vers le dossier des traductions
     };
 
     const EXCLUDED_PRODUCT_TYPE_IDS = [9, 10, 21, 27, 43];
@@ -20,10 +21,14 @@
         'console': 'fa-gamepad'
     };
 
+    // Stockage du dictionnaire chargé dynamiquement
+    let currentI18n = null;
+
     let appState = {
         displayType: 'popin', // 'popin' | 'drawer-right' | 'drawer-left'
+        lang: 'fr',           // 'fr' | 'en'
         cartAmount: 0,
-        showCartSummary: true, // Paramètre Tag Commander pour afficher ou masqué l'impact panier
+        showCartSummary: true,
         currentStep: 1,
         selectedProductTypeId: null,
         selectedProductTypeName: null,
@@ -43,6 +48,42 @@
     let searchTimeout = null;
     let isInitialized = false;
     let initPromise = null;
+
+    /**
+     * Charge le fichier JSON de langue depuis /i18n/{lang}.json
+     */
+    async function loadI18n(lang) {
+        const targetLang = ['fr', 'en'].includes(lang) ? lang : 'fr';
+        
+        // Évite de recharger si déjà en mémoire pour la même langue
+        if (currentI18n && appState.loadedLang === targetLang) {
+            return currentI18n;
+        }
+
+        try {
+            const response = await fetch(`${CONFIG.I18N_BASE_URL}/${targetLang}.json`);
+            if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+            currentI18n = await response.json();
+            appState.loadedLang = targetLang;
+        } catch (error) {
+            console.warn(`[TradeIn] Impossible de charger /i18n/${targetLang}.json, utilisation du fallback.`, error);
+            // Fallback minimal si le fichier n'est pas accessible
+            currentI18n = currentI18n || {
+                header_title: "Reprise",
+                steps: { device: "1", state: "2", estimation: "3", validation: "4" },
+                step1: { search_placeholder: "Rechercher...", category_label: "Catégorie", manufacturer_label: "Marque", model_label: "Modèle", product_label: "Produit", btn_continue: "Continuer" },
+                step2: { no_product: "Aucun produit", default_cat: "Appareil", modify: "Modifier", survey_error: "Erreur questionnaire" },
+                step3: { title: "Estimation", completed: "Complété", trade_value: "Valeur", loading: "Chargement...", error: "Erreur", btn_add_to_cart: "Ajouter" },
+                step4: { title: "Validation", cart_summary_title: "Récapitulatif", initial_cart: "Panier initial", tradein_deduction: "Reprise", final_cart: "Total", swikly_info: "", card_number: "Carte", expiry_date: "Date", cvv: "CVV", secure_info: "Sécurisé", btn_validate: "Valider" },
+                common: { back: "Retour", id: "ID", select: "Sélectionner", searching: "Recherche...", no_results: "Aucun résultat" }
+            };
+        }
+        return currentI18n;
+    }
+
+    function getI18n() {
+        return currentI18n;
+    }
 
     function injectDependencies() {
         if (initPromise) return initPromise;
@@ -141,7 +182,7 @@
                 
                 <!-- HEADER DU MODAL -->
                 <div class="px-6 pt-5 pb-3 border-b border-gray-100 flex justify-between items-center bg-white flex-shrink-0">
-                    <h1 class="text-xl font-bold text-gray-900">Reprise de votre appareil</h1>
+                    <h1 id="txt-header-title" class="text-xl font-bold text-gray-900"></h1>
                     <button id="tradein-close-btn" type="button" class="text-gray-400 hover:text-gray-600 transition p-1">
                         <i class="fa-solid fa-xmark text-xl"></i>
                     </button>
@@ -152,25 +193,25 @@
                     <div class="flex items-center justify-between w-full">
                         <div class="flex flex-col items-center flex-1">
                             <div id="circle-step-1" class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm mb-1 transition-all tradein-step-circle-active">1</div>
-                            <span id="text-step-1" class="text-xs text-center tradein-step-active">Appareil</span>
+                            <span id="text-step-1" class="text-xs text-center tradein-step-active"></span>
                         </div>
                         <div id="line-step-1" class="h-0.5 flex-1 transition-all tradein-step-line-pending mx-1 mb-5"></div>
 
                         <div class="flex flex-col items-center flex-1">
                             <div id="circle-step-2" class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm mb-1 transition-all tradein-step-circle-pending">2</div>
-                            <span id="text-step-2" class="text-xs text-center text-gray-400">Etat</span>
+                            <span id="text-step-2" class="text-xs text-center text-gray-400"></span>
                         </div>
                         <div id="line-step-2" class="h-0.5 flex-1 transition-all tradein-step-line-pending mx-1 mb-5"></div>
 
                         <div class="flex flex-col items-center flex-1">
                             <div id="circle-step-3" class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm mb-1 transition-all tradein-step-circle-pending">3</div>
-                            <span id="text-step-3" class="text-xs text-center text-gray-400">Estimation</span>
+                            <span id="text-step-3" class="text-xs text-center text-gray-400"></span>
                         </div>
                         <div id="line-step-3" class="h-0.5 flex-1 transition-all tradein-step-line-pending mx-1 mb-5"></div>
 
                         <div class="flex flex-col items-center flex-1">
                             <div id="circle-step-4" class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm mb-1 transition-all tradein-step-circle-pending">4</div>
-                            <span id="text-step-4" class="text-xs text-center text-gray-400">Validation</span>
+                            <span id="text-step-4" class="text-xs text-center text-gray-400"></span>
                         </div>
                     </div>
                 </div>
@@ -181,14 +222,14 @@
                     <!-- ÉTAPE 1 -->
                     <div id="step-1" class="step-content space-y-5">
                         <div class="relative">
-                            <input type="text" id="tradein-search-input" placeholder="Rechercher par nom (ex : iPhone 11, Galaxy S23...)" 
+                            <input type="text" id="tradein-search-input" placeholder="" 
                                    class="w-full pl-4 pr-10 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 text-sm outline-none">
                             <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-400"></i>
                             <div id="search-results-dropdown" class="hidden absolute left-0 right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-xl z-20 max-h-60 overflow-y-auto divide-y divide-gray-100"></div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Catégorie d'appareil</label>
+                            <label id="txt-step1-category-label" class="block text-xs font-semibold text-gray-600 mb-2"></label>
                             <div id="categories-container" class="grid grid-cols-3 gap-2">
                                 <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
                                 <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
@@ -197,22 +238,22 @@
                         </div>
 
                         <div id="manufacturers-block" class="hidden">
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez la marque</label>
+                            <label id="txt-step1-manufacturer-label" class="block text-xs font-semibold text-gray-600 mb-2"></label>
                             <div id="manufacturers-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
                         </div>
 
                         <div id="models-block" class="hidden">
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez le modèle</label>
+                            <label id="txt-step1-model-label" class="block text-xs font-semibold text-gray-600 mb-2"></label>
                             <div id="models-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
                         </div>
 
                         <div id="products-block" class="hidden">
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez la variante / capacité</label>
+                            <label id="txt-step1-product-label" class="block text-xs font-semibold text-gray-600 mb-2"></label>
                             <div id="products-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
                         </div>
 
                         <button id="btn-continue-step1" disabled class="w-full py-3 bg-gray-300 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2 cursor-not-allowed">
-                            <span>Continuer</span>
+                            <span id="txt-step1-btn-continue"></span>
                             <i class="fa-solid fa-arrow-right text-xs"></i>
                         </button>
                     </div>
@@ -226,21 +267,21 @@
                                 </div>
                                 <div>
                                     <div class="flex items-center space-x-2">
-                                        <span class="font-semibold text-sm text-gray-800" id="selected-product-title">Aucun produit sélectionné</span>
+                                        <span class="font-semibold text-sm text-gray-800" id="selected-product-title"></span>
                                         <span class="bg-gray-200 text-gray-700 text-[10px] font-mono px-1.5 py-0.5 rounded" id="selected-product-id-tag">ID: -</span>
                                     </div>
-                                    <div class="text-xs text-gray-500 mt-0.5" id="selected-category-title">Appareil</div>
+                                    <div class="text-xs text-gray-500 mt-0.5" id="selected-category-title"></div>
                                 </div>
                             </div>
-                            <button id="btn-back-to-step1" type="button" class="text-xs text-blue-600 underline font-medium hover:text-blue-700">Modifier</button>
+                            <button id="btn-back-to-step1" type="button" class="text-xs text-blue-600 underline font-medium hover:text-blue-700"></button>
                         </div>
 
                         <div id="survey-questions-container" class="space-y-5 text-xs"></div>
 
                         <div class="flex space-x-2 pt-2">
-                            <button id="btn-back-step2" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition">Retour</button>
+                            <button id="btn-back-step2" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition"></button>
                             <button id="btn-continue-step2" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2">
-                                <span>Continuer</span>
+                                <span id="txt-step2-btn-continue"></span>
                                 <i class="fa-solid fa-arrow-right text-xs"></i>
                             </button>
                         </div>
@@ -248,68 +289,67 @@
 
                     <!-- ÉTAPE 3 -->
                     <div id="step-3" class="step-content hidden space-y-5">
-                        <h3 class="text-base font-bold text-gray-800">Votre estimation</h3>
+                        <h3 id="txt-step3-title" class="text-base font-bold text-gray-800"></h3>
                         <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 <div id="est-product-img-container" class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm border border-blue-100 overflow-hidden flex-shrink-0">
                                     <i class="fa-solid fa-mobile-screen"></i>
                                 </div>
                                 <div class="text-xs space-y-1">
-                                    <div class="font-bold text-sm text-gray-900" id="est-product-name">Produit</div>
-                                    <div class="text-gray-500 text-xs">Diagnostic complété</div>
+                                    <div class="font-bold text-sm text-gray-900" id="est-product-name"></div>
+                                    <div id="txt-step3-completed" class="text-gray-500 text-xs"></div>
                                 </div>
                             </div>
 
                             <div class="text-right flex-shrink-0 ml-3">
-                                <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Valeur de reprise</div>
+                                <div id="txt-step3-trade-value" class="text-[10px] text-gray-500 uppercase font-bold tracking-wider"></div>
                                 <div id="est-trade-price" class="text-2xl font-black text-green-600">-- €</div>
                             </div>
                         </div>
 
                         <div class="flex space-x-2 pt-2">
-                            <button id="btn-back-step3" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition">Retour</button>
-                            <button id="btn-continue-step3" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition">Ajouter la reprise au panier</button>
+                            <button id="btn-back-step3" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition"></button>
+                            <button id="btn-continue-step3" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition"></button>
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 4 : VALIDATION & APERÇU DU PANIER REVU À LA BAISSE -->
+                    <!-- ÉTAPE 4 -->
                     <div id="step-4" class="step-content hidden space-y-4">
                         <div class="flex items-center space-x-2">
                             <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
                                 <i class="fa-solid fa-infinity"></i>
                             </div>
                             <div>
-                                <div class="font-bold text-sm text-gray-900">Empreinte bancaire sécurisée</div>
+                                <div id="txt-step4-title" class="font-bold text-sm text-gray-900"></div>
                             </div>
                         </div>
 
-                        <!-- BLOC COMPARATIF PANIER DYNAMIQUE (Si showCartSummary = true) -->
                         <div id="step4-cart-summary-block" class="hidden bg-blue-50/70 p-3.5 rounded-xl border border-blue-200 text-xs space-y-2">
                             <div class="font-bold text-blue-900 flex items-center justify-between">
-                                <span>Récapitulatif de votre commande :</span>
+                                <span id="txt-step4-cart-summary-title"></span>
                                 <i class="fa-solid fa-cart-shopping text-blue-500"></i>
                             </div>
                             <div class="flex justify-between items-center text-gray-600">
-                                <span>Panier initial :</span>
+                                <span id="txt-step4-initial-cart"></span>
                                 <span id="summary-initial-cart" class="line-through">-- €</span>
                             </div>
                             <div class="flex justify-between items-center text-green-700 font-medium">
-                                <span>Déduction de votre reprise :</span>
+                                <span id="txt-step4-tradein-deduction"></span>
                                 <span id="summary-tradein-discount">- -- €</span>
                             </div>
                             <div class="flex justify-between items-center pt-2 border-t border-blue-200/80 font-bold text-sm text-gray-900">
-                                <span>Nouveau total panier :</span>
+                                <span id="txt-step4-final-cart"></span>
                                 <span id="summary-final-cart" class="text-green-600 text-base font-black">-- €</span>
                             </div>
                         </div>
 
                         <div class="bg-gray-50 p-3 rounded-lg text-xs space-y-2 border border-gray-200">
-                            <p class="text-gray-700">Pour confirmer votre demande de reprise, nous créons une empreinte bancaire d'un montant de <strong id="swikly-amount-summary">-- €</strong>. Aucun montant n'est débité maintenant.</p>
+                            <p id="txt-step4-swikly-info" class="text-gray-700"></p>
                         </div>
 
                         <div class="space-y-3 pt-1">
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Numéro de carte</label>
+                                <label id="txt-step4-card-number" class="block text-xs font-medium text-gray-700 mb-1"></label>
                                 <div class="relative">
                                     <input type="text" placeholder="1234 5678 9012 3456" value="1234 5678 9012 3456" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
                                     <div class="absolute right-3 top-2.5 flex space-x-1">
@@ -320,11 +360,11 @@
                             </div>
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">Date d'expiration</label>
+                                    <label id="txt-step4-expiry-date" class="block text-xs font-medium text-gray-700 mb-1"></label>
                                     <input type="text" placeholder="MM / AA" value="08 / 28" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">CVV</label>
+                                    <label id="txt-step4-cvv" class="block text-xs font-medium text-gray-700 mb-1"></label>
                                     <input type="text" placeholder="123" value="888" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
                             </div>
@@ -332,12 +372,12 @@
 
                         <div class="flex items-center space-x-2 text-[10px] text-gray-500 pt-1">
                             <i class="fa-solid fa-lock text-gray-400"></i>
-                            <span>Saisie 100% sécurisée. Vos données de paiement sont chiffrées.</span>
+                            <span id="txt-step4-secure-info"></span>
                         </div>
 
                         <div class="flex space-x-2 pt-2">
-                            <button id="btn-back-step4" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition">Retour</button>
-                            <button id="btn-finish-process" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition">Valider la reprise &rarr;</button>
+                            <button id="btn-back-step4" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition"></button>
+                            <button id="btn-finish-process" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition"></button>
                         </div>
                     </div>
 
@@ -347,6 +387,51 @@
 
         document.body.appendChild(overlay);
         attachEvents();
+    }
+
+    function applyTranslations() {
+        const t = getI18n();
+        if (!t) return;
+
+        document.getElementById('txt-header-title').textContent = t.header_title;
+
+        document.getElementById('text-step-1').textContent = t.steps.device;
+        document.getElementById('text-step-2').textContent = t.steps.state;
+        document.getElementById('text-step-3').textContent = t.steps.estimation;
+        document.getElementById('text-step-4').textContent = t.steps.validation;
+
+        document.getElementById('tradein-search-input').placeholder = t.step1.search_placeholder;
+        document.getElementById('txt-step1-category-label').textContent = t.step1.category_label;
+        document.getElementById('txt-step1-manufacturer-label').textContent = t.step1.manufacturer_label;
+        document.getElementById('txt-step1-model-label').textContent = t.step1.model_label;
+        document.getElementById('txt-step1-product-label').textContent = t.step1.product_label;
+        document.getElementById('txt-step1-btn-continue').textContent = t.step1.btn_continue;
+
+        document.getElementById('selected-product-title').textContent = appState.selectedProductName || appState.selectedModelName || t.step2.no_product;
+        document.getElementById('selected-category-title').textContent = appState.selectedProductTypeName || t.step2.default_cat;
+        document.getElementById('btn-back-to-step1').textContent = t.step2.modify;
+        document.getElementById('btn-back-step2').textContent = t.common.back;
+        document.getElementById('txt-step2-btn-continue').textContent = t.step1.btn_continue;
+
+        document.getElementById('txt-step3-title').textContent = t.step3.title;
+        document.getElementById('est-product-name').textContent = appState.selectedProductName || appState.selectedModelName || t.step2.default_cat;
+        document.getElementById('txt-step3-completed').textContent = t.step3.completed;
+        document.getElementById('txt-step3-trade-value').textContent = t.step3.trade_value;
+        document.getElementById('btn-back-step3').textContent = t.common.back;
+        document.getElementById('btn-continue-step3').textContent = t.step3.btn_add_to_cart;
+
+        document.getElementById('txt-step4-title').textContent = t.step4.title;
+        document.getElementById('txt-step4-cart-summary-title').textContent = t.step4.cart_summary_title;
+        document.getElementById('txt-step4-initial-cart').textContent = t.step4.initial_cart;
+        document.getElementById('txt-step4-tradein-deduction').textContent = t.step4.tradein_deduction;
+        document.getElementById('txt-step4-final-cart').textContent = t.step4.final_cart;
+        document.getElementById('txt-step4-swikly-info').innerHTML = t.step4.swikly_info;
+        document.getElementById('txt-step4-card-number').textContent = t.step4.card_number;
+        document.getElementById('txt-step4-expiry-date').textContent = t.step4.expiry_date;
+        document.getElementById('txt-step4-cvv').textContent = t.step4.cvv;
+        document.getElementById('txt-step4-secure-info').textContent = t.step4.secure_info;
+        document.getElementById('btn-back-step4').textContent = t.common.back;
+        document.getElementById('btn-finish-process').textContent = t.step4.btn_validate;
     }
 
     function applyDisplayMode(mode) {
@@ -412,22 +497,24 @@
         if (!container) return;
         container.innerHTML = '';
 
+        const lang = appState.lang;
+
         categories.forEach((cat) => {
-            const nameFr = cat.type?.fr || 'Appareil';
+            const name = cat.type?.[lang] || cat.type?.fr || 'Appareil';
             const catId = cat.idproduct_type;
             let iconClass = 'fa-mobile-screen-button';
             for (let key in categoryIcons) {
-                if (nameFr.toLowerCase().includes(key)) { iconClass = categoryIcons[key]; break; }
+                if (name.toLowerCase().includes(key)) { iconClass = categoryIcons[key]; break; }
             }
 
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative';
-            btn.onclick = () => selectCategory(btn, catId, nameFr);
+            btn.onclick = () => selectCategory(btn, catId, name);
             btn.innerHTML = `
                 <span class="absolute top-1 right-1 text-[9px] font-mono bg-gray-100 text-gray-500 px-1 rounded">ID:${catId}</span>
                 <i class="fa-solid ${iconClass} text-lg text-gray-500 mb-1"></i>
-                <span class="text-xs font-medium text-gray-700">${nameFr}</span>
+                <span class="text-xs font-medium text-gray-700">${name}</span>
             `;
             container.appendChild(btn);
         });
@@ -609,6 +696,7 @@
         clearTimeout(searchTimeout);
         const dropdown = document.getElementById('search-results-dropdown');
         const cleanQuery = query.trim();
+        const t = getI18n();
 
         if (cleanQuery.length < 2) {
             dropdown.classList.add('hidden');
@@ -617,7 +705,7 @@
         }
 
         searchTimeout = setTimeout(async () => {
-            dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Recherche en cours...</div>`;
+            dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center"><i class="fa-solid fa-spinner fa-spin mr-2"></i> ${t.common.searching}</div>`;
             dropdown.classList.remove('hidden');
 
             const keywords = cleanQuery.toLowerCase().split(/\s+/).filter(Boolean);
@@ -671,7 +759,7 @@
             }
 
             if (matches.length === 0) {
-                dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center">Aucun appareil correspondant trouvé</div>`;
+                dropdown.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center">${t.common.no_results}</div>`;
                 return;
             }
 
@@ -690,7 +778,7 @@
                         <span class="text-xs font-semibold text-gray-800 mr-2">${p.product}</span>
                         <span class="bg-gray-100 text-gray-500 text-[10px] font-mono px-1.5 py-0.5 rounded">ID: ${p.idproduct}</span>
                     </div>
-                    <span class="text-[10px] text-blue-600 font-medium">Sélectionner</span>
+                    <span class="text-[10px] text-blue-600 font-medium">${t.common.select}</span>
                 `;
 
                 item.onclick = () => {
@@ -709,6 +797,7 @@
         const container = document.getElementById('survey-questions-container');
         container.innerHTML = `<div class="animate-pulse space-y-4"><div class="h-4 bg-gray-200 rounded w-2/3"></div><div class="h-10 bg-gray-100 rounded-lg"></div></div>`;
         appState.surveyAnswers = {};
+        const t = getI18n();
 
         try {
             const res = await fetch(`${CONFIG.CODES_API_URL}/Diagnostic/survey?idproduct=${encodeURIComponent(idproduct)}`, {
@@ -717,16 +806,17 @@
             const data = await res.json();
             if (data?.results?.questions?.length) renderSurveyQuestions(data.results.questions);
         } catch (e) {
-            container.innerHTML = `<p class="text-xs text-red-500 text-center py-4">Erreur questionnaire.</p>`;
+            container.innerHTML = `<p class="text-xs text-red-500 text-center py-4">${t.step2.survey_error}</p>`;
         }
     }
 
     function renderSurveyQuestions(questions) {
         const container = document.getElementById('survey-questions-container');
         container.innerHTML = '';
+        const lang = appState.lang;
 
         questions.forEach((q, qIndex) => {
-            const qTitle = q.title?.fr || `Question ${qIndex + 1}`;
+            const qTitle = q.title?.[lang] || q.title?.fr || `Question ${qIndex + 1}`;
             const idQ = q.idquestion;
             const qImpact = q.question_impact;
 
@@ -736,7 +826,7 @@
             let answersHtml = '';
             if (q.answers?.length) {
                 q.answers.forEach((ans, aIndex) => {
-                    const ansTitle = ans.title?.fr || `Réponse ${aIndex + 1}`;
+                    const ansTitle = ans.title?.[lang] || ans.title?.fr || `Réponse ${aIndex + 1}`;
                     const isFirst = aIndex === 0;
 
                     if (isFirst) {
@@ -768,7 +858,6 @@
     }
 
     async function fetchGradeFromMatrix() {
-        console.group("=== DIAGNOSTIC MATRIX ===");
         const questionKeys = Object.keys(appState.surveyAnswers);
         const mappingCombination = questionKeys.slice(0, 5).map(k => appState.surveyAnswers[k].mapping).join('').toUpperCase();
 
@@ -783,14 +872,13 @@
                 fetchPriceFromArgus(appState.selectedProductId || appState.selectedModelId, grade);
             }
         } catch (e) { console.error("Erreur matrix", e); }
-        console.groupEnd();
     }
 
     async function fetchPriceFromArgus(idproduct, grade) {
-        console.group("=== CATALOG ARGUS ===");
         const priceElem = document.getElementById('est-trade-price');
         const summaryElem = document.getElementById('swikly-amount-summary');
-        priceElem.innerHTML = `<span class="animate-pulse text-gray-400 text-lg">Chargement...</span>`;
+        const t = getI18n();
+        priceElem.innerHTML = `<span class="animate-pulse text-gray-400 text-lg">${t.step3.loading}</span>`;
 
         try {
             const res = await fetch(`${CONFIG.CODES_API_URL}/Catalog/argus?idargus=356&idproduct=${encodeURIComponent(idproduct)}`, {
@@ -803,11 +891,9 @@
                 priceElem.textContent = `${price} €`;
                 if (summaryElem) summaryElem.textContent = `${price} €`;
 
-                // Mise à jour du récapitulatif du panier à l'Étape 4
                 updateStep4CartSummary();
             }
-        } catch (e) { priceElem.textContent = "Erreur"; }
-        console.groupEnd();
+        } catch (e) { priceElem.textContent = t.step3.error; }
     }
 
     function updateStep4CartSummary() {
@@ -826,11 +912,12 @@
     }
 
     function updatePreviewTitles() {
+        const t = getI18n();
         const name = appState.selectedProductName || appState.selectedModelName;
         const id = appState.selectedProductId || appState.selectedModelId;
         const img = appState.selectedProductImage;
 
-        document.getElementById('selected-product-title').textContent = name || "Aucun produit sélectionné";
+        document.getElementById('selected-product-title').textContent = name || t.step2.no_product;
         document.getElementById('selected-product-id-tag').textContent = id ? `ID: ${id}` : "ID: -";
         const imgContainerStep2 = document.getElementById('selected-product-img-container');
         if (imgContainerStep2) {
@@ -839,7 +926,7 @@
                 : `<i class="fa-solid fa-mobile-screen"></i>`;
         }
 
-        document.getElementById('est-product-name').textContent = name || "Produit";
+        document.getElementById('est-product-name').textContent = name || t.step2.default_cat;
         const imgContainerStep3 = document.getElementById('est-product-img-container');
         if (imgContainerStep3) {
             imgContainerStep3.innerHTML = img 
@@ -894,19 +981,18 @@
         }
     }
 
-    // --- ENVOI DU CALL / EVENT AU SITE HÔTE LORS DE LA VALIDATION ---
     function finishProcess() {
         const tradeInValue = appState.price || 0;
         const initialCart = appState.cartAmount;
         const finalCart = Math.max(0, initialCart - tradeInValue);
 
-        // Dispatch de l'événement personnalisé vers la page index.html
         const event = new CustomEvent('tradein:completed', {
             detail: {
                 productName: appState.selectedProductName || appState.selectedModelName,
                 tradeInDiscount: tradeInValue,
                 initialCartAmount: initialCart,
-                finalCartAmount: finalCart
+                finalCartAmount: finalCart,
+                lang: appState.lang
             }
         });
         window.dispatchEvent(event);
@@ -914,16 +1000,17 @@
         TradeInModule.close();
     }
 
-    // --- AUTO-INIT DEPUIS LA BALISE SCRIPT ---
     function autoInitFromScriptTag() {
         const currentScript = document.currentScript || document.querySelector('script[src*="tradein-module.js"]');
         if (currentScript) {
             const displayType = currentScript.getAttribute('data-displayType') || currentScript.getAttribute('data-displaytype') || 'popin';
+            const lang = currentScript.getAttribute('data-lang') || 'fr';
             const showSummary = currentScript.getAttribute('data-showCartSummary') !== 'false';
             const cartVal = parseFloat(currentScript.getAttribute('data-cart')) || 0;
 
             window.TradeInModule.init({ 
                 displayType: displayType,
+                lang: lang,
                 showCartSummary: showSummary,
                 cartAmount: cartVal
             });
@@ -941,9 +1028,14 @@
         init: async function (options) {
             const opts = options || {};
             appState.displayType = opts.displayType || 'popin';
+            appState.lang = (opts.lang === 'en' || opts.lang === 'fr') ? opts.lang : 'fr';
             if (typeof opts.showCartSummary !== 'undefined') appState.showCartSummary = !!opts.showCartSummary;
             if (typeof opts.cartAmount !== 'undefined') appState.cartAmount = parseFloat(opts.cartAmount) || 0;
 
+            // Chargement de la langue
+            await loadI18n(appState.lang);
+
+            // Chargement des dépendances UI
             await injectDependencies();
 
             if (!isInitialized) {
@@ -952,17 +1044,20 @@
                 isInitialized = true;
             }
 
+            applyTranslations();
             applyDisplayMode(appState.displayType);
         },
         open: async function (options) {
             if (options) {
                 if (options.displayType) appState.displayType = options.displayType;
+                if (options.lang) appState.lang = (options.lang === 'en' || options.lang === 'fr') ? options.lang : 'fr';
                 if (typeof options.showCartSummary !== 'undefined') appState.showCartSummary = !!options.showCartSummary;
                 if (typeof options.cartAmount !== 'undefined') appState.cartAmount = parseFloat(options.cartAmount) || 0;
             }
 
             await this.init({ 
                 displayType: appState.displayType,
+                lang: appState.lang,
                 showCartSummary: appState.showCartSummary,
                 cartAmount: appState.cartAmount
             });
