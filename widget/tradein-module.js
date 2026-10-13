@@ -322,21 +322,25 @@
                     <!-- ÉTAPE 3 -->
                     <div id="step-3" class="step-content hidden space-y-5">
                         <h3 id="txt-step3-title" class="text-base font-bold text-gray-800"></h3>
-                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between overflow-hidden min-h-[88px]">
-                            <div class="flex items-center space-x-3.5 h-full self-stretch">
-                                <div id="est-product-img-container" class="w-20 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
+                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-stretch justify-between overflow-hidden min-h-[100%]">
+                            
+                            <!-- Bloc Gauche : Image + Infos -->
+                            <div class="flex items-center space-x-4 h-full self-stretch flex-1">
+                                <div id="est-product-img-container" class="w-24 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
                                     <i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>
                                 </div>
-                                <div class="text-xs space-y-1 py-2.5">
+                                <div class="text-xs space-y-1 py-3 pr-2">
                                     <div class="font-bold text-sm text-gray-900" id="est-product-name"></div>
                                     <div id="txt-step3-completed" class="text-gray-500 text-xs"></div>
                                 </div>
                             </div>
 
-                            <div class="text-right flex-shrink-0 pr-4 pl-2 py-2.5">
-                                <div id="txt-step3-trade-value" class="text-[10px] text-gray-500 uppercase font-bold tracking-wider"></div>
-                                <div id="est-trade-price" class="text-2xl font-black text-green-600">-- €</div>
+                            <!-- Bloc Droite : Prix -->
+                            <div class="text-right flex-shrink-0 pr-4 pl-2 py-3 flex flex-col justify-center">
+                                <div id="txt-step3-trade-value" class="text-[10px] text-gray-500 uppercase font-bold tracking-wider mb-0.5"></div>
+                                <div id="est-trade-price" class="text-2xl font-black text-green-600 leading-none">-- €</div>
                             </div>
+
                         </div>
                     </div>
 
@@ -974,10 +978,10 @@
         const id = appState.selectedProductId || appState.selectedModelId;
         const img = appState.selectedProductImage;
 
+        // Étape 2
         document.getElementById('selected-product-title').textContent = name || t.step2.no_product;
         document.getElementById('selected-product-id-tag').textContent = id ? `ID: ${id}` : "ID: -";
         
-        // Conteneur Étape 2 (Bord gauche plein cadre)
         const imgContainerStep2 = document.getElementById('selected-product-img-container');
         if (imgContainerStep2) {
             imgContainerStep2.innerHTML = img 
@@ -985,12 +989,12 @@
                 : `<i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>`;
         }
 
-        // Conteneur Étape 3 (Bord gauche plein cadre)
+        // Étape 3 (Ajustement hauteur max image)
         document.getElementById('est-product-name').textContent = name || t.step2.default_cat;
         const imgContainerStep3 = document.getElementById('est-product-img-container');
         if (imgContainerStep3) {
             imgContainerStep3.innerHTML = img 
-                ? `<img src="${img}" class="h-full w-full object-contain">` 
+                ? `<img src="${img}" class="max-h-20 h-full w-full object-contain">` 
                 : `<i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>`;
         }
     }
