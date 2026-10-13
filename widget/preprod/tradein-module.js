@@ -322,7 +322,7 @@
                     <!-- ÉTAPE 3 -->
                     <div id="step-3" class="step-content hidden space-y-5">
                         <h3 id="txt-step3-title" class="text-base font-bold text-gray-800"></h3>
-                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-stretch justify-between overflow-hidden min-h-[100px]">
+                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-stretch justify-between overflow-hidden min-h-[100%]">
                             
                             <!-- Bloc Gauche : Image + Infos -->
                             <div class="flex items-center space-x-4 h-full self-stretch flex-1">
