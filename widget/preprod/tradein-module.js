@@ -156,7 +156,7 @@
                     .tradein-mode-popin {
                         max-width: 36rem;
                         height: 90vh;
-                        max-height: 680px;
+                        max-height: 850px;
                         border-radius: 1rem;
                         margin: auto;
                         transform: scale(0.95);
@@ -300,12 +300,12 @@
 
                     <!-- ÉTAPE 2 -->
                     <div id="step-2" class="step-content hidden space-y-5">
-                        <div class="bg-gray-50 p-3 rounded-xl flex justify-between items-center border border-gray-200 min-h-[72px]">
-                            <div class="flex items-center space-x-3 h-12">
-                                <div id="selected-product-img-container" class="w-12 h-full bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-semibold text-xs border border-blue-100 overflow-hidden flex-shrink-0">
-                                    <i class="fa-solid fa-mobile-screen"></i>
+                        <div class="bg-gray-50 rounded-xl flex justify-between items-center border border-gray-200 overflow-hidden min-h-[80px]">
+                            <div class="flex items-center space-x-3.5 h-full self-stretch">
+                                <div id="selected-product-img-container" class="w-20 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
+                                    <i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>
                                 </div>
-                                <div>
+                                <div class="py-2.5 pr-2">
                                     <div class="flex items-center space-x-2">
                                         <span class="font-semibold text-sm text-gray-800" id="selected-product-title"></span>
                                         <span class="bg-gray-200 text-gray-700 text-[10px] font-mono px-1.5 py-0.5 rounded" id="selected-product-id-tag">ID: -</span>
@@ -313,7 +313,7 @@
                                     <div class="text-xs text-gray-500 mt-0.5" id="selected-category-title"></div>
                                 </div>
                             </div>
-                            <button id="btn-back-to-step1" type="button" class="text-xs text-blue-600 underline font-medium hover:text-blue-700"></button>
+                            <button id="btn-back-to-step1" type="button" class="text-xs text-blue-600 underline font-medium hover:text-blue-700 pr-3 flex-shrink-0"></button>
                         </div>
 
                         <div id="survey-questions-container" class="space-y-5 text-xs"></div>
@@ -322,18 +322,18 @@
                     <!-- ÉTAPE 3 -->
                     <div id="step-3" class="step-content hidden space-y-5">
                         <h3 id="txt-step3-title" class="text-base font-bold text-gray-800"></h3>
-                        <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between min-h-[80px]">
-                            <div class="flex items-center space-x-3 h-14">
-                                <div id="est-product-img-container" class="w-14 h-full bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm border border-blue-100 overflow-hidden flex-shrink-0">
-                                    <i class="fa-solid fa-mobile-screen"></i>
+                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between overflow-hidden min-h-[88px]">
+                            <div class="flex items-center space-x-3.5 h-full self-stretch">
+                                <div id="est-product-img-container" class="w-20 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
+                                    <i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>
                                 </div>
-                                <div class="text-xs space-y-1">
+                                <div class="text-xs space-y-1 py-2.5">
                                     <div class="font-bold text-sm text-gray-900" id="est-product-name"></div>
                                     <div id="txt-step3-completed" class="text-gray-500 text-xs"></div>
                                 </div>
                             </div>
 
-                            <div class="text-right flex-shrink-0 ml-3">
+                            <div class="text-right flex-shrink-0 pr-4 pl-2 py-2.5">
                                 <div id="txt-step3-trade-value" class="text-[10px] text-gray-500 uppercase font-bold tracking-wider"></div>
                                 <div id="est-trade-price" class="text-2xl font-black text-green-600">-- €</div>
                             </div>
@@ -974,22 +974,24 @@
         const id = appState.selectedProductId || appState.selectedModelId;
         const img = appState.selectedProductImage;
 
-        // A04 : Visuel du produit épousant toute la hauteur du conteneur aux étapes 2 et 3
         document.getElementById('selected-product-title').textContent = name || t.step2.no_product;
         document.getElementById('selected-product-id-tag').textContent = id ? `ID: ${id}` : "ID: -";
+        
+        // Conteneur Étape 2 (Bord gauche plein cadre)
         const imgContainerStep2 = document.getElementById('selected-product-img-container');
         if (imgContainerStep2) {
             imgContainerStep2.innerHTML = img 
-                ? `<img src="${img}" class="h-full w-full object-contain p-1">` 
-                : `<i class="fa-solid fa-mobile-screen text-lg"></i>`;
+                ? `<img src="${img}" class="h-full w-full object-contain">` 
+                : `<i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>`;
         }
 
+        // Conteneur Étape 3 (Bord gauche plein cadre)
         document.getElementById('est-product-name').textContent = name || t.step2.default_cat;
         const imgContainerStep3 = document.getElementById('est-product-img-container');
         if (imgContainerStep3) {
             imgContainerStep3.innerHTML = img 
-                ? `<img src="${img}" class="h-full w-full object-contain p-1">` 
-                : `<i class="fa-solid fa-mobile-screen text-xl"></i>`;
+                ? `<img src="${img}" class="h-full w-full object-contain">` 
+                : `<i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>`;
         }
     }
 
