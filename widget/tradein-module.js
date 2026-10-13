@@ -4,7 +4,6 @@
 (function (window) {
     'use strict';
 
-    // --- CONFIGURATION DU MODULE ---
     const CONFIG = {
         CODES_API_URL: "https://corsproxy.io/?key=c46f8301&url=" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com"),
         CODES_API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr",
@@ -23,6 +22,8 @@
 
     let appState = {
         displayType: 'popin', // 'popin' | 'drawer-right' | 'drawer-left'
+        cartAmount: 0,
+        showCartSummary: true, // Paramètre Tag Commander pour afficher ou masqué l'impact panier
         currentStep: 1,
         selectedProductTypeId: null,
         selectedProductTypeName: null,
@@ -43,14 +44,12 @@
     let isInitialized = false;
     let initPromise = null;
 
-    // --- INJECTION ASYNCHRONE DES DÉPENDANCES (Tailwind, FontAwesome, Styles Custom) ---
     function injectDependencies() {
         if (initPromise) return initPromise;
 
         initPromise = new Promise((resolve) => {
             let tailwindLoaded = !!document.getElementById('tradein-tailwind-cdn');
 
-            // FontAwesome CDN
             if (!document.getElementById('tradein-fontawesome-cdn')) {
                 const faLink = document.createElement('link');
                 faLink.id = 'tradein-fontawesome-cdn';
@@ -59,7 +58,6 @@
                 document.head.appendChild(faLink);
             }
 
-            // Styles Custom (Stepper + Drawers)
             if (!document.getElementById('tradein-custom-styles')) {
                 const styleTag = document.createElement('style');
                 styleTag.id = 'tradein-custom-styles';
@@ -71,7 +69,6 @@
                     .tradein-step-line-active { background-color: #2563eb; }
                     .tradein-step-line-pending { background-color: #e5e7eb; }
                     
-                    /* POPIN */
                     .tradein-mode-popin {
                         max-width: 36rem;
                         border-radius: 1rem;
@@ -84,7 +81,6 @@
                         opacity: 1;
                     }
 
-                    /* DRAWER DROITE */
                     .tradein-mode-drawer-right {
                         position: fixed;
                         right: 0;
@@ -100,7 +96,6 @@
                         transform: translateX(0);
                     }
 
-                    /* DRAWER GAUCHE */
                     .tradein-mode-drawer-left {
                         position: fixed;
                         left: 0;
@@ -119,7 +114,6 @@
                 document.head.appendChild(styleTag);
             }
 
-            // Tailwind CDN
             if (!tailwindLoaded) {
                 const tailwindScript = document.createElement('script');
                 tailwindScript.id = 'tradein-tailwind-cdn';
@@ -135,7 +129,6 @@
         return initPromise;
     }
 
-    // --- INJECTION DU DOM DE LA FENÊTRE MODALE ---
     function injectModalDOM() {
         if (document.getElementById('tradein-modal-overlay')) return;
 
@@ -185,7 +178,7 @@
                 <!-- CONTENU SCROLLABLE -->
                 <div class="p-6 overflow-y-auto flex-1">
 
-                    <!-- ÉTAPE 1 : CHOIX DU PRODUIT -->
+                    <!-- ÉTAPE 1 -->
                     <div id="step-1" class="step-content space-y-5">
                         <div class="relative">
                             <input type="text" id="tradein-search-input" placeholder="Rechercher par nom (ex : iPhone 11, Galaxy S23...)" 
@@ -224,7 +217,7 @@
                         </button>
                     </div>
 
-                    <!-- ÉTAPE 2 : QUESTIONNAIRE ÉTAT -->
+                    <!-- ÉTAPE 2 -->
                     <div id="step-2" class="step-content hidden space-y-5">
                         <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center border border-gray-200">
                             <div class="flex items-center space-x-3">
@@ -253,7 +246,7 @@
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 3 : ESTIMATION -->
+                    <!-- ÉTAPE 3 -->
                     <div id="step-3" class="step-content hidden space-y-5">
                         <h3 class="text-base font-bold text-gray-800">Votre estimation</h3>
                         <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between">
@@ -279,7 +272,7 @@
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 4 : EMPREINTE CB DE GARANTIE -->
+                    <!-- ÉTAPE 4 : VALIDATION & APERÇU DU PANIER REVU À LA BAISSE -->
                     <div id="step-4" class="step-content hidden space-y-4">
                         <div class="flex items-center space-x-2">
                             <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
@@ -290,7 +283,27 @@
                             </div>
                         </div>
 
-                        <div class="bg-blue-50/50 p-3 rounded-lg text-xs space-y-2 border border-blue-100">
+                        <!-- BLOC COMPARATIF PANIER DYNAMIQUE (Si showCartSummary = true) -->
+                        <div id="step4-cart-summary-block" class="hidden bg-blue-50/70 p-3.5 rounded-xl border border-blue-200 text-xs space-y-2">
+                            <div class="font-bold text-blue-900 flex items-center justify-between">
+                                <span>Récapitulatif de votre commande :</span>
+                                <i class="fa-solid fa-cart-shopping text-blue-500"></i>
+                            </div>
+                            <div class="flex justify-between items-center text-gray-600">
+                                <span>Panier initial :</span>
+                                <span id="summary-initial-cart" class="line-through">-- €</span>
+                            </div>
+                            <div class="flex justify-between items-center text-green-700 font-medium">
+                                <span>Déduction de votre reprise :</span>
+                                <span id="summary-tradein-discount">- -- €</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-blue-200/80 font-bold text-sm text-gray-900">
+                                <span>Nouveau total panier :</span>
+                                <span id="summary-final-cart" class="text-green-600 text-base font-black">-- €</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 p-3 rounded-lg text-xs space-y-2 border border-gray-200">
                             <p class="text-gray-700">Pour confirmer votre demande de reprise, nous créons une empreinte bancaire d'un montant de <strong id="swikly-amount-summary">-- €</strong>. Aucun montant n'est débité maintenant.</p>
                         </div>
 
@@ -324,7 +337,7 @@
 
                         <div class="flex space-x-2 pt-2">
                             <button id="btn-back-step4" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition">Retour</button>
-                            <button id="btn-finish-process" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition">Valider l'empreinte &rarr;</button>
+                            <button id="btn-finish-process" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition">Valider la reprise &rarr;</button>
                         </div>
                     </div>
 
@@ -336,7 +349,6 @@
         attachEvents();
     }
 
-    // --- APPLICATION DU MODE D'AFFICHAGE ---
     function applyDisplayMode(mode) {
         const overlay = document.getElementById('tradein-modal-overlay');
         const container = document.getElementById('tradein-modal-container');
@@ -350,13 +362,12 @@
         } else if (mode === 'drawer-left') {
             overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-start p-0 opacity-0 pointer-events-none transition-opacity duration-300 ease-out";
             container.classList.add('tradein-mode-drawer-left');
-        } else { // popin par défaut
+        } else {
             overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 ease-out";
             container.classList.add('tradein-mode-popin');
         }
     }
 
-    // --- EVENEMENTS JS DU MODULE ---
     function attachEvents() {
         document.getElementById('tradein-close-btn').onclick = () => TradeInModule.close();
         document.getElementById('tradein-modal-overlay').onclick = (e) => {
@@ -382,7 +393,6 @@
         });
     }
 
-    // --- REQUÊTES API (CATALOGUE, QUESTIONNAIRE, ARGUS) ---
     async function fetchProductTypes() {
         try {
             const response = await fetch(CONFIG.CODES_API_URL + "/Catalog/productTypes", {
@@ -595,7 +605,6 @@
         updateContinueButtonState();
     }
 
-    // --- RECHERCHE MULTICRITÈRE AVEC FALLBACK ---
     function handleSearch(query) {
         clearTimeout(searchTimeout);
         const dropdown = document.getElementById('search-results-dropdown');
@@ -762,7 +771,6 @@
         console.group("=== DIAGNOSTIC MATRIX ===");
         const questionKeys = Object.keys(appState.surveyAnswers);
         const mappingCombination = questionKeys.slice(0, 5).map(k => appState.surveyAnswers[k].mapping).join('').toUpperCase();
-        console.log(`Mapping : "${mappingCombination}"`);
 
         try {
             const res = await fetch(`${CONFIG.CODES_API_URL}/Diagnostic/matrix?idargus=356`, {
@@ -772,7 +780,6 @@
             if (data?.results?.matrix?.[mappingCombination]) {
                 const grade = data.results.matrix[mappingCombination];
                 appState.grade = grade;
-                console.log(`Grade : ${grade}`);
                 fetchPriceFromArgus(appState.selectedProductId || appState.selectedModelId, grade);
             }
         } catch (e) { console.error("Erreur matrix", e); }
@@ -795,9 +802,27 @@
                 appState.price = price;
                 priceElem.textContent = `${price} €`;
                 if (summaryElem) summaryElem.textContent = `${price} €`;
+
+                // Mise à jour du récapitulatif du panier à l'Étape 4
+                updateStep4CartSummary();
             }
         } catch (e) { priceElem.textContent = "Erreur"; }
         console.groupEnd();
+    }
+
+    function updateStep4CartSummary() {
+        const cartBlock = document.getElementById('step4-cart-summary-block');
+        if (!cartBlock) return;
+
+        if (appState.showCartSummary && appState.cartAmount > 0 && appState.price) {
+            const finalCart = Math.max(0, appState.cartAmount - appState.price);
+            document.getElementById('summary-initial-cart').textContent = `${appState.cartAmount} €`;
+            document.getElementById('summary-tradein-discount').textContent = `- ${appState.price} €`;
+            document.getElementById('summary-final-cart').textContent = `${finalCart} €`;
+            cartBlock.classList.remove('hidden');
+        } else {
+            cartBlock.classList.add('hidden');
+        }
     }
 
     function updatePreviewTitles() {
@@ -869,19 +894,39 @@
         }
     }
 
+    // --- ENVOI DU CALL / EVENT AU SITE HÔTE LORS DE LA VALIDATION ---
     function finishProcess() {
-        alert(`Félicitations ! Votre demande pour [${appState.selectedProductName || appState.selectedModelName}] (Prix : ${appState.price ? appState.price + ' €' : 'N/A'}) est confirmée.`);
+        const tradeInValue = appState.price || 0;
+        const initialCart = appState.cartAmount;
+        const finalCart = Math.max(0, initialCart - tradeInValue);
+
+        // Dispatch de l'événement personnalisé vers la page index.html
+        const event = new CustomEvent('tradein:completed', {
+            detail: {
+                productName: appState.selectedProductName || appState.selectedModelName,
+                tradeInDiscount: tradeInValue,
+                initialCartAmount: initialCart,
+                finalCartAmount: finalCart
+            }
+        });
+        window.dispatchEvent(event);
+
         TradeInModule.close();
     }
 
-    // --- AUTO-INITIALISATION AUTO-EXÉCUTABLE DEPUIS L'ATTRIBUT DATA-DISPLAYTYPE ---
+    // --- AUTO-INIT DEPUIS LA BALISE SCRIPT ---
     function autoInitFromScriptTag() {
         const currentScript = document.currentScript || document.querySelector('script[src*="tradein-module.js"]');
         if (currentScript) {
-            const displayType = currentScript.getAttribute('data-displayType') || 
-                                currentScript.getAttribute('data-displaytype') || 
-                                'popin';
-            window.TradeInModule.init({ displayType: displayType });
+            const displayType = currentScript.getAttribute('data-displayType') || currentScript.getAttribute('data-displaytype') || 'popin';
+            const showSummary = currentScript.getAttribute('data-showCartSummary') !== 'false';
+            const cartVal = parseFloat(currentScript.getAttribute('data-cart')) || 0;
+
+            window.TradeInModule.init({ 
+                displayType: displayType,
+                showCartSummary: showSummary,
+                cartAmount: cartVal
+            });
         }
     }
 
@@ -891,11 +936,13 @@
         autoInitFromScriptTag();
     }
 
-    // --- API PUBLIQUE DU MODULE ---
+    // --- API PUBLIQUE ---
     window.TradeInModule = {
         init: async function (options) {
             const opts = options || {};
             appState.displayType = opts.displayType || 'popin';
+            if (typeof opts.showCartSummary !== 'undefined') appState.showCartSummary = !!opts.showCartSummary;
+            if (typeof opts.cartAmount !== 'undefined') appState.cartAmount = parseFloat(opts.cartAmount) || 0;
 
             await injectDependencies();
 
@@ -908,11 +955,17 @@
             applyDisplayMode(appState.displayType);
         },
         open: async function (options) {
-            if (options && options.displayType) {
-                appState.displayType = options.displayType;
+            if (options) {
+                if (options.displayType) appState.displayType = options.displayType;
+                if (typeof options.showCartSummary !== 'undefined') appState.showCartSummary = !!options.showCartSummary;
+                if (typeof options.cartAmount !== 'undefined') appState.cartAmount = parseFloat(options.cartAmount) || 0;
             }
 
-            await this.init({ displayType: appState.displayType });
+            await this.init({ 
+                displayType: appState.displayType,
+                showCartSummary: appState.showCartSummary,
+                cartAmount: appState.cartAmount
+            });
 
             const overlay = document.getElementById('tradein-modal-overlay');
             const container = document.getElementById('tradein-modal-container');
@@ -928,7 +981,6 @@
                 overlay.classList.remove('opacity-0', 'pointer-events-none');
                 overlay.classList.add('opacity-100');
 
-                // Recalcul de reflow pour valider l'état initial
                 void container.offsetHeight;
 
                 container.style.transition = '';

@@ -18,13 +18,86 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold text-gray-900">Démonstrateur d'Intégration Tag Commander</h1>
-                <p class="text-xs text-gray-500">Auto-initialisation du module via l'attribut data-displayType.</p>
+                <p class="text-xs text-gray-500">Modes d'affichage du module et méthodes d'intégration HTML / JavaScript.</p>
             </div>
         </div>
 
         <div class="space-y-6">
 
-            <!-- LIGNE 1 : MODE POPIN -->
+            <!-- LIGNE 1 : MODE DRAWER RIGHT (AVEC PANIER & ÉCOUTE ÉVÉNEMENT) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row">
+                <div class="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center overflow-hidden border border-blue-200">
+                                <svg class="w-full h-full" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" fill="#DBEAFE"/>
+                                    <rect x="22" y="0" width="10" height="32" fill="#1D4ED8"/>
+                                </svg>
+                            </div>
+                            <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">drawer-right</span>
+                        </div>
+                        
+                        <h2 class="font-bold text-base text-gray-900">Drawer Droite (Panier)</h2>
+                        <p class="text-xs text-gray-500">Tiroir à droite avec injection du montant panier et déduction automatique de la reprise.</p>
+
+                        <!-- CARD PANIER -->
+                        <div id="demo-cart-card" class="bg-gray-50 p-3 rounded-lg border border-gray-200 text-xs space-y-1.5">
+                            <div class="flex justify-between items-center text-gray-600">
+                                <span>Produit commandé :</span>
+                                <span id="cart-product-name" class="font-medium text-gray-800">Chargement...</span>
+                            </div>
+                            <div id="cart-price-breakdown" class="flex justify-between items-center pt-1.5 border-t border-gray-200">
+                                <span class="text-gray-600">Total Panier :</span>
+                                <span id="cart-total-amount" class="font-bold text-gray-900">-- €</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="btn-open-cart-tradein" 
+                            class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
+                        <span>Tester avec Panier</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- DOCUMENTATION TRIPLE (INIT, OPEN, EVENT LISTEN) -->
+                <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[15px] flex flex-col justify-center overflow-x-auto space-y-3.5">
+                    <div>
+                        <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
+                            <i class="fa-solid fa-code mr-1.5 text-blue-400"></i> 1. Tag Commander
+                        </div>
+<pre><code>&lt;script type="text/javascript" 
+    src="https://mon-cdn.com/tradein-module.js"
+    data-displayType="drawer-right" 
+    data-showCartSummary="true" 
+    data-cart="1035"&gt;&lt;/script&gt;</code></pre>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-800">
+                        <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
+                            <i class="fa-solid fa-terminal mr-1.5 text-green-400"></i> 2. Déclenchement JS
+                        </div>
+<pre><code>TradeInModule.open({ 
+    displayType: 'drawer-right', 
+    cartAmount: 1035, 
+    showCartSummary: true });</code></pre>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-800">
+                        <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
+                            <i class="fa-solid fa-reply mr-1.5 text-amber-400"></i> 3. MAJ du panier client
+                        </div>
+                        <pre><code>window.addEventListener('tradein:completed', function(e) {
+    console.log("Montant reprise :", e.detail.tradeInDiscount);
+    console.log("Nouveau panier :", e.detail.finalCartAmount);
+    // Code client pour mettre à jour le panier du site e-commerce
+});</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIGNE 2 : MODE POPIN CLASSIC -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row">
                 <div class="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col justify-between space-y-4">
                     <div class="space-y-2">
@@ -35,61 +108,37 @@
                             <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">popin</span>
                         </div>
                         <h2 class="font-bold text-base text-gray-900">Mode Popin</h2>
-                        <p class="text-xs text-gray-500">Modale centrée au milieu de l'écran.</p>
+                        <p class="text-xs text-gray-500">Modale centrée au milieu de l'écran sans calcul d'impact panier.</p>
                     </div>
-                    <button onclick="TradeInModule.open({ displayType: 'popin' })" 
+                    <button onclick="TradeInModule.open({ displayType: 'popin', showCartSummary: false })" 
                             class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
                         <span>Tester la Popin</span>
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
 
-                <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[11px] flex flex-col justify-center overflow-x-auto">
-                    <div class="text-[10px] text-slate-400 mb-2 font-sans flex items-center">
-                        <i class="fa-solid fa-terminal mr-1.5 text-blue-400"></i> Script Tag Commander (Auto-initialisé)
-                    </div>
-                    <pre><code>&lt;script 
-    type="text/javascript" 
+                <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[15px] flex flex-col justify-center overflow-x-auto space-y-3.5">
+                    <div>
+                        <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
+                            <i class="fa-solid fa-code mr-1.5 text-blue-400"></i> Option 1 : Tag Commander
+                        </div>
+<pre><code>&lt;script type="text/javascript" 
     src="https://mon-cdn.com/tradein-module.js" 
     data-displayType="popin"&gt;&lt;/script&gt;</code></pre>
-                </div>
-            </div>
+                    </div>
 
-            <!-- LIGNE 2 : MODE DRAWER RIGHT -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row">
-                <div class="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col justify-between space-y-4">
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center overflow-hidden border border-blue-200">
-                                <svg class="w-full h-full" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="32" height="32" fill="#DBEAFE"/>
-                                    <rect x="22" y="0" width="10" height="32" fill="#1D4ED8"/>
-                                </svg>
-                            </div>
-                            <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">drawer-right</span>
+                    <div class="pt-2 border-t border-slate-800">
+                        <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
+                            <i class="fa-solid fa-terminal mr-1.5 text-green-400"></i> Option 2 : Déclenchement JS
                         </div>
-                        <h2 class="font-bold text-base text-gray-900">Drawer (Droite)</h2>
-                        <p class="text-xs text-gray-500">Tiroir latéral glissant depuis la droite.</p>
+<pre><code>TradeInModule.open({ 
+    displayType: 'popin', 
+    showCartSummary: false });</code></pre>
                     </div>
-                    <button onclick="TradeInModule.open({ displayType: 'drawer-right' })" 
-                            class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
-                        <span>Tester Drawer Droite</span>
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-
-                <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[11px] flex flex-col justify-center overflow-x-auto">
-                    <div class="text-[10px] text-slate-400 mb-2 font-sans flex items-center">
-                        <i class="fa-solid fa-terminal mr-1.5 text-blue-400"></i> Script Tag Commander (Auto-initialisé)
-                    </div>
-                    <pre><code>&lt;script 
-    type="text/javascript" 
-    src="https://mon-cdn.com/tradein-module.js" 
-    data-displayType="drawer-right"&gt;&lt;/script&gt;</code></pre>
                 </div>
             </div>
 
-            <!-- LIGNE 3 : MODE DRAWER LEFT -->
+            <!-- LIGNE 3 : MODE DRAWER LEFT CLASSIC -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row">
                 <div class="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col justify-between space-y-4">
                     <div class="space-y-2">
@@ -102,24 +151,34 @@
                             </div>
                             <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">drawer-left</span>
                         </div>
-                        <h2 class="font-bold text-base text-gray-900">Drawer (Gauche)</h2>
+                        <h2 class="font-bold text-base text-gray-900">Drawer Gauche</h2>
                         <p class="text-xs text-gray-500">Tiroir latéral glissant depuis la gauche.</p>
                     </div>
-                    <button onclick="TradeInModule.open({ displayType: 'drawer-left' })" 
+                    <button onclick="TradeInModule.open({ displayType: 'drawer-left', showCartSummary: false })" 
                             class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
                         <span>Tester Drawer Gauche</span>
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
 
-                <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[11px] flex flex-col justify-center overflow-x-auto">
-                    <div class="text-[10px] text-slate-400 mb-2 font-sans flex items-center">
-                        <i class="fa-solid fa-terminal mr-1.5 text-blue-400"></i> Script Tag Commander (Auto-initialisé)
-                    </div>
-                    <pre><code>&lt;script 
-    type="text/javascript" 
+                <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[15px] flex flex-col justify-center overflow-x-auto space-y-3.5">
+                    <div>
+                        <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
+                            <i class="fa-solid fa-code mr-1.5 text-blue-400"></i> Option 1 : Tag Commander
+                        </div>
+<pre><code>&lt;script type="text/javascript" 
     src="https://mon-cdn.com/tradein-module.js" 
     data-displayType="drawer-left"&gt;&lt;/script&gt;</code></pre>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-800">
+                        <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
+                            <i class="fa-solid fa-terminal mr-1.5 text-green-400"></i> Option 2 : Déclenchement JS
+                        </div>
+<pre><code>TradeInModule.open({ 
+    displayType: 'drawer-left', 
+    showCartSummary: false });</code></pre>
+                    </div>
                 </div>
             </div>
 
@@ -127,8 +186,57 @@
 
     </div>
 
-    <!-- Chargement autonome du script module -->
-    <script src="tradein-module.js" data-displayType="popin"></script>
+    <!-- Script Module -->
+    <script src="tradein-module.js" data-displayType="drawer-right" data-showCartSummary="true" data-cart="1035"></script>
+
+    <!-- JS de la page de démo -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sampleProducts = [
+                { name: "iPhone 15 Pro Max", price: 1199 },
+                { name: "Galaxy S24 Ultra", price: 1149 },
+                { name: "MacBook Air M2", price: 1099 },
+                { name: "iPad Pro 11\" M4", price: 999 },
+                { name: "Asus ROG Phone 8", price: 1049 }
+            ];
+
+            const randomItem = sampleProducts[Math.floor(Math.random() * sampleProducts.length)];
+            const initialCartValue = randomItem.price;
+
+            document.getElementById('cart-product-name').textContent = randomItem.name;
+            document.getElementById('cart-total-amount').textContent = initialCartValue + " €";
+
+            document.getElementById('btn-open-cart-tradein').addEventListener('click', function () {
+                window.TradeInModule.open({
+                    displayType: 'drawer-right',
+                    cartAmount: initialCartValue,
+                    showCartSummary: true
+                });
+            });
+
+            // Écoute de l'événement personnalisé renvoyé par le module
+            window.addEventListener('tradein:completed', function (e) {
+                const detail = e.detail;
+                const cartBreakdown = document.getElementById('cart-price-breakdown');
+
+                cartBreakdown.className = "space-y-1 pt-1.5 border-t border-gray-200 text-xs";
+                cartBreakdown.innerHTML = `
+                    <div class="flex justify-between items-center text-gray-500">
+                        <span>Panier initial :</span>
+                        <span class="line-through">${detail.initialCartAmount} €</span>
+                    </div>
+                    <div class="flex justify-between items-center text-green-600">
+                        <span>Reprise (${detail.productName}) :</span>
+                        <span>- ${detail.tradeInDiscount} €</span>
+                    </div>
+                    <div class="flex justify-between items-center font-bold text-gray-900 pt-1 border-t border-gray-100">
+                        <span>Nouveau total :</span>
+                        <span class="text-green-600 font-black text-sm">${detail.finalCartAmount} €</span>
+                    </div>
+                `;
+            });
+        });
+    </script>
 
 </body>
 </html>
