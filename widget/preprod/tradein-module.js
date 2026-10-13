@@ -7,7 +7,7 @@
     const CONFIG = {
         CODES_API_URL: "https://corsproxy.io/?key=c46f8301&url=" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com"),
         CODES_API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr",
-        I18N_BASE_URL: "./i18n" // Chemin vers le dossier des traductions
+        I18N_BASE_URL: "./i18n"
     };
 
     const EXCLUDED_PRODUCT_TYPE_IDS = [9, 10, 21, 27, 43];
@@ -21,12 +21,12 @@
         'console': 'fa-gamepad'
     };
 
-    // Stockage du dictionnaire chargé dynamiquement
     let currentI18n = null;
 
     let appState = {
         displayType: 'popin', // 'popin' | 'drawer-right' | 'drawer-left'
         lang: 'fr',           // 'fr' | 'en'
+        loadedLang: null,
         cartAmount: 0,
         showCartSummary: true,
         currentStep: 1,
@@ -50,12 +50,11 @@
     let initPromise = null;
 
     /**
-     * Charge le fichier JSON de langue depuis /i18n/{lang}.json
+     * Charge le dictionnaire JSON depuis le sous-dossier i18n
      */
     async function loadI18n(lang) {
         const targetLang = ['fr', 'en'].includes(lang) ? lang : 'fr';
         
-        // Évite de recharger si déjà en mémoire pour la même langue
         if (currentI18n && appState.loadedLang === targetLang) {
             return currentI18n;
         }
@@ -66,17 +65,7 @@
             currentI18n = await response.json();
             appState.loadedLang = targetLang;
         } catch (error) {
-            console.warn(`[TradeIn] Impossible de charger /i18n/${targetLang}.json, utilisation du fallback.`, error);
-            // Fallback minimal si le fichier n'est pas accessible
-            currentI18n = currentI18n || {
-                header_title: "Reprise",
-                steps: { device: "1", state: "2", estimation: "3", validation: "4" },
-                step1: { search_placeholder: "Rechercher...", category_label: "Catégorie", manufacturer_label: "Marque", model_label: "Modèle", product_label: "Produit", btn_continue: "Continuer" },
-                step2: { no_product: "Aucun produit", default_cat: "Appareil", modify: "Modifier", survey_error: "Erreur questionnaire" },
-                step3: { title: "Estimation", completed: "Complété", trade_value: "Valeur", loading: "Chargement...", error: "Erreur", btn_add_to_cart: "Ajouter" },
-                step4: { title: "Validation", cart_summary_title: "Récapitulatif", initial_cart: "Panier initial", tradein_deduction: "Reprise", final_cart: "Total", swikly_info: "", card_number: "Carte", expiry_date: "Date", cvv: "CVV", secure_info: "Sécurisé", btn_validate: "Valider" },
-                common: { back: "Retour", id: "ID", select: "Sélectionner", searching: "Recherche...", no_results: "Aucun résultat" }
-            };
+            console.warn(`[TradeIn] Impossible de charger /i18n/${targetLang}.json`, error);
         }
         return currentI18n;
     }
@@ -112,6 +101,8 @@
                     
                     .tradein-mode-popin {
                         max-width: 36rem;
+                        height: 90vh;
+                        max-height: 680px;
                         border-radius: 1rem;
                         margin: auto;
                         transform: scale(0.95);
@@ -216,10 +207,10 @@
                     </div>
                 </div>
 
-                <!-- CONTENU SCROLLABLE -->
+                <!-- CONTENU SCROLLABLE CENTRAL -->
                 <div class="p-6 overflow-y-auto flex-1">
 
-                    <!-- ÉTAPE 1 -->
+                    <!-- ÉTAPE 1 (SANS BOUTON CONTINUER) -->
                     <div id="step-1" class="step-content space-y-5">
                         <div class="relative">
                             <input type="text" id="tradein-search-input" placeholder="" 
@@ -251,18 +242,13 @@
                             <label id="txt-step1-product-label" class="block text-xs font-semibold text-gray-600 mb-2"></label>
                             <div id="products-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
                         </div>
-
-                        <button id="btn-continue-step1" disabled class="w-full py-3 bg-gray-300 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2 cursor-not-allowed">
-                            <span id="txt-step1-btn-continue"></span>
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </button>
                     </div>
 
                     <!-- ÉTAPE 2 -->
                     <div id="step-2" class="step-content hidden space-y-5">
-                        <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center border border-gray-200">
-                            <div class="flex items-center space-x-3">
-                                <div id="selected-product-img-container" class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-semibold text-xs border border-blue-100 overflow-hidden flex-shrink-0">
+                        <div class="bg-gray-50 p-3 rounded-xl flex justify-between items-center border border-gray-200 min-h-[72px]">
+                            <div class="flex items-center space-x-3 h-12">
+                                <div id="selected-product-img-container" class="w-12 h-full bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-semibold text-xs border border-blue-100 overflow-hidden flex-shrink-0">
                                     <i class="fa-solid fa-mobile-screen"></i>
                                 </div>
                                 <div>
@@ -277,22 +263,14 @@
                         </div>
 
                         <div id="survey-questions-container" class="space-y-5 text-xs"></div>
-
-                        <div class="flex space-x-2 pt-2">
-                            <button id="btn-back-step2" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition"></button>
-                            <button id="btn-continue-step2" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition flex items-center justify-center space-x-2">
-                                <span id="txt-step2-btn-continue"></span>
-                                <i class="fa-solid fa-arrow-right text-xs"></i>
-                            </button>
-                        </div>
                     </div>
 
                     <!-- ÉTAPE 3 -->
                     <div id="step-3" class="step-content hidden space-y-5">
                         <h3 id="txt-step3-title" class="text-base font-bold text-gray-800"></h3>
-                        <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <div id="est-product-img-container" class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm border border-blue-100 overflow-hidden flex-shrink-0">
+                        <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 flex items-center justify-between min-h-[80px]">
+                            <div class="flex items-center space-x-3 h-14">
+                                <div id="est-product-img-container" class="w-14 h-full bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm border border-blue-100 overflow-hidden flex-shrink-0">
                                     <i class="fa-solid fa-mobile-screen"></i>
                                 </div>
                                 <div class="text-xs space-y-1">
@@ -305,11 +283,6 @@
                                 <div id="txt-step3-trade-value" class="text-[10px] text-gray-500 uppercase font-bold tracking-wider"></div>
                                 <div id="est-trade-price" class="text-2xl font-black text-green-600">-- €</div>
                             </div>
-                        </div>
-
-                        <div class="flex space-x-2 pt-2">
-                            <button id="btn-back-step3" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition"></button>
-                            <button id="btn-continue-step3" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition"></button>
                         </div>
                     </div>
 
@@ -374,14 +347,31 @@
                             <i class="fa-solid fa-lock text-gray-400"></i>
                             <span id="txt-step4-secure-info"></span>
                         </div>
-
-                        <div class="flex space-x-2 pt-2">
-                            <button id="btn-back-step4" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition"></button>
-                            <button id="btn-finish-process" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition"></button>
-                        </div>
                     </div>
 
                 </div>
+
+                <!-- FOOTER FIXE / STICKY EN BAS DE LA MODALE POUR TOUTES LES ÉTAPES -->
+                <div id="modal-footer-controls" class="p-4 border-t border-gray-200 bg-white flex-shrink-0 hidden">
+                    <div id="footer-buttons-step2" class="footer-btn-group hidden flex space-x-2">
+                        <button id="btn-back-step2" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition text-xs"></button>
+                        <button id="btn-continue-step2" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
+                            <span id="txt-step2-btn-continue"></span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div id="footer-buttons-step3" class="footer-btn-group hidden flex space-x-2">
+                        <button id="btn-back-step3" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition text-xs"></button>
+                        <button id="btn-continue-step3" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs"></button>
+                    </div>
+
+                    <div id="footer-buttons-step4" class="footer-btn-group hidden flex space-x-2">
+                        <button id="btn-back-step4" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition text-xs"></button>
+                        <button id="btn-finish-process" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs"></button>
+                    </div>
+                </div>
+
             </div>
         `;
 
@@ -405,7 +395,6 @@
         document.getElementById('txt-step1-manufacturer-label').textContent = t.step1.manufacturer_label;
         document.getElementById('txt-step1-model-label').textContent = t.step1.model_label;
         document.getElementById('txt-step1-product-label').textContent = t.step1.product_label;
-        document.getElementById('txt-step1-btn-continue').textContent = t.step1.btn_continue;
 
         document.getElementById('selected-product-title').textContent = appState.selectedProductName || appState.selectedModelName || t.step2.no_product;
         document.getElementById('selected-category-title').textContent = appState.selectedProductTypeName || t.step2.default_cat;
@@ -425,7 +414,11 @@
         document.getElementById('txt-step4-initial-cart').textContent = t.step4.initial_cart;
         document.getElementById('txt-step4-tradein-deduction').textContent = t.step4.tradein_deduction;
         document.getElementById('txt-step4-final-cart').textContent = t.step4.final_cart;
-        document.getElementById('txt-step4-swikly-info').innerHTML = t.step4.swikly_info;
+
+        // A05 : Remplacement systématique de l'empreinte bancaire par 0 €
+        let swiklyTxt = t.step4.swikly_info || "";
+        document.getElementById('txt-step4-swikly-info').innerHTML = swiklyTxt.replace(/\{amount\}|147\s*€/g, '<strong id="swikly-amount-summary">0 €</strong>');
+
         document.getElementById('txt-step4-card-number').textContent = t.step4.card_number;
         document.getElementById('txt-step4-expiry-date').textContent = t.step4.expiry_date;
         document.getElementById('txt-step4-cvv').textContent = t.step4.cvv;
@@ -460,7 +453,6 @@
         };
 
         document.getElementById('tradein-search-input').oninput = (e) => handleSearch(e.target.value);
-        document.getElementById('btn-continue-step1').onclick = () => goToStep(2);
         document.getElementById('btn-back-to-step1').onclick = () => goToStep(1);
         document.getElementById('btn-back-step2').onclick = () => goToStep(1);
         document.getElementById('btn-continue-step2').onclick = () => goToStep(3);
@@ -527,7 +519,6 @@
         
         document.getElementById('models-block').classList.add('hidden');
         document.getElementById('products-block').classList.add('hidden');
-        updateContinueButtonState();
 
         document.querySelectorAll('.category-btn').forEach(btn => btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative");
         element.className = "category-btn border-2 border-blue-600 bg-blue-50/30 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative";
@@ -575,7 +566,6 @@
         appState.selectedManufacturerName = name;
         appState.selectedModelId = appState.selectedProductId = null;
         document.getElementById('products-block').classList.add('hidden');
-        updateContinueButtonState();
 
         document.querySelectorAll('.manufacturer-item').forEach(btn => btn.className = "manufacturer-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 text-left text-sm transition");
         element.className = "manufacturer-item w-full flex items-center justify-between p-2.5 rounded-lg border-2 border-blue-600 bg-blue-50/30 text-left text-sm transition";
@@ -643,18 +633,19 @@
                 data.results.forEach(p => { if (!productCache.some(i => i.idproduct === p.idproduct)) productCache.push(p); });
                 renderProducts(data.results);
             } else {
+                // A01 : Pas de variante de produit, on bascule directement à l'étape 2
                 block.classList.add('hidden');
                 appState.selectedProductId = appState.selectedModelId;
                 appState.selectedProductName = appState.selectedModelName;
                 updatePreviewTitles();
-                updateContinueButtonState();
+                goToStep(2);
             }
         } catch (e) {
             block.classList.add('hidden');
             appState.selectedProductId = appState.selectedModelId;
             appState.selectedProductName = appState.selectedModelName;
             updatePreviewTitles();
-            updateContinueButtonState();
+            goToStep(2);
         }
     }
 
@@ -666,9 +657,9 @@
             btn.type = 'button';
             btn.className = 'product-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 hover:border-blue-500 text-left text-sm transition';
             btn.onclick = () => selectProduct(btn, p);
-            const imgHtml = p.image ? `<img src="${p.image}" class="w-7 h-7 object-contain mr-2.5">` : '';
+            const imgHtml = p.image ? `<img src="${p.image}" class="h-full max-h-8 w-8 object-contain mr-2.5">` : '';
             btn.innerHTML = `
-                <div class="flex items-center">
+                <div class="flex items-center h-8">
                     ${imgHtml}
                     <span class="font-medium text-xs text-gray-800 mr-2">${p.product}</span>
                     <span class="bg-gray-100 text-gray-500 text-[10px] font-mono px-1.5 py-0.5 rounded">ID: ${p.idproduct}</span>
@@ -684,12 +675,9 @@
         appState.selectedProductName = productObj.product;
         appState.selectedProductImage = productObj.image || null;
 
-        if (element) {
-            document.querySelectorAll('.product-item').forEach(btn => btn.className = "product-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 text-left text-sm transition");
-            element.className = "product-item w-full flex items-center justify-between p-2.5 rounded-lg border-2 border-blue-600 bg-blue-50/30 text-left text-sm transition";
-        }
         updatePreviewTitles();
-        updateContinueButtonState();
+        // A01 : Passage direct à l'étape 2 dès qu'un produit est sélectionné
+        goToStep(2);
     }
 
     function handleSearch(query) {
@@ -769,7 +757,7 @@
                 item.className = 'p-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between transition border-b border-gray-50 last:border-0';
                 
                 const imgHtml = p.image 
-                    ? `<img src="${p.image}" class="w-6 h-6 object-contain mr-2">`
+                    ? `<img src="${p.image}" class="h-6 w-6 object-contain mr-2">`
                     : `<i class="fa-solid fa-mobile-screen text-gray-400 mr-2"></i>`;
 
                 item.innerHTML = `
@@ -781,6 +769,7 @@
                     <span class="text-[10px] text-blue-600 font-medium">${t.common.select}</span>
                 `;
 
+                // A02 : Un clic sur un produit recherché bascule directement à l'étape 2
                 item.onclick = () => {
                     selectProduct(null, p);
                     document.getElementById('tradein-search-input').value = p.product;
@@ -889,7 +878,7 @@
                 const price = data.results.products[0].best[grade];
                 appState.price = price;
                 priceElem.textContent = `${price} €`;
-                if (summaryElem) summaryElem.textContent = `${price} €`;
+                if (summaryElem) summaryElem.textContent = "0 €";
 
                 updateStep4CartSummary();
             }
@@ -917,32 +906,22 @@
         const id = appState.selectedProductId || appState.selectedModelId;
         const img = appState.selectedProductImage;
 
+        // A04 : Visuel du produit épousant toute la hauteur du conteneur aux étapes 2 et 3
         document.getElementById('selected-product-title').textContent = name || t.step2.no_product;
         document.getElementById('selected-product-id-tag').textContent = id ? `ID: ${id}` : "ID: -";
         const imgContainerStep2 = document.getElementById('selected-product-img-container');
         if (imgContainerStep2) {
             imgContainerStep2.innerHTML = img 
-                ? `<img src="${img}" class="w-full h-full object-contain p-0.5">` 
-                : `<i class="fa-solid fa-mobile-screen"></i>`;
+                ? `<img src="${img}" class="h-full w-full object-contain p-1">` 
+                : `<i class="fa-solid fa-mobile-screen text-lg"></i>`;
         }
 
         document.getElementById('est-product-name').textContent = name || t.step2.default_cat;
         const imgContainerStep3 = document.getElementById('est-product-img-container');
         if (imgContainerStep3) {
             imgContainerStep3.innerHTML = img 
-                ? `<img src="${img}" class="w-full h-full object-contain p-0.5">` 
-                : `<i class="fa-solid fa-mobile-screen"></i>`;
-        }
-    }
-
-    function updateContinueButtonState() {
-        const btn = document.getElementById('btn-continue-step1');
-        if (appState.selectedProductId || appState.selectedModelId) {
-            btn.disabled = false;
-            btn.className = "w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition cursor-pointer";
-        } else {
-            btn.disabled = true;
-            btn.className = "w-full py-3 bg-gray-300 text-white font-medium rounded-xl shadow transition cursor-not-allowed";
+                ? `<img src="${img}" class="h-full w-full object-contain p-1">` 
+                : `<i class="fa-solid fa-mobile-screen text-xl"></i>`;
         }
     }
 
@@ -956,6 +935,18 @@
         appState.currentStep = step;
         document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
         document.getElementById(`step-${step}`).classList.remove('hidden');
+
+        // A03 : Gestion du footer fixe des boutons Retour / Continuer selon l'étape
+        const footer = document.getElementById('modal-footer-controls');
+        document.querySelectorAll('.footer-btn-group').forEach(group => group.classList.add('hidden'));
+
+        if (step === 1) {
+            footer.classList.add('hidden');
+        } else {
+            footer.classList.remove('hidden');
+            const activeGroup = document.getElementById(`footer-buttons-step${step}`);
+            if (activeGroup) activeGroup.classList.remove('hidden');
+        }
 
         for (let i = 1; i <= 4; i++) {
             const circle = document.getElementById(`circle-step-${i}`);
@@ -1032,10 +1023,7 @@
             if (typeof opts.showCartSummary !== 'undefined') appState.showCartSummary = !!opts.showCartSummary;
             if (typeof opts.cartAmount !== 'undefined') appState.cartAmount = parseFloat(opts.cartAmount) || 0;
 
-            // Chargement de la langue
             await loadI18n(appState.lang);
-
-            // Chargement des dépendances UI
             await injectDependencies();
 
             if (!isInitialized) {
