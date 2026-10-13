@@ -70,6 +70,60 @@
         return currentI18n;
     }
 
+    function resetState() {
+        // 1. Réinitialisation des variables de state
+        appState.currentStep = 1;
+        appState.selectedProductTypeId = null;
+        appState.selectedProductTypeName = null;
+        appState.selectedManufacturerId = null;
+        appState.selectedManufacturerName = null;
+        appState.selectedModelId = null;
+        appState.selectedModelName = null;
+        appState.selectedProductId = null;
+        appState.selectedProductName = null;
+        appState.selectedProductImage = null;
+        appState.surveyAnswers = {};
+        appState.grade = null;
+        appState.price = null;
+
+        // 2. Réinitialisation des champs et conteneurs du DOM
+        const searchInput = document.getElementById('tradein-search-input');
+        if (searchInput) searchInput.value = '';
+
+        const dropdown = document.getElementById('search-results-dropdown');
+        if (dropdown) {
+            dropdown.innerHTML = '';
+            dropdown.classList.add('hidden');
+        }
+
+        // Masquer les sous-blocs de sélection
+        const mBlock = document.getElementById('manufacturers-block');
+        const mdBlock = document.getElementById('models-block');
+        const pBlock = document.getElementById('products-block');
+        if (mBlock) mBlock.classList.add('hidden');
+        if (mdBlock) mdBlock.classList.add('hidden');
+        if (pBlock) pBlock.classList.add('hidden');
+
+        // Réinitialiser la sélection visuelle des catégories
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative";
+        });
+
+        // Vider le conteneur des questions
+        const surveyContainer = document.getElementById('survey-questions-container');
+        if (surveyContainer) surveyContainer.innerHTML = '';
+
+        // Réinitialiser les affichages de prix
+        const priceElem = document.getElementById('est-trade-price');
+        if (priceElem) priceElem.textContent = '-- €';
+
+        const cartSummaryBlock = document.getElementById('step4-cart-summary-block');
+        if (cartSummaryBlock) cartSummaryBlock.classList.add('hidden');
+
+        // Revenir visuellement à l'étape 1
+        goToStep(1);
+    }
+
     function getI18n() {
         return currentI18n;
     }
@@ -1050,6 +1104,9 @@
                 cartAmount: appState.cartAmount
             });
 
+            // Remise à zéro complète des données à l'ouverture
+            resetState();
+
             const overlay = document.getElementById('tradein-modal-overlay');
             const container = document.getElementById('tradein-modal-container');
 
@@ -1057,8 +1114,6 @@
                 container.style.transition = 'none';
                 container.classList.remove('tradein-active');
             }
-
-            goToStep(1);
 
             if (overlay && container) {
                 overlay.classList.remove('opacity-0', 'pointer-events-none');
@@ -1080,6 +1135,11 @@
             container.classList.remove('tradein-active');
             overlay.classList.remove('opacity-100');
             overlay.classList.add('opacity-0', 'pointer-events-none');
+
+            // Remise à zéro des données dès la fermeture (après l'animation)
+            setTimeout(() => {
+                resetState();
+            }, 300);
         },
         _selectAnswer: _selectAnswer
     };
