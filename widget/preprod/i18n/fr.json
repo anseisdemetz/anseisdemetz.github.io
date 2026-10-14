@@ -21,13 +21,18 @@
     "survey_error": "Erreur lors du chargement du questionnaire."
   },
   "step3": {
-    "title": "Votre estimation",
-    "completed": "Diagnostic complété",
-    "trade_value": "Valeur de reprise",
-    "loading": "Chargement...",
-    "error": "Erreur",
-    "btn_add_to_cart": "Ajouter la reprise au panier"
-  },
+      "title": "Votre estimation",
+      "completed": "Diagnostic complété",
+      "trade_value": "Valeur de reprise",
+      "loading": "Chargement...",
+      "error": "Erreur",
+      "imei_label": "Numéro IMEI de l'appareil",
+      "imei_placeholder": "Ex : 354829091234567 (15 chiffres)",
+      "imei_error": "Veuillez saisir un numéro IMEI valide (15 chiffres).",
+      "imei_help_title": "Comment trouver votre code IMEI ?",
+      "imei_help_text": "Composez simplement <strong>*#06#</strong> sur le clavier de votre téléphone. L'IMEI à 15 chiffres s'affichera immédiatement à l'écran. Vous le trouverez aussi dans les paramètres de votre appareil ou au dos de la boîte d'origine.",
+      "btn_add_to_cart": "Ajouter la reprise au panier"
+    },
   "step4": {
     "title": "Empreinte bancaire sécurisée",
     "cart_summary_title": "Récapitulatif de votre commande :",
