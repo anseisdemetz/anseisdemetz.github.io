@@ -623,7 +623,7 @@
             // Comparaison des chaînes en lowercase
             const matchingProduct = resultsList.find(p => (p.product_name || '').toLowerCase().trim() === currentSelectedNameLower);
 
-            console.log(resultsList.product_name.toLowerCase().trim());
+            console.log(resultsList.find(p => (p.product_name || '').toLowerCase().trim());
             console.log(currentSelectedNameLower);
 
             if (matchingProduct) {
