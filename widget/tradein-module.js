@@ -1,5 +1,5 @@
 /**
- * TradeInModule - Module de reprise autonome pilotable par Tag Manager / Tag Commander
+ * TradeInModule - Module de reprise autonome (Version Démo)
  */
 (function (window) {
     'use strict';
@@ -40,6 +40,7 @@
         selectedProductName: null,
         selectedProductImage: null,
         surveyAnswers: {},
+        imei: null,
         grade: null,
         price: null
     };
@@ -49,9 +50,6 @@
     let isInitialized = false;
     let initPromise = null;
 
-    /**
-     * Charge le dictionnaire JSON depuis le sous-dossier i18n
-     */
     async function loadI18n(lang) {
         const targetLang = ['fr', 'en'].includes(lang) ? lang : 'fr';
         
@@ -71,7 +69,6 @@
     }
 
     function resetState() {
-        // 1. Réinitialisation des variables de state
         appState.currentStep = 1;
         appState.selectedProductTypeId = null;
         appState.selectedProductTypeName = null;
@@ -85,8 +82,8 @@
         appState.surveyAnswers = {};
         appState.grade = null;
         appState.price = null;
+        appState.imei = null;
 
-        // 2. Réinitialisation des champs et conteneurs du DOM
         const searchInput = document.getElementById('tradein-search-input');
         if (searchInput) searchInput.value = '';
 
@@ -96,7 +93,11 @@
             dropdown.classList.add('hidden');
         }
 
-        // Masquer les sous-blocs de sélection
+        const imeiInput = document.getElementById('tradein-imei-input');
+        if (imeiInput) imeiInput.value = '';
+        const imeiError = document.getElementById('tradein-imei-error');
+        if (imeiError) imeiError.classList.add('hidden');
+
         const mBlock = document.getElementById('manufacturers-block');
         const mdBlock = document.getElementById('models-block');
         const pBlock = document.getElementById('products-block');
@@ -104,23 +105,19 @@
         if (mdBlock) mdBlock.classList.add('hidden');
         if (pBlock) pBlock.classList.add('hidden');
 
-        // Réinitialiser la sélection visuelle des catégories
         document.querySelectorAll('.category-btn').forEach(btn => {
             btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative";
         });
 
-        // Vider le conteneur des questions
         const surveyContainer = document.getElementById('survey-questions-container');
         if (surveyContainer) surveyContainer.innerHTML = '';
 
-        // Réinitialiser les affichages de prix
         const priceElem = document.getElementById('est-trade-price');
         if (priceElem) priceElem.textContent = '-- €';
 
         const cartSummaryBlock = document.getElementById('step4-cart-summary-block');
         if (cartSummaryBlock) cartSummaryBlock.classList.add('hidden');
 
-        // Revenir visuellement à l'étape 1
         goToStep(1);
     }
 
@@ -264,7 +261,7 @@
                 <!-- CONTENU SCROLLABLE CENTRAL -->
                 <div class="p-6 overflow-y-auto flex-1">
 
-                    <!-- ÉTAPE 1 (SANS BOUTON CONTINUER) -->
+                    <!-- ÉTAPE 1 -->
                     <div id="step-1" class="step-content space-y-5">
                         <div class="relative">
                             <input type="text" id="tradein-search-input" placeholder="" 
@@ -322,9 +319,9 @@
                     <!-- ÉTAPE 3 -->
                     <div id="step-3" class="step-content hidden space-y-5">
                         <h3 id="txt-step3-title" class="text-base font-bold text-gray-800"></h3>
-                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-stretch justify-between overflow-hidden min-h-[100%]">
-                            
-                            <!-- Bloc Gauche : Image + Infos -->
+                        
+                        <!-- Carte Estimation Produit -->
+                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-stretch justify-between overflow-hidden min-h-[100px]">
                             <div class="flex items-center space-x-4 h-full self-stretch flex-1">
                                 <div id="est-product-img-container" class="w-24 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
                                     <i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>
@@ -335,12 +332,42 @@
                                 </div>
                             </div>
 
-                            <!-- Bloc Droite : Prix -->
                             <div class="text-right flex-shrink-0 pr-4 pl-2 py-3 flex flex-col justify-center">
                                 <div id="txt-step3-trade-value" class="text-[10px] text-gray-500 uppercase font-bold tracking-wider mb-0.5"></div>
                                 <div id="est-trade-price" class="text-2xl font-black text-green-600 leading-none">-- €</div>
                             </div>
+                        </div>
 
+                        <!-- CHAMP OBLIGATOIRE IMEI -->
+                        <div class="space-y-2 pt-2">
+                            <label for="tradein-imei-input" class="block text-xs font-bold text-gray-800">
+                                <span id="txt-step3-imei-label"></span> <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" 
+                                       id="tradein-imei-input" 
+                                       maxlength="15" 
+                                       inputmode="numeric"
+                                       pattern="[0-9]*"
+                                       class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-mono text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" 
+                                       placeholder="" />
+                                <i class="fa-solid fa-barcode absolute right-3.5 top-3 text-gray-400"></i>
+                            </div>
+                            <p id="tradein-imei-error" class="hidden text-[11px] text-red-600 font-medium flex items-center space-x-1">
+                                <i class="fa-solid fa-circle-exclamation mr-1"></i>
+                                <span id="txt-step3-imei-error"></span>
+                            </p>
+                        </div>
+
+                        <!-- ENCART EXPLICATIF IMEI -->
+                        <div class="bg-blue-50/80 border border-blue-200 rounded-xl p-3.5 flex items-start space-x-3 text-xs text-blue-900">
+                            <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <div id="txt-step3-imei-help-title" class="font-bold text-blue-950"></div>
+                                <p id="txt-step3-imei-help-text" class="text-blue-800 leading-relaxed text-[11px]"></p>
+                            </div>
                         </div>
                     </div>
 
@@ -409,7 +436,7 @@
 
                 </div>
 
-                <!-- FOOTER FIXE / STICKY EN BAS DE LA MODALE POUR TOUTES LES ÉTAPES -->
+                <!-- FOOTER FIXE -->
                 <div id="modal-footer-controls" class="p-4 border-t border-gray-200 bg-white flex-shrink-0 hidden">
                     <div id="footer-buttons-step2" class="footer-btn-group hidden flex space-x-2">
                         <button id="btn-back-step2" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition text-xs"></button>
@@ -421,7 +448,10 @@
 
                     <div id="footer-buttons-step3" class="footer-btn-group hidden flex space-x-2">
                         <button id="btn-back-step3" type="button" class="w-1/3 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition text-xs"></button>
-                        <button id="btn-continue-step3" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs"></button>
+                        <button id="btn-continue-step3" type="button" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
+                            <span id="txt-step3-btn-continue"></span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
                     </div>
 
                     <div id="footer-buttons-step4" class="footer-btn-group hidden flex space-x-2">
@@ -465,7 +495,9 @@
         document.getElementById('txt-step3-completed').textContent = t.step3.completed;
         document.getElementById('txt-step3-trade-value').textContent = t.step3.trade_value;
         document.getElementById('btn-back-step3').textContent = t.common.back;
-        document.getElementById('btn-continue-step3').textContent = t.step3.btn_add_to_cart;
+        
+        const btnContinue3 = document.getElementById('txt-step3-btn-continue');
+        if (btnContinue3) btnContinue3.textContent = t.step3.btn_add_to_cart || t.step1.btn_continue;
 
         document.getElementById('txt-step4-title').textContent = t.step4.title;
         document.getElementById('txt-step4-cart-summary-title').textContent = t.step4.cart_summary_title;
@@ -473,7 +505,12 @@
         document.getElementById('txt-step4-tradein-deduction').textContent = t.step4.tradein_deduction;
         document.getElementById('txt-step4-final-cart').textContent = t.step4.final_cart;
 
-        // A05 : Remplacement systématique de l'empreinte bancaire par 0 €
+        document.getElementById('txt-step3-imei-label').textContent = t.step3.imei_label;
+        document.getElementById('tradein-imei-input').placeholder = t.step3.imei_placeholder;
+        document.getElementById('txt-step3-imei-error').textContent = t.step3.imei_error;
+        document.getElementById('txt-step3-imei-help-title').textContent = t.step3.imei_help_title;
+        document.getElementById('txt-step3-imei-help-text').innerHTML = t.step3.imei_help_text;
+
         let swiklyTxt = t.step4.swikly_info || "";
         document.getElementById('txt-step4-swikly-info').innerHTML = swiklyTxt.replace(/\{amount\}|147\s*€/g, '<strong id="swikly-amount-summary">0 €</strong>');
 
@@ -515,9 +552,40 @@
         document.getElementById('btn-back-step2').onclick = () => goToStep(1);
         document.getElementById('btn-continue-step2').onclick = () => goToStep(3);
         document.getElementById('btn-back-step3').onclick = () => goToStep(2);
-        document.getElementById('btn-continue-step3').onclick = () => goToStep(4);
         document.getElementById('btn-back-step4').onclick = () => goToStep(3);
         document.getElementById('btn-finish-process').onclick = finishProcess;
+
+        // VERIFICATION DE SAISIE DE L'IMEI A L'ETAPE 3
+        document.getElementById('btn-continue-step3').onclick = () => {
+            const imeiInput = document.getElementById('tradein-imei-input');
+            const imeiError = document.getElementById('tradein-imei-error');
+            const txtError = document.getElementById('txt-step3-imei-error');
+            const t = getI18n();
+            const val = (imeiInput.value || '').trim();
+
+            if (!/^\d{15}$/.test(val)) {
+                txtError.textContent = t.step3.imei_error || "Veuillez saisir un numéro IMEI valide (15 chiffres).";
+                imeiError.classList.remove('hidden');
+                imeiInput.classList.add('border-red-500');
+                imeiInput.focus();
+                return;
+            }
+
+            imeiError.classList.add('hidden');
+            imeiInput.classList.remove('border-red-500');
+            appState.imei = val;
+            
+            // Passage direct à l'étape 4
+            goToStep(4);
+        };
+
+        document.getElementById('tradein-imei-input').oninput = (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
+            if (e.target.value.length === 15) {
+                document.getElementById('tradein-imei-error').classList.add('hidden');
+                e.target.classList.remove('border-red-500');
+            }
+        };
 
         document.addEventListener('click', (e) => {
             const searchInput = document.getElementById('tradein-search-input');
@@ -691,17 +759,22 @@
                 data.results.forEach(p => { if (!productCache.some(i => i.idproduct === p.idproduct)) productCache.push(p); });
                 renderProducts(data.results);
             } else {
-                // A01 : Pas de variante de produit, on bascule directement à l'étape 2
                 block.classList.add('hidden');
                 appState.selectedProductId = appState.selectedModelId;
-                appState.selectedProductName = appState.selectedModelName;
+                
+                const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
+                appState.selectedProductName = `${mName}${appState.selectedModelName}`;
+                
                 updatePreviewTitles();
                 goToStep(2);
             }
         } catch (e) {
             block.classList.add('hidden');
             appState.selectedProductId = appState.selectedModelId;
-            appState.selectedProductName = appState.selectedModelName;
+            
+            const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
+            appState.selectedProductName = `${mName}${appState.selectedModelName}`;
+            
             updatePreviewTitles();
             goToStep(2);
         }
@@ -716,10 +789,14 @@
             btn.className = 'product-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 hover:border-blue-500 text-left text-sm transition';
             btn.onclick = () => selectProduct(btn, p);
             const imgHtml = p.image ? `<img src="${p.image}" class="h-full max-h-8 w-8 object-contain mr-2.5">` : '';
+            
+            const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
+            const fullName = p.product.toLowerCase().startsWith(mName.toLowerCase().trim()) ? p.product : `${mName}${p.product}`;
+
             btn.innerHTML = `
                 <div class="flex items-center h-8">
                     ${imgHtml}
-                    <span class="font-medium text-xs text-gray-800 mr-2">${p.product}</span>
+                    <span class="font-medium text-xs text-gray-800 mr-2">${fullName}</span>
                     <span class="bg-gray-100 text-gray-500 text-[10px] font-mono px-1.5 py-0.5 rounded">ID: ${p.idproduct}</span>
                 </div>
                 <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
@@ -730,11 +807,13 @@
 
     function selectProduct(element, productObj) {
         appState.selectedProductId = productObj.idproduct;
-        appState.selectedProductName = productObj.product;
+        
+        const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
+        const rawName = productObj.product || '';
+        appState.selectedProductName = rawName.toLowerCase().startsWith(mName.toLowerCase().trim()) ? rawName : `${mName}${rawName}`;
         appState.selectedProductImage = productObj.image || null;
 
         updatePreviewTitles();
-        // A01 : Passage direct à l'étape 2 dès qu'un produit est sélectionné
         goToStep(2);
     }
 
@@ -827,7 +906,6 @@
                     <span class="text-[10px] text-blue-600 font-medium">${t.common.select}</span>
                 `;
 
-                // A02 : Un clic sur un produit recherché bascule directement à l'étape 2
                 item.onclick = () => {
                     selectProduct(null, p);
                     document.getElementById('tradein-search-input').value = p.product;
@@ -916,7 +994,7 @@
             if (data?.results?.matrix?.[mappingCombination]) {
                 const grade = data.results.matrix[mappingCombination];
                 appState.grade = grade;
-                fetchPriceFromArgus(appState.selectedProductId || appState.selectedModelId, grade);
+                await fetchPriceFromArgus(appState.selectedProductId || appState.selectedModelId, grade);
             }
         } catch (e) { console.error("Erreur matrix", e); }
     }
@@ -933,20 +1011,17 @@
             });
             const data = await res.json();
             
-            // CORRECTION ICI : On teste si la propriété existe et n'est ni null ni undefined
             const rawPrice = data?.results?.products?.[0]?.best?.[grade];
 
             if (rawPrice !== undefined && rawPrice !== null) {
                 const price = Number(rawPrice);
                 appState.price = price;
                 
-                // Affichage du prix (même si 0 €)
                 priceElem.textContent = `${price} €`;
                 if (summaryElem) summaryElem.textContent = "0 €";
 
                 updateStep4CartSummary();
             } else {
-                // Si l'API n'a pas de prix référencé pour ce grade
                 appState.price = 0;
                 priceElem.textContent = "0 €";
                 if (summaryElem) summaryElem.textContent = "0 €";
@@ -961,7 +1036,7 @@
         const cartBlock = document.getElementById('step4-cart-summary-block');
         if (!cartBlock) return;
 
-        if (appState.showCartSummary && appState.cartAmount > 0 && appState.price) {
+        if (appState.showCartSummary && appState.cartAmount > 0 && appState.price !== null) {
             const finalCart = Math.max(0, appState.cartAmount - appState.price);
             document.getElementById('summary-initial-cart').textContent = `${appState.cartAmount} €`;
             document.getElementById('summary-tradein-discount').textContent = `- ${appState.price} €`;
@@ -989,7 +1064,7 @@
                 : `<i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>`;
         }
 
-        // Étape 3 (Ajustement hauteur max image)
+        // Étape 3
         document.getElementById('est-product-name').textContent = name || t.step2.default_cat;
         const imgContainerStep3 = document.getElementById('est-product-img-container');
         if (imgContainerStep3) {
@@ -1010,7 +1085,6 @@
         document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
         document.getElementById(`step-${step}`).classList.remove('hidden');
 
-        // A03 : Gestion du footer fixe des boutons Retour / Continuer selon l'étape
         const footer = document.getElementById('modal-footer-controls');
         document.querySelectorAll('.footer-btn-group').forEach(group => group.classList.add('hidden'));
 
@@ -1057,11 +1131,12 @@
                 tradeInDiscount: tradeInValue,
                 initialCartAmount: initialCart,
                 finalCartAmount: finalCart,
+                imei: appState.imei,
                 lang: appState.lang
             }
         });
-        window.dispatchEvent(event);
 
+        window.dispatchEvent(event);
         TradeInModule.close();
     }
 
@@ -1124,7 +1199,6 @@
                 cartAmount: appState.cartAmount
             });
 
-            // Remise à zéro complète des données à l'ouverture
             resetState();
 
             const overlay = document.getElementById('tradein-modal-overlay');
@@ -1156,7 +1230,6 @@
             overlay.classList.remove('opacity-100');
             overlay.classList.add('opacity-0', 'pointer-events-none');
 
-            // Remise à zéro des données dès la fermeture (après l'animation)
             setTimeout(() => {
                 resetState();
             }, 300);
