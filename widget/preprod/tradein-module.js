@@ -1,5 +1,5 @@
 /**
- * TradeInModule - Module de reprise autonome pilotable par Tag Manager / Tag Commander
+ * TradeInModule - Module de reprise autonome (Version Démo)
  */
 (function (window) {
     'use strict';
@@ -97,9 +97,6 @@
         if (imeiInput) imeiInput.value = '';
         const imeiError = document.getElementById('tradein-imei-error');
         if (imeiError) imeiError.classList.add('hidden');
-
-        const mismatchBlock = document.getElementById('tradein-imei-mismatch-block');
-        if (mismatchBlock) mismatchBlock.classList.add('hidden');
 
         const mBlock = document.getElementById('manufacturers-block');
         const mdBlock = document.getElementById('models-block');
@@ -362,18 +359,6 @@
                             </p>
                         </div>
 
-                        <!-- ENCART DE SÉLECTION MULTIPLE DES PRODUITS DE L'IMEI -->
-                        <div id="tradein-imei-mismatch-block" class="hidden bg-amber-50 border border-amber-300 rounded-xl p-3.5 space-y-3 text-xs text-amber-900">
-                            <div class="flex items-center space-x-2">
-                                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base"></i>
-                                <div id="txt-step3-mismatch-title" class="font-bold text-amber-950">Est-ce bien ce produit que vous avez diagnostiqué ?</div>
-                            </div>
-                            <p class="text-amber-800 text-[11px]">Sélectionnez le produit correspondant exactement à votre numéro IMEI :</p>
-                            
-                            <!-- LISTE DES PRODUITS DE PRODUCTINFO -->
-                            <div id="imei-products-list-container" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
-                        </div>
-
                         <!-- ENCART EXPLICATIF IMEI -->
                         <div class="bg-blue-50/80 border border-blue-200 rounded-xl p-3.5 flex items-start space-x-3 text-xs text-blue-900">
                             <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">
@@ -526,10 +511,6 @@
         document.getElementById('txt-step3-imei-help-title').textContent = t.step3.imei_help_title;
         document.getElementById('txt-step3-imei-help-text').innerHTML = t.step3.imei_help_text;
 
-        if (document.getElementById('txt-step3-mismatch-title')) {
-            document.getElementById('txt-step3-mismatch-title').textContent = t.step3.imei_mismatch_title || "Est-ce bien ce produit que vous avez diagnostiqué ?";
-        }
-
         let swiklyTxt = t.step4.swikly_info || "";
         document.getElementById('txt-step4-swikly-info').innerHTML = swiklyTxt.replace(/\{amount\}|147\s*€/g, '<strong id="swikly-amount-summary">0 €</strong>');
 
@@ -560,128 +541,6 @@
         }
     }
 
-    // --- MISE À JOUR DE L'ESTIMATION ET DU PANIER DEPUIS LE PRODUIT SÉLECTIONNÉ ---
-    function applySelectedImeiProduct(prod) {
-        const priceElem = document.getElementById('est-trade-price');
-        
-        // 1. Mise à jour du nom du produit
-        appState.selectedProductName = prod.product_name;
-
-        // 2. Mise à jour du Visuel picture
-        if (prod.picture) {
-            appState.selectedProductImage = prod.picture;
-        }
-
-        // 3. Mise à jour du Prix de reprise max_price
-        const newPrice = Number(prod.max_price || 0);
-        appState.price = newPrice;
-
-        // 4. Rafraîchissement des visuels et du bloc estimation
-        updatePreviewTitles();
-        if (priceElem) priceElem.textContent = `${newPrice} €`;
-
-        // 5. Mise à jour du calcul Panier (Mode Panier)
-        updateStep4CartSummary();
-    }
-
-    // --- VÉRIFICATION API IMEI & RENDU DU BLOC DE DÉSACCORD ---
-    async function verifyImeiAndProceed(imeiValue) {
-        const imeiError = document.getElementById('tradein-imei-error');
-        const txtError = document.getElementById('txt-step3-imei-error');
-        const imeiInput = document.getElementById('tradein-imei-input');
-        const mismatchBlock = document.getElementById('tradein-imei-mismatch-block');
-        const productsListContainer = document.getElementById('imei-products-list-container');
-        const btnContinue = document.getElementById('btn-continue-step3');
-        const t = getI18n();
-
-        mismatchBlock.classList.add('hidden');
-        productsListContainer.innerHTML = '';
-        btnContinue.disabled = true;
-        btnContinue.classList.add('opacity-75', 'cursor-not-allowed');
-
-        try {
-            const res = await fetch(`${CONFIG.CODES_API_URL}/Catalog/productInfo?identifier=${encodeURIComponent(imeiValue)}`, {
-                headers: { "Content-Type": "application/json", "X-AUTH-CR": CONFIG.CODES_API_TOKEN }
-            });
-            const data = await res.json();
-
-            btnContinue.disabled = false;
-            btnContinue.classList.remove('opacity-75', 'cursor-not-allowed');
-
-            // CAS 1 : IMEI INEXISTANT (result_code === KO)
-            if (data.result_code === "KO" || !data.results?.result?.length) {
-                txtError.textContent = t.step3.imei_not_found || "Cet IMEI n'existe pas. Veuillez vérifier votre saisie.";
-                imeiError.classList.remove('hidden');
-                imeiInput.classList.add('border-red-500');
-                return;
-            }
-
-            // CAS 2 & 3 : IMEI EXISTE EN BASE
-            const resultsList = data.results.result;
-            const currentSelectedNameLower = (appState.selectedProductName || '').toLowerCase().trim();
-
-            // Comparaison des chaînes en lowercase
-            const matchingProduct = resultsList.find(p => (p.product_name || '').toLowerCase().trim() === currentSelectedNameLower);
-
-            console.log(resultsList.find(p => (p.product_name || '').toLowerCase().trim());
-            console.log(currentSelectedNameLower);
-
-            if (matchingProduct) {
-                // CAS 2 : L'IMEI correspond exactement au produit diagnostiqué
-                appState.imei = imeiValue;
-                goToStep(4);
-            } else {
-                // CAS 3 : L'IMEI existe mais ne correspond pas au produit sélectionné
-                mismatchBlock.classList.remove('hidden');
-
-                // Génération de la liste des produits retournés par l'API
-                resultsList.forEach((prod) => {
-                    const itemBtn = document.createElement('div');
-                    itemBtn.className = "p-2.5 bg-white border border-amber-200 rounded-lg flex items-center justify-between hover:border-amber-500 transition cursor-pointer";
-                    
-                    const imgHtml = prod.picture 
-                        ? `<img src="${prod.picture}" class="h-10 w-10 object-contain mr-2 flex-shrink-0">` 
-                        : `<i class="fa-solid fa-mobile-screen text-amber-400 text-xl mr-2"></i>`;
-
-                    itemBtn.innerHTML = `
-                        <div class="flex items-center space-x-2">
-                            ${imgHtml}
-                            <div>
-                                <div class="font-bold text-xs text-gray-800">${prod.product_name}</div>
-                                <div class="text-[10px] text-gray-500">Capacité: ${prod.value || '-'}</div>
-                            </div>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <div class="text-sm font-black text-green-600">${prod.max_price} €</div>
-                            <span class="text-[10px] text-blue-600 font-semibold underline">${t.step3.select_this_product || 'Choisir'}</span>
-                        </div>
-                    `;
-
-                    // Clic sur l'un des produits proposés par l'IMEI
-                    itemBtn.onclick = () => {
-                        // Highlight visuel de la sélection
-                        document.querySelectorAll('#imei-products-list-container > div').forEach(el => el.className = "p-2.5 bg-white border border-amber-200 rounded-lg flex items-center justify-between transition cursor-pointer");
-                        itemBtn.className = "p-2.5 bg-amber-100 border-2 border-amber-600 rounded-lg flex items-center justify-between transition cursor-pointer";
-
-                        // Application de la mise à jour (image, nom, max_price et panier)
-                        applySelectedImeiProduct(prod);
-                        appState.imei = imeiValue;
-                    };
-
-                    productsListContainer.appendChild(itemBtn);
-                });
-            }
-
-        } catch (e) {
-            btnContinue.disabled = false;
-            btnContinue.classList.remove('opacity-75', 'cursor-not-allowed');
-            console.warn("Erreur vérification IMEI API, mode démo", e);
-            
-            appState.imei = imeiValue;
-            goToStep(4);
-        }
-    }
-
     function attachEvents() {
         document.getElementById('tradein-close-btn').onclick = () => TradeInModule.close();
         document.getElementById('tradein-modal-overlay').onclick = (e) => {
@@ -696,12 +555,11 @@
         document.getElementById('btn-back-step4').onclick = () => goToStep(3);
         document.getElementById('btn-finish-process').onclick = finishProcess;
 
-        // Clic sur Continuer à l'Étape 3
+        // VERIFICATION DE SAISIE DE L'IMEI A L'ETAPE 3
         document.getElementById('btn-continue-step3').onclick = () => {
             const imeiInput = document.getElementById('tradein-imei-input');
             const imeiError = document.getElementById('tradein-imei-error');
             const txtError = document.getElementById('txt-step3-imei-error');
-            const mismatchBlock = document.getElementById('tradein-imei-mismatch-block');
             const t = getI18n();
             const val = (imeiInput.value || '').trim();
 
@@ -713,17 +571,12 @@
                 return;
             }
 
-            // Si un conflit était affiché et que l'utilisateur a sélectionné son produit (imei enregistré)
-            if (!mismatchBlock.classList.contains('hidden') && appState.imei === val) {
-                goToStep(4);
-                return;
-            }
-
             imeiError.classList.add('hidden');
             imeiInput.classList.remove('border-red-500');
+            appState.imei = val;
             
-            // Lancement de la vérification API
-            verifyImeiAndProceed(val);
+            // Passage direct à l'étape 4
+            goToStep(4);
         };
 
         document.getElementById('tradein-imei-input').oninput = (e) => {
