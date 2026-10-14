@@ -31,7 +31,11 @@
       "imei_error": "Veuillez saisir un numéro IMEI valide (15 chiffres).",
       "imei_help_title": "Comment trouver votre code IMEI ?",
       "imei_help_text": "Composez simplement <strong>*#06#</strong> sur le clavier de votre téléphone. L'IMEI à 15 chiffres s'affichera immédiatement à l'écran. Vous le trouverez aussi dans les paramètres de votre appareil ou au dos de la boîte d'origine.",
-      "btn_add_to_cart": "Ajouter la reprise au panier"
+      "btn_add_to_cart": "Ajouter la reprise au panier",
+      "imei_not_found": "Numéro IMEI introuvable. Veuillez vérifier votre saisie.",
+      "imei_mismatch_title": "Est-ce bien ce produit que vous avez diagnostiqué ?",
+      "imei_mismatch_confirm": "Oui, mettre à jour le produit",
+      "imei_mismatch_cancel": "Non, corriger l'IMEI"
     },
   "step4": {
     "title": "Empreinte bancaire sécurisée",
