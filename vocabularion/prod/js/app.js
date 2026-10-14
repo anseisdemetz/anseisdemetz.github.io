@@ -448,8 +448,11 @@ function getDailyPinnedStorage() {
     return { storageKey, pinnedData };
 }
 
-// Action de punaiser/dépunaiser un mot
-function togglePinDailyWord(id, event) {
+// ==========================================
+// [A037][A039][A040][A043] GESTION DES MOTS PUNAISÉS ET REMISE DU SCORE À 1
+// ==========================================
+
+async function togglePinDailyWord(id, event) {
     if (event) event.stopPropagation();
 
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
@@ -461,11 +464,31 @@ function togglePinDailyWord(id, event) {
         // 1. Dépunaiser
         pinnedData.ids.splice(index, 1);
     } else {
-        // 2. Punaiser et injecter immédiatement dans le Lot du Jour [A040]
+        // 2. Punaiser + Injecter dans le Lot du Jour + Score remet à 1 [A043]
         pinnedData.ids.push(id);
         
+        // [A043] Mise à jour du score local à 1
+        const vocabList = db.languages[activeLang].vocabulary || [];
+        const targetWord = vocabList.find(w => w.id === id);
+        if (targetWord) {
+            targetWord.score = 1;
+            targetWord.status = 'unstudied'; // Repasse en "Pas encore appris"
+        }
+
+        // [A043] Persistance du score à 1 dans Supabase
+        try {
+            const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
+            await supabaseClient
+                .from(tableName)
+                .update({ score: 1, status: 'unstudied' })
+                .eq('id', id);
+        } catch (err) {
+            console.error("Erreur lors de la réinitialisation du score du mot punaisé :", err);
+        }
+
+        // Injection en tête du Lot du Jour si pas encore présent
         if (!dailyFocusWords[activeLang].includes(id)) {
-            dailyFocusWords[activeLang].unshift(id); // Ajout en tête du lot
+            dailyFocusWords[activeLang].unshift(id);
             localStorage.setItem(`daily_focus_${activeLang}`, JSON.stringify({
                 date: todayStr,
                 words: dailyFocusWords[activeLang]
@@ -474,7 +497,14 @@ function togglePinDailyWord(id, event) {
     }
 
     localStorage.setItem(storageKey, JSON.stringify(pinnedData));
-    renderDailyFocus();
+    
+    // Rafraîchir l'application (tableau, lot du jour, graphiques)
+    if (typeof renderApp === 'function') {
+        renderApp();
+    } else {
+        renderDailyFocus();
+        renderTable(false);
+    }
 }
 
 // [A040] Action sur le bouton "+1 mot" en priorisant les punaisés non affichés
