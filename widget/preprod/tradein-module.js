@@ -324,7 +324,7 @@
                         <h3 id="txt-step3-title" class="text-base font-bold text-gray-800"></h3>
                         
                         <!-- Carte Estimation Produit -->
-                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-stretch justify-between overflow-hidden min-h-[100px]">
+                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-stretch justify-between overflow-hidden min-h-[100%]">
                             <div class="flex items-center space-x-4 h-full self-stretch flex-1">
                                 <div id="est-product-img-container" class="w-24 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
                                     <i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>
