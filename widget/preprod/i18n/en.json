@@ -32,10 +32,11 @@
       "imei_help_title": "How to find your IMEI number?",
       "imei_help_text": "Simply dial <strong>*#06#</strong> on your phone's keypad. The 15-digit IMEI will appear on screen immediately. You can also find it in your device settings or on the back of the original box.",
       "btn_add_to_cart": "Add trade-in to cart",
-      "imei_not_found": "IMEI number not found. Please check your entry.",
-      "imei_mismatch_title": "Is this the device you diagnosed?",
       "imei_mismatch_confirm": "Yes, update product",
-      "imei_mismatch_cancel": "No, correct IMEI"
+      "imei_mismatch_cancel": "No, correct IMEI",
+      "imei_mismatch_title": "Select the product matching your IMEI:",
+      "imei_not_found": "This IMEI does not exist. Please check your entry.",
+      "select_this_product": "Select"
     },
   "step4": {
     "title": "Secure credit card hold",

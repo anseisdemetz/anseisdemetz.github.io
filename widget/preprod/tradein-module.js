@@ -362,28 +362,19 @@
                             </p>
                         </div>
 
-                        <!-- ENCART DE CONFIRMATION EN CAS DE DÉSACCORD IMEI -->
+                        <!-- ENCART DE SÉLECTION MULTIPLE DES PRODUITS DE L'IMEI -->
                         <div id="tradein-imei-mismatch-block" class="hidden bg-amber-50 border border-amber-300 rounded-xl p-3.5 space-y-3 text-xs text-amber-900">
-                            <div class="flex items-start space-x-2.5">
-                                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base mt-0.5"></i>
-                                <div class="space-y-1">
-                                    <div id="txt-step3-mismatch-title" class="font-bold text-amber-950">Est-ce bien ce produit que vous avez diagnostiqué ?</div>
-                                    <p class="text-amber-800 text-[11px]">
-                                        Produit détecté par l'IMEI : <strong id="detected-product-name" class="text-amber-950 underline"></strong>
-                                    </p>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base"></i>
+                                <div id="txt-step3-mismatch-title" class="font-bold text-amber-950">Est-ce bien ce produit que vous avez diagnostiqué ?</div>
                             </div>
-                            <div class="flex space-x-2 pt-1">
-                                <button id="btn-confirm-imei-product" type="button" class="flex-1 py-2 px-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-xs transition">
-                                    <span id="txt-step3-mismatch-confirm">Oui, mettre à jour</span>
-                                </button>
-                                <button id="btn-cancel-imei-product" type="button" class="py-2 px-3 bg-white border border-amber-300 text-amber-800 font-medium rounded-lg text-xs hover:bg-amber-100 transition">
-                                    <span id="txt-step3-mismatch-cancel">Corriger l'IMEI</span>
-                                </button>
-                            </div>
+                            <p class="text-amber-800 text-[11px]">Sélectionnez le produit correspondant exactement à votre numéro IMEI :</p>
+                            
+                            <!-- LISTE DES PRODUITS DE PRODUCTINFO -->
+                            <div id="imei-products-list-container" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
                         </div>
 
-                        <!-- ENCART EXPLICATIF OBTENTION IMEI -->
+                        <!-- ENCART EXPLICATIF IMEI -->
                         <div class="bg-blue-50/80 border border-blue-200 rounded-xl p-3.5 flex items-start space-x-3 text-xs text-blue-900">
                             <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">
                                 <i class="fa-solid fa-circle-info"></i>
@@ -537,8 +528,6 @@
 
         if (document.getElementById('txt-step3-mismatch-title')) {
             document.getElementById('txt-step3-mismatch-title').textContent = t.step3.imei_mismatch_title || "Est-ce bien ce produit que vous avez diagnostiqué ?";
-            document.getElementById('txt-step3-mismatch-confirm').textContent = t.step3.imei_mismatch_confirm || "Oui, mettre à jour";
-            document.getElementById('txt-step3-mismatch-cancel').textContent = t.step3.imei_mismatch_cancel || "Corriger l'IMEI";
         }
 
         let swiklyTxt = t.step4.swikly_info || "";
@@ -571,16 +560,42 @@
         }
     }
 
-    // --- VERIFICATION API DE L'IMEI ---
+    // --- MISE À JOUR DE L'ESTIMATION ET DU PANIER DEPUIS LE PRODUIT SÉLECTIONNÉ ---
+    function applySelectedImeiProduct(prod) {
+        const priceElem = document.getElementById('est-trade-price');
+        
+        // 1. Mise à jour du nom du produit
+        appState.selectedProductName = prod.product_name;
+
+        // 2. Mise à jour du Visuel picture
+        if (prod.picture) {
+            appState.selectedProductImage = prod.picture;
+        }
+
+        // 3. Mise à jour du Prix de reprise max_price
+        const newPrice = Number(prod.max_price || 0);
+        appState.price = newPrice;
+
+        // 4. Rafraîchissement des visuels et du bloc estimation
+        updatePreviewTitles();
+        if (priceElem) priceElem.textContent = `${newPrice} €`;
+
+        // 5. Mise à jour du calcul Panier (Mode Panier)
+        updateStep4CartSummary();
+    }
+
+    // --- VÉRIFICATION API IMEI & RENDU DU BLOC DE DÉSACCORD ---
     async function verifyImeiAndProceed(imeiValue) {
         const imeiError = document.getElementById('tradein-imei-error');
         const txtError = document.getElementById('txt-step3-imei-error');
         const imeiInput = document.getElementById('tradein-imei-input');
         const mismatchBlock = document.getElementById('tradein-imei-mismatch-block');
+        const productsListContainer = document.getElementById('imei-products-list-container');
         const btnContinue = document.getElementById('btn-continue-step3');
         const t = getI18n();
 
         mismatchBlock.classList.add('hidden');
+        productsListContainer.innerHTML = '';
         btnContinue.disabled = true;
         btnContinue.classList.add('opacity-75', 'cursor-not-allowed');
 
@@ -601,51 +616,64 @@
                 return;
             }
 
-            // CAS 2 & 3 : IMEI EXISTE
+            // CAS 2 & 3 : IMEI EXISTE EN BASE
             const resultsList = data.results.result;
             const currentSelectedNameLower = (appState.selectedProductName || '').toLowerCase().trim();
 
-            // Comparaison en lowercase
+            // Comparaison des chaînes en lowercase
             const matchingProduct = resultsList.find(p => (p.product_name || '').toLowerCase().trim() === currentSelectedNameLower);
 
             if (matchingProduct) {
-                // CAS 2 : IMEI correspond parfaitement au produit sélectionné
+                // CAS 2 : L'IMEI correspond exactement au produit diagnostiqué
                 appState.imei = imeiValue;
                 goToStep(4);
             } else {
-                // CAS 3 : IMEI existe mais pour un produit différent
-                const detected = resultsList[0]; // On prend le premier résultat suggéré par l'API
-                document.getElementById('detected-product-name').textContent = detected.product_name;
-
+                // CAS 3 : L'IMEI existe mais ne correspond pas au produit sélectionné
                 mismatchBlock.classList.remove('hidden');
 
-                // Bouton OUI : On met à jour le produit, recalcul de la matrice et argus, puis passage à l'étape 4
-                document.getElementById('btn-confirm-imei-product').onclick = async () => {
-                    appState.selectedProductName = detected.product_name;
-                    if (detected.picture) appState.selectedProductImage = detected.picture;
+                // Génération de la liste des produits retournés par l'API
+                resultsList.forEach((prod) => {
+                    const itemBtn = document.createElement('div');
+                    itemBtn.className = "p-2.5 bg-white border border-amber-200 rounded-lg flex items-center justify-between hover:border-amber-500 transition cursor-pointer";
+                    
+                    const imgHtml = prod.picture 
+                        ? `<img src="${prod.picture}" class="h-10 w-10 object-contain mr-2 flex-shrink-0">` 
+                        : `<i class="fa-solid fa-mobile-screen text-amber-400 text-xl mr-2"></i>`;
 
-                    updatePreviewTitles();
-                    mismatchBlock.classList.add('hidden');
+                    itemBtn.innerHTML = `
+                        <div class="flex items-center space-x-2">
+                            ${imgHtml}
+                            <div>
+                                <div class="font-bold text-xs text-gray-800">${prod.product_name}</div>
+                                <div class="text-[10px] text-gray-500">Capacité: ${prod.value || '-'}</div>
+                            </div>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                            <div class="text-sm font-black text-green-600">${prod.max_price} €</div>
+                            <span class="text-[10px] text-blue-600 font-semibold underline">${t.step3.select_this_product || 'Choisir'}</span>
+                        </div>
+                    `;
 
-                    // Recalcul en arrière-plan
-                    await fetchGradeFromMatrix();
-                    appState.imei = imeiValue;
-                    goToStep(4);
-                };
+                    // Clic sur l'un des produits proposés par l'IMEI
+                    itemBtn.onclick = () => {
+                        // Highlight visuel de la sélection
+                        document.querySelectorAll('#imei-products-list-container > div').forEach(el => el.className = "p-2.5 bg-white border border-amber-200 rounded-lg flex items-center justify-between transition cursor-pointer");
+                        itemBtn.className = "p-2.5 bg-amber-100 border-2 border-amber-600 rounded-lg flex items-center justify-between transition cursor-pointer";
 
-                // Bouton NON / CORRIGER : On masque l'encart et remet le focus sur l'IMEI
-                document.getElementById('btn-cancel-imei-product').onclick = () => {
-                    mismatchBlock.classList.add('hidden');
-                    imeiInput.focus();
-                };
+                        // Application de la mise à jour (image, nom, max_price et panier)
+                        applySelectedImeiProduct(prod);
+                        appState.imei = imeiValue;
+                    };
+
+                    productsListContainer.appendChild(itemBtn);
+                });
             }
 
         } catch (e) {
             btnContinue.disabled = false;
             btnContinue.classList.remove('opacity-75', 'cursor-not-allowed');
-            console.warn("Erreur vérification IMEI API, passage en mode démo", e);
+            console.warn("Erreur vérification IMEI API, mode démo", e);
             
-            // En cas d'erreur de réseau/proxy, passage tolérant pour la démo
             appState.imei = imeiValue;
             goToStep(4);
         }
@@ -665,11 +693,12 @@
         document.getElementById('btn-back-step4').onclick = () => goToStep(3);
         document.getElementById('btn-finish-process').onclick = finishProcess;
 
-        // Clic sur Continuer à l'Étape 3 -> Lancement de la vérification IMEI
+        // Clic sur Continuer à l'Étape 3
         document.getElementById('btn-continue-step3').onclick = () => {
             const imeiInput = document.getElementById('tradein-imei-input');
             const imeiError = document.getElementById('tradein-imei-error');
             const txtError = document.getElementById('txt-step3-imei-error');
+            const mismatchBlock = document.getElementById('tradein-imei-mismatch-block');
             const t = getI18n();
             const val = (imeiInput.value || '').trim();
 
@@ -678,6 +707,12 @@
                 imeiError.classList.remove('hidden');
                 imeiInput.classList.add('border-red-500');
                 imeiInput.focus();
+                return;
+            }
+
+            // Si un conflit était affiché et que l'utilisateur a sélectionné son produit (imei enregistré)
+            if (!mismatchBlock.classList.contains('hidden') && appState.imei === val) {
+                goToStep(4);
                 return;
             }
 
@@ -871,7 +906,6 @@
                 block.classList.add('hidden');
                 appState.selectedProductId = appState.selectedModelId;
                 
-                // Concaténation Marque + Nom du Produit
                 const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
                 appState.selectedProductName = `${mName}${appState.selectedModelName}`;
                 
@@ -900,7 +934,6 @@
             btn.onclick = () => selectProduct(btn, p);
             const imgHtml = p.image ? `<img src="${p.image}" class="h-full max-h-8 w-8 object-contain mr-2.5">` : '';
             
-            // Formatage Marque + Produit pour l'affichage
             const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
             const fullName = p.product.toLowerCase().startsWith(mName.toLowerCase().trim()) ? p.product : `${mName}${p.product}`;
 
@@ -919,7 +952,6 @@
     function selectProduct(element, productObj) {
         appState.selectedProductId = productObj.idproduct;
         
-        // CONCATÉNATION MARQUE + NOM PRODUIT (ex: Apple iPhone 13 Mini 512Go)
         const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
         const rawName = productObj.product || '';
         appState.selectedProductName = rawName.toLowerCase().startsWith(mName.toLowerCase().trim()) ? rawName : `${mName}${rawName}`;
