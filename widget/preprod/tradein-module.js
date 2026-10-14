@@ -623,6 +623,9 @@
             // Comparaison des chaînes en lowercase
             const matchingProduct = resultsList.find(p => (p.product_name || '').toLowerCase().trim() === currentSelectedNameLower);
 
+            console.log((p.product_name || '').toLowerCase().trim());
+            console.log(currentSelectedNameLower);
+
             if (matchingProduct) {
                 // CAS 2 : L'IMEI correspond exactement au produit diagnostiqué
                 appState.imei = imeiValue;
