@@ -26,6 +26,10 @@
       const [selectedGrade, setSelectedGrade] = useState("A");
       const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+      // Modal d'importation JSON
+      const [isImportOpen, setIsImportOpen] = useState(false);
+      const [jsonInput, setJsonInput] = useState("");
+
       const [apiKey, setApiKey] = useState(() => localStorage.getItem("gemini_api_key") || "");
       const [aiAnalysis, setAiAnalysis] = useState(null);
       const [loadingAi, setLoadingAi] = useState(false);
@@ -55,12 +59,14 @@
         localStorage.setItem("gemini_api_key", key);
       };
 
+      // Chargement initial du fichier catalogue timeline_data_09.json
       useEffect(() => {
         fetch("timeline_data_09.json")
           .then((res) => res.json())
           .then((data) => {
-            setData09(data);
-            const defaultProd = data.find((p) => p.idproduct === "44888");
+            const sanitized = data.map(item => ({ ...item, idproduct: String(item.idproduct) }));
+            setData09(sanitized);
+            const defaultProd = sanitized.find((p) => String(p.idproduct) === "44888");
             if (defaultProd) {
               setSearchTerm(`${defaultProd.product} (${defaultProd.idproduct})`);
             }
@@ -71,13 +77,16 @@
       const productsList = useMemo(() => {
         const uniqueMap = new Map();
         data09.forEach((item) => {
-          if (!uniqueMap.has(item.idproduct)) {
-            uniqueMap.set(item.idproduct, {
-              id: item.idproduct,
-              name: item.product,
-              brand: item.manufacturer,
-              launchDate: item.launch_date
-            });
+          if (item && item.idproduct !== undefined && item.idproduct !== null) {
+            const strId = String(item.idproduct);
+            if (!uniqueMap.has(strId)) {
+              uniqueMap.set(strId, {
+                id: strId,
+                name: String(item.product || ""),
+                brand: String(item.manufacturer || ""),
+                launchDate: item.launch_date
+              });
+            }
           }
         });
         return Array.from(uniqueMap.values()).sort((a, b) => new Date(a.launchDate) - new Date(b.launchDate));
@@ -85,13 +94,13 @@
 
       const filteredProducts = useMemo(() => {
         if (!searchTerm.trim()) return productsList;
-        const selectedProd = productsList.find((p) => p.id === selectedId);
+        const selectedProd = productsList.find((p) => p.id === String(selectedId));
         const selectedString = selectedProd ? `${selectedProd.name} (${selectedProd.id})` : "";
         if (searchTerm === selectedString) return productsList;
 
         const term = searchTerm.toLowerCase();
         return productsList.filter(
-          (p) => p.name.toLowerCase().includes(term) || p.id.toLowerCase().includes(term)
+          (p) => String(p.name).toLowerCase().includes(term) || String(p.id).toLowerCase().includes(term)
         );
       }, [productsList, searchTerm, selectedId]);
 
@@ -106,28 +115,78 @@
       }, []);
 
       const currentItem = useMemo(() => {
-        return data09.find((i) => i.idproduct === selectedId && i.grade === selectedGrade) || null;
+        return data09.find((i) => String(i.idproduct) === String(selectedId) && i.grade === selectedGrade) || null;
       }, [data09, selectedId, selectedGrade]);
 
+      // LECTURE PRIORITAIRE DE `ai_data` DEPUIS LE JSON (ou fallback sur localStorage)
       useEffect(() => {
-        if (!selectedId) return;
+        if (!currentItem) {
+          setAiAnalysis(null);
+          setNewProductHistory([]);
+          return;
+        }
+
+        // 1. Si ai_data est présent directement dans l'objet JSON (importé ou chargé depuis timeline_data_09.json)
+        if (currentItem.ai_data) {
+          setAiAnalysis(currentItem.ai_data);
+          if (Array.isArray(currentItem.ai_data.estimated_new_price_curve) && currentItem.ai_data.estimated_new_price_curve.length > 0) {
+            setNewProductHistory(currentItem.ai_data.estimated_new_price_curve);
+          } else {
+            setNewProductHistory(new Array(37).fill(currentItem.p0));
+          }
+          return;
+        }
+
+        // 2. Sinon, recherche dans le localStorage
         const storageKey = `new_price_db_${selectedId}_${selectedGrade}`;
         const saved = localStorage.getItem(storageKey);
         if (saved) {
           try {
             const parsed = JSON.parse(saved);
-            setNewProductHistory(parsed.history || []);
             setAiAnalysis(parsed.analysis || null);
+            setNewProductHistory(parsed.history || new Array(37).fill(currentItem.p0));
           } catch (e) {
-            setNewProductHistory([]);
+            setAiAnalysis(null);
+            setNewProductHistory(new Array(37).fill(currentItem.p0));
           }
         } else {
-          setNewProductHistory([]);
           setAiAnalysis(null);
+          setNewProductHistory(new Array(37).fill(currentItem.p0));
         }
-      }, [selectedId, selectedGrade]);
+      }, [currentItem, selectedId, selectedGrade]);
 
-      // Analyse spécifique aux 5 vitrines de rachat
+      // Importation dynamique via Copier-Coller du JSON
+      const handleImportJson = () => {
+        try {
+          const parsed = JSON.parse(jsonInput.trim());
+          const newItems = Array.isArray(parsed) ? parsed : [parsed];
+
+          if (!newItems[0] || newItems[0].idproduct === undefined) {
+            alert("Format JSON invalide : 'idproduct' manquant.");
+            return;
+          }
+
+          // Force la conversion des IDs en String
+          const sanitizedItems = newItems.map(item => ({
+            ...item,
+            idproduct: String(item.idproduct)
+          }));
+
+          setData09((prev) => {
+            const filtered = prev.filter((item) => !sanitizedItems.some((n) => String(n.idproduct) === String(item.idproduct) && n.grade === item.grade));
+            return [...sanitizedItems, ...filtered];
+          });
+
+          const importedId = String(sanitizedItems[0].idproduct);
+          setSelectedId(importedId);
+          setSearchTerm(`${sanitizedItems[0].product} (${importedId})`);
+          setIsImportOpen(false);
+          setJsonInput("");
+        } catch (e) {
+          alert("Erreur de parsing JSON. Vérifiez la syntaxe de votre extrait.");
+        }
+      };
+
       const analyzeWithGemini = async () => {
         if (!apiKey) {
           alert("Veuillez saisir votre clé API Gemini.");
@@ -195,7 +254,7 @@ Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
               updatedAt: new Date().toISOString()
             }));
           } else {
-            alert("Erreur lors de la structuration des données des repreneurs.");
+            alert("Erreur lors de la structuration des données.");
           }
         } catch (err) {
           alert("Erreur lors de la recherche web.");
@@ -203,7 +262,7 @@ Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
         setLoadingAi(false);
       };
 
-      // Graphique Unique
+      // Graphique
       useEffect(() => {
         if (!chartRef.current) return;
         const ctx = chartRef.current.getContext("2d");
@@ -327,7 +386,7 @@ Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
       }, [currentItem, newProductHistory]);
 
       const handleSelect = (prod) => {
-        setSelectedId(prod.id);
+        setSelectedId(String(prod.id));
         setSearchTerm(`${prod.name} (${prod.id})`);
         setIsDropdownOpen(false);
       };
@@ -340,17 +399,53 @@ Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
               <p className="text-slate-500 text-xs">Suivi individuel des prix de rachat et de l'évolution du prix neuf sur le marché</p>
             </div>
 
-            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
-              <span className="text-xs text-slate-500 font-medium">Clé API Gemini :</span>
-              <input
-                type="password"
-                placeholder="AIzaSy..."
-                value={apiKey}
-                onChange={handleApiKeyChange}
-                className="bg-slate-50 border border-slate-200 px-2 py-1 rounded text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-600 w-40"
-              />
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsImportOpen(true)}
+                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm flex items-center gap-1.5"
+              >
+                📥 Importer JSON Produit
+              </button>
+
+              <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+                <span className="text-xs text-slate-500 font-medium">Clé API :</span>
+                <input
+                  type="password"
+                  placeholder="AIzaSy..."
+                  value={apiKey}
+                  onChange={handleApiKeyChange}
+                  className="bg-slate-50 border border-slate-200 px-2 py-1 rounded text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-600 w-36"
+                />
+              </div>
             </div>
           </header>
+
+          {/* Modal d'importation */}
+          {isImportOpen && (
+            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
+              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-2xl max-w-lg w-full space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-sm font-bold text-slate-800">Coller le JSON généré par Python</h3>
+                  <button onClick={() => setIsImportOpen(false)} className="text-slate-400 hover:text-slate-600 font-bold text-sm">✕</button>
+                </div>
+                <textarea
+                  rows="8"
+                  placeholder="Collez ici le tableau JSON généré par predict_product.py..."
+                  value={jsonInput}
+                  onChange={(e) => setJsonInput(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                ></textarea>
+                <div className="flex justify-end gap-2">
+                  <button onClick={() => setIsImportOpen(false)} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-200">
+                    Annuler
+                  </button>
+                  <button onClick={handleImportJson} className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700">
+                    Charger les Données
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative" ref={dropdownRef}>
             <label className="block text-xs font-semibold text-slate-600 mb-1.5">
@@ -392,7 +487,7 @@ Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
                       key={p.id}
                       onClick={() => handleSelect(p)}
                       className={`p-3 text-sm hover:bg-slate-50 cursor-pointer flex justify-between items-center ${
-                        p.id === selectedId ? "bg-emerald-50 text-emerald-800 font-semibold" : "text-slate-700"
+                        String(p.id) === String(selectedId) ? "bg-emerald-50 text-emerald-800 font-semibold" : "text-slate-700"
                       }`}
                     >
                       <span>{p.name}</span>
@@ -414,23 +509,23 @@ Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
                 <div>
                   <h2 className="text-lg font-bold text-slate-900">{currentItem.product}</h2>
                   <p className="text-xs text-slate-500 mt-0.5 font-mono">
-                    Marque : <b className="text-slate-700">{currentItem.manufacturer}</b> | ID : <b className="text-slate-700">{currentItem.idproduct}</b>
+                    Constructeur : <b className="text-slate-700">{currentItem.manufacturer}</b> | ID : <b className="text-slate-700">{currentItem.idproduct}</b>
                   </p>
                 </div>
 
                 <div className="flex gap-6 font-mono text-xs">
                   <div className="bg-slate-50 px-4 py-2 rounded-lg border border-slate-200 text-center">
-                    <span className="text-slate-400 block text-[10px]">Date de lancement</span>
+                    <span className="text-slate-400 block text-[10px]">Lancement</span>
                     <b className="text-slate-700 text-sm">{new Date(currentItem.launch_date).toLocaleDateString("fr-FR")}</b>
                   </div>
                   <div className="bg-slate-50 px-4 py-2 rounded-lg border border-slate-200 text-center">
-                    <span className="text-slate-400 block text-[10px]">Prix de lancement</span>
+                    <span className="text-slate-400 block text-[10px]">Prix P0 Initial</span>
                     <b className="text-emerald-700 text-sm">{currentItem.p0} €</b>
                   </div>
                 </div>
               </div>
 
-              {/* Encart IA : 5 Vitrines de Repreneurs */}
+              {/* Encart IA : 5 Vitrines */}
               <div className="bg-white p-5 rounded-xl border border-emerald-200 shadow-sm space-y-4">
                 <div className="flex justify-between items-center flex-wrap gap-2">
                   <div>
@@ -446,11 +541,10 @@ Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
                     disabled={loadingAi}
                     className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition-colors shadow-sm disabled:opacity-50"
                   >
-                    {loadingAi ? "Recherche en cours..." : "Rechercher les prix web à date"}
+                    {loadingAi ? "Recherche en cours..." : "Rechercher en direct (IA)"}
                   </button>
                 </div>
 
-                {/* Grille des 5 Vitrines */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 font-mono">
                   {buyersList.map((buyer) => {
                     const price = aiAnalysis?.buyers?.[buyer.key];
@@ -525,7 +619,7 @@ Donne une réponse sous forme d'un objet JSON strict (sans balises markdown) :
                             ))}
                           </tr>
                         </thead>
-                        <tbody className="font-mono divide-y divide-slate-200 border-b border-slate-200">
+                        <tbody className="font-mono divide-x divide-slate-200 border-b border-slate-200">
                           <tr className="hover:bg-slate-50/50">
                             <td className="p-3.5 text-left font-sans font-bold text-slate-700 bg-slate-50/80">
                               Argus / Prévision
