@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Démonstrateur - Module de Reprise</title>
+    <title>Démonstrateur Tag Commander - Module de Reprise</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -17,13 +17,14 @@
                 <i class="fa-solid fa-code"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold text-gray-900">Démonstrateur - Module de Reprise</h1>
+                <h1 class="text-xl font-bold text-gray-900">Démonstrateur d'Intégration Tag Commander</h1>
+                <p class="text-xs text-gray-500">Modes d'affichage du module et méthodes d'intégration HTML / JavaScript.</p>
             </div>
         </div>
 
         <div class="space-y-6">
 
-            <!-- LIGNE 1 : MODE DRAWER RIGHT (AVEC PANIER) -->
+            <!-- LIGNE 1 : MODE DRAWER RIGHT (AVEC PANIER & ÉCOUTE ÉVÉNEMENT) -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row">
                 <div class="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col justify-between space-y-4">
                     <div class="space-y-3">
@@ -34,10 +35,11 @@
                                     <rect x="22" y="0" width="10" height="32" fill="#1D4ED8"/>
                                 </svg>
                             </div>
+                            <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">drawer-right</span>
                         </div>
                         
-                        <h2 class="font-bold text-base text-gray-900">Drawer Droite + Panier</h2>
-                        <p class="text-xs text-gray-500">Tiroir à droite avec injection du montant panier dynamique au moment du clic.</p>
+                        <h2 class="font-bold text-base text-gray-900">Drawer Droite (Panier)</h2>
+                        <p class="text-xs text-gray-500">Tiroir à droite avec injection du montant panier et déduction automatique de la reprise.</p>
 
                         <!-- CARD PANIER -->
                         <div id="demo-cart-card" class="bg-gray-50 p-3 rounded-lg border border-gray-200 text-xs space-y-1.5">
@@ -59,30 +61,37 @@
                     </button>
                 </div>
 
-                <!-- DOCUMENTATION : SÉPARATION SETTINGS / JS DYNAMIQUE -->
+                <!-- DOCUMENTATION TRIPLE (INIT, OPEN, EVENT LISTEN) -->
                 <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[15px] flex flex-col justify-center overflow-x-auto space-y-3.5">
                     <div>
                         <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
-                            <i class="fa-solid fa-sliders mr-1.5 text-blue-400"></i> 1. Tag Commander & Configuration
+                            <i class="fa-solid fa-code mr-1.5 text-blue-400"></i> 1. Tag Commander
                         </div>
 <pre><code>&lt;script type="text/javascript" 
     src="https://mon-cdn.com/tradein-module.js"
     data-displayType="drawer-right" 
-    data-lang="fr"
-    data-showCartSummary="true"&gt;&lt;/script&gt;</code></pre></div>
-                    <div class="pt-2 border-t border-slate-800">
-                        <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
-                            <i class="fa-solid fa-bolt mr-1.5 text-green-400"></i> 2. Déclenchement JS au Clic & paramètre à transmettre
-                        </div>
-<pre><code>TradeInModule.open({ cartAmount: 1035 });</code></pre>
+    data-showCartSummary="true" 
+    data-cart="1035"&gt;&lt;/script&gt;</code></pre>
                     </div>
 
                     <div class="pt-2 border-t border-slate-800">
                         <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
-                            <i class="fa-solid fa-reply mr-1.5 text-amber-400"></i> 3. Écoute du retour au panier du client
+                            <i class="fa-solid fa-terminal mr-1.5 text-green-400"></i> 2. Déclenchement JS
+                        </div>
+<pre><code>TradeInModule.open({ 
+    displayType: 'drawer-right', 
+    cartAmount: 1035, 
+    showCartSummary: true });</code></pre>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-800">
+                        <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
+                            <i class="fa-solid fa-reply mr-1.5 text-amber-400"></i> 3. MAJ du panier client
                         </div>
                         <pre><code>window.addEventListener('tradein:completed', function(e) {
+    console.log("Montant reprise :", e.detail.tradeInDiscount);
     console.log("Nouveau panier :", e.detail.finalCartAmount);
+    // Code client pour mettre à jour le panier du site e-commerce
 });</code></pre>
                     </div>
                 </div>
@@ -96,6 +105,7 @@
                             <span class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
                                 <i class="fa-solid fa-window-maximize"></i>
                             </span>
+                            <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">popin</span>
                         </div>
                         <h2 class="font-bold text-base text-gray-900">Mode Popin</h2>
                         <p class="text-xs text-gray-500">Modale centrée au milieu de l'écran sans calcul d'impact panier.</p>
@@ -126,7 +136,7 @@
                 <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[15px] flex flex-col justify-center overflow-x-auto space-y-3.5">
                     <div>
                         <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
-                            <i class="fa-solid fa-sliders mr-1.5 text-blue-400"></i> 1. Tag Commander & Configuration
+                            <i class="fa-solid fa-code mr-1.5 text-blue-400"></i> Option 1 : Tag Commander
                         </div>
 <pre><code id="code-popin-html">&lt;script type="text/javascript" 
     src="https://mon-cdn.com/tradein-module.js" 
@@ -136,9 +146,12 @@
 
                     <div class="pt-2 border-t border-slate-800">
                         <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
-                            <i class="fa-solid fa-bolt mr-1.5 text-green-400"></i> 2. Déclenchement JS au Clic
+                            <i class="fa-solid fa-terminal mr-1.5 text-green-400"></i> Option 2 : Déclenchement JS
                         </div>
-<pre><code id="code-popin-js">TradeInModule.open();</code></pre>
+<pre><code id="code-popin-js">TradeInModule.open({ 
+    displayType: 'popin', 
+    lang: 'fr',
+    showCartSummary: false });</code></pre>
                     </div>
                 </div>
             </div>
@@ -154,11 +167,12 @@
                                     <rect x="0" y="0" width="10" height="32" fill="#1D4ED8"/>
                                 </svg>
                             </div>
+                            <span class="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-600">drawer-left</span>
                         </div>
                         <h2 class="font-bold text-base text-gray-900">Drawer Gauche</h2>
                         <p class="text-xs text-gray-500">Tiroir latéral glissant depuis la gauche.</p>
                     </div>
-                    <button onclick="TradeInModule.open({ displayType: 'drawer-left' })" 
+                    <button onclick="TradeInModule.open({ displayType: 'drawer-left', showCartSummary: false })" 
                             class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow transition text-xs flex items-center justify-center space-x-2">
                         <span>Tester Drawer Gauche</span>
                         <i class="fa-solid fa-arrow-right"></i>
@@ -168,19 +182,20 @@
                 <div class="p-6 md:w-2/3 bg-slate-900 text-slate-100 font-mono text-[15px] flex flex-col justify-center overflow-x-auto space-y-3.5">
                     <div>
                         <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
-                            <i class="fa-solid fa-sliders mr-1.5 text-blue-400"></i> 1. Tag Commander & Configuration
+                            <i class="fa-solid fa-code mr-1.5 text-blue-400"></i> Option 1 : Tag Commander
                         </div>
 <pre><code>&lt;script type="text/javascript" 
     src="https://mon-cdn.com/tradein-module.js" 
-    data-displayType="drawer-left"
-    data-lang="fr"&gt;&lt;/script&gt;</code></pre>
+    data-displayType="drawer-left"&gt;&lt;/script&gt;</code></pre>
                     </div>
 
                     <div class="pt-2 border-t border-slate-800">
                         <div class="text-[15px] text-slate-400 mb-1 font-sans flex items-center">
-                            <i class="fa-solid fa-bolt mr-1.5 text-green-400"></i> 2. Déclenchement JS au Clic
+                            <i class="fa-solid fa-terminal mr-1.5 text-green-400"></i> Option 2 : Déclenchement JS
                         </div>
-<pre><code>TradeInModule.open();</code></pre>
+<pre><code>TradeInModule.open({ 
+    displayType: 'drawer-left', 
+    showCartSummary: false });</code></pre>
                     </div>
                 </div>
             </div>
@@ -189,8 +204,8 @@
 
     </div>
 
-    <!-- Script Module (Configuré via Tag Commander avec les paramètres fixes) -->
-    <script src="tradein-module.js" data-displayType="drawer-right" data-lang="fr" data-showCartSummary="true"></script>
+    <!-- Script Module -->
+    <script src="tradein-module.js" data-displayType="drawer-right" data-showCartSummary="true" data-cart="1035"></script>
 
     <!-- JS de la page de démo -->
     <script>
@@ -211,18 +226,20 @@
             document.getElementById('cart-product-name').textContent = randomItem.name;
             document.getElementById('cart-total-amount').textContent = initialCartValue + " €";
 
-            // Clic : On ne passe QUE la donnée dynamique (le panier du client à l'instant T)
             document.getElementById('btn-open-cart-tradein').addEventListener('click', function () {
                 window.TradeInModule.open({
-                    cartAmount: initialCartValue
+                    displayType: 'drawer-right',
+                    cartAmount: initialCartValue,
+                    showCartSummary: true
                 });
             });
 
-            // GESTION DYNAMIQUE DU SÉLECTEUR DE LANGUE POUR LA POPIN
+            // GESTION DYNAMIQUE DE LA LANGUE POPIN
             const btnFr = document.getElementById('btn-lang-fr');
             const btnEn = document.getElementById('btn-lang-en');
             const btnOpenPopin = document.getElementById('btn-open-popin');
             const codePopinHtml = document.getElementById('code-popin-html');
+            const codePopinJs = document.getElementById('code-popin-js');
 
             function updatePopinLangUI(lang) {
                 selectedPopinLang = lang;
@@ -231,11 +248,13 @@
                     btnEn.className = "flex-1 py-1.5 px-3 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 font-medium text-xs transition flex items-center justify-center space-x-1";
                     btnOpenPopin.innerHTML = `<span>Tester la Popin (FR)</span><i class="fa-solid fa-arrow-right"></i>`;
                     codePopinHtml.textContent = `<script type="text/javascript" \n    src="https://mon-cdn.com/tradein-module.js" \n    data-displayType="popin"\n    data-lang="fr"><\/script>`;
+                    codePopinJs.textContent = `TradeInModule.open({ \n    displayType: 'popin', \n    lang: 'fr',\n    showCartSummary: false });`;
                 } else {
                     btnEn.className = "flex-1 py-1.5 px-3 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-700 font-bold text-xs transition flex items-center justify-center space-x-1";
                     btnFr.className = "flex-1 py-1.5 px-3 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 font-medium text-xs transition flex items-center justify-center space-x-1";
-                    btnOpenPopin.innerHTML = `<span>Tester la Popin (EN)</span><i class="fa-solid fa-arrow-right"></i>`;
+                    btnOpenPopin.innerHTML = `<span>Test Popin (EN)</span><i class="fa-solid fa-arrow-right"></i>`;
                     codePopinHtml.textContent = `<script type="text/javascript" \n    src="https://mon-cdn.com/tradein-module.js" \n    data-displayType="popin"\n    data-lang="en"><\/script>`;
+                    codePopinJs.textContent = `TradeInModule.open({ \n    displayType: 'popin', \n    lang: 'en',\n    showCartSummary: false });`;
                 }
             }
 
@@ -245,7 +264,8 @@
             btnOpenPopin.addEventListener('click', function () {
                 window.TradeInModule.open({
                     displayType: 'popin',
-                    lang: selectedPopinLang
+                    lang: selectedPopinLang,
+                    showCartSummary: false
                 });
             });
 
