@@ -270,11 +270,10 @@
 
       if (currentSearchMode === 'EAN') {
         const ean = document.getElementById('inputEan').value.trim();
-        //if (!ean) return;
         if (!ean) {
-  console.warn("Veuillez saisir un code EAN avant d'interroger l'API.");
-  return; // Bloque la requête si le champ est vide
-}
+          console.warn("Veuillez saisir un code EAN avant d'interroger l'API.");
+          return; // Bloque la requête si le champ est vide
+        }
         params.append('GTIN', ean);
       } else {
         const vendor = document.getElementById('inputVendor').value.trim();
