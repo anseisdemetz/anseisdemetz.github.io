@@ -280,12 +280,11 @@
         const vendor = document.getElementById('inputVendor').value.trim();
         const mpn = document.getElementById('inputMpn').value.trim();
 
-        console.log(`${vendor} - ${mpn}`);
         if (!vendor || !mpn) {
           alert('Veuillez spécifier la Marque et la Référence MPN.');
           return;
         }
-        params.append('Vendor', vendor);
+        params.append('Brand', vendor);
         params.append('ProductCode', mpn);
       }
 
