@@ -649,11 +649,8 @@
             document.getElementById('seo-keywords').value = product.seoKeywords || '';
 
             const modalFields = document.getElementById('modal-fields');
-            const gsxList = Array.isArray(product["Référence GSX"]) ? product["Référence GSX"] : [];
-            const gsxBadges = gsxList.length > 0 
-                ? gsxList.map(t => `<span class="inline-block bg-slate-100 font-mono text-xs px-2 py-1 rounded border border-slate-200 mr-1 mb-1">${t}</span>`).join('')
-                : '-';
 
+            // 1. Encart de date et prix de lancement
             const launchInfoBox = (product.releaseDate || product.launchPrice) 
                 ? `<div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-3 flex items-center justify-between text-xs">
                      <div class="flex items-center gap-2">
@@ -669,6 +666,65 @@
                    </div>`
                 : `<div id="launch-info-placeholder" class="hidden"></div>`;
 
+            // 2. Construction du tableau défilant des TACs (Outil de vérification GSMA)
+            const tacList = Array.isArray(product.TAC_Details) ? product.TAC_Details : [];
+            let tacTableHtml = '';
+
+            if (tacList.length > 0) {
+                const rows = tacList.map(item => `
+                    <tr class="hover:bg-slate-100 text-xs border-b border-slate-100 transition-colors">
+                        <td class="py-1.5 px-2 font-mono font-bold text-slate-800">${item.TAC || '-'}</td>
+                        <td class="py-1.5 px-2 text-slate-700">${item.GSMA_MarketingName || '-'}</td>
+                        <td class="py-1.5 px-2 text-slate-600">${item.GSMA_ModelName || '-'}</td>
+                        <td class="py-1.5 px-2 text-slate-600">${item.Standardised_MarketingName || '-'}</td>
+                        <td class="py-1.5 px-2 font-mono text-slate-600">${item.DeviceAtlas_ID || '-'}</td>
+                        <td class="py-1.5 px-2 text-slate-500">${item.GSMA_CountryCode || '-'}</td>
+                    </tr>
+                `).join('');
+
+                tacTableHtml = `
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-700">Détail des TACs associés (${tacList.length})</span>
+                            <span class="text-[10px] text-slate-400">Outil de vérification GSMA</span>
+                        </div>
+                        <div class="max-h-80 overflow-y-auto border border-slate-200 rounded-lg bg-white shadow-inner">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-100 text-[11px] font-semibold text-slate-600 sticky top-0 border-b border-slate-200 z-10">
+                                    <tr>
+                                        <th class="py-1.5 px-2">TAC</th>
+                                        <th class="py-1.5 px-2">GSMA Marketing Name</th>
+                                        <th class="py-1.5 px-2">GSMA Model Name</th>
+                                        <th class="py-1.5 px-2">Std Marketing Name</th>
+                                        <th class="py-1.5 px-2">DeviceAtlas ID</th>
+                                        <th class="py-1.5 px-2">Country Code</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    ${rows}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Fallback si le JSON utilise l'ancien tableau simple de TACs ("Référence GSX")
+                const gsxList = Array.isArray(product["Référence GSX"]) ? product["Référence GSX"] : [];
+                const gsxBadges = gsxList.length > 0 
+                    ? gsxList.map(t => `<span class="inline-block bg-slate-100 font-mono text-xs px-2 py-1 rounded border border-slate-200 mr-1 mb-1">${t}</span>`).join('')
+                    : '-';
+
+                tacTableHtml = `
+                    <div>
+                        <span class="text-xs text-slate-400 block mb-1">Référence GSX (Codes TAC associés - ${gsxList.length})</span>
+                        <div class="max-h-24 overflow-y-auto p-2 bg-slate-50 rounded-lg border border-slate-200">
+                            ${gsxBadges}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 3. Rendu global de la modal
             modalFields.innerHTML = `
                 <div class="border-b border-slate-100 pb-2">
                     <span class="text-xs text-slate-400 block">Nom complet</span>
@@ -703,12 +759,8 @@
                         <span class="font-medium text-slate-800">${product["Code Pays"] || '-'}</span>
                     </div>
                 </div>
-                <div>
-                    <span class="text-xs text-slate-400 block mb-1">Référence GSX (Codes TAC associés - ${gsxList.length})</span>
-                    <div class="max-h-24 overflow-y-auto p-2 bg-slate-50 rounded-lg border border-slate-200">
-                        ${gsxBadges}
-                    </div>
-                </div>
+
+                ${tacTableHtml}
             `;
 
             document.getElementById('detail-modal').classList.remove('hidden');
@@ -784,7 +836,7 @@ Sans aucun markdown, sans guillemets de code, sans texte additionnel.`;
         }
 
         async function callGeminiAPI(apiKey, promptText, jsonSchema = null) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
             
             const bodyPayload = {
                 contents: [{
