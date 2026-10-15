@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations bancaires - CompaRecycle</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #ffffff;
+            color: #0f2b3c;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Custom color definitions */
+        .bg-sidebar { background-color: #eaf1f7; }
+        .text-navy { color: #0f2f44; }
+        .bg-navy { background-color: #0f2f44; }
+        .border-navy { border-color: #0f2f44; }
+        .text-muted-gray { color: #5e7081; }
+        .text-info-blue { color: #008be3; }
+        .bg-green-primary { background-color: #2dae5e; }
+        .bg-green-primary:hover { background-color: #269852; }
+
+        /* Custom toggle switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            background-color: #0f2f44;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #cdd8e3;
+        }
+
+        /* Input styling */
+        .custom-input {
+            border: 1px solid #dcdfe4;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 15px;
+            outline: none;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        .custom-input:focus {
+            border-color: #0f2f44;
+            box-shadow: 0 0 0 2px rgba(15, 47, 68, 0.1);
+        }
+        .custom-input::placeholder {
+            color: #b0bac5;
+        }
+
+        /* Modal backdrop blur */
+        .modal-backdrop {
+            background-color: rgba(15, 47, 68, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Accordion transition effect */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+        }
+        .accordion-content.open {
+            max-height: 1200px;
+            transition: max-height 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-10 min-h-screen flex justify-center items-start">
+
+    <div class="max-w-[1140px] w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Sidebar Navigation & Product Details -->
+        <aside class="lg:col-span-4 bg-sidebar rounded-[24px] p-5 sm:p-6 flex flex-col justify-between self-stretch">
+            <div class="space-y-4">
+                <!-- Back link -->
+                <a href="#" class="inline-flex items-center text-navy font-semibold text-sm hover:underline tracking-tight">
+                    <svg class="w-4 h-4 mr-2 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+                    </svg>
+                    Retour à la page d'accueil
+                </a>
+
+                <!-- Product Card -->
+                <div class="bg-white rounded-[16px] p-4 flex items-center gap-4 shadow-sm">
+                    <div class="w-16 h-20 flex-shrink-0 flex items-center justify-center">
+                        <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-11-pro-max-gold-select-2019?wid=470&hei=556&fmt=png-alpha" 
+                             alt="iPhone 11 Pro" 
+                             class="max-h-full max-w-full object-contain"
+                             onerror="this.onerror=null; this.src='https://placehold.co/100x120/f1f5f9/0f2f44?text=iPhone';">
+                    </div>
+                    <div>
+                        <h3 class="text-navy font-bold text-lg leading-tight">Apple</h3>
+                        <p class="text-muted-gray text-sm font-medium">iPhone 11 Pro 512Go</p>
+                        <p class="text-muted-gray text-[11px] mt-2 font-normal">IMEI : 353837100263811</p>
+                    </div>
+                </div>
+
+                <!-- Attributes Card -->
+                <div class="bg-white rounded-[16px] p-5 shadow-sm space-y-4 text-sm">
+                    <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                        <span class="text-navy font-medium">Appareil fonctionnel</span>
+                        <span class="text-navy font-bold">100% fonction...</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                        <span class="text-navy font-medium">Etat de l'écran</span>
+                        <span class="text-navy font-bold">Comme neuf</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-navy font-medium">Cosmétique</span>
+                        <span class="text-navy font-bold">Impeccable</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Box -->
+            <div class="bg-green-primary text-white rounded-[16px] p-5 mt-6">
+                <p class="text-sm font-semibold opacity-95">Prix de reprise estimé</p>
+                <p class="text-4xl font-extrabold mt-1 tracking-tight">110€</p>
+            </div>
+        </aside>
+
+        <main class="lg:col-span-8 flex flex-col justify-between">
+            <div>
+                <!-- Header Title -->
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight mb-6">Informations bancaires</h1>
+
+                <!-- Mode Selection Buttons (CB vs IBAN) -->
+                <div class="mb-6">
+                    <p class="text-sm font-bold text-navy mb-3">Choisissez votre mode de versement :</p>
+                    <div class="flex gap-4">
+                        <!-- CB Button -->
+                        <button id="btn-tab-cb" onclick="handleCbClick()" 
+                                class="flex-1 flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-[14px] font-bold text-sm border-2 transition-all duration-200 border-gray-200 bg-white text-navy hover:border-navy shadow-sm">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>CB</span>
+                        </button>
+
+                        <!-- IBAN Button (sans libellé de texte) -->
+                        <button id="btn-tab-iban" onclick="toggleIbanForm()" 
+                                title="Virement IBAN"
+                                class="flex-1 flex items-center justify-center py-3.5 px-5 rounded-[14px] border-2 transition-all duration-200 border-gray-200 bg-white text-navy hover:border-navy shadow-sm">
+                            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- IBAN Collapsible Container -->
+                <div id="section-iban-container" class="accordion-content">
+                    <div class="bg-white rounded-[20px] p-6 sm:p-8 border border-gray-100 shadow-sm space-y-6 mt-2 mb-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-navy mb-3">Coordonnées bancaires</h2>
+                            <p class="text-navy text-sm sm:text-[15px] leading-relaxed mb-4">
+                                Les virements SEPA font désormais l'objet d'une <strong class="font-bold">vérification du bénéficiaire</strong>. Assurez-vous que <strong class="font-bold">le nom du titulaire et l'IBAN indiqués correspondent exactement à ceux enregistrés auprès de votre banque</strong>, afin d'éviter tout blocage de paiement.
+                            </p>
+                            <p class="text-navy text-sm sm:text-[15px] mb-4">
+                                Veuillez entrer les informations du compte à utiliser.
+                            </p>
+
+                            <!-- Info Badge -->
+                            <div class="flex items-center gap-2 text-info-blue text-sm font-medium">
+                                <svg class="w-5 h-5 flex-shrink-0 fill-current" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Seuls les comptes bancaires situés dans la zone SEPA sont acceptés.</span>
+                            </div>
+                        </div>
+
+                        <!-- Input Fields -->
+                        <div class="space-y-5 pt-2">
+                            <div>
+                                <label class="block text-navy font-bold text-sm mb-2">Nom du bénéficiaire*</label>
+                                <input type="text" value="Raoul Lafoule" class="custom-input text-navy font-medium">
+                            </div>
+
+                            <div>
+                                <label class="block text-navy font-bold text-sm mb-2">IBAN*</label>
+                                <input type="text" placeholder="FRXX XXXX XXXX XXXX XXXX XXXX XXXX" class="custom-input tracking-wider uppercase font-medium">
+                            </div>
+                        </div>
+
+                        <!-- Save Box / Disclaimer Area -->
+                        <div class="bg-[#f8fafc] rounded-[14px] p-5 border border-gray-100 flex gap-4 items-start">
+                            <!-- Toggle Switch -->
+                            <div class="relative inline-block w-12 mr-1 align-middle select-none flex-shrink-0 mt-1">
+                                <input type="checkbox" name="toggle" id="toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-2 border-gray-300 appearance-none cursor-pointer transition-all duration-200 ease-in-out left-0 top-0 shadow-sm"/>
+                                <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-200 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                            </div>
+                            
+                            <div class="text-xs sm:text-[13px] text-muted-gray leading-relaxed space-y-1">
+                                <label for="toggle" class="font-bold text-navy block text-sm cursor-pointer">Enregistrer ces coordonnées bancaires dans mon compte</label>
+                                <p>
+                                    J'accepte que CompaRecycle sauvegarde mes coordonnées bancaires. Celles-ci seront déjà préremplies pour faciliter le traitement lors de mes prochaines reprises. Vous pourrez à tout moment modifier ou supprimer vos coordonnées bancaires sauvegardées <a href="#" class="underline text-navy font-semibold">ici</a>. Plus d'informations dans les pages <a href="#" class="underline text-navy font-semibold">Conditions générales d'utilisation</a> et <a href="#" class="underline text-navy font-semibold">Conditions générales de reprise</a>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button (Hors du bloc IBAN) -->
+                <button type="button" class="w-full bg-green-primary text-white font-bold text-base py-4 px-6 rounded-[16px] shadow-sm hover:shadow transition duration-200 text-center">
+                    Confirmer ma reprise
+                </button>
+
+                <footer class="mt-8 text-center text-xs text-muted-gray leading-relaxed space-y-3 px-4">
+                    <p>
+                        En cliquant sur "Confirmer ma reprise", j'accepte les <a href="#" class="text-info-blue font-bold hover:underline">CGU du service</a> et les <a href="#" class="text-info-blue font-bold hover:underline">Conditions de reprise</a>.
+                    </p>
+                    <p class="text-[11px] text-gray-400">
+                        Comparecycle, en tant que responsable de traitement, collecte et traite vos données à caractère personnel à des fins de communication avec vous/paiement de votre appareil repris/traitement de votre demande de reprise. Pour en savoir plus, consulter notre <a href="#" class="underline hover:text-gray-600">Politique des cookies</a>.
+                    </p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal CB Partner -->
+    <div id="cb-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+        <div class="bg-white rounded-[24px] max-w-md w-full p-6 sm:p-8 shadow-2xl relative border border-gray-100">
+            <!-- Close Button -->
+            <button onclick="closeCbModal()" class="absolute top-5 right-5 text-gray-400 hover:text-navy transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <!-- Partner Branding Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold px-2.5 py-1 bg-green-100 text-green-700 rounded-full flex items-center gap-1">
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Sécurisé SSL
+                    </span>
+                    <span class="text-xs text-muted-gray font-medium">Partenaire PaySafe</span>
+                </div>
+                <!-- Card Logos -->
+                <div class="flex items-center gap-1.5 opacity-80">
+                    <span class="text-[10px] font-black tracking-tighter text-blue-800 bg-blue-50 px-1.5 py-0.5 rounded">VISA</span>
+                    <span class="text-[10px] font-black tracking-tighter text-red-600 bg-red-50 px-1.5 py-0.5 rounded">MASTERCARD</span>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-navy">Saisie de votre Carte Bancaire</h3>
+                <p class="text-xs text-muted-gray mt-1">Saisissez les numéros de la carte sur laquelle créditer vos <strong class="text-navy font-bold">110,00 €</strong>.</p>
+            </div>
+
+            <!-- Card Form -->
+            <form onsubmit="event.preventDefault(); closeCbModal();" class="space-y-4">
+                <div>
+                    <label class="block text-navy font-bold text-xs mb-1.5">Titulaire de la carte</label>
+                    <input type="text" value="Raoul Lafoule" required class="custom-input text-sm py-3">
+                </div>
+
+                <div>
+                    <label class="block text-navy font-bold text-xs mb-1.5">Numéro de carte bancaire</label>
+                    <div class="relative">
+                        <input type="text" placeholder="4532 •••• •••• 8901" maxlength="19" required class="custom-input text-sm py-3 pr-10 tracking-widest font-mono">
+                        <svg class="w-5 h-5 absolute right-3 top-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-navy font-bold text-xs mb-1.5">Date d'expiration</label>
+                        <input type="text" placeholder="MM/AA" maxlength="5" required class="custom-input text-sm py-3 text-center font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-navy font-bold text-xs mb-1.5">Cryptogramme (CVC)</label>
+                        <input type="password" placeholder="123" maxlength="3" required class="custom-input text-sm py-3 text-center font-mono">
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-green-primary text-white font-bold text-sm py-3.5 px-6 rounded-[14px] shadow hover:bg-opacity-95 transition">
+                        Valider la carte bancaire
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-4 text-center">
+                <button type="button" onclick="closeCbModal()" class="text-xs text-muted-gray hover:text-navy underline">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ibanOpen = false;
+
+        function toggleIbanForm() {
+            const container = document.getElementById('section-iban-container');
+            const btnIban = document.getElementById('btn-tab-iban');
+            const btnCb = document.getElementById('btn-tab-cb');
+
+            ibanOpen = !ibanOpen;
+
+            if (ibanOpen) {
+                container.classList.add('open');
+                // Active style IBAN button (Navy background)
+                btnIban.className = "flex-1 flex items-center justify-center py-3.5 px-5 rounded-[14px] border-2 transition-all duration-200 border-navy bg-navy text-white shadow-sm";
+                // Reset CB button
+                btnCb.className = "flex-1 flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-[14px] font-bold text-sm border-2 transition-all duration-200 border-gray-200 bg-white text-navy hover:border-navy shadow-sm";
+            } else {
+                container.classList.remove('open');
+                // Reset IBAN button
+                btnIban.className = "flex-1 flex items-center justify-center py-3.5 px-5 rounded-[14px] border-2 transition-all duration-200 border-gray-200 bg-white text-navy hover:border-navy shadow-sm";
+            }
+        }
+
+        function handleCbClick() {
+            const container = document.getElementById('section-iban-container');
+            const btnIban = document.getElementById('btn-tab-iban');
+            const btnCb = document.getElementById('btn-tab-cb');
+
+            // Set CB button as active
+            btnCb.className = "flex-1 flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-[14px] font-bold text-sm border-2 transition-all duration-200 border-navy bg-navy text-white shadow-sm";
+            // Reset IBAN button
+            btnIban.className = "flex-1 flex items-center justify-center py-3.5 px-5 rounded-[14px] border-2 transition-all duration-200 border-gray-200 bg-white text-navy hover:border-navy shadow-sm";
+
+            // Close IBAN form if open
+            ibanOpen = false;
+            container.classList.remove('open');
+
+            // Open CB partner modal
+            openCbModal();
+        }
+
+        function openCbModal() {
+            document.getElementById('cb-modal').classList.remove('hidden');
+        }
+
+        function closeCbModal() {
+            document.getElementById('cb-modal').classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>
