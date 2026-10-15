@@ -227,18 +227,25 @@
             <div class="p-6 space-y-6 overflow-y-auto flex-1">
                 
                 <!-- Zone Studio Blanc e-commerce -->
-                <div id="illustration-box" onclick="handleIllustrationBoxClick()" class="w-full h-56 bg-white border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center relative overflow-hidden transition-colors cursor-pointer group hover:border-brand-400 shadow-inner">
-                    <div id="img-prompt" class="flex flex-col items-center gap-2 text-slate-400 group-hover:text-brand-600 transition-colors">
+                <div id="illustration-box" class="w-full min-h-56 bg-white border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center relative overflow-hidden transition-colors shadow-inner p-4">
+                    
+                    <!-- Prompt Initial -->
+                    <div id="img-prompt" onclick="handleIllustrationBoxClick()" class="flex flex-col items-center gap-2 text-slate-400 hover:text-brand-600 cursor-pointer transition-colors text-center py-6">
                         <i data-lucide="image-plus" class="w-8 h-8"></i>
                         <span class="text-xs font-medium">Charger le visuel studio officiel (rendu e-commerce via Icecat)</span>
                     </div>
 
-                    <div id="img-loader" class="hidden flex flex-col items-center gap-2 text-brand-600">
+                    <!-- Loader Progress -->
+                    <div id="img-loader" class="hidden flex flex-col items-center gap-2 text-brand-600 text-center py-6">
                         <i data-lucide="loader-2" class="w-7 h-7 animate-spin"></i>
-                        <span id="img-loader-text" class="text-xs font-semibold">Recherche du code EAN via IA & requête Icecat...</span>
+                        <span id="img-loader-text" class="text-xs font-semibold">Génération des 10 EAN potentiels via Gemini...</span>
                     </div>
 
-                    <div id="img-carousel" class="hidden w-full h-full relative flex items-center justify-center bg-white p-4">
+                    <!-- Liste des EANs testés -->
+                    <div id="ean-chips-container" class="hidden w-full mb-3 flex flex-wrap gap-1.5 justify-center"></div>
+
+                    <!-- Carrousel d'images -->
+                    <div id="img-carousel" class="hidden w-full h-56 relative flex items-center justify-center bg-white p-2">
                         <img id="carousel-img" referrerpolicy="no-referrer" src="" alt="Illustration Officielle" class="h-full w-full object-contain cursor-pointer transition-all duration-200 drop-shadow-md" onclick="selectCurrentImage(event)">
 
                         <div id="selected-badge" class="hidden absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10">
@@ -256,6 +263,22 @@
 
                         <div class="absolute bottom-2 bg-slate-800/80 text-white text-[11px] font-mono px-2.5 py-0.5 rounded-full backdrop-blur-sm shadow">
                             <span id="img-index-display">1 / 1</span>
+                        </div>
+                    </div>
+
+                    <!-- Formulaire de saisie manuelle si aucun visuel trouvé -->
+                    <div id="manual-ean-container" class="hidden w-full max-w-md bg-amber-50 border border-amber-200 rounded-lg p-3 text-center space-y-2 my-2">
+                        <div class="flex items-center justify-center gap-1.5 text-xs font-semibold text-amber-800">
+                            <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600"></i>
+                            <span>Aucun visuel trouvé avec les 10 EAN générés.</span>
+                        </div>
+                        <p class="text-[11px] text-amber-700">Saisissez manuellement le code EAN/GTIN officiel pour effectuer la recherche sur Icecat :</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="manual-ean-input" placeholder="Ex: 0195949038228" class="flex-1 px-3 py-1.5 text-xs border border-amber-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:outline-none font-mono bg-white">
+                            <button onclick="submitManualEan()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-md transition-colors inline-flex items-center gap-1">
+                                <i data-lucide="search" class="w-3.5 h-3.5"></i>
+                                <span>Lancer Icecat</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -760,17 +783,26 @@ Sans aucun markdown, sans guillemets de code, sans texte additionnel.`;
             }
         }
 
-        async function callGeminiAPI(apiKey, promptText) {
+        async function callGeminiAPI(apiKey, promptText, jsonSchema = null) {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
             
+            const bodyPayload = {
+                contents: [{
+                    parts: [{ text: promptText }]
+                }]
+            };
+
+            if (jsonSchema) {
+                bodyPayload.generationConfig = {
+                    responseMimeType: "application/json",
+                    responseSchema: jsonSchema
+                };
+            }
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{ text: promptText }]
-                    }]
-                })
+                body: JSON.stringify(bodyPayload)
             });
 
             if (!response.ok) {
@@ -782,7 +814,7 @@ Sans aucun markdown, sans guillemets de code, sans texte additionnel.`;
             return data.candidates[0].content.parts[0].text.trim();
         }
 
-        // --- Moteur de visuels officiels via Icecat & Gemini EAN ---
+        // --- Moteur de visuels officiels via Icecat (Test de 10 EANs) ---
 
         function resetIllustrationBox() {
             fetchedImages = [];
@@ -793,6 +825,11 @@ Sans aucun markdown, sans guillemets de code, sans texte additionnel.`;
             document.getElementById('img-loader').classList.add('hidden');
             document.getElementById('img-carousel').classList.add('hidden');
             document.getElementById('selected-badge').classList.add('hidden');
+            document.getElementById('manual-ean-container').classList.add('hidden');
+            
+            const chipsBox = document.getElementById('ean-chips-container');
+            chipsBox.innerHTML = '';
+            chipsBox.classList.add('hidden');
         }
 
         function handleIllustrationBoxClick() {
@@ -812,61 +849,149 @@ Sans aucun markdown, sans guillemets de code, sans texte additionnel.`;
 
             document.getElementById('img-prompt').classList.add('hidden');
             document.getElementById('img-loader').classList.remove('hidden');
+            document.getElementById('manual-ean-container').classList.add('hidden');
             const loaderText = document.getElementById('img-loader-text');
+            const chipsBox = document.getElementById('ean-chips-container');
 
             try {
-                // Step 1: Récupération du code EAN/GTIN via Gemini
-                loaderText.textContent = "Recherche du code EAN/GTIN officiel via Gemini...";
+                // Étape 1 : Demander 10 EANs potentiels à Gemini (Format JSON Strict)
+                loaderText.textContent = "Génération des 10 codes EAN potentiels via Gemini...";
                 const cleanName = activeProduct["Nom"].replace(/\(eSim-Only\)/i, '').trim();
                 const brand = activeProduct["Marque"] || "";
                 const model = activeProduct["Modèle"] || "";
 
-                const promptEan = `Donne-moi le code EAN / GTIN principal officiel à 13 chiffres pour le produit "${brand} ${cleanName} ${model}".
-Renvoie UNIQUEMENT le code numérique à 13 chiffres et absolument rien d'autre.`;
+                const promptEans = `Tu es une base de données EAN/GTIN. Pour le produit : "${model}", fournis un tableau de 10 codes EAN quelle que soit la couleur ou la capacité`;
 
-                const eanResult = await callGeminiAPI(cfg.geminiKey, promptEan);
-                const gtin = eanResult.replace(/\D/g, '').trim();
+                const schemaEans = {
+                    type: "OBJECT",
+                    properties: {
+                        eans: {
+                            type: "ARRAY",
+                            items: { type: "STRING" },
+                            description: "Liste de 10 codes EAN"
+                        }
+                    },
+                    required: ["eans"]
+                };
 
-                if (!gtin || gtin.length < 8) {
-                    throw new Error("Impossible d'obtenir un code EAN/GTIN valide.");
+                const rawJson = await callGeminiAPI(cfg.geminiKey, promptEans, schemaEans);
+                const parsedEans = JSON.parse(rawJson);
+                const eanList = Array.isArray(parsedEans.eans) ? parsedEans.eans.map(e => e.replace(/\D/g, '').trim()).filter(e => e.length >= 8).slice(0, 10) : [];
+
+                if (eanList.length === 0) {
+                    throw new Error("Aucun EAN généré par l'IA.");
                 }
 
-                // Step 2: Appel de l'API Icecat avec le GTIN
-                loaderText.textContent = `Requête API Icecat pour l'EAN ${gtin}...`;
-                const icecatUrl = `https://live.icecat.biz/api/?UserName=${encodeURIComponent(cfg.icecatUser)}&AppKey=${encodeURIComponent(cfg.icecatKey)}&Language=fr&GTIN=${gtin}`;
+                // Affichage des chips EAN dans le bloc
+                chipsBox.innerHTML = eanList.map(e => `<span id="chip-${e}" class="inline-block bg-slate-100 text-slate-600 font-mono text-[10px] px-2 py-0.5 rounded border border-slate-200">${e}</span>`).join('');
+                chipsBox.classList.remove('hidden');
 
+                // Étape 2 : Tester chaque EAN auprès d'Icecat jusqu'à trouver une image
+                fetchedImages = [];
+                let successfulEan = null;
+
+                for (let i = 0; i < eanList.length; i++) {
+                    const currentEan = eanList[i];
+                    loaderText.textContent = `Test Icecat (${i + 1}/${eanList.length}) : EAN ${currentEan}...`;
+
+                    const chipEl = document.getElementById(`chip-${currentEan}`);
+                    if (chipEl) {
+                        chipEl.className = "inline-block bg-brand-100 text-brand-700 font-mono text-[10px] px-2 py-0.5 rounded border border-brand-300 font-bold animate-pulse";
+                    }
+
+                    const images = await testEanWithIcecat(cfg.icecatUser, cfg.icecatKey, currentEan);
+
+                    if (images.length > 0) {
+                        fetchedImages = images;
+                        successfulEan = currentEan;
+                        if (chipEl) {
+                            chipEl.className = "inline-block bg-emerald-100 text-emerald-700 font-mono text-[10px] px-2 py-0.5 rounded border border-emerald-300 font-bold";
+                        }
+                        break;
+                    } else {
+                        if (chipEl) {
+                            chipEl.className = "inline-block bg-rose-50 text-rose-400 font-mono text-[10px] px-2 py-0.5 rounded border border-rose-200 line-through opacity-60";
+                        }
+                    }
+                }
+
+                // Étape 3 : Afficher les images ou proposer la saisie manuelle
+                document.getElementById('img-loader').classList.add('hidden');
+
+                if (fetchedImages.length > 0) {
+                    currentImgIndex = 0;
+                    displayCurrentImage();
+                    document.getElementById('img-carousel').classList.remove('hidden');
+                } else {
+                    document.getElementById('manual-ean-container').classList.remove('hidden');
+                }
+
+            } catch (err) {
+                console.warn("Erreur lors de la recherche automatique :", err);
+                document.getElementById('img-loader').classList.add('hidden');
+                document.getElementById('manual-ean-container').classList.remove('hidden');
+            }
+        }
+
+        // Fonction auxiliaire pour interroger Icecat sur un EAN donné
+        async function testEanWithIcecat(userName, appKey, ean) {
+            try {
+                const icecatUrl = `https://live.icecat.biz/api/?UserName=${encodeURIComponent(userName)}&AppKey=${encodeURIComponent(appKey)}&Language=fr&GTIN=${ean}`;
                 const response = await fetch(icecatUrl);
-                if (!response.ok) throw new Error(`Erreur API Icecat (HTTP ${response.status})`);
+                if (!response.ok) return [];
 
                 const icecatData = await response.json();
+                const images = [];
 
-                // Step 3: Extraction du parcours `data` -> `Image` -> `Pic500x500`
-                fetchedImages = [];
                 if (icecatData && icecatData.data) {
                     if (icecatData.data.Image && icecatData.data.Image.Pic500x500) {
-                        fetchedImages.push(icecatData.data.Image.Pic500x500);
+                        images.push(icecatData.data.Image.Pic500x500);
                     }
                     if (Array.isArray(icecatData.data.Gallery)) {
                         icecatData.data.Gallery.forEach(item => {
-                            if (item.Pic500x500 && !fetchedImages.includes(item.Pic500x500)) {
-                                fetchedImages.push(item.Pic500x500);
+                            if (item.Pic500x500 && !images.includes(item.Pic500x500)) {
+                                images.push(item.Pic500x500);
                             }
                         });
                     }
                 }
+                return images;
+            } catch (e) {
+                return [];
+            }
+        }
 
-                if (fetchedImages.length === 0) {
-                    throw new Error("Aucun visuel Pic500x500 trouvé dans le retour Icecat pour cet EAN.");
-                }
+        // Soumission manuelle d'un EAN par l'administrateur
+        async function submitManualEan() {
+            const manualInput = document.getElementById('manual-ean-input').value.trim();
+            const cleanEan = manualInput.replace(/\D/g, '');
 
+            if (!cleanEan || cleanEan.length < 8) {
+                alert("Veuillez saisir un code EAN/GTIN valide à 8 chiffres minimum.");
+                return;
+            }
+
+            const cfg = getSavedConfig();
+            if (!cfg.icecatUser || !cfg.icecatKey) {
+                alert("Veuillez configurer l'UserName et l'AppKey Icecat dans la section globale.");
+                return;
+            }
+
+            document.getElementById('manual-ean-container').classList.add('hidden');
+            document.getElementById('img-loader').classList.remove('hidden');
+            document.getElementById('img-loader-text').textContent = `Recherche Icecat avec l'EAN manuel : ${cleanEan}...`;
+
+            const images = await testEanWithIcecat(cfg.icecatUser, cfg.icecatKey, cleanEan);
+            document.getElementById('img-loader').classList.add('hidden');
+
+            if (images.length > 0) {
+                fetchedImages = images;
                 currentImgIndex = 0;
                 displayCurrentImage();
-                document.getElementById('img-loader').classList.add('hidden');
                 document.getElementById('img-carousel').classList.remove('hidden');
-
-            } catch (err) {
-                alert("Erreur lors de la récupération du visuel Icecat : " + err.message);
-                resetIllustrationBox();
+            } else {
+                alert(`Aucun visuel trouvé sur Icecat avec l'EAN ${cleanEan}.`);
+                document.getElementById('manual-ean-container').classList.remove('hidden');
             }
         }
 
