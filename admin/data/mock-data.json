@@ -1,0 +1,148 @@
+{
+  "expeditionsData": [
+    {
+      "numColisage": "26-S35-2808-01_1293",
+      "nbProduits": 1,
+      "dateMiseDispo": "28 août 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 370,
+      "valeurTotal": 267.00
+    },
+    {
+      "numColisage": "26-S34-2108-01_1293",
+      "nbProduits": 2,
+      "dateMiseDispo": "21 août 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 230,
+      "valeurTotal": 534.00
+    },
+    {
+      "numColisage": "26-S33-1408-01_1293",
+      "nbProduits": 2,
+      "dateMiseDispo": "14 août 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 530,
+      "valeurTotal": 436.00
+    },
+    {
+      "numColisage": "26-S32-0708-01_1293",
+      "nbProduits": 2,
+      "dateMiseDispo": "7 août 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 460,
+      "valeurTotal": 534.00
+    },
+    {
+      "numColisage": "26-S31-3107-01_1293",
+      "nbProduits": 2,
+      "dateMiseDispo": "31 juil. 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 530,
+      "valeurTotal": 531.00
+    },
+    {
+      "numColisage": "26-S30-2407-01_1293",
+      "nbProduits": 1,
+      "dateMiseDispo": "24 juil. 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 360,
+      "valeurTotal": 260.00
+    },
+    {
+      "numColisage": "26-S29-1707-01_1293",
+      "nbProduits": 6,
+      "dateMiseDispo": "17 juil. 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 1220,
+      "valeurTotal": 1389.00
+    },
+    {
+      "numColisage": "26-S28-1007-01_1293",
+      "nbProduits": 4,
+      "dateMiseDispo": "10 juil. 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 720,
+      "valeurTotal": 1061.00
+    },
+    {
+      "numColisage": "26-S27-0307-01_1293",
+      "nbProduits": 1,
+      "dateMiseDispo": "3 juil. 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 360,
+      "valeurTotal": 174.00
+    },
+    {
+      "numColisage": "26-S26-2606-01_1293",
+      "nbProduits": 3,
+      "dateMiseDispo": "26 juin 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 700,
+      "valeurTotal": 660.00
+    },
+    {
+      "numColisage": "26-S25-1906-01_1293",
+      "nbProduits": 10,
+      "dateMiseDispo": "19 juin 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 1920,
+      "valeurTotal": 2628.00
+    },
+    {
+      "numColisage": "26-S24-1206-01_1293",
+      "nbProduits": 1,
+      "dateMiseDispo": "12 juin 2026",
+      "dateEnlevement": "",
+      "numSuivi": "RMP",
+      "longueur": 250,
+      "largeur": 200,
+      "hauteur": 150,
+      "poids": 360,
+      "valeurTotal": 247.00
+    }
+  ]
+}

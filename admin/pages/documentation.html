@@ -1,0 +1,226 @@
+<!-- DOCUMENTATION PAGE -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+            Documentations & Guides
+        </h1>
+        <p class="text-xs text-slate-500 mt-1">Consultez et téléchargez les guides d'intégration technique et documentations de l'API CompaRecycle.</p>
+    </div>
+</div>
+
+<!-- Filter & Search Toolbar -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex items-center gap-3 relative">
+    <div class="relative flex-1">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input type="text" id="docSearchInput" placeholder="Rechercher un document par titre, description, langue..." class="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+    </div>
+
+    <div class="relative">
+        <button id="docColPickerBtn" onclick="toggleDocColumnPicker()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition border border-slate-300 shrink-0">
+            <i class="fa-solid fa-table-columns text-slate-500"></i>
+            <span>Colonnes</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+        </button>
+
+        <div id="docColumnPickerPanel" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Colonnes affichées</span>
+                <button onclick="resetDocColumnVisibility()" class="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700">Réinitialiser</button>
+            </div>
+            <div class="space-y-1.5 text-xs text-slate-700 font-medium max-h-72 overflow-y-auto pr-1">
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Idpartner download</span>
+                    <input type="checkbox" data-doccol="col-idpartner" checked onchange="toggleDocColumn('col-idpartner', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Title</span>
+                    <input type="checkbox" data-doccol="col-title" checked onchange="toggleDocColumn('col-title', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Description</span>
+                    <input type="checkbox" data-doccol="col-description" checked onchange="toggleDocColumn('col-description', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Language</span>
+                    <input type="checkbox" data-doccol="col-language" checked onchange="toggleDocColumn('col-language', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Download name</span>
+                    <input type="checkbox" data-doccol="col-downloadname" checked onchange="toggleDocColumn('col-downloadname', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date de création</span>
+                    <input type="checkbox" data-doccol="col-datecreated" checked onchange="toggleDocColumn('col-datecreated', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>État</span>
+                    <input type="checkbox" data-doccol="col-status" checked onchange="toggleDocColumn('col-status', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Actions</span>
+                    <input type="checkbox" data-doccol="col-actions" checked onchange="toggleDocColumn('col-actions', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
+    <div class="overflow-x-auto flex-1">
+        <table class="w-full text-left border-collapse min-w-[1200px]">
+            <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none whitespace-nowrap">
+                    <th class="py-3 px-4 col-idpartner">Idpartner download</th>
+                    <th class="py-3 px-4 col-title">Title</th>
+                    <th class="py-3 px-4 col-description max-w-md">Description</th>
+                    <th class="py-3 px-4 text-center col-language">Language</th>
+                    <th class="py-3 px-4 col-downloadname">Download name</th>
+                    <th class="py-3 px-4 text-center col-datecreated">Date de création</th>
+                    <th class="py-3 px-4 text-center col-status">État</th>
+                    <th class="py-3 px-4 text-center col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="docTableBody" class="divide-y divide-slate-100 text-xs">
+                <!-- Loaded via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div>
+            1 à <span id="docCountCurrent">2</span> sur <span id="docCountTotal">2</span> documentations
+        </div>
+
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2">
+                <span>Lignes par page</span>
+                <select class="bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:outline-none font-semibold text-slate-700">
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                    <option selected>100</option>
+                </select>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <button class="p-1.5 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30" disabled><i class="fa-solid fa-chevron-left text-sm"></i></button>
+                <span class="font-bold text-slate-800 px-2 py-0.5 rounded bg-white border border-slate-200">1</span>
+                <button class="p-1.5 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30" disabled><i class="fa-solid fa-chevron-right text-sm"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function renderDocTable() {
+        const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.docsData) ? GLOBAL_DATA.docsData : [];
+        const tbody = document.getElementById('docTableBody');
+        const countCur = document.getElementById('docCountCurrent');
+        const countTot = document.getElementById('docCountTotal');
+
+        if (countCur) countCur.innerText = data.length;
+        if (countTot) countTot.innerText = data.length;
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        data.forEach((item) => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100 text-slate-700";
+
+            const langBadge = item.language === 'fr' 
+                ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold text-[11px] uppercase border border-blue-200"><img src="https://flagcdn.com/w20/fr.png" class="w-3.5 h-2.5 rounded-sm object-cover"> fr</span>`
+                : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold text-[11px] uppercase border border-purple-200"><img src="https://flagcdn.com/w20/gb.png" class="w-3.5 h-2.5 rounded-sm object-cover"> en</span>`;
+
+            tr.innerHTML = `
+                <td class="py-3.5 px-4 font-mono text-xs text-slate-600 font-semibold col-idpartner">${item.idPartnerDownload}</td>
+                <td class="py-3.5 px-4 font-bold text-slate-900 text-xs col-title max-w-xs">${item.title}</td>
+                <td class="py-3.5 px-4 text-slate-600 text-xs leading-relaxed max-w-md col-description">${item.description}</td>
+                <td class="py-3.5 px-4 text-center col-language">${langBadge}</td>
+                <td class="py-3.5 px-4 font-mono text-xs text-emerald-700 font-semibold col-downloadname">${item.downloadName}</td>
+                <td class="py-3.5 px-4 text-center font-mono text-xs text-slate-600 whitespace-nowrap col-datecreated">${item.dateCreated}</td>
+                <td class="py-3.5 px-4 text-center col-status">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${item.status}
+                    </span>
+                </td>
+                <td class="py-3.5 px-4 text-center whitespace-nowrap col-actions">
+                    <button onclick="alert('Téléchargement de ' + '${item.downloadName}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-md shadow-emerald-600/20 transition inline-flex items-center gap-1.5">
+                        <i class="fa-solid fa-download"></i> TÉLÉCHARGER
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function toggleDocColumnPicker() {
+        const panel = document.getElementById('docColumnPickerPanel');
+        if (panel) panel.classList.toggle('hidden');
+    }
+
+    function toggleDocColumn(colClass, isVisible) {
+        const elements = document.querySelectorAll('.' + colClass);
+        elements.forEach(el => {
+            if (isVisible) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        });
+    }
+
+    function resetDocColumnVisibility() {
+        const checkboxes = document.querySelectorAll('input[data-doccol]');
+        checkboxes.forEach(cb => {
+            cb.checked = true;
+            toggleDocColumn(cb.getAttribute('data-doccol'), true);
+        });
+    }
+
+    const docSearchInput = document.getElementById('docSearchInput');
+    if (docSearchInput) {
+        docSearchInput.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.docsData) ? GLOBAL_DATA.docsData : [];
+            const filtered = data.filter(d => 
+                d.title.toLowerCase().includes(q) || 
+                d.description.toLowerCase().includes(q) || 
+                d.language.toLowerCase().includes(q) ||
+                d.downloadName.toLowerCase().includes(q)
+            );
+            renderDocTableFiltered(filtered);
+        });
+    }
+
+    function renderDocTableFiltered(data) {
+        const tbody = document.getElementById('docTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        data.forEach((item) => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100 text-slate-700";
+            const langBadge = item.language === 'fr' 
+                ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold text-[11px] uppercase border border-blue-200"><img src="https://flagcdn.com/w20/fr.png" class="w-3.5 h-2.5 rounded-sm object-cover"> fr</span>`
+                : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold text-[11px] uppercase border border-purple-200"><img src="https://flagcdn.com/w20/gb.png" class="w-3.5 h-2.5 rounded-sm object-cover"> en</span>`;
+
+            tr.innerHTML = `
+                <td class="py-3.5 px-4 font-mono text-xs text-slate-600 font-semibold col-idpartner">${item.idPartnerDownload}</td>
+                <td class="py-3.5 px-4 font-bold text-slate-900 text-xs col-title max-w-xs">${item.title}</td>
+                <td class="py-3.5 px-4 text-slate-600 text-xs leading-relaxed max-w-md col-description">${item.description}</td>
+                <td class="py-3.5 px-4 text-center col-language">${langBadge}</td>
+                <td class="py-3.5 px-4 font-mono text-xs text-emerald-700 font-semibold col-downloadname">${item.downloadName}</td>
+                <td class="py-3.5 px-4 text-center font-mono text-xs text-slate-600 whitespace-nowrap col-datecreated">${item.dateCreated}</td>
+                <td class="py-3.5 px-4 text-center col-status">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${item.status}
+                    </span>
+                </td>
+                <td class="py-3.5 px-4 text-center whitespace-nowrap col-actions">
+                    <button onclick="alert('Téléchargement de ' + '${item.downloadName}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-md shadow-emerald-600/20 transition inline-flex items-center gap-1.5">
+                        <i class="fa-solid fa-download"></i> TÉLÉCHARGER
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    renderDocTable();
+</script>

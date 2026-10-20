@@ -1,0 +1,175 @@
+<!-- Page Title Bar -->
+<div class="mb-6 text-center">
+    <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Facturation</h1>
+</div>
+
+<!-- Filters Bar (Matching Mockup design) -->
+<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6 max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Date de facturation -->
+        <div>
+            <label class="block text-xs font-medium text-slate-500 mb-1">Date de facturation</label>
+            <div class="relative">
+                <input type="text" value="01/09/2026 - 31/10/2026" class="w-full pl-3 pr-8 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold text-slate-700">
+                <i class="fa-solid fa-xmark absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-slate-600 text-xs"></i>
+            </div>
+        </div>
+
+        <!-- Date de paiement -->
+        <div>
+            <label class="block text-xs font-medium text-slate-500 mb-1">Date de paiement</label>
+            <div class="relative">
+                <input type="text" placeholder="Cliquez pour sélectionner un..." class="w-full pl-3 pr-8 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-700">
+                <i class="fa-regular fa-calendar absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+            </div>
+        </div>
+
+        <!-- Statut -->
+        <div>
+            <label class="block text-xs font-medium text-slate-500 mb-1">Statut</label>
+            <select class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-700">
+                <option value="">Statut</option>
+                <option value="facture">Facturé</option>
+                <option value="paye">Payé</option>
+                <option value="retard">En retard</option>
+            </select>
+        </div>
+
+        <!-- Type de TVA -->
+        <div>
+            <label class="block text-xs font-medium text-slate-500 mb-1">Type de TVA</label>
+            <select class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-700">
+                <option value="">Type de TVA</option>
+                <option value="classique">Classique</option>
+                <option value="marge">Sur Marge</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- KPI Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8 max-w-5xl mx-auto">
+    <!-- Facturé -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-bold text-slate-500">Facturé</span>
+        <div class="mt-2">
+            <div class="text-2xl font-black text-indigo-600">10 607 €</div>
+            <div class="text-xs text-slate-400 font-medium mt-0.5">20 transactions</div>
+        </div>
+    </div>
+
+    <!-- En retard -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-bold text-rose-600">En retard</span>
+        <div class="mt-2">
+            <div class="text-2xl font-black text-rose-600">0 €</div>
+            <div class="text-xs text-rose-500 font-medium mt-0.5">0 transactions</div>
+        </div>
+    </div>
+
+    <!-- Payé -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-bold text-emerald-600">Payé</span>
+        <div class="mt-2">
+            <div class="text-2xl font-black text-emerald-600">21 995 €</div>
+            <div class="text-xs text-emerald-600 font-medium mt-0.5">36 transactions</div>
+        </div>
+    </div>
+
+    <!-- Total -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-bold text-teal-600">Total</span>
+        <div class="mt-2">
+            <div class="text-2xl font-black text-teal-600">32 602 €</div>
+            <div class="text-xs text-teal-600 font-medium mt-0.5">56 transactions</div>
+        </div>
+    </div>
+</div>
+
+<!-- DATA TABLE CONTAINER -->
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
+    <div class="overflow-x-auto flex-1">
+        <table class="w-full text-left border-collapse min-w-[1000px]">
+            <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none">
+                    <th class="py-3 px-4">N° de facture</th>
+                    <th class="py-3 px-4">Type de TVA</th>
+                    <th class="py-3 px-4 text-center">Date de création facture</th>
+                    <th class="py-3 px-4 text-center">Date de paiement facture</th>
+                    <th class="py-3 px-4 text-center">Nb de transactions</th>
+                    <th class="py-3 px-4 text-right">Montant total TTC</th>
+                    <th class="py-3 px-4 text-right">Montant total HT</th>
+                    <th class="py-3 px-4 text-center">Statut</th>
+                    <th class="py-3 px-4 text-right">Téléchargements</th>
+                </tr>
+            </thead>
+            <tbody id="facturationTableBody" class="divide-y divide-slate-100 text-xs">
+                <!-- Loaded dynamically via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TABLE FOOTER & PAGINATION -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div>
+            Page <span class="font-semibold text-slate-800">1</span> sur <span class="font-semibold text-slate-800">1</span> (<span id="factCountLines">5</span> lignes)
+        </div>
+
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2">
+                <span>Lignes par page</span>
+                <select class="bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:outline-none font-semibold text-slate-700">
+                    <option>10</option>
+                    <option>25</option>
+                    <option selected>50</option>
+                    <option>100</option>
+                </select>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <button class="p-1.5 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30" disabled><i class="fa-solid fa-chevron-left text-sm"></i></button>
+                <button class="p-1.5 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30" disabled><i class="fa-solid fa-chevron-right text-sm"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function renderFacturationTable() {
+        const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.facturationData) ? GLOBAL_DATA.facturationData : [];
+        const tbody = document.getElementById('facturationTableBody');
+        const linesEl = document.getElementById('factCountLines');
+        if (linesEl) linesEl.innerText = data.length;
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        data.forEach((item) => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100 text-slate-700";
+
+            const isPaye = item.status === "Payé";
+            const statusBadge = isPaye 
+                ? `<span class="px-3 py-1 rounded-md text-xs font-bold bg-emerald-500 text-white shadow-sm">Payé</span>`
+                : `<span class="px-3 py-1 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm">Facturé</span>`;
+
+            tr.innerHTML = `
+                <td class="py-3.5 px-4 font-bold text-slate-900 font-mono text-xs">${item.num}</td>
+                <td class="py-3.5 px-4 font-medium">${item.tva}</td>
+                <td class="py-3.5 px-4 text-center font-mono text-slate-600">${item.dateFacture}</td>
+                <td class="py-3.5 px-4 text-center font-mono text-slate-600">${item.datePaiement}</td>
+                <td class="py-3.5 px-4 text-center font-bold text-slate-800">${item.nbTrans}</td>
+                <td class="py-3.5 px-4 text-right font-bold text-slate-900">${item.ttc}</td>
+                <td class="py-3.5 px-4 text-right font-bold text-slate-900">${item.ht || item.ttc}</td>
+                <td class="py-3.5 px-4 text-center">${statusBadge}</td>
+                <td class="py-3.5 px-4 text-right">
+                    <button title="Télécharger" class="px-2.5 py-1 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded text-[10px] tracking-wider uppercase transition shadow-sm">
+                        FACTURE
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    renderFacturationTable();
+</script>

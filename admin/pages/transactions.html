@@ -1,0 +1,538 @@
+<!-- TRANSACTIONS PAGE -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+            Transactions <span class="text-slate-400 font-normal text-lg" id="trxTotalCount">(882)</span>
+        </h1>
+        <p class="text-sm text-slate-500 mt-0.5">Suivez et gérez l'ensemble des transactions, états de facturation et homologations.</p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2.5">
+        <button class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
+            <i class="fa-solid fa-download text-slate-500"></i> Exporter
+        </button>
+    </div>
+</div>
+
+<!-- Filter & Search Toolbar -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex items-center gap-3 relative">
+    <!-- Quick Search -->
+    <div class="relative flex-1">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input type="text" id="trxSearchInput" placeholder="Rechercher une transaction (N°, IMEI, marque, produit, client...)" class="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+    </div>
+
+    <!-- Column Visibility Toggle Panel Button -->
+    <div class="relative">
+        <button id="trxColPickerBtn" onclick="toggleTrxColumnPicker()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition border border-slate-300 shrink-0">
+            <i class="fa-solid fa-table-columns text-slate-500"></i>
+            <span>Colonnes</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+        </button>
+
+        <!-- Column Picker Dropdown Panel -->
+        <div id="trxColumnPickerPanel" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Colonnes affichées</span>
+                <button onclick="resetTrxColumnVisibility()" class="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700">Réinitialiser</button>
+            </div>
+            <div class="space-y-1.5 text-xs text-slate-700 font-medium max-h-72 overflow-y-auto pr-1">
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Idtransaction group</span>
+                    <input type="checkbox" data-trxcol="col-idgroup" checked onchange="toggleTrxColumn('col-idgroup', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Idtransaction product</span>
+                    <input type="checkbox" data-trxcol="col-idprod" checked onchange="toggleTrxColumn('col-idprod', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>N° Transaction</span>
+                    <input type="checkbox" data-trxcol="col-numtrans" checked onchange="toggleTrxColumn('col-numtrans', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date de création</span>
+                    <input type="checkbox" data-trxcol="col-datecreation" checked onchange="toggleTrxColumn('col-datecreation', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Catégorie</span>
+                    <input type="checkbox" data-trxcol="col-category" checked onchange="toggleTrxColumn('col-category', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Marque</span>
+                    <input type="checkbox" data-trxcol="col-brand" checked onchange="toggleTrxColumn('col-brand', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>#Produit Comparecycle</span>
+                    <input type="checkbox" data-trxcol="col-numcomparecycle" checked onchange="toggleTrxColumn('col-numcomparecycle', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Produit</span>
+                    <input type="checkbox" data-trxcol="col-product" checked onchange="toggleTrxColumn('col-product', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Attributes initial</span>
+                    <input type="checkbox" data-trxcol="col-attrinitial" checked onchange="toggleTrxColumn('col-attrinitial', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Attributes validé</span>
+                    <input type="checkbox" data-trxcol="col-attrvalide" checked onchange="toggleTrxColumn('col-attrvalide', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>IMEI validé</span>
+                    <input type="checkbox" data-trxcol="col-imeivalide" checked onchange="toggleTrxColumn('col-imeivalide', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Grade initial</span>
+                    <input type="checkbox" data-trxcol="col-gradeinitial" checked onchange="toggleTrxColumn('col-gradeinitial', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Grade validé</span>
+                    <input type="checkbox" data-trxcol="col-gradevalide" checked onchange="toggleTrxColumn('col-gradevalide', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Prix Initial</span>
+                    <input type="checkbox" data-trxcol="col-priceinitial" checked onchange="toggleTrxColumn('col-priceinitial', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Prix validé</span>
+                    <input type="checkbox" data-trxcol="col-pricevalide" checked onchange="toggleTrxColumn('col-pricevalide', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Statut de la transaction</span>
+                    <input type="checkbox" data-trxcol="col-statustrans" checked onchange="toggleTrxColumn('col-statustrans', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>État facturation</span>
+                    <input type="checkbox" data-trxcol="col-etatfacture" checked onchange="toggleTrxColumn('col-etatfacture', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>N° de facture</span>
+                    <input type="checkbox" data-trxcol="col-numfacture" checked onchange="toggleTrxColumn('col-numfacture', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date de facture</span>
+                    <input type="checkbox" data-trxcol="col-datefacture" checked onchange="toggleTrxColumn('col-datefacture', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date paiement facture</span>
+                    <input type="checkbox" data-trxcol="col-datepaiement" checked onchange="toggleTrxColumn('col-datepaiement', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Type de TVA</span>
+                    <input type="checkbox" data-trxcol="col-typetva" checked onchange="toggleTrxColumn('col-typetva', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date homologation</span>
+                    <input type="checkbox" data-trxcol="col-datehomologation" checked onchange="toggleTrxColumn('col-datehomologation', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date de mise à dispo</span>
+                    <input type="checkbox" data-trxcol="col-datemisedispo" checked onchange="toggleTrxColumn('col-datemisedispo', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Certificat d'effacement</span>
+                    <input type="checkbox" data-trxcol="col-certifeffacement" checked onchange="toggleTrxColumn('col-certifeffacement', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Actions</span>
+                    <input type="checkbox" data-trxcol="col-actions" checked onchange="toggleTrxColumn('col-actions', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Trigger Button (À gauche de Colonnes) -->
+    <button onclick="openTrxFilterDrawer()" class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition shrink-0">
+        <i class="fa-solid fa-sliders text-slate-500"></i>
+        <span>Filtres</span>
+    </button>
+
+</div>
+
+<!-- DATA TABLE CONTAINER -->
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
+    <div class="overflow-x-auto flex-1">
+        <table class="w-full text-left border-collapse min-w-[2200px]">
+            <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none whitespace-nowrap">
+                    <th class="py-3 px-3 text-center col-idgroup">Idtransaction group</th>
+                    <th class="py-3 px-3 text-center col-idprod">Idtransaction product</th>
+                    <th class="py-3 px-3 col-numtrans">N° Transaction</th>
+                    <th class="py-3 px-3 text-center col-datecreation">Date de création</th>
+                    <th class="py-3 px-3 text-center col-category">Catégorie</th>
+                    <th class="py-3 px-3 col-brand">Marque</th>
+                    <th class="py-3 px-3 text-center col-numcomparecycle">#Produit Comparecycle</th>
+                    <th class="py-3 px-3 col-product">Produit</th>
+                    <th class="py-3 px-3 col-attrinitial">Attributes initial</th>
+                    <th class="py-3 px-3 col-attrvalide">Attributes validé</th>
+                    <th class="py-3 px-3 col-imeivalide">IMEI validé</th>
+                    <th class="py-3 px-3 text-center col-gradeinitial">Grade initial</th>
+                    <th class="py-3 px-3 text-center col-gradevalide">Grade validé</th>
+                    <th class="py-3 px-3 text-center col-priceinitial">Prix Initial</th>
+                    <th class="py-3 px-3 text-center col-pricevalide">Prix validé</th>
+                    <th class="py-3 px-3 text-center col-statustrans">Statut de la transaction</th>
+                    <th class="py-3 px-3 text-center col-etatfacture">État facturation</th>
+                    <th class="py-3 px-3 text-center col-numfacture">N° de facture</th>
+                    <th class="py-3 px-3 text-center col-datefacture">Date de facture</th>
+                    <th class="py-3 px-3 text-center col-datepaiement">Date paiement facture</th>
+                    <th class="py-3 px-3 text-center col-typetva">Type de TVA</th>
+                    <th class="py-3 px-3 text-center col-datehomologation">Date homologation</th>
+                    <th class="py-3 px-3 text-center col-datemisedispo">Date de mise à dispo</th>
+                    <th class="py-3 px-3 text-center col-certifeffacement">Certificat d'effacement</th>
+                    <th class="py-3 px-4 text-right col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="transactionTableBody" class="divide-y divide-slate-100 text-xs whitespace-nowrap">
+                <!-- Loaded via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TABLE FOOTER & PAGINATION -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div>
+            Affichage de <span class="font-semibold text-slate-800" id="trxDispStart">1</span> à <span class="font-semibold text-slate-800" id="trxDispEnd">2</span> sur <span class="font-semibold text-slate-800" id="trxDispTotal">2</span> transactions
+        </div>
+
+        <div class="flex items-center space-x-1">
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angles-left"></i></button>
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angle-left"></i></button>
+            <button class="px-3 py-1.5 rounded border border-emerald-600 bg-emerald-600 text-white font-bold">1</button>
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition" disabled><i class="fa-solid fa-angle-right"></i></button>
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition" disabled><i class="fa-solid fa-angles-right"></i></button>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span>Par page:</span>
+            <select class="bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:outline-none">
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option selected>100</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- SIDEBAR FILTER DRAWER -->
+<div id="trxFilterDrawerBackdrop" onclick="closeTrxFilterDrawer()" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity"></div>
+
+<div id="trxFilterDrawer" class="fixed top-0 right-0 h-full w-80 sm:w-96 bg-white shadow-2xl border-l border-slate-200 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+    <!-- Header -->
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
+        <h3 class="text-lg font-medium text-slate-800">Filtres</h3>
+        <button onclick="closeTrxFilterDrawer()" class="p-1 text-slate-400 hover:text-slate-600 transition text-lg">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <!-- Drawer Content -->
+    <div class="p-6 overflow-y-auto flex-1 space-y-6 text-sm text-slate-600">
+        <!-- Date de création -->
+        <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-2">Date de création</label>
+            <div class="flex items-center gap-6">
+                <label class="inline-flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="trxDateType" value="relative" checked class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                    <span class="text-xs font-medium text-slate-700">Date relative</span>
+                </label>
+                <label class="inline-flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="trxDateType" value="range" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                    <span class="text-xs font-medium text-slate-700">Plage de dates</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- N° Transaction -->
+        <div class="relative pt-2">
+            <div class="border border-slate-300 rounded-lg p-3 relative bg-white focus-within:border-emerald-500 transition">
+                <label class="absolute -top-2.5 left-3 bg-white px-1 text-[11px] text-slate-400 font-medium">N° Transaction</label>
+                <input type="text" id="filterNumTrans" class="w-full text-xs text-slate-800 focus:outline-none bg-transparent">
+            </div>
+        </div>
+
+        <!-- Marque -->
+        <div class="relative">
+            <label class="block text-xs font-medium text-slate-400 mb-1">Marque</label>
+            <select id="filterBrand" class="w-full py-2 bg-transparent border-b border-slate-300 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                <option value=""></option>
+                <option value="Apple">Apple</option>
+                <option value="Samsung">Samsung</option>
+            </select>
+        </div>
+
+        <!-- Produit -->
+        <div class="relative">
+            <label class="block text-xs font-medium text-slate-400 mb-1">Produit</label>
+            <select id="filterProduct" class="w-full py-2 bg-transparent border-b border-slate-300 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                <option value=""></option>
+                <option value="iPhone 17 Pro Max 2To">iPhone 17 Pro Max 2To</option>
+                <option value="Galaxy S25 FE 512Go">Galaxy S25 FE 512Go</option>
+            </select>
+        </div>
+
+        <!-- Catégorie -->
+        <div class="relative">
+            <label class="block text-xs font-medium text-slate-400 mb-1">Catégorie</label>
+            <select id="filterCategory" class="w-full py-2 bg-transparent border-b border-slate-300 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                <option value=""></option>
+                <option value="Smartphone">Smartphone</option>
+                <option value="Tablette">Tablette</option>
+            </select>
+        </div>
+
+        <!-- Grade validé -->
+        <div class="relative">
+            <label class="block text-xs font-medium text-slate-400 mb-1">Grade validé</label>
+            <select id="filterGradeValide" class="w-full py-2 bg-transparent border-b border-slate-300 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                <option value=""></option>
+                <option value="Grade A">Grade A</option>
+                <option value="Grade B">Grade B</option>
+                <option value="Grade C">Grade C</option>
+            </select>
+        </div>
+
+        <!-- Grade initial -->
+        <div class="relative">
+            <label class="block text-xs font-medium text-slate-400 mb-1">Grade initial</label>
+            <select id="filterGradeInitial" class="w-full py-2 bg-transparent border-b border-slate-300 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                <option value=""></option>
+                <option value="Grade A">Grade A</option>
+                <option value="Grade B">Grade B</option>
+                <option value="Grade C">Grade C</option>
+            </select>
+        </div>
+
+        <!-- Type de TVA -->
+        <div class="relative">
+            <label class="block text-xs font-medium text-slate-400 mb-1">Type de TVA</label>
+            <select id="filterTypeTva" class="w-full py-2 bg-transparent border-b border-slate-300 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                <option value=""></option>
+                <option value="Marge">Marge</option>
+                <option value="Standard">Standard</option>
+            </select>
+        </div>
+
+        <!-- État -->
+        <div class="relative">
+            <label class="block text-xs font-medium text-slate-400 mb-1">État</label>
+            <select id="filterEtat" class="w-full py-2 bg-transparent border-b border-slate-300 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                <option value=""></option>
+                <option value="Validée">Validée</option>
+                <option value="En cours">En cours</option>
+            </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="pt-4 space-y-3 shrink-0">
+            <button onclick="applyTrxFilters()" class="w-full py-2.5 border border-sky-400 text-sky-500 font-bold text-xs tracking-wider uppercase rounded hover:bg-sky-50 transition text-center">
+                FILTRER
+            </button>
+            <button onclick="resetTrxFilters()" class="w-full py-2.5 border border-rose-400 text-rose-500 font-bold text-xs tracking-wider uppercase rounded hover:bg-rose-50 transition text-center">
+                EFFACER
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTrxFilterDrawer() {
+        const backdrop = document.getElementById('trxFilterDrawerBackdrop');
+        const drawer = document.getElementById('trxFilterDrawer');
+        if (backdrop) backdrop.classList.remove('hidden');
+        if (drawer) drawer.classList.remove('translate-x-full');
+    }
+
+    function closeTrxFilterDrawer() {
+        const backdrop = document.getElementById('trxFilterDrawerBackdrop');
+        const drawer = document.getElementById('trxFilterDrawer');
+        if (backdrop) backdrop.classList.add('hidden');
+        if (drawer) drawer.classList.add('translate-x-full');
+    }
+
+    function applyTrxFilters() {
+        const numTrans = document.getElementById('filterNumTrans').value.toLowerCase();
+        const brand = document.getElementById('filterBrand').value.toLowerCase();
+        const product = document.getElementById('filterProduct').value.toLowerCase();
+        const category = document.getElementById('filterCategory').value.toLowerCase();
+        const gradeValide = document.getElementById('filterGradeValide').value.toLowerCase();
+        const gradeInitial = document.getElementById('filterGradeInitial').value.toLowerCase();
+        const typeTva = document.getElementById('filterTypeTva').value.toLowerCase();
+        const etat = document.getElementById('filterEtat').value.toLowerCase();
+
+        const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.transactionsData) ? GLOBAL_DATA.transactionsData : [];
+        const filtered = data.filter(t => {
+            return (!numTrans || t.numTrans.toLowerCase().includes(numTrans)) &&
+                   (!brand || t.brand.toLowerCase().includes(brand)) &&
+                   (!product || t.product.toLowerCase().includes(product)) &&
+                   (!category || t.category.toLowerCase().includes(category)) &&
+                   (!gradeValide || t.gradeValide.toLowerCase().includes(gradeValide)) &&
+                   (!gradeInitial || t.gradeInitial.toLowerCase().includes(gradeInitial)) &&
+                   (!typeTva || t.typeTva.toLowerCase().includes(typeTva)) &&
+                   (!etat || t.statusTrans.toLowerCase().includes(etat));
+        });
+
+        renderTransactionsTableFiltered(filtered);
+        closeTrxFilterDrawer();
+    }
+
+    function resetTrxFilters() {
+        document.getElementById('filterNumTrans').value = '';
+        document.getElementById('filterBrand').value = '';
+        document.getElementById('filterProduct').value = '';
+        document.getElementById('filterCategory').value = '';
+        document.getElementById('filterGradeValide').value = '';
+        document.getElementById('filterGradeInitial').value = '';
+        document.getElementById('filterTypeTva').value = '';
+        document.getElementById('filterEtat').value = '';
+
+        renderTransactionsTable();
+        closeTrxFilterDrawer();
+    }
+
+    function renderTransactionsTable() {
+        const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.transactionsData) ? GLOBAL_DATA.transactionsData : [];
+        const tbody = document.getElementById('transactionTableBody');
+        const totalCount = document.getElementById('trxTotalCount');
+        const dispTotal = document.getElementById('trxDispTotal');
+        const dispEnd = document.getElementById('trxDispEnd');
+        
+        if (totalCount) totalCount.innerText = `(${data.length})`;
+        if (dispTotal) dispTotal.innerText = data.length;
+        if (dispEnd) dispEnd.innerText = data.length;
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        data.forEach((t) => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition group border-b border-slate-100";
+
+            tr.innerHTML = `
+                <td class="py-3 px-3 text-center col-idgroup font-mono text-[11px] text-slate-600">${t.idGroup}</td>
+                <td class="py-3 px-3 text-center col-idprod font-mono text-[11px] text-slate-600">${t.idProd}</td>
+                <td class="py-3 px-3 font-bold text-slate-800 col-numtrans">${t.numTrans}</td>
+                <td class="py-3 px-3 text-center col-datecreation text-slate-600">${t.dateCreation}</td>
+                <td class="py-3 px-3 text-center col-category"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium">${t.category}</span></td>
+                <td class="py-3 px-3 font-semibold text-slate-800 col-brand">${t.brand}</td>
+                <td class="py-3 px-3 text-center font-mono text-emerald-700 font-semibold col-numcomparecycle">${t.numComparecycle}</td>
+                <td class="py-3 px-3 font-bold text-slate-900 col-product">${t.product}</td>
+                <td class="py-3 px-3 col-attrinitial text-slate-600">${t.attrInitial}</td>
+                <td class="py-3 px-3 col-attrvalide text-slate-600">${t.attrValide}</td>
+                <td class="py-3 px-3 font-mono text-[11px] text-slate-600 col-imeivalide">${t.imeiValide}</td>
+                <td class="py-3 px-3 text-center col-gradeinitial"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">${t.gradeInitial}</span></td>
+                <td class="py-3 px-3 text-center col-gradevalide"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">${t.gradeValide}</span></td>
+                <td class="py-3 px-3 text-center font-bold text-slate-700 col-priceinitial">${t.priceInitial}</td>
+                <td class="py-3 px-3 text-center font-bold text-emerald-600 col-pricevalide">${t.priceValide}</td>
+                <td class="py-3 px-3 text-center col-statustrans">
+                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${t.statusTrans}
+                    </span>
+                </td>
+                <td class="py-3 px-3 text-center col-etatfacture">
+                    <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold ${t.etatFacture === 'Facturée' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}">${t.etatFacture}</span>
+                </td>
+                <td class="py-3 px-3 text-center font-mono text-[11px] text-slate-600 col-numfacture">${t.numFacture}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-datefacture">${t.dateFacture}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-datepaiement">${t.datePaiement}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-typetva">${t.typeTva}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-datehomologation">${t.dateHomologation}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-datemisedispo">${t.dateMiseDispo}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-certifeffacement">${t.certifEffacement}</td>
+                <td class="py-3 px-4 text-center col-actions">
+                    <button title="Télécharger le rapport de test" class="inline-flex items-center gap-1.5 font-bold text-xs text-emerald-600 hover:text-emerald-700 transition px-2 py-1 bg-emerald-50 hover:bg-emerald-100 rounded-md">
+                        <i class="fa-solid fa-file-arrow-down text-sm"></i>
+                        <span>Rapport</span>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function toggleTrxColumnPicker() {
+        const panel = document.getElementById('trxColumnPickerPanel');
+        if (panel) panel.classList.toggle('hidden');
+    }
+
+    function toggleTrxColumn(colClass, isVisible) {
+        const elements = document.querySelectorAll('.' + colClass);
+        elements.forEach(el => {
+            if (isVisible) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        });
+    }
+
+    function resetTrxColumnVisibility() {
+        const checkboxes = document.querySelectorAll('input[data-trxcol]');
+        checkboxes.forEach(cb => {
+            cb.checked = true;
+            toggleTrxColumn(cb.getAttribute('data-trxcol'), true);
+        });
+    }
+
+    const trxSearchInput = document.getElementById('trxSearchInput');
+    if (trxSearchInput) {
+        trxSearchInput.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.transactionsData) ? GLOBAL_DATA.transactionsData : [];
+            const filtered = data.filter(t => 
+                t.numTrans.toLowerCase().includes(q) || 
+                t.product.toLowerCase().includes(q) || 
+                t.brand.toLowerCase().includes(q) ||
+                t.imeiValide.toLowerCase().includes(q)
+            );
+            renderTransactionsTableFiltered(filtered);
+        });
+    }
+
+    function renderTransactionsTableFiltered(data) {
+        const tbody = document.getElementById('transactionTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        data.forEach((t) => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition group border-b border-slate-100";
+            tr.innerHTML = `
+                <td class="py-3 px-3 text-center col-idgroup font-mono text-[11px] text-slate-600">${t.idGroup}</td>
+                <td class="py-3 px-3 text-center col-idprod font-mono text-[11px] text-slate-600">${t.idProd}</td>
+                <td class="py-3 px-3 font-bold text-slate-800 col-numtrans">${t.numTrans}</td>
+                <td class="py-3 px-3 text-center col-datecreation text-slate-600">${t.dateCreation}</td>
+                <td class="py-3 px-3 text-center col-category"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium">${t.category}</span></td>
+                <td class="py-3 px-3 font-semibold text-slate-800 col-brand">${t.brand}</td>
+                <td class="py-3 px-3 text-center font-mono text-emerald-700 font-semibold col-numcomparecycle">${t.numComparecycle}</td>
+                <td class="py-3 px-3 font-bold text-slate-900 col-product">${t.product}</td>
+                <td class="py-3 px-3 col-attrinitial text-slate-600">${t.attrInitial}</td>
+                <td class="py-3 px-3 col-attrvalide text-slate-600">${t.attrValide}</td>
+                <td class="py-3 px-3 font-mono text-[11px] text-slate-600 col-imeivalide">${t.imeiValide}</td>
+                <td class="py-3 px-3 text-center col-gradeinitial"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">${t.gradeInitial}</span></td>
+                <td class="py-3 px-3 text-center col-gradevalide"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">${t.gradeValide}</span></td>
+                <td class="py-3 px-3 text-center font-bold text-slate-700 col-priceinitial">${t.priceInitial}</td>
+                <td class="py-3 px-3 text-center font-bold text-emerald-600 col-pricevalide">${t.priceValide}</td>
+                <td class="py-3 px-3 text-center col-statustrans">
+                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${t.statusTrans}
+                    </span>
+                </td>
+                <td class="py-3 px-3 text-center col-etatfacture">
+                    <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold ${t.etatFacture === 'Facturée' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}">${t.etatFacture}</span>
+                </td>
+                <td class="py-3 px-3 text-center font-mono text-[11px] text-slate-600 col-numfacture">${t.numFacture}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-datefacture">${t.dateFacture}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-datepaiement">${t.datePaiement}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-typetva">${t.typeTva}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-datehomologation">${t.dateHomologation}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-datemisedispo">${t.dateMiseDispo}</td>
+                <td class="py-3 px-3 text-center text-slate-600 col-certifeffacement">${t.certifEffacement}</td>
+                <td class="py-3 px-4 text-center col-actions">
+                    <button title="Télécharger le rapport de test" class="inline-flex items-center gap-1.5 font-bold text-xs text-emerald-600 hover:text-emerald-700 transition px-2 py-1 bg-emerald-50 hover:bg-emerald-100 rounded-md">
+                        <i class="fa-solid fa-file-arrow-down text-sm"></i>
+                        <span>Rapport</span>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    renderTransactionsTable();
+</script>

@@ -1,0 +1,224 @@
+<!-- EXPEDITION PAGE -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+            Liste de colisage <span class="text-slate-400 font-normal text-lg" id="expeditionCount">(0)</span>
+        </h1>
+        <p class="text-sm text-slate-500 mt-0.5">Consultez et gérez l'ensemble de vos bordereaux de colisage, dimensions et détails d'expédition.</p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2.5">
+        <button class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
+            <i class="fa-solid fa-download text-slate-500"></i> Exporter
+        </button>
+    </div>
+</div>
+
+<!-- Filter & Search Toolbar -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex items-center gap-3 relative">
+    <!-- Quick Search Input -->
+    <div class="relative flex-1">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input type="text" id="expSearchInput" placeholder="Rechercher par N° de colisage, N° de suivi..." class="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+    </div>
+
+    <!-- Column Picker Dropdown Button -->
+    <div class="relative">
+        <button id="expColPickerBtn" onclick="toggleExpColumnPicker()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition border border-slate-300 shrink-0">
+            <i class="fa-solid fa-table-columns text-slate-500"></i>
+            <span>Colonnes</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+        </button>
+
+        <!-- Column Picker Panel -->
+        <div id="expColumnPickerPanel" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Colonnes affichées</span>
+                <button onclick="resetExpColumnVisibility()" class="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700">Réinitialiser</button>
+            </div>
+            <div class="space-y-1.5 text-xs text-slate-700 font-medium max-h-60 overflow-y-auto pr-1">
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>N° Liste de colisage</span>
+                    <input type="checkbox" data-expcol="col-numcolisage" checked onchange="toggleExpColumn('col-numcolisage', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Nb produits</span>
+                    <input type="checkbox" data-expcol="col-nbproduits" checked onchange="toggleExpColumn('col-nbproduits', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date mise à disposition</span>
+                    <input type="checkbox" data-expcol="col-datemisedispo" checked onchange="toggleExpColumn('col-datemisedispo', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date enlèvement PR</span>
+                    <input type="checkbox" data-expcol="col-dateenlevement" checked onchange="toggleExpColumn('col-dateenlevement', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>N° Suivi</span>
+                    <input type="checkbox" data-expcol="col-numsuivi" checked onchange="toggleExpColumn('col-numsuivi', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Longueur / Largeur / Hauteur</span>
+                    <input type="checkbox" data-expcol="col-dimensions" checked onchange="toggleExpColumn('col-dimensions', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Poids</span>
+                    <input type="checkbox" data-expcol="col-poids" checked onchange="toggleExpColumn('col-poids', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Valeur totale</span>
+                    <input type="checkbox" data-expcol="col-valeur" checked onchange="toggleExpColumn('col-valeur', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Actions</span>
+                    <input type="checkbox" data-expcol="col-actions" checked onchange="toggleExpColumn('col-actions', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TABLE CONTAINER -->
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
+    <div class="overflow-x-auto flex-1">
+        <table class="w-full text-left border-collapse min-w-[1100px]">
+            <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none whitespace-nowrap">
+                    <th class="py-3 px-4 col-numcolisage">N° liste de colisage</th>
+                    <th class="py-3 px-3 text-center col-nbproduits">Nb produits</th>
+                    <th class="py-3 px-4 text-center col-datemisedispo">Date de mise à disposition</th>
+                    <th class="py-3 px-4 text-center col-dateenlevement">Date d'enlèvement du PR</th>
+                    <th class="py-3 px-3 text-center col-numsuivi">N° Suivi</th>
+                    <th class="py-3 px-3 text-center col-dimensions">Longueur</th>
+                    <th class="py-3 px-3 text-center col-dimensions">Largeur</th>
+                    <th class="py-3 px-3 text-center col-dimensions">Hauteur</th>
+                    <th class="py-3 px-3 text-center col-poids">Poids</th>
+                    <th class="py-3 px-4 text-right col-valeur">Valeur totale</th>
+                    <th class="py-3 px-4 text-right col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="expeditionTableBody" class="divide-y divide-slate-100 text-xs whitespace-nowrap">
+                <!-- Loaded via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TABLE FOOTER & PAGINATION -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div>
+            Affichage de <span class="font-semibold text-slate-800" id="expDispStart">1</span> à <span class="font-semibold text-slate-800" id="expDispEnd">12</span> sur <span class="font-semibold text-slate-800" id="expDispTotal">12</span> colisages
+        </div>
+
+        <div class="flex items-center space-x-1">
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angles-left"></i></button>
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angle-left"></i></button>
+            <button class="px-3 py-1.5 rounded border border-emerald-600 bg-emerald-600 text-white font-bold">1</button>
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition" disabled><i class="fa-solid fa-angle-right"></i></button>
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition" disabled><i class="fa-solid fa-angles-right"></i></button>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span>Par page:</span>
+            <select class="bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:outline-none">
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option selected>100</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<script>
+    function renderExpeditionTable(dataList) { console.log("ok");
+        const data = dataList || ((typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.expeditionsData) ? GLOBAL_DATA.expeditionsData : []);
+        const tbody = document.getElementById('expeditionTableBody');
+        const count = document.getElementById('expeditionCount');
+        const dispTotal = document.getElementById('expDispTotal');
+        const dispEnd = document.getElementById('expDispEnd');
+
+        if (count) count.innerText = `(${data.length})`;
+        if (dispTotal) dispTotal.innerText = data.length;
+        if (dispEnd) dispEnd.innerText = data.length;
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        if (data.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="11" class="py-8 text-center text-slate-400">
+                        Aucune liste de colisage trouvée.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        data.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100";
+            tr.innerHTML = `
+                <td class="py-3.5 px-4 font-bold text-slate-900 font-mono col-numcolisage">${item.numColisage}</td>
+                <td class="py-3.5 px-3 text-center col-nbproduits">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 font-bold text-slate-700">${item.nbProduits}</span>
+                </td>
+                <td class="py-3.5 px-4 text-center text-slate-600 col-datemisedispo">${item.dateMiseDispo}</td>
+                <td class="py-3.5 px-4 text-center text-slate-400 col-dateenlevement">${item.dateEnlevement || '-'}</td>
+                <td class="py-3.5 px-3 text-center col-numsuivi">
+                    <span class="px-2 py-0.5 rounded font-mono text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">${item.numSuivi}</span>
+                </td>
+                <td class="py-3.5 px-3 text-center text-slate-600 col-dimensions">${item.longueur} mm</td>
+                <td class="py-3.5 px-3 text-center text-slate-600 col-dimensions">${item.largeur} mm</td>
+                <td class="py-3.5 px-3 text-center text-slate-600 col-dimensions">${item.hauteur} mm</td>
+                <td class="py-3.5 px-3 text-center font-medium text-slate-700 col-poids">${item.poids} g</td>
+                <td class="py-3.5 px-4 text-right font-bold text-slate-900 col-valeur">${item.valeurTotal.toFixed(2)} €</td>
+                <td class="py-3.5 px-4 text-right col-actions">
+                    <button title="Voir les détails" class="p-1.5 text-slate-400 hover:text-emerald-600 transition">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                    <button title="Imprimer le bordereau" class="p-1.5 text-slate-400 hover:text-slate-700 transition">
+                        <i class="fa-solid fa-print"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function toggleExpColumnPicker() {
+        const panel = document.getElementById('expColumnPickerPanel');
+        if (panel) panel.classList.toggle('hidden');
+    }
+
+    function toggleExpColumn(colClass, isVisible) {
+        const elements = document.querySelectorAll('.' + colClass);
+        elements.forEach(el => {
+            if (isVisible) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        });
+    }
+
+    function resetExpColumnVisibility() {
+        const checkboxes = document.querySelectorAll('input[data-expcol]');
+        checkboxes.forEach(cb => {
+            cb.checked = true;
+            toggleExpColumn(cb.getAttribute('data-expcol'), true);
+        });
+    }
+
+    const expSearchInput = document.getElementById('expSearchInput');
+    if (expSearchInput) {
+        expSearchInput.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.expeditionsData) ? GLOBAL_DATA.expeditionsData : [];
+            const filtered = data.filter(item => 
+                item.numColisage.toLowerCase().includes(q) || 
+                item.numSuivi.toLowerCase().includes(q) ||
+                item.dateMiseDispo.toLowerCase().includes(q)
+            );
+            renderExpeditionTable(filtered);
+        });
+    }
+
+    renderExpeditionTable();
+</script>

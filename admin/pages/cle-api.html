@@ -1,0 +1,412 @@
+<!-- CLE API PAGE -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+            Gestionnaire de Clé API
+        </h1>
+        <p class="text-xs text-slate-500 mt-1">Gérez vos clés d'accès API, leurs permissions et suivez leur utilisation en temps réel.</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <a href="#" onclick="alert('Ouverture de la documentation Swagger'); return false;" class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
+            <i class="fa-regular fa-circle-question text-slate-500 text-sm"></i> Documentation
+        </a>
+        <button onclick="openAddKeyModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-md shadow-emerald-600/20 transition">
+            <i class="fa-solid fa-plus text-sm"></i> AJOUTER CLÉ API
+        </button>
+    </div>
+</div>
+
+<!-- Filter & Search Toolbar -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex items-center gap-3 relative">
+    <div class="relative flex-1">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input type="text" id="apiSearchInput" placeholder="Rechercher par nom de clé, partenaire ou clé publique..." class="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+    </div>
+
+    <div class="relative">
+        <button id="apiColPickerBtn" onclick="toggleApiColumnPicker()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition border border-slate-300 shrink-0">
+            <i class="fa-solid fa-table-columns text-slate-500"></i>
+            <span>Colonnes</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+        </button>
+
+        <div id="apiColumnPickerPanel" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Colonnes affichées</span>
+                <button onclick="resetApiColumnVisibility()" class="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700">Réinitialiser</button>
+            </div>
+            <div class="space-y-1.5 text-xs text-slate-700 font-medium max-h-72 overflow-y-auto pr-1">
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Nom de la clé</span>
+                    <input type="checkbox" data-apicol="col-keyname" checked onchange="toggleApiColumn('col-keyname', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Partenaire</span>
+                    <input type="checkbox" data-apicol="col-partner" checked onchange="toggleApiColumn('col-partner', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Clé Public</span>
+                    <input type="checkbox" data-apicol="col-publickey" checked onchange="toggleApiColumn('col-publickey', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date de Création</span>
+                    <input type="checkbox" data-apicol="col-datecreated" checked onchange="toggleApiColumn('col-datecreated', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Date de dernière utilisation</span>
+                    <input type="checkbox" data-apicol="col-datelastuse" checked onchange="toggleApiColumn('col-datelastuse', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Nombre d'echec d'authentification</span>
+                    <input type="checkbox" data-apicol="col-authfails" checked onchange="toggleApiColumn('col-authfails', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Permission de lecture</span>
+                    <input type="checkbox" data-apicol="col-readperm" checked onchange="toggleApiColumn('col-readperm', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Permission d'écriture</span>
+                    <input type="checkbox" data-apicol="col-writeperm" checked onchange="toggleApiColumn('col-writeperm', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>État</span>
+                    <input type="checkbox" data-apicol="col-status" checked onchange="toggleApiColumn('col-status', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Actions</span>
+                    <input type="checkbox" data-apicol="col-actions" checked onchange="toggleApiColumn('col-actions', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
+    <div class="overflow-x-auto flex-1">
+        <table class="w-full text-left border-collapse min-w-[1500px]">
+            <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none whitespace-nowrap">
+                    <th class="py-3 px-4 col-keyname">Nom de la clé</th>
+                    <th class="py-3 px-4 col-partner">Partenaire</th>
+                    <th class="py-3 px-4 col-publickey">Clé Public</th>
+                    <th class="py-3 px-4 text-center col-datecreated">Date de Création</th>
+                    <th class="py-3 px-4 text-center col-datelastuse">Date de dernière utilisation</th>
+                    <th class="py-3 px-4 text-center col-authfails">Nombre d'échec d'authentification</th>
+                    <th class="py-3 px-4 text-center col-readperm">Permission de lecture</th>
+                    <th class="py-3 px-4 text-center col-writeperm">Permission d'écriture</th>
+                    <th class="py-3 px-4 text-center col-status">État</th>
+                    <th class="py-3 px-4 text-right col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="apiKeysTableBody" class="divide-y divide-slate-100 text-xs whitespace-nowrap">
+                <!-- Loaded via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div>
+            1 à <span class="font-semibold text-slate-800" id="apiKeyCountDisp">1</span> sur <span class="font-semibold text-slate-800" id="apiKeyCountTotal">1</span> clé API
+        </div>
+
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2">
+                <span>Lignes par page</span>
+                <select class="bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:outline-none font-semibold text-slate-700">
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                    <option selected>100</option>
+                </select>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <button class="p-1.5 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30" disabled><i class="fa-solid fa-chevron-left text-sm"></i></button>
+                <span class="font-bold text-slate-800 px-2 py-0.5 rounded bg-white border border-slate-200">1</span>
+                <button class="p-1.5 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30" disabled><i class="fa-solid fa-chevron-right text-sm"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Step 1 -->
+<div id="addApiKeyModalStep1" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden animate-in fade-in duration-150">
+        <div class="p-8">
+            <h2 class="text-xl font-medium text-slate-800 mb-6 tracking-tight">Nouvelle Clé API</h2>
+
+            <div class="space-y-6">
+                <div class="relative">
+                    <div id="addKeyNameInputContainer" class="border border-slate-300 rounded focus-within:border-[#007b92] p-3 relative bg-white transition">
+                        <label class="absolute -top-2.5 left-3 bg-white px-1 text-[11px] text-slate-500 font-medium">Nom de la clé *</label>
+                        <input type="text" id="addKeyNameInput" oninput="hideAddKeyNameError()" class="w-full text-sm text-slate-800 focus:outline-none bg-transparent">
+                    </div>
+                    <div id="addKeyNameErrorMsg" class="hidden text-xs font-semibold text-rose-600 flex items-center gap-1.5 mt-1.5">
+                        <i class="fa-solid fa-circle-exclamation text-rose-500"></i>
+                        <span>Veuillez renseigner le nom de la clé.</span>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="border-b border-slate-300 focus-within:border-[#007b92] py-2 relative bg-white flex items-center justify-between">
+                        <div class="w-full">
+                            <label class="block text-[11px] text-slate-500 font-medium mb-0.5">Partenaire *</label>
+                            <select id="addKeyPartnerSelect" class="w-full text-sm text-slate-800 focus:outline-none bg-transparent cursor-pointer">
+                                <option value="1293 - Grading-Largo">1293 - Grading-Largo</option>
+                                <option value="1294 - CompaRecycle Retail">1294 - CompaRecycle Retail</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-2">Permission en Lecture *</label>
+                    <div class="flex items-center space-x-6 text-sm text-slate-700">
+                        <label class="inline-flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="addKeyReadPerm" value="Oui" checked class="w-4 h-4 text-[#007b92] focus:ring-0">
+                            <span class="text-xs font-medium">Oui</span>
+                        </label>
+                        <label class="inline-flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="addKeyReadPerm" value="Non" class="w-4 h-4 text-[#007b92] focus:ring-0">
+                            <span class="text-xs font-medium">Non</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-2">Permission en Ecriture *</label>
+                    <div class="flex items-center space-x-6 text-sm text-slate-700">
+                        <label class="inline-flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="addKeyWritePerm" value="Oui" checked class="w-4 h-4 text-[#007b92] focus:ring-0">
+                            <span class="text-xs font-medium">Oui</span>
+                        </label>
+                        <label class="inline-flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="addKeyWritePerm" value="Non" class="w-4 h-4 text-[#007b92] focus:ring-0">
+                            <span class="text-xs font-medium">Non</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex items-center justify-end space-x-6 text-xs font-bold tracking-wider uppercase">
+                <button onclick="closeAddApiKeyModalStep1()" class="text-[#e91e63] hover:text-[#c2185b] transition">ANNULER</button>
+                <button onclick="submitAddApiKeyStep1()" class="text-emerald-600 hover:text-emerald-700 transition">CRÉER</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Step 2 -->
+<div id="addApiKeyModalStep2" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in duration-150">
+        <div class="p-8">
+            <h2 class="text-xl font-medium text-slate-800 mb-6 tracking-tight">Nouvelle Clé API</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="border border-slate-300 rounded p-3 relative bg-white">
+                    <label class="absolute -top-2.5 left-3 bg-white px-1 text-[11px] text-slate-500 font-medium">Clé Publique</label>
+                    <div class="flex items-center justify-between gap-2 mt-1">
+                        <textarea id="createdPublicKeyArea" readonly class="w-full text-xs font-mono text-slate-800 resize-none h-24 focus:outline-none border-0 p-0 bg-transparent" rows="4">7af02a5ed36fb75486fbfb7d94dc5137896d63bd099119fa33fa708f8390cdbc4acefde7f23367f5580b9accc21568a9a638511ffd756c6c</textarea>
+                        <div class="flex flex-col items-center justify-between h-20 text-slate-500 shrink-0">
+                            <i class="fa-solid fa-caret-up text-xs cursor-pointer hover:text-slate-800"></i>
+                            <button onclick="copyAreaText('createdPublicKeyArea')" title="Copier" class="p-1 hover:text-slate-900 transition">
+                                <i class="fa-solid fa-copy text-base text-slate-700"></i>
+                            </button>
+                            <i class="fa-solid fa-caret-down text-xs cursor-pointer hover:text-slate-800"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border border-slate-300 rounded p-3 relative bg-white">
+                    <label class="absolute -top-2.5 left-3 bg-white px-1 text-[11px] text-slate-500 font-medium">Clé Privée</label>
+                    <div class="flex items-center justify-between gap-2 mt-1">
+                        <textarea id="createdPrivateKeyArea" readonly class="w-full text-xs font-mono text-slate-800 resize-none h-24 focus:outline-none border-0 p-0 bg-transparent" rows="4">b8ed921955ac66addb84426f434772b63145ba1ef6186213ce40ad61abae51ff7c9fa77bdb50fae81487b44a62973ad0c2e020db185117eeb09aec</textarea>
+                        <div class="flex flex-col items-center justify-between h-20 text-slate-500 shrink-0">
+                            <i class="fa-solid fa-caret-up text-xs cursor-pointer hover:text-slate-800"></i>
+                            <button onclick="copyAreaText('createdPrivateKeyArea')" title="Copier" class="p-1 hover:text-slate-900 transition">
+                                <i class="fa-solid fa-copy text-base text-slate-700"></i>
+                            </button>
+                            <i class="fa-solid fa-caret-down text-xs cursor-pointer hover:text-slate-800"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-6 p-3.5 bg-rose-50 border border-rose-200 rounded-lg flex items-center gap-3 text-xs text-rose-700 shadow-sm">
+                <div class="w-7 h-7 rounded-full bg-rose-100 border border-rose-200 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-600 text-sm"></i>
+                </div>
+                <div class="font-medium">
+                    <strong class="font-bold text-rose-800">Attention :</strong> Sauvegardez la clé privée, elle ne sera plus affichée par la suite.
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end">
+                <button onclick="closeAddApiKeyModalStep2()" class="text-slate-400 hover:text-slate-700 text-xs font-bold tracking-wider uppercase transition">
+                    FERMER (<span id="closeCountdownValue">7</span>)
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let apiKeyCountdownTimer = null;
+    let apiKeyCountdownSeconds = 7;
+
+    function renderApiKeysTable() {
+        const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.apiKeysData) ? GLOBAL_DATA.apiKeysData : [];
+        const tbody = document.getElementById('apiKeysTableBody');
+        const dispEl = document.getElementById('apiKeyCountDisp');
+        const totalEl = document.getElementById('apiKeyCountTotal');
+
+        if (dispEl) dispEl.innerText = data.length;
+        if (totalEl) totalEl.innerText = data.length;
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        data.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100 text-slate-700";
+
+            tr.innerHTML = `
+                <td class="py-3.5 px-4 font-bold text-slate-900 col-keyname">${item.name}</td>
+                <td class="py-3.5 px-4 col-partner">${item.partner}</td>
+                <td class="py-3.5 px-4 font-mono text-xs text-slate-600 max-w-xs truncate col-publickey" title="${item.publicKey}">${item.publicKey.substring(0, 30)}...</td>
+                <td class="py-3.5 px-4 text-center font-mono text-slate-600 col-datecreated">${item.createdDate}</td>
+                <td class="py-3.5 px-4 text-center font-mono text-slate-600 col-datelastuse">${item.lastUsedDate}</td>
+                <td class="py-3.5 px-4 text-center font-bold text-slate-800 col-authfails">${item.authFails}</td>
+                <td class="py-3.5 px-4 text-center col-readperm">${item.readPerm ? '<i class="fa-solid fa-check text-emerald-600 font-bold text-sm"></i>' : '<i class="fa-solid fa-xmark text-rose-500 font-bold text-sm"></i>'}</td>
+                <td class="py-3.5 px-4 text-center col-writeperm">${item.writePerm ? '<i class="fa-solid fa-check text-emerald-600 font-bold text-sm"></i>' : '<i class="fa-solid fa-xmark text-rose-500 font-bold text-sm"></i>'}</td>
+                <td class="py-3.5 px-4 text-center col-status">
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${item.status}</span>
+                </td>
+                <td class="py-3.5 px-4 text-right col-actions">
+                    <button class="p-1.5 text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function hideAddKeyNameError() {
+        const errEl = document.getElementById('addKeyNameErrorMsg');
+        const container = document.getElementById('addKeyNameInputContainer');
+        if (errEl) errEl.classList.add('hidden');
+        if (container) {
+            container.classList.remove('border-rose-500', 'bg-rose-50/30');
+            container.classList.add('border-slate-300');
+        }
+    }
+
+    function openAddKeyModal() {
+        const inputName = document.getElementById('addKeyNameInput');
+        if (inputName) inputName.value = '';
+        hideAddKeyNameError();
+        const modal1 = document.getElementById('addApiKeyModalStep1');
+        if (modal1) modal1.classList.remove('hidden');
+    }
+
+    function closeAddApiKeyModalStep1() {
+        hideAddKeyNameError();
+        const modal1 = document.getElementById('addApiKeyModalStep1');
+        if (modal1) modal1.classList.add('hidden');
+    }
+
+    function submitAddApiKeyStep1() {
+        const inputEl = document.getElementById('addKeyNameInput');
+        const keyName = inputEl ? inputEl.value.trim() : '';
+        if (!keyName) {
+            const errEl = document.getElementById('addKeyNameErrorMsg');
+            const container = document.getElementById('addKeyNameInputContainer');
+            if (errEl) errEl.classList.remove('hidden');
+            if (container) {
+                container.classList.remove('border-slate-300');
+                container.classList.add('border-rose-500', 'bg-rose-50/30');
+            }
+            if (inputEl) inputEl.focus();
+            return;
+        }
+
+        closeAddApiKeyModalStep1();
+
+        const modal2 = document.getElementById('addApiKeyModalStep2');
+        if (modal2) modal2.classList.remove('hidden');
+
+        if (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.apiKeysData) {
+            const partnerVal = document.getElementById('addKeyPartnerSelect').value;
+            const readVal = document.querySelector('input[name="addKeyReadPerm"]:checked').value === 'Oui';
+            const writeVal = document.querySelector('input[name="addKeyWritePerm"]:checked').value === 'Oui';
+            
+            const randomHex = (len) => Array.from({length: len}, () => Math.floor(Math.random()*16).toString(16)).join('');
+
+            const newKeyObj = {
+                name: keyName,
+                partner: partnerVal,
+                publicKey: randomHex(120),
+                createdDate: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                lastUsedDate: "Jamais",
+                authFails: 0,
+                readPerm: readVal,
+                writePerm: writeVal,
+                status: "Actif"
+            };
+
+            GLOBAL_DATA.apiKeysData.unshift(newKeyObj);
+            renderApiKeysTable();
+        }
+
+        apiKeyCountdownSeconds = 7;
+        const countdownEl = document.getElementById('closeCountdownValue');
+        if (countdownEl) countdownEl.innerText = apiKeyCountdownSeconds;
+
+        if (apiKeyCountdownTimer) clearInterval(apiKeyCountdownTimer);
+        apiKeyCountdownTimer = setInterval(() => {
+            if (apiKeyCountdownSeconds > 0) {
+                apiKeyCountdownSeconds--;
+                if (countdownEl) countdownEl.innerText = apiKeyCountdownSeconds;
+            } else {
+                clearInterval(apiKeyCountdownTimer);
+                if (countdownEl) countdownEl.innerText = '0';
+            }
+        }, 1000);
+    }
+
+    function closeAddApiKeyModalStep2() {
+        if (apiKeyCountdownTimer) clearInterval(apiKeyCountdownTimer);
+        const modal2 = document.getElementById('addApiKeyModalStep2');
+        if (modal2) modal2.classList.add('hidden');
+    }
+
+    function copyAreaText(elementId) {
+        const area = document.getElementById(elementId);
+        if (area) {
+            area.select();
+            navigator.clipboard.writeText(area.value);
+        }
+    }
+
+    function toggleApiColumnPicker() {
+        const panel = document.getElementById('apiColumnPickerPanel');
+        if (panel) panel.classList.toggle('hidden');
+    }
+
+    function toggleApiColumn(colClass, isVisible) {
+        const elements = document.querySelectorAll('.' + colClass);
+        elements.forEach(el => {
+            if (isVisible) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        });
+    }
+
+    function resetApiColumnVisibility() {
+        const checkboxes = document.querySelectorAll('input[data-apicol]');
+        checkboxes.forEach(cb => {
+            cb.checked = true;
+            toggleApiColumn(cb.getAttribute('data-apicol'), true);
+        });
+    }
+
+    renderApiKeysTable();
+</script>

@@ -1,0 +1,331 @@
+<!-- ARGUS PAGE -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+            Argus - Grading FLIP <span class="text-slate-400 font-normal text-lg" id="argusCount">(1309)</span>
+        </h1>
+        <p class="text-sm text-slate-500 mt-0.5">Consultez et gérez les prix de reprise par produit et par grade.</p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2.5">
+        <label class="inline-flex items-center cursor-pointer gap-2.5 px-3.5 py-2 bg-white border border-slate-300 rounded-lg shadow-sm hover:bg-slate-50 transition select-none">
+            <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Top Trade-in</span>
+            <input type="checkbox" id="topTradeInToggle" class="sr-only peer" checked>
+            <div class="relative w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
+        </label>
+        <button class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
+            <i class="fa-solid fa-download text-slate-500"></i> Exporter
+        </button>
+        <button onclick="openImportModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-md shadow-emerald-600/20 transition">
+            <i class="fa-solid fa-upload"></i> Importer / Mettre à jour
+        </button>
+    </div>
+</div>
+
+<!-- Filter & Search Toolbar -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex items-center gap-3 relative">
+    <div class="relative flex-1">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input type="text" id="searchInput" placeholder="Rechercher un produit (marque, modèle, capacité...)" class="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+    </div>
+
+    <div class="relative">
+        <button id="colPickerBtn" onclick="toggleColumnPicker()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition border border-slate-300 shrink-0">
+            <i class="fa-solid fa-table-columns text-slate-500"></i>
+            <span>Colonnes</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+        </button>
+
+        <!-- Column Picker Dropdown Panel -->
+        <div id="columnPickerPanel" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Colonnes affichées</span>
+                <button onclick="resetColumnVisibility()" class="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700">Réinitialiser</button>
+            </div>
+            <div class="space-y-1.5 text-xs text-slate-700 font-medium max-h-72 overflow-y-auto pr-1">
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Produit</span>
+                    <input type="checkbox" data-col="col-product" checked onchange="toggleColumn('col-product', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Grade A</span>
+                    <input type="checkbox" data-col="col-grade-a" checked onchange="toggleColumn('col-grade-a', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Grade A-</span>
+                    <input type="checkbox" data-col="col-grade-asub" checked onchange="toggleColumn('col-grade-asub', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Grade B</span>
+                    <input type="checkbox" data-col="col-grade-b" checked onchange="toggleColumn('col-grade-b', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Grade C</span>
+                    <input type="checkbox" data-col="col-grade-c" checked onchange="toggleColumn('col-grade-c', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Grade C-</span>
+                    <input type="checkbox" data-col="col-grade-csub" checked onchange="toggleColumn('col-grade-csub', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Grade D</span>
+                    <input type="checkbox" data-col="col-grade-d" checked onchange="toggleColumn('col-grade-d', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Grade D-</span>
+                    <input type="checkbox" data-col="col-grade-dsub" checked onchange="toggleColumn('col-grade-dsub', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Actions</span>
+                    <input type="checkbox" data-col="col-actions" checked onchange="toggleColumn('col-actions', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
+    <div class="overflow-x-auto flex-1">
+        <table class="w-full text-left border-collapse min-w-[1200px]">
+            <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none">
+                    <th class="py-3 px-4 w-10 text-center">
+                        <input type="checkbox" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                    </th>
+                    <th class="py-3 px-4 w-64 col-product">
+                        <div class="flex items-center gap-1.5 cursor-pointer hover:text-slate-800">
+                            <span>Produit</span>
+                            <i class="fa-solid fa-arrow-down-a-z text-slate-400"></i>
+                        </div>
+                    </th>
+                    <th class="py-3 px-2 text-center w-28 col-grade-a">
+                        <span class="block text-emerald-700 font-bold">Grade A</span>
+                        <span class="text-[9px] text-emerald-600 font-normal capitalize">Like new</span>
+                    </th>
+                    <th class="py-3 px-2 text-center w-28 col-grade-asub">
+                        <span class="block text-emerald-700 font-bold">Grade A-</span>
+                        <span class="text-[9px] text-emerald-600 font-normal capitalize">Excellent</span>
+                    </th>
+                    <th class="py-3 px-2 text-center w-28 col-grade-b">
+                        <span class="block text-emerald-700 font-bold">Grade B</span>
+                        <span class="text-[9px] text-emerald-600 font-normal capitalize">Very good</span>
+                    </th>
+                    <th class="py-3 px-2 text-center w-28 col-grade-c">
+                        <span class="block text-amber-700 font-bold">Grade C</span>
+                        <span class="text-[9px] text-amber-600 font-normal capitalize">Good</span>
+                    </th>
+                    <th class="py-3 px-2 text-center w-28 col-grade-csub">
+                        <span class="block text-amber-700 font-bold">Grade C-</span>
+                        <span class="text-[9px] text-amber-600 font-normal capitalize">Average</span>
+                    </th>
+                    <th class="py-3 px-2 text-center w-28 col-grade-d">
+                        <span class="block text-rose-700 font-bold">Grade D</span>
+                        <span class="text-[9px] text-rose-600 font-normal capitalize">Heavily used</span>
+                    </th>
+                    <th class="py-3 px-2 text-center w-28 col-grade-dsub">
+                        <span class="block text-rose-700 font-bold">Grade D-</span>
+                        <span class="text-[9px] text-rose-600 font-normal capitalize">Damaged</span>
+                    </th>
+                    <th class="py-3 px-4 text-center w-28 col-updated">Dernière mise à jour</th>
+                    <th class="py-3 px-3 text-center w-24 col-status">Statut</th>
+                    <th class="py-3 px-4 text-right w-28 col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody" class="divide-y divide-slate-100 text-xs">
+                <!-- Loaded via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div>
+            Affichage de <span class="font-semibold text-slate-800">1</span> à <span class="font-semibold text-slate-800" id="argusDispCount">2</span> sur <span class="font-semibold text-slate-800" id="argusTotalCount">2</span> produits
+        </div>
+
+        <div class="flex items-center space-x-1">
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angles-left"></i></button>
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angle-left"></i></button>
+            <button class="px-3 py-1.5 rounded border border-emerald-600 bg-emerald-600 text-white font-bold">1</button>
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition" disabled><i class="fa-solid fa-angle-right"></i></button>
+            <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition" disabled><i class="fa-solid fa-angles-right"></i></button>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span>Par page:</span>
+            <select class="bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:outline-none">
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option selected>100</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL IMPORTER / METTRE À JOUR (Harmonisé en vert Emerald) -->
+<div id="importModalBackdrop" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl border border-slate-100 w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <!-- Modal Content Container -->
+        <div class="p-8">
+            <h2 class="text-xl font-bold text-slate-800 mb-6">Importer</h2>
+
+            <!-- Rules Dropdown Banner -->
+            <div class="mb-6 relative">
+                <div class="w-full bg-slate-50/80 border border-slate-200 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center shrink-0">R</span>
+                        <span class="text-sm font-medium text-slate-700">Règles à prendre en compte lors de la modification des prix</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-hover:text-slate-600 transition"></i>
+                </div>
+            </div>
+
+            <!-- Upload Field Section -->
+            <div class="mb-8">
+                <label id="importFileLabel" class="block text-sm font-normal text-slate-600 mb-2 transition-colors">
+                    Fichier (csv, xlsx) <span class="text-slate-600">*</span>
+                </label>
+
+                <!-- Dropzone Box (Changement du cyan vers emerald) -->
+                <div id="dropzoneBox" onclick="document.getElementById('importFileInput').click()" class="border-2 border-dashed border-emerald-400 bg-emerald-50/20 rounded-lg h-28 flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-50/40 transition relative">
+                    <input type="file" id="importFileInput" accept=".csv, .xlsx" class="hidden" onchange="handleFileSelected(this)">
+                    
+                    <div id="dropzoneDefault" class="flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                        </div>
+                    </div>
+
+                    <div id="dropzoneSelected" class="hidden flex items-center gap-2 text-xs font-semibold text-slate-700">
+                        <i class="fa-solid fa-file-excel text-emerald-600 text-base"></i>
+                        <span id="selectedFileName">fichier.xlsx</span>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="importErrorMessage" class="hidden text-[11px] font-medium text-rose-500 mt-2">
+                    Champs requis
+                </div>
+            </div>
+
+            <!-- Modal Action Buttons (Changement cyan-500 vers emerald-600) -->
+            <div class="flex items-center justify-end gap-6 pt-2">
+                <button onclick="closeImportModal()" class="text-xs font-bold text-rose-500 hover:text-rose-600 tracking-wider uppercase transition">
+                    ANNULER
+                </button>
+                <button onclick="submitImport()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 tracking-wider uppercase transition">
+                    ENREGISTRER
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function renderArgusTable() {
+        const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.productsData) ? GLOBAL_DATA.productsData : [];
+        const tbody = document.getElementById('productTableBody');
+        const count = document.getElementById('argusCount');
+        const dispCount = document.getElementById('argusDispCount');
+        const totalCount = document.getElementById('argusTotalCount');
+
+        if (count) count.innerText = `(${data.length})`;
+        if (dispCount) dispCount.innerText = data.length;
+        if (totalCount) totalCount.innerText = data.length;
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        data.forEach(p => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100";
+            tr.innerHTML = `
+                <td class="py-3 px-4 text-center"><input type="checkbox" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"></td>
+                <td class="py-3.5 px-4 font-bold text-slate-900 col-product">${p.name} <span class="text-slate-400 font-normal">(${p.cap})</span></td>
+                <td class="py-3.5 px-2 text-center font-bold text-emerald-600 col-grade-a">${p.grades.a.price} €</td>
+                <td class="py-3.5 px-2 text-center font-bold text-emerald-600 col-grade-asub">${p.grades.aSub ? p.grades.aSub.price : p.grades.a.price} €</td>
+                <td class="py-3.5 px-2 text-center font-bold text-emerald-600 col-grade-b">${p.grades.b.price} €</td>
+                <td class="py-3.5 px-2 text-center font-bold text-amber-600 col-grade-c">${p.grades.c.price} €</td>
+                <td class="py-3.5 px-2 text-center font-bold text-amber-600 col-grade-csub">${p.grades.cSub ? p.grades.cSub.price : p.grades.c.price} €</td>
+                <td class="py-3.5 px-2 text-center font-bold text-rose-600 col-grade-d">${p.grades.d.price} €</td>
+                <td class="py-3.5 px-2 text-center font-bold text-rose-600 col-grade-dsub">${p.grades.dSub ? p.grades.dSub.price : p.grades.d.price} €</td>
+                <td class="py-3.5 px-4 text-center text-slate-500 font-mono col-updated">${p.updated}</td>
+                <td class="py-3.5 px-4 text-center col-status">
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${p.status}</span>
+                </td>
+                <td class="py-3.5 px-4 text-right col-actions">
+                    <button class="p-1.5 text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function toggleColumnPicker() {
+        const panel = document.getElementById('columnPickerPanel');
+        if (panel) panel.classList.toggle('hidden');
+    }
+
+    function toggleColumn(colClass, isVisible) {
+        const elements = document.querySelectorAll('.' + colClass);
+        elements.forEach(el => {
+            if (isVisible) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        });
+    }
+
+    function resetColumnVisibility() {
+        const checkboxes = document.querySelectorAll('input[data-col]');
+        checkboxes.forEach(cb => {
+            cb.checked = true;
+            toggleColumn(cb.getAttribute('data-col'), true);
+        });
+    }
+
+    // IMPORTER MODAL LOGIC
+    function openImportModal() {
+        const modal = document.getElementById('importModalBackdrop');
+        if (modal) {
+            resetImportForm();
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeImportModal() {
+        const modal = document.getElementById('importModalBackdrop');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function handleFileSelected(input) {
+        if (input.files && input.files[0]) {
+            const fileName = input.files[0].name;
+            document.getElementById('selectedFileName').innerText = fileName;
+            document.getElementById('dropzoneDefault').classList.add('hidden');
+            document.getElementById('dropzoneSelected').classList.remove('hidden');
+            
+            document.getElementById('importFileLabel').className = "block text-sm font-normal text-slate-600 mb-2 transition-colors";
+            document.getElementById('importErrorMessage').classList.add('hidden');
+        }
+    }
+
+    function resetImportForm() {
+        const input = document.getElementById('importFileInput');
+        if (input) input.value = '';
+        document.getElementById('dropzoneDefault').classList.remove('hidden');
+        document.getElementById('dropzoneSelected').classList.add('hidden');
+        document.getElementById('importFileLabel').className = "block text-sm font-normal text-slate-600 mb-2 transition-colors";
+        document.getElementById('importErrorMessage').classList.add('hidden');
+    }
+
+    function submitImport() {
+        const input = document.getElementById('importFileInput');
+        if (!input.files || input.files.length === 0) {
+            document.getElementById('importFileLabel').className = "block text-sm font-normal text-rose-500 mb-2 transition-colors";
+            document.getElementById('importErrorMessage').classList.remove('hidden');
+        } else {
+            alert("Fichier importé avec succès !");
+            closeImportModal();
+        }
+    }
+
+    renderArgusTable();
+</script>
