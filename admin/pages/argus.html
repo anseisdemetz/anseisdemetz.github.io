@@ -44,6 +44,10 @@
             </div>
             <div class="space-y-1.5 text-xs text-slate-700 font-medium max-h-72 overflow-y-auto pr-1">
                 <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>N° produit CR</span>
+                    <input type="checkbox" data-col="col-numcr" checked onchange="toggleColumn('col-numcr', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
                     <span>Produit</span>
                     <input type="checkbox" data-col="col-product" checked onchange="toggleColumn('col-product', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
                 </label>
@@ -76,6 +80,10 @@
                     <input type="checkbox" data-col="col-grade-dsub" checked onchange="toggleColumn('col-grade-dsub', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
                 </label>
                 <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                    <span>Prix actif depuis</span>
+                    <input type="checkbox" data-col="col-updated" checked onchange="toggleColumn('col-updated', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                </label>
+                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
                     <span>Actions</span>
                     <input type="checkbox" data-col="col-actions" checked onchange="toggleColumn('col-actions', this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
                 </label>
@@ -84,51 +92,42 @@
     </div>
 </div>
 
+<!-- DATA TABLE CONTAINER -->
 <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
     <div class="overflow-x-auto flex-1">
-        <table class="w-full text-left border-collapse min-w-[1200px]">
+        <table class="w-full text-left border-collapse min-w-[1300px]">
             <thead>
                 <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none">
-                    <th class="py-3 px-4 w-10 text-center">
-                        <input type="checkbox" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                    </th>
-                    <th class="py-3 px-4 w-64 col-product">
+                    <th class="py-3 px-4 w-28 col-numcr">N° Produit CR</th>
+                    <th class="py-3 px-4 min-w-[280px] col-product">
                         <div class="flex items-center gap-1.5 cursor-pointer hover:text-slate-800">
                             <span>Produit</span>
                             <i class="fa-solid fa-arrow-down-a-z text-slate-400"></i>
                         </div>
                     </th>
                     <th class="py-3 px-2 text-center w-28 col-grade-a">
-                        <span class="block text-emerald-700 font-bold">Grade A</span>
-                        <span class="text-[9px] text-emerald-600 font-normal capitalize">Like new</span>
+                        <span class="block text-slate-700 font-bold">Grade A</span>
                     </th>
                     <th class="py-3 px-2 text-center w-28 col-grade-asub">
-                        <span class="block text-emerald-700 font-bold">Grade A-</span>
-                        <span class="text-[9px] text-emerald-600 font-normal capitalize">Excellent</span>
+                        <span class="block text-slate-700 font-bold">Grade A-</span>
                     </th>
                     <th class="py-3 px-2 text-center w-28 col-grade-b">
-                        <span class="block text-emerald-700 font-bold">Grade B</span>
-                        <span class="text-[9px] text-emerald-600 font-normal capitalize">Very good</span>
+                        <span class="block text-slate-700 font-bold">Grade B</span>
                     </th>
                     <th class="py-3 px-2 text-center w-28 col-grade-c">
-                        <span class="block text-amber-700 font-bold">Grade C</span>
-                        <span class="text-[9px] text-amber-600 font-normal capitalize">Good</span>
+                        <span class="block text-slate-700 font-bold">Grade C</span>
                     </th>
                     <th class="py-3 px-2 text-center w-28 col-grade-csub">
-                        <span class="block text-amber-700 font-bold">Grade C-</span>
-                        <span class="text-[9px] text-amber-600 font-normal capitalize">Average</span>
+                        <span class="block text-slate-700 font-bold">Grade C-</span>
                     </th>
                     <th class="py-3 px-2 text-center w-28 col-grade-d">
-                        <span class="block text-rose-700 font-bold">Grade D</span>
-                        <span class="text-[9px] text-rose-600 font-normal capitalize">Heavily used</span>
+                        <span class="block text-slate-700 font-bold">Grade D</span>
                     </th>
                     <th class="py-3 px-2 text-center w-28 col-grade-dsub">
-                        <span class="block text-rose-700 font-bold">Grade D-</span>
-                        <span class="text-[9px] text-rose-600 font-normal capitalize">Damaged</span>
+                        <span class="block text-slate-700 font-bold">Grade D-</span>
                     </th>
-                    <th class="py-3 px-4 text-center w-28 col-updated">Dernière mise à jour</th>
-                    <th class="py-3 px-3 text-center w-24 col-status">Statut</th>
-                    <th class="py-3 px-4 text-right w-28 col-actions">Actions</th>
+                    <th class="py-3 px-4 text-center w-36 col-updated">Mon prix actif depuis</th>
+                    <th class="py-3 px-4 text-right w-20 col-actions">Actions</th>
                 </tr>
             </thead>
             <tbody id="productTableBody" class="divide-y divide-slate-100 text-xs">
@@ -137,6 +136,7 @@
         </table>
     </div>
 
+    <!-- TABLE FOOTER & PAGINATION -->
     <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
         <div>
             Affichage de <span class="font-semibold text-slate-800">1</span> à <span class="font-semibold text-slate-800" id="argusDispCount">2</span> sur <span class="font-semibold text-slate-800" id="argusTotalCount">2</span> produits
@@ -162,14 +162,12 @@
     </div>
 </div>
 
-<!-- MODAL IMPORTER / METTRE À JOUR (Harmonisé en vert Emerald) -->
+<!-- MODAL IMPORTER / METTRE À JOUR -->
 <div id="importModalBackdrop" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-2xl border border-slate-100 w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <!-- Modal Content Container -->
         <div class="p-8">
             <h2 class="text-xl font-bold text-slate-800 mb-6">Importer</h2>
 
-            <!-- Rules Dropdown Banner -->
             <div class="mb-6 relative">
                 <div class="w-full bg-slate-50/80 border border-slate-200 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer group">
                     <div class="flex items-center gap-3">
@@ -180,13 +178,11 @@
                 </div>
             </div>
 
-            <!-- Upload Field Section -->
             <div class="mb-8">
                 <label id="importFileLabel" class="block text-sm font-normal text-slate-600 mb-2 transition-colors">
                     Fichier (csv, xlsx) <span class="text-slate-600">*</span>
                 </label>
 
-                <!-- Dropzone Box (Changement du cyan vers emerald) -->
                 <div id="dropzoneBox" onclick="document.getElementById('importFileInput').click()" class="border-2 border-dashed border-emerald-400 bg-emerald-50/20 rounded-lg h-28 flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-50/40 transition relative">
                     <input type="file" id="importFileInput" accept=".csv, .xlsx" class="hidden" onchange="handleFileSelected(this)">
                     
@@ -202,13 +198,11 @@
                     </div>
                 </div>
 
-                <!-- Error Message -->
                 <div id="importErrorMessage" class="hidden text-[11px] font-medium text-rose-500 mt-2">
                     Champs requis
                 </div>
             </div>
 
-            <!-- Modal Action Buttons (Changement cyan-500 vers emerald-600) -->
             <div class="flex items-center justify-end gap-6 pt-2">
                 <button onclick="closeImportModal()" class="text-xs font-bold text-rose-500 hover:text-rose-600 tracking-wider uppercase transition">
                     ANNULER
@@ -222,6 +216,22 @@
 </div>
 
 <script>
+    function formatPriceBadge(recPrice, partnerPrice) {
+        const hasPartner = partnerPrice !== undefined && partnerPrice !== null;
+        const pPrice = hasPartner ? partnerPrice : recPrice;
+        
+        return `
+            <div class="inline-flex items-center justify-center gap-1.5">
+                <span class="px-2 py-0.5 rounded-md bg-teal-700 text-white font-bold text-[11px] shadow-sm tracking-tight">
+                    ${recPrice}€
+                </span>
+                <span class="font-bold ${pPrice > 0 ? 'text-rose-600' : 'text-slate-400'} text-[11px]">
+                    ${pPrice}€
+                </span>
+            </div>
+        `;
+    }
+
     function renderArgusTable() {
         const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.productsData) ? GLOBAL_DATA.productsData : [];
         const tbody = document.getElementById('productTableBody');
@@ -235,29 +245,51 @@
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        data.forEach(p => {
+        data.forEach((p, idx) => {
             const tr = document.createElement('tr');
             tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100";
+            
+            const numCr = p.numCr || (44884 - idx);
+            const dateActif = p.updated || "28/08/2026";
+
             tr.innerHTML = `
-                <td class="py-3 px-4 text-center"><input type="checkbox" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"></td>
-                <td class="py-3.5 px-4 font-bold text-slate-900 col-product">${p.name} <span class="text-slate-400 font-normal">(${p.cap})</span></td>
-                <td class="py-3.5 px-2 text-center font-bold text-emerald-600 col-grade-a">${p.grades.a.price} €</td>
-                <td class="py-3.5 px-2 text-center font-bold text-emerald-600 col-grade-asub">${p.grades.aSub ? p.grades.aSub.price : p.grades.a.price} €</td>
-                <td class="py-3.5 px-2 text-center font-bold text-emerald-600 col-grade-b">${p.grades.b.price} €</td>
-                <td class="py-3.5 px-2 text-center font-bold text-amber-600 col-grade-c">${p.grades.c.price} €</td>
-                <td class="py-3.5 px-2 text-center font-bold text-amber-600 col-grade-csub">${p.grades.cSub ? p.grades.cSub.price : p.grades.c.price} €</td>
-                <td class="py-3.5 px-2 text-center font-bold text-rose-600 col-grade-d">${p.grades.d.price} €</td>
-                <td class="py-3.5 px-2 text-center font-bold text-rose-600 col-grade-dsub">${p.grades.dSub ? p.grades.dSub.price : p.grades.d.price} €</td>
-                <td class="py-3.5 px-4 text-center text-slate-500 font-mono col-updated">${p.updated}</td>
-                <td class="py-3.5 px-4 text-center col-status">
-                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${p.status}</span>
+                <td class="py-3.5 px-4 font-mono text-slate-500 text-[11px] col-numcr">${numCr}</td>
+                <td class="py-2.5 px-4 font-semibold text-slate-800 col-product">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 shrink-0 p-1 flex items-center justify-center overflow-hidden shadow-sm">
+                            <img src="img/produit.jpg" alt="Faux Produit" class="w-full h-full object-contain" />
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-slate-900 leading-tight">Mobile - ${p.name}</span>
+                            <span class="text-[11px] font-normal text-slate-400">${p.cap ? p.cap : ''}</span>
+                        </div>
+                    </div>
                 </td>
+                <td class="py-3.5 px-2 text-center col-grade-a">${formatPriceBadge(p.grades.a.price, p.grades.a.partnerPrice || 461)}</td>
+                <td class="py-3.5 px-2 text-center col-grade-asub">${formatPriceBadge(p.grades.aSub ? p.grades.aSub.price : p.grades.a.price, p.grades.aSub ? p.grades.aSub.partnerPrice : 461)}</td>
+                <td class="py-3.5 px-2 text-center col-grade-b">${formatPriceBadge(p.grades.b.price, p.grades.b.partnerPrice || 461)}</td>
+                <td class="py-3.5 px-2 text-center col-grade-c">${formatPriceBadge(p.grades.c.price, p.grades.c.partnerPrice || 460)}</td>
+                <td class="py-3.5 px-2 text-center col-grade-csub">${formatPriceBadge(p.grades.cSub ? p.grades.cSub.price : p.grades.c.price, p.grades.cSub ? p.grades.cSub.partnerPrice : 460)}</td>
+                <td class="py-3.5 px-2 text-center col-grade-d">${formatPriceBadge(p.grades.d.price, p.grades.d.partnerPrice || 443)}</td>
+                <td class="py-3.5 px-2 text-center col-grade-dsub">${formatPriceBadge(p.grades.dSub ? p.grades.dSub.price : p.grades.d.price, p.grades.dSub ? p.grades.dSub.partnerPrice : 360)}</td>
+                <td class="py-3.5 px-4 text-center text-slate-500 font-medium text-[11px] col-updated">${dateActif}</td>
                 <td class="py-3.5 px-4 text-right col-actions">
-                    <button class="p-1.5 text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <div class="flex items-center justify-end gap-1">
+                        <button onclick="editProduct('${numCr}')" title="Éditer la fiche produit" class="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">
+                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                        </button>
+                        <button title="Plus d'actions" class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition">
+                        </button>
+                    </div>
                 </td>
             `;
             tbody.appendChild(tr);
         });
+    }
+
+    function editProduct(productId) {
+        // Fonction de simulation pour l'édition de la fiche produit Argus
+        console.log("Édition du produit :", productId);
     }
 
     function toggleColumnPicker() {
@@ -325,6 +357,54 @@
             alert("Fichier importé avec succès !");
             closeImportModal();
         }
+    }
+
+    // Live search listener
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            const data = (typeof GLOBAL_DATA !== 'undefined' && GLOBAL_DATA.productsData) ? GLOBAL_DATA.productsData : [];
+            const filtered = data.filter(p => p.name.toLowerCase().includes(q) || (p.cap && p.cap.toLowerCase().includes(q)));
+            
+            const tbody = document.getElementById('productTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            filtered.forEach((p, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100";
+                const numCr = p.numCr || (44884 - idx);
+                const dateActif = p.updated || "28/08/2026";
+                const imgUrl = p.image || `img/products/${p.name.toLowerCase().replace(/ /g, '-')}.png`;
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-4 font-mono text-slate-500 text-[11px] col-numcr">${numCr}</td>
+                    <td class="py-2.5 px-4 font-semibold text-slate-800 col-product">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 shrink-0 p-1 flex items-center justify-center overflow-hidden shadow-sm">
+                                <img src="${imgUrl}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.onerror=null; this.parentNode.innerHTML='<i class=\"fa-solid fa-mobile-screen text-slate-400 text-lg\"></i>';">
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-bold text-slate-900 leading-tight">Mobile - ${p.name}</span>
+                                <span class="text-[11px] font-normal text-slate-400">${p.cap ? p.cap : ''}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-2 text-center col-grade-a">${formatPriceBadge(p.grades.a.price, p.grades.a.partnerPrice || 461)}</td>
+                    <td class="py-3.5 px-2 text-center col-grade-asub">${formatPriceBadge(p.grades.aSub ? p.grades.aSub.price : p.grades.a.price, p.grades.aSub ? p.grades.aSub.partnerPrice : 461)}</td>
+                    <td class="py-3.5 px-2 text-center col-grade-b">${formatPriceBadge(p.grades.b.price, p.grades.b.partnerPrice || 461)}</td>
+                    <td class="py-3.5 px-2 text-center col-grade-c">${formatPriceBadge(p.grades.c.price, p.grades.c.partnerPrice || 460)}</td>
+                    <td class="py-3.5 px-2 text-center col-grade-csub">${formatPriceBadge(p.grades.cSub ? p.grades.cSub.price : p.grades.c.price, p.grades.cSub ? p.grades.cSub.partnerPrice : 460)}</td>
+                    <td class="py-3.5 px-2 text-center col-grade-d">${formatPriceBadge(p.grades.d.price, p.grades.d.partnerPrice || 443)}</td>
+                    <td class="py-3.5 px-2 text-center col-grade-dsub">${formatPriceBadge(p.grades.dSub ? p.grades.dSub.price : p.grades.d.price, p.grades.dSub ? p.grades.dSub.partnerPrice : 360)}</td>
+                    <td class="py-3.5 px-4 text-center text-slate-500 font-medium text-[11px] col-updated">${dateActif}</td>
+                    <td class="py-3.5 px-4 text-right col-actions">
+                        <button class="p-1.5 text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        });
     }
 
     renderArgusTable();

@@ -1,4 +1,90 @@
 {
+  "productsData": [
+    {
+      "name": "iPhone 16 Pro Max",
+      "cap": "256Go",
+      "updated": "20/10/2026",
+      "status": "Actif",
+      "grades": {
+        "a": { "price": 890 },
+        "aSub": { "price": 850 },
+        "b": { "price": 790 },
+        "c": { "price": 680 },
+        "cSub": { "price": 620 },
+        "d": { "price": 450 },
+        "dSub": { "price": 380 }
+      }
+    },
+    {
+      "name": "Samsung Galaxy S24 Ultra",
+      "cap": "512Go",
+      "updated": "19/10/2026",
+      "status": "Actif",
+      "grades": {
+        "a": { "price": 750 },
+        "aSub": { "price": 710 },
+        "b": { "price": 650 },
+        "c": { "price": 540 },
+        "cSub": { "price": 490 },
+        "d": { "price": 320 },
+        "dSub": { "price": 270 }
+      }
+    }
+  ],
+  "transactionsData": [
+    {
+      "idGroup": "GRP-8821",
+      "idProd": "PRD-1029",
+      "numTrans": "TRX-2026-001",
+      "dateCreation": "18/10/2026",
+      "category": "Smartphone",
+      "brand": "Apple",
+      "numComparecycle": "CMP-9021",
+      "product": "iPhone 15 Pro 128Go",
+      "attrInitial": "Parfait état, Batterie > 85%",
+      "attrValide": "Parfait état, Batterie > 85%",
+      "imeiValide": "356789102938475",
+      "gradeInitial": "Grade A",
+      "gradeValide": "Grade A",
+      "priceInitial": "620.00 €",
+      "priceValide": "620.00 €",
+      "statusTrans": "Validée",
+      "etatFacture": "Facturée",
+      "numFacture": "FAC-2026-104",
+      "dateFacture": "19/10/2026",
+      "datePaiement": "20/10/2026",
+      "typeTva": "Marge",
+      "dateHomologation": "18/10/2026",
+      "dateMiseDispo": "19/10/2026",
+      "certifEffacement": "Oui"
+    },
+    {
+      "idGroup": "GRP-8822",
+      "idProd": "PRD-1030",
+      "numTrans": "TRX-2026-002",
+      "dateCreation": "19/10/2026",
+      "category": "Smartphone",
+      "brand": "Samsung",
+      "numComparecycle": "CMP-9022",
+      "product": "Galaxy S23 FE 256Go",
+      "attrInitial": "Rayures écran, Bon état",
+      "attrValide": "Rayures écran, Bon état",
+      "imeiValide": "359876123456789",
+      "gradeInitial": "Grade B",
+      "gradeValide": "Grade B",
+      "priceInitial": "340.00 €",
+      "priceValide": "340.00 €",
+      "statusTrans": "En cours",
+      "etatFacture": "En attente",
+      "numFacture": "-",
+      "dateFacture": "-",
+      "datePaiement": "-",
+      "typeTva": "Standard",
+      "dateHomologation": "19/10/2026",
+      "dateMiseDispo": "20/10/2026",
+      "certifEffacement": "En cours"
+    }
+  ],
   "expeditionsData": [
     {
       "numColisage": "26-S35-2808-01_1293",
