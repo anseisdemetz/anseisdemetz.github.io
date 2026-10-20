@@ -1,17 +1,446 @@
-<!-- SIMULATEUR PAGE -->
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-    <div>
-        <h1 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
-            Simulateur
-        </h1>
-        <p class="text-xs text-slate-500 mt-1">Simulez la valeur de reprise et la décote de vos produits.</p>
+<!-- CATEGORIES TABS HEADER -->
+<div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm mb-6 flex items-center justify-between gap-2 overflow-x-auto shrink-0">
+    <button onclick="selectCategory('mobile')" id="cat-mobile" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
+        <img src="img/mobile.png" alt="MOBILE" class="h-20 w-auto object-contain">
+        <span>MOBILE</span>
+    </button>
+    <button onclick="selectCategory('tablet')" id="cat-tablet" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
+        <img src="img/tablette.png" alt="TABLETTE" class="h-20 w-auto object-contain">
+        <span>TABLETTE</span>
+    </button>
+    <button onclick="selectCategory('console')" id="cat-console" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
+        <img src="img/console.png" alt="CONSOLE" class="h-20 w-auto object-contain">
+        <span>CONSOLE</span>
+    </button>
+    <button onclick="selectCategory('watch')" id="cat-watch" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
+        <img src="img/montre.png" alt="SMARTWATCH" class="h-20 w-auto object-contain">
+        <span>SMARTWATCH</span>
+    </button>
+    <button onclick="selectCategory('audio')" id="cat-audio" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
+        <img src="img/audio.png" alt="AUDIO" class="h-20 w-auto object-contain">
+        <span>AUDIO</span>
+    </button>
+    <button onclick="selectCategory('ordinateur')" id="cat-ordinateur" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
+        <img src="img/ordinateur.png" alt="ordinateur" class="h-20 w-auto object-contain">
+        <span>ORDINATEUR</span>
+    </button>
+</div>
+
+<!-- MAIN WORKSPACE: QUESTIONNAIRE + RESULT SIDEBAR -->
+<div class="flex flex-col lg:flex-row gap-6 items-start flex-1 min-h-0 overflow-y-auto pb-8">
+
+    <!-- LEFT COLUMN: QUESTIONNAIRE -->
+    <div class="flex-1 space-y-6 w-full">
+
+        <!-- QUESTION 1 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">1</span>
+                <h3 class="text-sm font-bold text-slate-800">Le mobile est-il fonctionnel ?</h3>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <label onclick="setScore(1, 0)" class="q1-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all shadow-sm">
+                    <!-- Input invisible contrôlant l'état -->
+                    <input type="radio" name="q1" checked class="sr-only peer">
+                    
+                    <!-- Puce radio personnalisée verte (centrée verticalement) -->
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all">
+                        <!-- Coche FontAwesome en blanc, forcée au centre -->
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
+                    
+                    <!-- Image du téléphone à fleur de bordure bottom -->
+                    <img src="img/Q1_2.png" alt="Mobile fonctionnel" class="h-20 w-auto object-contain shrink-0" style="margin-bottom: -16px;">
+                    
+                    <div>
+                        <span class="font-bold text-slate-900 text-sm block">Oui</span>
+                        <span class="text-[11px] text-slate-500 leading-tight block">L'appareil fonctionne parfaitement.</span>
+                    </div>
+                </label>
+                <label onclick="setScore(1, 4)" class="q1-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all">
+                    <input type="radio" name="q1" class="text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 group-hover:bg-rose-50 group-hover:text-rose-500 flex items-center justify-center shrink-0 text-xl font-bold transition">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-slate-900 text-sm block">Non</span>
+                        <span class="text-[11px] text-slate-500 leading-tight block">Ne s'allume pas ou a au moins une panne.</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- QUESTION 2 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">2</span>
+                <h3 class="text-sm font-bold text-slate-800">Quel est l'état fonctionnel de l'écran et des boutons ?</h3>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <label onclick="setScore(2, 0)" class="q2-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all shadow-sm">
+                    <input type="radio" name="q2" checked class="text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 text-xl font-bold">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-slate-900 text-sm block">Parfait état de marche</span>
+                        <span class="text-[11px] text-slate-500 leading-tight block">L'écran tactile et les boutons fonctionnent.</span>
+                    </div>
+                </label>
+                <label onclick="setScore(2, 3)" class="q2-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all">
+                    <input type="radio" name="q2" class="text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 group-hover:bg-rose-50 group-hover:text-rose-500 flex items-center justify-center shrink-0 text-xl font-bold transition">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-slate-900 text-sm block">Endommagé et/ou HS</span>
+                        <span class="text-[11px] text-slate-500 leading-tight block">Pixels morts, tactile défectueux, boutons absents.</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- QUESTION 3 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">3</span>
+                <h3 class="text-sm font-bold text-slate-800">Quel est l'état de l'écran du mobile ?</h3>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <label onclick="setScore(3, 0)" class="q3-opt p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2 shadow-sm">
+                    <input type="radio" name="q3" checked class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Comme neuf</span>
+                        <span class="text-[10px] text-emerald-700 font-semibold">Intact / Parfait</span>
+                    </div>
+                </label>
+                <label onclick="setScore(3, 1)" class="q3-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
+                    <input type="radio" name="q3" class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-lg"><i class="fa-solid fa-[#fa-wand-magic-sparkles]"></i><i class="fa-solid fa-sparkles"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Micro-rayures</span>
+                        <span class="text-[10px] text-slate-400">Invisibles allumé</span>
+                    </div>
+                </label>
+                <label onclick="setScore(3, 2)" class="q3-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
+                    <input type="radio" name="q3" class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-italic"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Rayures / Impacts</span>
+                        <span class="text-[10px] text-slate-400">Marques visibles</span>
+                    </div>
+                </label>
+                <label onclick="setScore(3, 3)" class="q3-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
+                    <input type="radio" name="q3" class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-lg"><i class="fa-solid fa-burst"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Très abîmé</span>
+                        <span class="text-[10px] text-rose-500 font-bold">Écran cassé</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- QUESTION 4 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">4</span>
+                <h3 class="text-sm font-bold text-slate-800">Quel est l'état de la face arrière ?</h3>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <label onclick="setScore(4, 0)" class="q4-opt p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2 shadow-sm">
+                    <input type="radio" name="q4" checked class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg"><i class="fa-solid fa-gem"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Comme neuf</span>
+                        <span class="text-[10px] text-emerald-700 font-semibold">Intact</span>
+                    </div>
+                </label>
+                <label onclick="setScore(4, 1)" class="q4-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
+                    <input type="radio" name="q4" class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-lg"><i class="fa-solid fa-feather"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Micro-rayures</span>
+                        <span class="text-[10px] text-slate-400">Très légères</span>
+                    </div>
+                </label>
+                <label onclick="setScore(4, 2)" class="q4-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
+                    <input type="radio" name="q4" class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-border-all"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Rayures / Impacts</span>
+                        <span class="text-[10px] text-slate-400">Visibles</span>
+                    </div>
+                </label>
+                <label onclick="setScore(4, 3)" class="q4-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
+                    <input type="radio" name="q4" class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-lg"><i class="fa-solid fa-crack"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Très abîmé</span>
+                        <span class="text-[10px] text-rose-500 font-bold">Vitre brisée</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- QUESTION 5 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">5</span>
+                <h3 class="text-sm font-bold text-slate-800">Quel est l'état du contour / châssis du mobile ?</h3>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <label onclick="setScore(5, 0)" class="q5-opt p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2 shadow-sm">
+                    <input type="radio" name="q5" checked class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg"><i class="fa-solid fa-square"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Comme neuf</span>
+                        <span class="text-[10px] text-emerald-700 font-semibold">Intact</span>
+                    </div>
+                </label>
+                <label onclick="setScore(5, 1)" class="q5-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
+                    <input type="radio" name="q5" class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-lg"><i class="fa-solid fa-grip-lines-vertical"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Micro-rayures</span>
+                        <span class="text-[10px] text-slate-400">Légères</span>
+                    </div>
+                </label>
+                <label onclick="setScore(5, 2)" class="q5-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
+                    <input type="radio" name="q5" class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-hammer"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Rayures / Impacts</span>
+                        <span class="text-[10px] text-slate-400">Petits pocs</span>
+                    </div>
+                </label>
+                <label onclick="setScore(5, 3)" class="q5-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
+                    <input type="radio" name="q5" class="text-emerald-600 focus:ring-emerald-500">
+                    <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-lg"><i class="fa-solid fa-ban"></i></div>
+                    <div>
+                        <span class="font-bold text-slate-900 block">Très abîmé</span>
+                        <span class="text-[10px] text-rose-500 font-bold">Châssis tordu</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: FINAL RESULT SIDEBAR -->
+    <div class="w-full lg:w-80 shrink-0 space-y-5 lg:sticky lg:top-4">
+        
+    <!-- RESULT BOX (Fidèle à la capture) -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+        <h2 class="text-xl font-bold text-slate-900 mb-3">Résultat Final</h2>
+        
+        <!-- Encadré vert pastel contenant le grade et l'image -->
+        <div class="bg-emerald-50 rounded-2xl p-4 flex items-end justify-between relative min-h-[140px] overflow-hidden">
+            <!-- Partie texte (Grade + Lettre) -->
+            <div class="flex flex-col justify-center z-10 my-auto">
+                <span class="text-base font-bold text-slate-900 text-center">Grade</span>
+                <span id="gradeBadge" class="text-10xl font-black text-emerald-600 leading-none mt-1 transition-all duration-300">
+                    A
+                </span>
+            </div>
+
+            <!-- Image du téléphone (à fleur du bas, à droite) -->
+            <img id="gradeProductImg" src="img/visuel-grade.png" alt="Produit gradé" class="h-32 w-auto object-contain shrink-0 -mb-4 -mr-2 z-10 transition-all duration-300">
+        </div>
+    </div>
+
+        <!-- GRADES INFORMATIONAL LIST (Version Whaou & 100% Français) -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </span>
+                    <span class="text-xs font-bold text-slate-900 tracking-wide">Nos 7 grades</span>
+                </div>
+            </div>
+
+            <div class="space-y-2 text-xs">
+                <!-- Grade A -->
+                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group">
+                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform">
+                        A
+                    </span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-bold text-slate-900 text-xs leading-tight">Comme neuf</span>
+                        <span class="text-[11px] text-slate-500 truncate">Aucun défaut. Aucune marque ni rayure.</span>
+                    </div>
+                </div>
+
+                <!-- Grade A- -->
+                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group">
+                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+                        A-
+                    </span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-bold text-slate-900 text-xs leading-tight">Excellent état</span>
+                        <span class="text-[11px] text-slate-500 truncate">Traces minimes, invisibles à 20 cm.</span>
+                    </div>
+                </div>
+
+                <!-- Grade B -->
+                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group">
+                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-emerald-400 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-400/20 group-hover:scale-105 transition-transform">
+                        B
+                    </span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-bold text-slate-900 text-xs leading-tight">Très bon état</span>
+                        <span class="text-[11px] text-slate-500 truncate">Traces d'usure légères, micro-rayures.</span>
+                    </div>
+                </div>
+
+                <!-- Grade C -->
+                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-amber-200 hover:bg-amber-50/30 transition-all group">
+                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+                        C
+                    </span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-bold text-slate-900 text-xs leading-tight">Bon état</span>
+                        <span class="text-[11px] text-slate-500 truncate">Rayures visibles ou petits impacts.</span>
+                    </div>
+                </div>
+
+                <!-- Grade C- -->
+                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-amber-200 hover:bg-amber-50/30 transition-all group">
+                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-amber-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform">
+                        C-
+                    </span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-bold text-slate-900 text-xs leading-tight">État moyen</span>
+                        <span class="text-[11px] text-slate-500 truncate">Rayures et marques plus nombreuses.</span>
+                    </div>
+                </div>
+
+                <!-- Grade D -->
+                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-rose-200 hover:bg-rose-50/30 transition-all group">
+                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-500/20 group-hover:scale-105 transition-transform">
+                        D
+                    </span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-bold text-slate-900 text-xs leading-tight">Très abîmé</span>
+                        <span class="text-[11px] text-slate-500 truncate">Impacts ou rayures importantes.</span>
+                    </div>
+                </div>
+
+                <!-- Grade D- -->
+                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-rose-200 hover:bg-rose-50/30 transition-all group">
+                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-rose-700 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-700/20 group-hover:scale-105 transition-transform">
+                        D-
+                    </span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-bold text-slate-900 text-xs leading-tight">Endommagé</span>
+                        <span class="text-[11px] text-slate-500 truncate">Élément brisé mais fonctionnel.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUICK TEST BUTTONS (Captures style) -->
+        <div class="space-y-2.5">
+            <button onclick="setBestAnswers()" class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-thumbs-up text-sm"></i> CHOISIR LES MEILLEURES RÉPONSES
+            </button>
+            <button onclick="setWorstAnswers()" class="w-full py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-600/20 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-thumbs-down text-sm"></i> CHOISIR LES PIRES RÉPONSES
+            </button>
+        </div>
+
     </div>
 </div>
 
-<div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-center my-auto">
-    <i class="fa-solid fa-calculator text-4xl text-emerald-600 mb-3"></i>
-    <h2 class="text-lg font-bold text-slate-800 mb-1">Rubrique Simulateur</h2>
-    <p class="text-xs text-slate-500 max-w-md mx-auto mt-2">
-        Outil de simulation de rachat et d'estimation tarifaire.
-    </p>
-</div>
+<script>
+    let scores = { q1: 0, q2: 0, q3: 0, q4: 0, q5: 0 };
+
+    const gradesMap = [
+        { code: "A", name: "Like new", desc: "Aucun défaut. Aucune marque ni rayure.", color: "bg-emerald-600", textColor: "text-emerald-700" },
+        { code: "A-", name: "Excellent", desc: "Très légères traces, invisibles à 20cm.", color: "bg-emerald-500", textColor: "text-emerald-600" },
+        { code: "B", name: "Very good", desc: "Traces légères, micro-rayures fines.", color: "bg-emerald-400", textColor: "text-emerald-600" },
+        { code: "C", name: "Good", desc: "Rayures visibles ou petits impacts légers.", color: "bg-amber-500", textColor: "text-amber-700" },
+        { code: "C-", name: "Average", desc: "Rayures plus nombreuses et marquées.", color: "bg-amber-600", textColor: "text-amber-700" },
+        { code: "D", name: "Heavily used", desc: "Impacts ou rayures importantes.", color: "bg-rose-500", textColor: "text-rose-600" },
+        { code: "D-", name: "Damaged", desc: "Élément brisé mais appareil fonctionnel.", color: "bg-rose-700", textColor: "text-rose-700" }
+    ];
+
+    function selectCategory(catKey) {
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.className = "cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-bold text-xs flex flex-col items-center gap-1.5 transition-all";
+        });
+        const activeBtn = document.getElementById('cat-' + catKey);
+        if (activeBtn) {
+            activeBtn.className = "cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm";
+        }
+    }
+
+    function setScore(qNum, value) {
+        scores['q' + qNum] = value;
+        updateCardStyles(qNum);
+        calculateGrade();
+    }
+
+    function updateCardStyles(qNum) {
+        const labels = document.querySelectorAll(`.q${qNum}-opt`);
+        labels.forEach(lbl => {
+            const radio = lbl.querySelector('input[type="radio"]');
+            if (radio && radio.checked) {
+                lbl.className = lbl.className.replace(/border-slate-200|bg-white/g, 'border-emerald-500 bg-emerald-50/30 shadow-sm');
+            } else {
+                lbl.className = lbl.className.replace(/border-emerald-500|bg-emerald-50\/30|shadow-sm/g, 'border-slate-200 bg-white');
+            }
+        });
+    }
+
+    function calculateGrade() {
+        const totalPenalties = scores.q1 + scores.q2 + scores.q3 + scores.q4 + scores.q5;
+        let gradeIdx = Math.min(totalPenalties, gradesMap.length - 1);
+        
+        const res = gradesMap[gradeIdx];
+        const badge = document.getElementById('gradeBadge');
+        const gName = document.getElementById('gradeName');
+        const gDesc = document.getElementById('gradeDesc');
+
+        if (badge) {
+            badge.innerText = res.code;
+            badge.className = `w-20 h-20 rounded-2xl ${res.color} text-white flex items-center justify-center text-6xl font-black shadow-lg shadow-slate-200 transition-all duration-300 scale-105`;
+            setTimeout(() => badge.classList.remove('scale-105'), 200);
+        }
+        if (gName) {
+            gName.innerText = res.name;
+            gName.className = `text-lg font-bold ${res.textColor} block leading-tight`;
+        }
+        if (gDesc) gDesc.innerText = res.desc;
+    }
+
+    function setBestAnswers() {
+        for (let i = 1; i <= 5; i++) {
+            const firstRadio = document.querySelectorAll(`input[name="q${i}"]`)[0];
+            if (firstRadio) {
+                firstRadio.checked = true;
+                scores['q' + i] = 0;
+                updateCardStyles(i);
+            }
+        }
+        calculateGrade();
+    }
+
+    function setWorstAnswers() {
+        const worstVals = { q1: 4, q2: 3, q3: 3, q4: 3, q5: 3 };
+        for (let i = 1; i <= 5; i++) {
+            const radios = document.querySelectorAll(`input[name="q${i}"]`);
+            const lastRadio = radios[radios.length - 1];
+            if (lastRadio) {
+                lastRadio.checked = true;
+                scores['q' + i] = worstVals['q' + i];
+                updateCardStyles(i);
+            }
+        }
+        calculateGrade();
+    }
+
+    calculateGrade();
+</script>
