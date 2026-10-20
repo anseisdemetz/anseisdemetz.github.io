@@ -59,9 +59,6 @@
                 </label>
                 <label onclick="setScore(1, 4)" class="q1-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all">
                     <input type="radio" name="q1" class="text-emerald-600 focus:ring-emerald-500 w-4 h-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 group-hover:bg-rose-50 group-hover:text-rose-500 flex items-center justify-center shrink-0 text-xl font-bold transition">
-                        <i class="fa-solid fa-mobile-screen-button"></i>
-                    </div>
                     <div>
                         <span class="font-bold text-slate-900 text-sm block">Non</span>
                         <span class="text-[11px] text-slate-500 leading-tight block">Ne s'allume pas ou a au moins une panne.</span>
@@ -79,9 +76,6 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <label onclick="setScore(2, 0)" class="q2-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all shadow-sm">
                     <input type="radio" name="q2" checked class="text-emerald-600 focus:ring-emerald-500 w-4 h-4">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 text-xl font-bold">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
                     <div>
                         <span class="font-bold text-slate-900 text-sm block">Parfait état de marche</span>
                         <span class="text-[11px] text-slate-500 leading-tight block">L'écran tactile et les boutons fonctionnent.</span>
@@ -89,9 +83,7 @@
                 </label>
                 <label onclick="setScore(2, 3)" class="q2-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all">
                     <input type="radio" name="q2" class="text-emerald-600 focus:ring-emerald-500 w-4 h-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 group-hover:bg-rose-50 group-hover:text-rose-500 flex items-center justify-center shrink-0 text-xl font-bold transition">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
+                    
                     <div>
                         <span class="font-bold text-slate-900 text-sm block">Endommagé et/ou HS</span>
                         <span class="text-[11px] text-slate-500 leading-tight block">Pixels morts, tactile défectueux, boutons absents.</span>
@@ -109,7 +101,6 @@
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <label onclick="setScore(3, 0)" class="q3-opt p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2 shadow-sm">
                     <input type="radio" name="q3" checked class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg"><i class="fa-solid fa-shield-halved"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Comme neuf</span>
                         <span class="text-[10px] text-emerald-700 font-semibold">Intact / Parfait</span>
@@ -117,7 +108,6 @@
                 </label>
                 <label onclick="setScore(3, 1)" class="q3-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
                     <input type="radio" name="q3" class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-lg"><i class="fa-solid fa-[#fa-wand-magic-sparkles]"></i><i class="fa-solid fa-sparkles"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Micro-rayures</span>
                         <span class="text-[10px] text-slate-400">Invisibles allumé</span>
@@ -125,7 +115,6 @@
                 </label>
                 <label onclick="setScore(3, 2)" class="q3-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
                     <input type="radio" name="q3" class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-italic"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Rayures / Impacts</span>
                         <span class="text-[10px] text-slate-400">Marques visibles</span>
@@ -133,7 +122,6 @@
                 </label>
                 <label onclick="setScore(3, 3)" class="q3-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
                     <input type="radio" name="q3" class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-lg"><i class="fa-solid fa-burst"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Très abîmé</span>
                         <span class="text-[10px] text-rose-500 font-bold">Écran cassé</span>
@@ -151,7 +139,6 @@
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <label onclick="setScore(4, 0)" class="q4-opt p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2 shadow-sm">
                     <input type="radio" name="q4" checked class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg"><i class="fa-solid fa-gem"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Comme neuf</span>
                         <span class="text-[10px] text-emerald-700 font-semibold">Intact</span>
@@ -159,7 +146,6 @@
                 </label>
                 <label onclick="setScore(4, 1)" class="q4-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
                     <input type="radio" name="q4" class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-lg"><i class="fa-solid fa-feather"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Micro-rayures</span>
                         <span class="text-[10px] text-slate-400">Très légères</span>
@@ -167,7 +153,6 @@
                 </label>
                 <label onclick="setScore(4, 2)" class="q4-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
                     <input type="radio" name="q4" class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-border-all"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Rayures / Impacts</span>
                         <span class="text-[10px] text-slate-400">Visibles</span>
@@ -175,7 +160,6 @@
                 </label>
                 <label onclick="setScore(4, 3)" class="q4-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
                     <input type="radio" name="q4" class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-lg"><i class="fa-solid fa-crack"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Très abîmé</span>
                         <span class="text-[10px] text-rose-500 font-bold">Vitre brisée</span>
@@ -193,7 +177,6 @@
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <label onclick="setScore(5, 0)" class="q5-opt p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2 shadow-sm">
                     <input type="radio" name="q5" checked class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg"><i class="fa-solid fa-square"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Comme neuf</span>
                         <span class="text-[10px] text-emerald-700 font-semibold">Intact</span>
@@ -201,7 +184,6 @@
                 </label>
                 <label onclick="setScore(5, 1)" class="q5-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
                     <input type="radio" name="q5" class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-lg"><i class="fa-solid fa-grip-lines-vertical"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Micro-rayures</span>
                         <span class="text-[10px] text-slate-400">Légères</span>
@@ -209,7 +191,6 @@
                 </label>
                 <label onclick="setScore(5, 2)" class="q5-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
                     <input type="radio" name="q5" class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-hammer"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Rayures / Impacts</span>
                         <span class="text-[10px] text-slate-400">Petits pocs</span>
@@ -217,7 +198,6 @@
                 </label>
                 <label onclick="setScore(5, 3)" class="q5-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
                     <input type="radio" name="q5" class="text-emerald-600 focus:ring-emerald-500">
-                    <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-lg"><i class="fa-solid fa-ban"></i></div>
                     <div>
                         <span class="font-bold text-slate-900 block">Très abîmé</span>
                         <span class="text-[10px] text-rose-500 font-bold">Châssis tordu</span>
@@ -229,7 +209,7 @@
     </div>
 
     <!-- RIGHT COLUMN: FINAL RESULT SIDEBAR -->
-    <div class="w-full lg:w-80 shrink-0 space-y-5 lg:sticky lg:top-4">
+    <div class="w-full lg:w-80 shrink-0 space-y-5 lg:sticky">
         
     <!-- RESULT BOX (Fidèle à la capture) -->
     <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
