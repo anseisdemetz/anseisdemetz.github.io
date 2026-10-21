@@ -1,27 +1,27 @@
 <!-- CATEGORIES TABS HEADER -->
 <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm mb-6 flex items-center justify-between gap-2 overflow-x-auto shrink-0">
     <button onclick="selectCategory('mobile')" id="cat-mobile" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
-        <img src="img/mobile.png" alt="MOBILE" class="h-20 w-auto object-contain">
+        <img src="img/mobile.png" alt="MOBILE" class="h-16 w-auto object-contain">
         <span>MOBILE</span>
     </button>
     <button onclick="selectCategory('tablet')" id="cat-tablet" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
-        <img src="img/tablette.png" alt="TABLETTE" class="h-20 w-auto object-contain">
+        <img src="img/tablette.png" alt="TABLETTE" class="h-16 w-auto object-contain">
         <span>TABLETTE</span>
     </button>
     <button onclick="selectCategory('console')" id="cat-console" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
-        <img src="img/console.png" alt="CONSOLE" class="h-20 w-auto object-contain">
+        <img src="img/console.png" alt="CONSOLE" class="h-16 w-auto object-contain">
         <span>CONSOLE</span>
     </button>
     <button onclick="selectCategory('watch')" id="cat-watch" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
-        <img src="img/montre.png" alt="SMARTWATCH" class="h-20 w-auto object-contain">
+        <img src="img/montre.png" alt="SMARTWATCH" class="h-16 w-auto object-contain">
         <span>SMARTWATCH</span>
     </button>
     <button onclick="selectCategory('audio')" id="cat-audio" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
-        <img src="img/audio.png" alt="AUDIO" class="h-20 w-auto object-contain">
+        <img src="img/audio.png" alt="AUDIO" class="h-16 w-auto object-contain">
         <span>AUDIO</span>
     </button>
     <button onclick="selectCategory('ordinateur')" id="cat-ordinateur" class="cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm">
-        <img src="img/ordinateur.png" alt="ordinateur" class="h-20 w-auto object-contain">
+        <img src="img/ordinateur.png" alt="ORDINATEUR" class="h-16 w-auto object-contain">
         <span>ORDINATEUR</span>
     </button>
 </div>
@@ -39,29 +39,24 @@
                 <h3 class="text-sm font-bold text-slate-800">Le mobile est-il fonctionnel ?</h3>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <label onclick="setScore(1, 0)" class="q1-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all shadow-sm">
-                    <!-- Input invisible contrôlant l'état -->
-                    <input type="radio" name="q1" checked class="sr-only peer">
-                    
-                    <!-- Puce radio personnalisée verte (centrée verticalement) -->
-                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all">
-                        <!-- Coche FontAwesome en blanc, forcée au centre -->
+                <label onclick="setScore(1, 0)" class="q1-opt group relative flex items-start gap-3 p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all shadow-sm">
+                    <input type="radio" name="q1" checked class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
                         <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
                     </div>
-                    
-                    <!-- Image du téléphone à fleur de bordure bottom -->
-                    <img src="img/Q1_2.png" alt="Mobile fonctionnel" class="h-20 w-auto object-contain shrink-0" style="margin-bottom: -16px;">
-                    
                     <div>
-                        <span class="font-bold text-slate-900 text-sm block">Oui</span>
-                        <span class="text-[11px] text-slate-500 leading-tight block">L'appareil fonctionne parfaitement.</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Oui</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Il s'allume, s'éteint et se charge complètement. Le déblocage par reconnaissance faciale et/ou digitale est fonctionnel. Toutes les fonctionnalités sont opérationnelles.</span>
                     </div>
                 </label>
-                <label onclick="setScore(1, 4)" class="q1-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all">
-                    <input type="radio" name="q1" class="text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+                <label onclick="setScore(1, 4)" class="q1-opt group relative flex items-start gap-3 p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all">
+                    <input type="radio" name="q1" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 text-sm block">Non</span>
-                        <span class="text-[11px] text-slate-500 leading-tight block">Ne s'allume pas ou a au moins une panne.</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Non</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Il ne s'allume pas ou ne s'éteint pas et/ou ne charge pas normalement. Le déblocage par reconnaissance faciale et/ou digitale n'est pas fonctionnel. Il y a au moins un défaut de fonctionnement.</span>
                     </div>
                 </label>
             </div>
@@ -74,19 +69,24 @@
                 <h3 class="text-sm font-bold text-slate-800">Quel est l'état fonctionnel de l'écran et des boutons ?</h3>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <label onclick="setScore(2, 0)" class="q2-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all shadow-sm">
-                    <input type="radio" name="q2" checked class="text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+                <label onclick="setScore(2, 0)" class="q2-opt group relative flex items-start gap-3 p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all shadow-sm">
+                    <input type="radio" name="q2" checked class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 text-sm block">Parfait état de marche</span>
-                        <span class="text-[11px] text-slate-500 leading-tight block">L'écran tactile et les boutons fonctionnent.</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Parfait état fonctionnel</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">L'écran tactile est 100% fonctionnel. Tous les boutons fonctionnent (volume, on/off, verrouillage silencieux). Tous les éléments sont présents (tiroir SIM / vis / stylet...). Charnière fonctionnelle.</span>
                     </div>
                 </label>
-                <label onclick="setScore(2, 3)" class="q2-opt group relative flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all">
-                    <input type="radio" name="q2" class="text-emerald-600 focus:ring-emerald-500 w-4 h-4">
-                    
+                <label onclick="setScore(2, 3)" class="q2-opt group relative flex items-start gap-3 p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all">
+                    <input type="radio" name="q2" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 text-sm block">Endommagé et/ou HS</span>
-                        <span class="text-[11px] text-slate-500 leading-tight block">Pixels morts, tactile défectueux, boutons absents.</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Abîmé et/ou non fonctionnel</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Dysfonctionnement écran (tactile, pixel manquant / tache / image fantôme et/ou figée / rétro-éclairage) Boutons / touches KO ou manquants (adaptateur SIM, vis...). Charnière défectueuse, ouverture incomplète.</span>
                     </div>
                 </label>
             </div>
@@ -98,33 +98,45 @@
                 <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">3</span>
                 <h3 class="text-sm font-bold text-slate-800">Quel est l'état de l'écran du mobile ?</h3>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <label onclick="setScore(3, 0)" class="q3-opt p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2 shadow-sm">
-                    <input type="radio" name="q3" checked class="text-emerald-600 focus:ring-emerald-500">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <label onclick="setScore(3, 0)" class="q3-opt p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all flex items-start gap-3 shadow-sm">
+                    <input type="radio" name="q3" checked class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Comme neuf</span>
-                        <span class="text-[10px] text-emerald-700 font-semibold">Intact / Parfait</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Comme neuf - Intact</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Aucun défaut. Aucune marque. Aucune rayure ou impact.</span>
                     </div>
                 </label>
-                <label onclick="setScore(3, 1)" class="q3-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
-                    <input type="radio" name="q3" class="text-emerald-600 focus:ring-emerald-500">
+                <label onclick="setScore(3, 1)" class="q3-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                    <input type="radio" name="q3" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Micro-rayures</span>
-                        <span class="text-[10px] text-slate-400">Invisibles allumé</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Micro rayure(s) / Micro impact(s)</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Légère trace d'utilisation. Rayure(s) ou impact(s) non sensible(s) à l'ongle, invisible à 20 cm.</span>
                     </div>
                 </label>
-                <label onclick="setScore(3, 2)" class="q3-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
-                    <input type="radio" name="q3" class="text-emerald-600 focus:ring-emerald-500">
+                <label onclick="setScore(3, 2)" class="q3-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                    <input type="radio" name="q3" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Rayures / Impacts</span>
-                        <span class="text-[10px] text-slate-400">Marques visibles</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Rayure(s) / Impact(s)</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Rayure(s) marquée(s) sensible(s) à l'ongle, visible(s) à 20 cm. Rayure(s) étendue(s). Impact(s) ou altération(s) visible(s) à 20 cm.</span>
                     </div>
                 </label>
-                <label onclick="setScore(3, 3)" class="q3-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
-                    <input type="radio" name="q3" class="text-emerald-600 focus:ring-emerald-500">
+                <label onclick="setScore(3, 3)" class="q3-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                    <input type="radio" name="q3" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Très abîmé</span>
-                        <span class="text-[10px] text-rose-500 font-bold">Écran cassé</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Très abîmé - Cassé</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Fissuré, cassé, éclat, décollement.</span>
                     </div>
                 </label>
             </div>
@@ -134,35 +146,47 @@
         <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
             <div class="flex items-center gap-3">
                 <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">4</span>
-                <h3 class="text-sm font-bold text-slate-800">Quel est l'état de la face arrière ?</h3>
+                <h3 class="text-sm font-bold text-slate-800">Quel est l'état de l'arrière du mobile ?</h3>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <label onclick="setScore(4, 0)" class="q4-opt p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2 shadow-sm">
-                    <input type="radio" name="q4" checked class="text-emerald-600 focus:ring-emerald-500">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <label onclick="setScore(4, 0)" class="q4-opt p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all flex items-start gap-3 shadow-sm">
+                    <input type="radio" name="q4" checked class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Comme neuf</span>
-                        <span class="text-[10px] text-emerald-700 font-semibold">Intact</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Comme neuf - Intact</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Aucun défaut. Aucune marque. Aucune rayure ou impact.</span>
                     </div>
                 </label>
-                <label onclick="setScore(4, 1)" class="q4-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
-                    <input type="radio" name="q4" class="text-emerald-600 focus:ring-emerald-500">
+                <label onclick="setScore(4, 1)" class="q4-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                    <input type="radio" name="q4" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Micro-rayures</span>
-                        <span class="text-[10px] text-slate-400">Très légères</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Micro rayure(s) / Micro impact(s)</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Légère trace d'utilisation. Rayure(s) ou impact(s) non sensible(s) à l'ongle, invisible à 20 cm.</span>
                     </div>
                 </label>
-                <label onclick="setScore(4, 2)" class="q4-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
-                    <input type="radio" name="q4" class="text-emerald-600 focus:ring-emerald-500">
+                <label onclick="setScore(4, 2)" class="q4-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                    <input type="radio" name="q4" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Rayures / Impacts</span>
-                        <span class="text-[10px] text-slate-400">Visibles</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Rayure(s) / Impact(s)</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Rayure(s) marquée(s) sensible(s) à l'ongle, visible(s) à 20 cm. Rayure(s) étendue(s). Impact(s) ou altération(s) visible(s) à 20 cm.</span>
                     </div>
                 </label>
-                <label onclick="setScore(4, 3)" class="q4-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
-                    <input type="radio" name="q4" class="text-emerald-600 focus:ring-emerald-500">
+                <label onclick="setScore(4, 3)" class="q4-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                    <input type="radio" name="q4" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Très abîmé</span>
-                        <span class="text-[10px] text-rose-500 font-bold">Vitre brisée</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Très abîmé - Cassé</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Arrière brisé - fissure(s) - éclat(s) - décoloration - décollement... Objectif(s) photo endommagé(s)</span>
                     </div>
                 </label>
             </div>
@@ -172,35 +196,47 @@
         <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
             <div class="flex items-center gap-3">
                 <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">5</span>
-                <h3 class="text-sm font-bold text-slate-800">Quel est l'état du contour / châssis du mobile ?</h3>
+                <h3 class="text-sm font-bold text-slate-800">Quel est l'état du contour/châssis du mobile ?</h3>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <label onclick="setScore(5, 0)" class="q5-opt p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2 shadow-sm">
-                    <input type="radio" name="q5" checked class="text-emerald-600 focus:ring-emerald-500">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <label onclick="setScore(5, 0)" class="q5-opt p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all flex items-start gap-3 shadow-sm">
+                    <input type="radio" name="q5" checked class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Comme neuf</span>
-                        <span class="text-[10px] text-emerald-700 font-semibold">Intact</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Comme neuf - Intact</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Aucun défaut. Aucune marque. Aucune rayure ou impact.</span>
                     </div>
                 </label>
-                <label onclick="setScore(5, 1)" class="q5-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
-                    <input type="radio" name="q5" class="text-emerald-600 focus:ring-emerald-500">
+                <label onclick="setScore(5, 1)" class="q5-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                    <input type="radio" name="q5" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Micro-rayures</span>
-                        <span class="text-[10px] text-slate-400">Légères</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Micro rayure(s) / Micro impact(s)</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Légère trace d'utilisation. Rayure(s) ou impact(s) non sensible(s) à l'ongle, invisible à 20 cm.</span>
                     </div>
                 </label>
-                <label onclick="setScore(5, 2)" class="q5-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
-                    <input type="radio" name="q5" class="text-emerald-600 focus:ring-emerald-500">
+                <label onclick="setScore(5, 2)" class="q5-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                    <input type="radio" name="q5" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Rayures / Impacts</span>
-                        <span class="text-[10px] text-slate-400">Petits pocs</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Rayure(s) / Impact(s)</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Rayure(s) marquée(s) sensible(s) à l'ongle, visible(s) à 20 cm. Rayure(s) étendue(s). Impact(s) ou altération(s) visible(s) à 20 cm.</span>
                     </div>
                 </label>
-                <label onclick="setScore(5, 3)" class="q5-opt p-3.5 rounded-2xl border-2 border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition-all text-center flex flex-col items-center justify-between gap-2">
-                    <input type="radio" name="q5" class="text-emerald-600 focus:ring-emerald-500">
+                <label onclick="setScore(5, 3)" class="q5-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                    <input type="radio" name="q5" class="hidden peer">
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                        <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                    </div>
                     <div>
-                        <span class="font-bold text-slate-900 block">Très abîmé</span>
-                        <span class="text-[10px] text-rose-500 font-bold">Châssis tordu</span>
+                        <span class="font-bold text-slate-900 text-sm block mb-1">Très abîmé - Cassé</span>
+                        <span class="text-[11px] text-slate-500 leading-normal block">Fissuré, fendu, choc, tordu.</span>
                     </div>
                 </label>
             </div>
@@ -209,125 +245,27 @@
     </div>
 
     <!-- RIGHT COLUMN: FINAL RESULT SIDEBAR -->
-    <div class="w-full lg:w-80 shrink-0 space-y-5 lg:sticky">
+    <div class="w-full lg:w-60 shrink-0 space-y-4 lg:sticky lg:top-4">
         
-    <!-- RESULT BOX (Fidèle à la capture) -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
-        <h2 class="text-xl font-bold text-slate-900 mb-3">Résultat Final</h2>
-        
-        <!-- Encadré vert pastel contenant le grade et l'image -->
-        <div class="bg-emerald-50 rounded-2xl p-4 flex items-end justify-between relative min-h-[140px] overflow-hidden">
-            <!-- Partie texte (Grade + Lettre) -->
-            <div class="flex flex-col justify-center z-10 my-auto">
-                <span class="text-base font-bold text-slate-900 text-center">Grade</span>
-                <span id="gradeBadge" class="text-10xl font-black text-emerald-600 leading-none mt-1 transition-all duration-300">
+        <!-- RESULT BOX -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+            <h2 class="text-base font-bold text-slate-900 mb-2.5">Résultat Final</h2>
+            
+            <div class="bg-emerald-50 rounded-2xl p-4 flex flex-col justify-center items-start min-h-[110px] relative overflow-hidden">
+                <span class="text-xs font-bold text-slate-800">Grade</span>
+                <span id="gradeBadge" class="text-5xl font-black text-emerald-600 leading-none mt-1 transition-all duration-300">
                     A
                 </span>
             </div>
-
-            <!-- Image du téléphone (à fleur du bas, à droite) -->
-            <img id="gradeProductImg" src="img/visuel-grade.png" alt="Produit gradé" class="h-32 w-auto object-contain shrink-0 -mb-4 -mr-2 z-10 transition-all duration-300">
-        </div>
-    </div>
-
-        <!-- GRADES INFORMATIONAL LIST (Version Whaou & 100% Français) -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div class="flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
-                        <i class="fa-solid fa-layer-group"></i>
-                    </span>
-                    <span class="text-xs font-bold text-slate-900 tracking-wide">Nos 7 grades</span>
-                </div>
-            </div>
-
-            <div class="space-y-2 text-xs">
-                <!-- Grade A -->
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group">
-                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform">
-                        A
-                    </span>
-                    <div class="flex flex-col min-w-0">
-                        <span class="font-bold text-slate-900 text-xs leading-tight">Comme neuf</span>
-                        <span class="text-[11px] text-slate-500 truncate">Aucun défaut. Aucune marque ni rayure.</span>
-                    </div>
-                </div>
-
-                <!-- Grade A- -->
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group">
-                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-                        A-
-                    </span>
-                    <div class="flex flex-col min-w-0">
-                        <span class="font-bold text-slate-900 text-xs leading-tight">Excellent état</span>
-                        <span class="text-[11px] text-slate-500 truncate">Traces minimes, invisibles à 20 cm.</span>
-                    </div>
-                </div>
-
-                <!-- Grade B -->
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group">
-                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-emerald-400 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-400/20 group-hover:scale-105 transition-transform">
-                        B
-                    </span>
-                    <div class="flex flex-col min-w-0">
-                        <span class="font-bold text-slate-900 text-xs leading-tight">Très bon état</span>
-                        <span class="text-[11px] text-slate-500 truncate">Traces d'usure légères, micro-rayures.</span>
-                    </div>
-                </div>
-
-                <!-- Grade C -->
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-amber-200 hover:bg-amber-50/30 transition-all group">
-                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                        C
-                    </span>
-                    <div class="flex flex-col min-w-0">
-                        <span class="font-bold text-slate-900 text-xs leading-tight">Bon état</span>
-                        <span class="text-[11px] text-slate-500 truncate">Rayures visibles ou petits impacts.</span>
-                    </div>
-                </div>
-
-                <!-- Grade C- -->
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-amber-200 hover:bg-amber-50/30 transition-all group">
-                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-amber-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform">
-                        C-
-                    </span>
-                    <div class="flex flex-col min-w-0">
-                        <span class="font-bold text-slate-900 text-xs leading-tight">État moyen</span>
-                        <span class="text-[11px] text-slate-500 truncate">Rayures et marques plus nombreuses.</span>
-                    </div>
-                </div>
-
-                <!-- Grade D -->
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-rose-200 hover:bg-rose-50/30 transition-all group">
-                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-500/20 group-hover:scale-105 transition-transform">
-                        D
-                    </span>
-                    <div class="flex flex-col min-w-0">
-                        <span class="font-bold text-slate-900 text-xs leading-tight">Très abîmé</span>
-                        <span class="text-[11px] text-slate-500 truncate">Impacts ou rayures importantes.</span>
-                    </div>
-                </div>
-
-                <!-- Grade D- -->
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-rose-200 hover:bg-rose-50/30 transition-all group">
-                    <span class="w-8 h-8 rounded-xl font-black text-xs bg-rose-700 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-700/20 group-hover:scale-105 transition-transform">
-                        D-
-                    </span>
-                    <div class="flex flex-col min-w-0">
-                        <span class="font-bold text-slate-900 text-xs leading-tight">Endommagé</span>
-                        <span class="text-[11px] text-slate-500 truncate">Élément brisé mais fonctionnel.</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <!-- QUICK TEST BUTTONS (Captures style) -->
-        <div class="space-y-2.5">
-            <button onclick="setBestAnswers()" class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2">
-                <i class="fa-solid fa-thumbs-up text-sm"></i> CHOISIR LES MEILLEURES RÉPONSES
+        <!-- QUICK TEST BUTTONS -->
+        <div class="space-y-2">
+            <button onclick="setBestAnswers()" class="w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-thumbs-up text-xs"></i> MEILLEURES RÉPONSES
             </button>
-            <button onclick="setWorstAnswers()" class="w-full py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-600/20 transition-all flex items-center justify-center gap-2">
-                <i class="fa-solid fa-thumbs-down text-sm"></i> CHOISIR LES PIRES RÉPONSES
+            <button onclick="setWorstAnswers()" class="w-full py-2.5 px-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] rounded-xl shadow-md shadow-rose-600/20 transition-all flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-thumbs-down text-xs"></i> PIRES RÉPONSES
             </button>
         </div>
 
@@ -338,18 +276,18 @@
     let scores = { q1: 0, q2: 0, q3: 0, q4: 0, q5: 0 };
 
     const gradesMap = [
-        { code: "A", name: "Like new", desc: "Aucun défaut. Aucune marque ni rayure.", color: "bg-emerald-600", textColor: "text-emerald-700" },
-        { code: "A-", name: "Excellent", desc: "Très légères traces, invisibles à 20cm.", color: "bg-emerald-500", textColor: "text-emerald-600" },
-        { code: "B", name: "Very good", desc: "Traces légères, micro-rayures fines.", color: "bg-emerald-400", textColor: "text-emerald-600" },
-        { code: "C", name: "Good", desc: "Rayures visibles ou petits impacts légers.", color: "bg-amber-500", textColor: "text-amber-700" },
-        { code: "C-", name: "Average", desc: "Rayures plus nombreuses et marquées.", color: "bg-amber-600", textColor: "text-amber-700" },
-        { code: "D", name: "Heavily used", desc: "Impacts ou rayures importantes.", color: "bg-rose-500", textColor: "text-rose-600" },
-        { code: "D-", name: "Damaged", desc: "Élément brisé mais appareil fonctionnel.", color: "bg-rose-700", textColor: "text-rose-700" }
+        { code: "A", name: "Comme neuf", desc: "Aucun défaut. Aucune marque ni rayure.", color: "text-emerald-600" },
+        { code: "A-", name: "Excellent", desc: "Très légères traces, invisibles à 20cm.", color: "text-emerald-500" },
+        { code: "B", name: "Très bon état", desc: "Traces légères, micro-rayures fines.", color: "text-emerald-400" },
+        { code: "C", name: "Bon état", desc: "Rayures visibles ou petits impacts légers.", color: "text-amber-500" },
+        { code: "C-", name: "État moyen", desc: "Rayures plus nombreuses et marquées.", color: "text-amber-600" },
+        { code: "D", name: "Très abîmé", desc: "Impacts ou rayures importantes.", color: "text-rose-500" },
+        { code: "D-", name: "Endommagé", desc: "Élément brisé mais appareil fonctionnel.", color: "text-rose-700" }
     ];
 
     function selectCategory(catKey) {
         document.querySelectorAll('.cat-btn').forEach(btn => {
-            btn.className = "cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-bold text-xs flex flex-col items-center gap-1.5 transition-all";
+            btn.className = "cat-btn flex-1 min-w-[105px] py-2.5 px-3 rounded-xl border-2 border-transparent bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-1.5 transition-all shadow-sm";
         });
         const activeBtn = document.getElementById('cat-' + catKey);
         if (activeBtn) {
@@ -386,13 +324,10 @@
 
         if (badge) {
             badge.innerText = res.code;
-            badge.className = `w-20 h-20 rounded-2xl ${res.color} text-white flex items-center justify-center text-6xl font-black shadow-lg shadow-slate-200 transition-all duration-300 scale-105`;
+            badge.className = `text-5xl font-black ${res.color} leading-none mt-1 transition-all duration-300 scale-105`;
             setTimeout(() => badge.classList.remove('scale-105'), 200);
         }
-        if (gName) {
-            gName.innerText = res.name;
-            gName.className = `text-lg font-bold ${res.textColor} block leading-tight`;
-        }
+        if (gName) gName.innerText = res.name;
         if (gDesc) gDesc.innerText = res.desc;
     }
 
