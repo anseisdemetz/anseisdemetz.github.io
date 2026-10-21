@@ -214,7 +214,7 @@
     </div>
 </div>
 
-<!-- SIDEBAR FILTER DRAWER (Version Refondue) -->
+<!-- SIDEBAR FILTER DRAWER -->
 <div id="trxFilterDrawerBackdrop" onclick="closeTrxFilterDrawer()" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity"></div>
 
 <div id="trxFilterDrawer" class="fixed top-0 right-0 h-full w-80 sm:w-[420px] bg-white shadow-2xl border-l border-slate-200 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
@@ -226,7 +226,7 @@
             </div>
             <div>
                 <h3 class="text-base font-bold text-slate-900">Filtres avancés</h3>
-                <p class="text-[11px] text-slate-400">Affinezer vos résultats de transactions</p>
+                <p class="text-[11px] text-slate-400">Affiner vos résultats de transactions</p>
             </div>
         </div>
         <button onclick="closeTrxFilterDrawer()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center">
@@ -244,13 +244,36 @@
             </span>
             <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-lg">
                 <label class="cursor-pointer text-center">
-                    <input type="radio" name="trxDateType" value="relative" checked class="sr-only peer">
+                    <input type="radio" name="trxDateType" value="relative" checked onclick="switchDateType('relative')" class="sr-only peer">
                     <span class="block py-1.5 rounded-md text-xs font-semibold text-slate-600 peer-checked:bg-white peer-checked:text-emerald-700 peer-checked:shadow-sm transition">Date relative</span>
                 </label>
                 <label class="cursor-pointer text-center">
-                    <input type="radio" name="trxDateType" value="range" class="sr-only peer">
+                    <input type="radio" name="trxDateType" value="range" onclick="switchDateType('range')" class="sr-only peer">
                     <span class="block py-1.5 rounded-md text-xs font-semibold text-slate-600 peer-checked:bg-white peer-checked:text-emerald-700 peer-checked:shadow-sm transition">Plage de dates</span>
                 </label>
+            </div>
+
+            <!-- CONTENEUR 1 : DATE RELATIVE (Liste déroulante) -->
+            <div id="containerDateRelative" class="pt-1">
+                <select id="selectRelativeDate" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                    <option value="today">Aujourd'hui</option>
+                    <option value="yesterday">Hier</option>
+                    <option value="this_week">Cette semaine</option>
+                    <option value="last_week">La semaine dernière</option>
+                    <option value="from_last_month">À partir du mois dernier</option>
+                </select>
+            </div>
+
+            <!-- CONTENEUR 2 : PLAGE DE DATES (Deux champs date) -->
+            <div id="containerDateRange" class="hidden space-y-2 pt-1">
+                <div>
+                    <label class="block text-[10px] font-semibold text-slate-500 mb-1">Date de début</label>
+                    <input type="date" id="filterStartDate" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-semibold text-slate-500 mb-1">Date de fin</label>
+                    <input type="date" id="filterEndDate" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
             </div>
         </div>
 
@@ -376,6 +399,19 @@
         if (drawer) drawer.classList.add('translate-x-full');
     }
 
+    function switchDateType(type) {
+        const containerRelative = document.getElementById('containerDateRelative');
+        const containerRange = document.getElementById('containerDateRange');
+
+        if (type === 'relative') {
+            if (containerRelative) containerRelative.classList.remove('hidden');
+            if (containerRange) containerRange.classList.add('hidden');
+        } else {
+            if (containerRange) containerRange.classList.remove('hidden');
+            if (containerRelative) containerRelative.classList.add('hidden');
+        }
+    }
+
     function applyTrxFilters() {
         const numTrans = document.getElementById('filterNumTrans').value.toLowerCase();
         const brand = document.getElementById('filterBrand').value.toLowerCase();
@@ -403,14 +439,21 @@
     }
 
     function resetTrxFilters() {
-        document.getElementById('filterNumTrans').value = '';
-        document.getElementById('filterBrand').value = '';
-        document.getElementById('filterProduct').value = '';
-        document.getElementById('filterCategory').value = '';
-        document.getElementById('filterGradeValide').value = '';
-        document.getElementById('filterGradeInitial').value = '';
-        document.getElementById('filterTypeTva').value = '';
-        document.getElementById('filterEtat').value = '';
+        switchDateType('relative');
+        const relRadio = document.querySelector('input[name="trxDateType"][value="relative"]');
+        if (relRadio) relRadio.checked = true;
+
+        if (document.getElementById('selectRelativeDate')) document.getElementById('selectRelativeDate').value = 'today';
+        if (document.getElementById('filterStartDate')) document.getElementById('filterStartDate').value = '';
+        if (document.getElementById('filterEndDate')) document.getElementById('filterEndDate').value = '';
+        if (document.getElementById('filterNumTrans')) document.getElementById('filterNumTrans').value = '';
+        if (document.getElementById('filterBrand')) document.getElementById('filterBrand').value = '';
+        if (document.getElementById('filterProduct')) document.getElementById('filterProduct').value = '';
+        if (document.getElementById('filterCategory')) document.getElementById('filterCategory').value = '';
+        if (document.getElementById('filterGradeValide')) document.getElementById('filterGradeValide').value = '';
+        if (document.getElementById('filterGradeInitial')) document.getElementById('filterGradeInitial').value = '';
+        if (document.getElementById('filterTypeTva')) document.getElementById('filterTypeTva').value = '';
+        if (document.getElementById('filterEtat')) document.getElementById('filterEtat').value = '';
 
         renderTransactionsTable();
         closeTrxFilterDrawer();
