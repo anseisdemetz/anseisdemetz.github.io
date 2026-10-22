@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic et Notation de l'Appareil</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Police Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 p-4 sm:p-6 lg:p-8 min-h-screen">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- CATEGORIES TABS HEADER -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm mb-6 flex items-center justify-between gap-2 overflow-x-auto shrink-0">
+            <button onclick="selectCategory('mobile')" id="cat-mobile" class="cat-btn flex-1 min-w-[105px] py-3 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-2 transition-all shadow-sm">
+                <img src="img/mobile.png" alt="MOBILE" class="h-16 w-auto object-contain">
+                <span>MOBILE</span>
+            </button>
+            <button onclick="selectCategory('tablet')" id="cat-tablet" class="cat-btn flex-1 min-w-[105px] py-3 px-3 rounded-xl border-2 border-transparent bg-slate-50 hover:bg-emerald-50/20 text-slate-600 font-bold text-xs flex flex-col items-center gap-2 transition-all">
+                <img src="img/tablette.png" alt="MOBILE" class="h-16 w-auto object-contain">
+                <span>TABLETTE</span>
+            </button>
+            <button onclick="selectCategory('console')" id="cat-console" class="cat-btn flex-1 min-w-[105px] py-3 px-3 rounded-xl border-2 border-transparent bg-slate-50 hover:bg-emerald-50/20 text-slate-600 font-bold text-xs flex flex-col items-center gap-2 transition-all">
+                <img src="img/console.png" alt="MOBILE" class="h-16 w-auto object-contain">
+                <span>CONSOLE</span>
+            </button>
+            <button onclick="selectCategory('watch')" id="cat-watch" class="cat-btn flex-1 min-w-[105px] py-3 px-3 rounded-xl border-2 border-transparent bg-slate-50 hover:bg-emerald-50/20 text-slate-600 font-bold text-xs flex flex-col items-center gap-2 transition-all">
+                <img src="img/montre.png" alt="MOBILE" class="h-16 w-auto object-contain">
+                <span>SMARTWATCH</span>
+            </button>
+            <button onclick="selectCategory('audio')" id="cat-audio" class="cat-btn flex-1 min-w-[105px] py-3 px-3 rounded-xl border-2 border-transparent bg-slate-50 hover:bg-emerald-50/20 text-slate-600 font-bold text-xs flex flex-col items-center gap-2 transition-all">
+                <img src="img/audio.png" alt="MOBILE" class="h-16 w-auto object-contain">
+                <span>AUDIO</span>
+            </button>
+            <button onclick="selectCategory('ordinateur')" id="cat-ordinateur" class="cat-btn flex-1 min-w-[105px] py-3 px-3 rounded-xl border-2 border-transparent bg-slate-50 hover:bg-emerald-50/20 text-slate-600 font-bold text-xs flex flex-col items-center gap-2 transition-all">
+                <img src="img/ordinateur.png" alt="MOBILE" class="h-16 w-auto object-contain">
+                <span>ORDINATEUR</span>
+            </button>
+        </div>
+
+        <!-- MAIN WORKSPACE: QUESTIONNAIRE + RESULT SIDEBAR -->
+        <div class="flex flex-col lg:flex-row gap-6 items-start">
+
+            <!-- LEFT COLUMN: QUESTIONNAIRE -->
+            <div class="flex-1 space-y-6 w-full">
+
+                <!-- QUESTION 1 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">1</span>
+                        <h3 class="text-sm font-bold text-slate-800">Le mobile est-il fonctionnel ?</h3>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <label onclick="setScore(1, 0)" class="q1-opt group relative flex items-start gap-3 p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all shadow-sm">
+                            <input type="radio" name="q1" checked class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Oui</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Il s'allume, s'éteint et se charge complètement. Le déblocage par reconnaissance faciale et/ou digitale est fonctionnel. Toutes les fonctionnalités sont opérationnelles.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(1, 4)" class="q1-opt group relative flex items-start gap-3 p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all">
+                            <input type="radio" name="q1" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Non</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Il ne s'allume pas ou ne s'éteint pas et/ou ne charge pas normalement. Le déblocage par reconnaissance faciale et/ou digitale n'est pas fonctionnel. Il y a au moins un défaut de fonctionnement.</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- QUESTION 2 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">2</span>
+                        <h3 class="text-sm font-bold text-slate-800">Quel est l'état fonctionnel de l'écran et des boutons ?</h3>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <label onclick="setScore(2, 0)" class="q2-opt group relative flex items-start gap-3 p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all shadow-sm">
+                            <input type="radio" name="q2" checked class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Parfait état fonctionnel</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">L'écran tactile est 100% fonctionnel. Tous les boutons fonctionnent (volume, on/off, verrouillage silencieux). Tous les éléments sont présents (tiroir SIM / vis / stylet...). Charnière fonctionnelle.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(2, 3)" class="q2-opt group relative flex items-start gap-3 p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all">
+                            <input type="radio" name="q2" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Abîmé et/ou non fonctionnel</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Dysfonctionnement écran (tactile, pixel manquant / tache / image fantôme et/ou figée / rétro-éclairage) Boutons / touches KO ou manquants (adaptateur SIM, vis...). Charnière défectueuse, ouverture incomplète.</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- QUESTION 3 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">3</span>
+                        <h3 class="text-sm font-bold text-slate-800">Quel est l'état de l'écran du mobile ?</h3>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <label onclick="setScore(3, 0)" class="q3-opt p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all flex items-start gap-3 shadow-sm">
+                            <input type="radio" name="q3" checked class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Comme neuf - Intact</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Aucun défaut. Aucune marque. Aucune rayure ou impact.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(3, 1)" class="q3-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                            <input type="radio" name="q3" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Micro rayure(s) / Micro impact(s)</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Légère trace d'utilisation. Rayure(s) ou impact(s) non sensible(s) à l'ongle, invisible à 20 cm.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(3, 2)" class="q3-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                            <input type="radio" name="q3" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Rayure(s) / Impact(s)</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Rayure(s) marquée(s) sensible(s) à l'ongle, visible(s) à 20 cm. Rayure(s) étendue(s). Impact(s) ou altération(s) visible(s) à 20 cm.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(3, 3)" class="q3-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                            <input type="radio" name="q3" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Très abîmé - Cassé</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Fissuré, cassé, éclat, décollement.</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- QUESTION 4 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">4</span>
+                        <h3 class="text-sm font-bold text-slate-800">Quel est l'état de l'arrière du mobile ?</h3>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <label onclick="setScore(4, 0)" class="q4-opt p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all flex items-start gap-3 shadow-sm">
+                            <input type="radio" name="q4" checked class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Comme neuf - Intact</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Aucun défaut. Aucune marque. Aucune rayure ou impact.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(4, 1)" class="q4-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                            <input type="radio" name="q4" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Micro rayure(s) / Micro impact(s)</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Légère trace d'utilisation. Rayure(s) ou impact(s) non sensible(s) à l'ongle, invisible à 20 cm.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(4, 2)" class="q4-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                            <input type="radio" name="q4" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Rayure(s) / Impact(s)</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Rayure(s) marquée(s) sensible(s) à l'ongle, visible(s) à 20 cm. Rayure(s) étendue(s). Impact(s) ou altération(s) visible(s) à 20 cm.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(4, 3)" class="q4-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                            <input type="radio" name="q4" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Très abîmé - Cassé</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Arrière brisé - fissure(s) - éclat(s) - décoloration - décollement... Objectif(s) photo endommagé(s)</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- QUESTION 5 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">5</span>
+                        <h3 class="text-sm font-bold text-slate-800">Quel est l'état du contour/châssis du mobile ?</h3>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <label onclick="setScore(5, 0)" class="q5-opt p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 cursor-pointer transition-all flex items-start gap-3 shadow-sm">
+                            <input type="radio" name="q5" checked class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Comme neuf - Intact</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Aucun défaut. Aucune marque. Aucune rayure ou impact.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(5, 1)" class="q5-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                            <input type="radio" name="q5" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Micro rayure(s) / Micro impact(s)</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Légère trace d'utilisation. Rayure(s) ou impact(s) non sensible(s) à l'ongle, invisible à 20 cm.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(5, 2)" class="q5-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                            <input type="radio" name="q5" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Rayure(s) / Impact(s)</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Rayure(s) marquée(s) sensible(s) à l'ongle, visible(s) à 20 cm. Rayure(s) étendue(s). Impact(s) ou altération(s) visible(s) à 20 cm.</span>
+                            </div>
+                        </label>
+                        <label onclick="setScore(5, 3)" class="q5-opt p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition-all flex items-start gap-3">
+                            <input type="radio" name="q5" class="hidden peer">
+                            <div class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-white flex items-center justify-center shrink-0 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-all mt-0.5">
+                                <i class="fa-solid fa-check text-white text-[11px] leading-none hidden peer-checked:block"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm block mb-1">Très abîmé - Cassé</span>
+                                <span class="text-[11px] text-slate-500 leading-normal block">Fissuré, fendu, choc, tordu.</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: FINAL RESULT SIDEBAR -->
+            <div class="w-full lg:w-64 shrink-0 space-y-4 lg:sticky lg:top-6">
+                
+                <!-- RESULT BOX -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+                    <h2 class="text-base font-bold text-slate-900 mb-3">Résultat Final</h2>
+                    
+                    <div class="bg-emerald-50/60 border border-emerald-100 rounded-2xl p-5 flex flex-col items-center justify-center text-center relative overflow-hidden">
+                        <span class="text-xs uppercase tracking-wider font-bold text-slate-500">Grade</span>
+                        <span id="gradeBadge" class="text-5xl font-black text-emerald-600 leading-none my-2 transition-transform duration-200">
+                            A
+                        </span>
+                        <span id="gradeName" class="text-sm font-bold text-slate-800">Comme neuf</span>
+                        <span id="gradeDesc" class="text-[11px] text-slate-500 mt-1 leading-relaxed">Aucun défaut. Aucune marque ni rayure.</span>
+                    </div>
+                </div>
+
+                <!-- QUICK TEST BUTTONS -->
+                <div class="space-y-2">
+                    <button onclick="setBestAnswers()" class="w-full py-3 px-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-thumbs-up text-xs"></i> MEILLEURES RÉPONSES
+                    </button>
+                    <button onclick="setWorstAnswers()" class="w-full py-3 px-3 bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white font-bold text-xs rounded-xl shadow-md shadow-rose-600/20 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-thumbs-down text-xs"></i> PIRES RÉPONSES
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SCRIPT LOGIQUE -->
+    <script>
+        let scores = { q1: 0, q2: 0, q3: 0, q4: 0, q5: 0 };
+
+        const gradesMap = [
+            { code: "A", name: "Comme neuf", desc: "Aucun défaut. Aucune marque ni rayure.", color: "text-emerald-600" },
+            { code: "A-", name: "Excellent", desc: "Très légères traces, invisibles à 20cm.", color: "text-emerald-500" },
+            { code: "B", name: "Très bon état", desc: "Traces légères, micro-rayures fines.", color: "text-emerald-500" },
+            { code: "C", name: "Bon état", desc: "Rayures visibles ou petits impacts légers.", color: "text-amber-500" },
+            { code: "C-", name: "État moyen", desc: "Rayures plus nombreuses et marquées.", color: "text-amber-600" },
+            { code: "D", name: "Très abîmé", desc: "Impacts ou rayures importantes.", color: "text-rose-500" },
+            { code: "D-", name: "Endommagé", desc: "Élément brisé mais appareil fonctionnel.", color: "text-rose-700" }
+        ];
+
+        function selectCategory(catKey) {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.className = "cat-btn flex-1 min-w-[105px] py-3 px-3 rounded-xl border-2 border-transparent bg-slate-50 hover:bg-emerald-50/20 text-slate-600 font-bold text-xs flex flex-col items-center gap-2 transition-all";
+            });
+            const activeBtn = document.getElementById('cat-' + catKey);
+            if (activeBtn) {
+                activeBtn.className = "cat-btn flex-1 min-w-[105px] py-3 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50/40 text-emerald-700 font-bold text-xs flex flex-col items-center gap-2 transition-all shadow-sm";
+            }
+        }
+
+        function setScore(qNum, value) {
+            scores['q' + qNum] = value;
+            // Met à jour l'affichage après le cycle d'événement
+            setTimeout(() => {
+                updateCardStyles(qNum);
+                calculateGrade();
+            }, 0);
+        }
+
+        function updateCardStyles(qNum) {
+            const labels = document.querySelectorAll(`.q${qNum}-opt`);
+            labels.forEach(lbl => {
+                const radio = lbl.querySelector('input[type="radio"]');
+                if (radio && radio.checked) {
+                    lbl.classList.remove('border-slate-200', 'bg-white');
+                    lbl.classList.add('border-emerald-500', 'bg-emerald-50/30', 'shadow-sm');
+                } else {
+                    lbl.classList.remove('border-emerald-500', 'bg-emerald-50/30', 'shadow-sm');
+                    lbl.classList.add('border-slate-200', 'bg-white');
+                }
+            });
+        }
+
+        function calculateGrade() {
+            const totalPenalties = scores.q1 + scores.q2 + scores.q3 + scores.q4 + scores.q5;
+            let gradeIdx = Math.min(totalPenalties, gradesMap.length - 1);
+            
+            const res = gradesMap[gradeIdx];
+            const badge = document.getElementById('gradeBadge');
+            const gName = document.getElementById('gradeName');
+            const gDesc = document.getElementById('gradeDesc');
+
+            if (badge) {
+                badge.innerText = res.code;
+                badge.className = `text-5xl font-black ${res.color} leading-none my-2 transition-transform duration-200 scale-110`;
+                setTimeout(() => badge.classList.remove('scale-110'), 200);
+            }
+            if (gName) gName.innerText = res.name;
+            if (gDesc) gDesc.innerText = res.desc;
+        }
+
+        function setBestAnswers() {
+            for (let i = 1; i <= 5; i++) {
+                const firstRadio = document.querySelectorAll(`input[name="q${i}"]`)[0];
+                if (firstRadio) {
+                    firstRadio.checked = true;
+                    scores['q' + i] = 0;
+                    updateCardStyles(i);
+                }
+            }
+            calculateGrade();
+        }
+
+        function setWorstAnswers() {
+            const worstVals = { q1: 4, q2: 3, q3: 3, q4: 3, q5: 3 };
+            for (let i = 1; i <= 5; i++) {
+                const radios = document.querySelectorAll(`input[name="q${i}"]`);
+                const lastRadio = radios[radios.length - 1];
+                if (lastRadio) {
+                    lastRadio.checked = true;
+                    scores['q' + i] = worstVals['q' + i];
+                    updateCardStyles(i);
+                }
+            }
+            calculateGrade();
+        }
+
+        // Initialisation
+        calculateGrade();
+    </script>
+</body>
+</html>
