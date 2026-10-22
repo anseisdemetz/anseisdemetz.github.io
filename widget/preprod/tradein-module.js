@@ -42,7 +42,8 @@
         surveyAnswers: {},
         imei: null,
         grade: null,
-        price: null
+        price: null,
+        paymentMethod: null // 'cb' | 'iban'
     };
 
     let productCache = [];
@@ -83,6 +84,7 @@
         appState.grade = null;
         appState.price = null;
         appState.imei = null;
+        appState.paymentMethod = null;
 
         const searchInput = document.getElementById('tradein-search-input');
         if (searchInput) searchInput.value = '';
@@ -117,6 +119,8 @@
 
         const cartSummaryBlock = document.getElementById('step4-cart-summary-block');
         if (cartSummaryBlock) cartSummaryBlock.classList.add('hidden');
+
+        closePaymentModals();
 
         goToStep(1);
     }
@@ -371,7 +375,7 @@
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 4 -->
+                    <!-- ÉTAPE 4 - MODIFIÉE -->
                     <div id="step-4" class="step-content hidden space-y-4">
                         <div class="flex items-center space-x-2">
                             <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
@@ -405,26 +409,23 @@
                             <p id="txt-step4-swikly-info" class="text-gray-700"></p>
                         </div>
 
-                        <div class="space-y-3 pt-1">
-                            <div>
-                                <label id="txt-step4-card-number" class="block text-xs font-medium text-gray-700 mb-1"></label>
-                                <div class="relative">
-                                    <input type="text" placeholder="1234 5678 9012 3456" value="1234 5678 9012 3456" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
-                                    <div class="absolute right-3 top-2.5 flex space-x-1">
-                                        <span class="bg-blue-900 text-white font-bold text-[9px] px-1.5 py-0.5 rounded">VISA</span>
-                                        <span class="bg-red-600 text-white font-bold text-[9px] px-1.5 py-0.5 rounded">MC</span>
+                        <!-- SÉLECTION MODE DE PAIEMENT : CB & IBAN (SAISIE DIRECTE SUPPRIMÉE) -->
+                        <div class="space-y-3 pt-2">
+                            <label class="block text-xs font-bold text-gray-800">Choisissez votre moyen de règlement :</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button id="btn-select-cb" type="button" class="p-4 border-2 border-gray-200 hover:border-blue-600 bg-white hover:bg-blue-50/30 rounded-xl flex flex-col items-center justify-center space-y-2 transition text-center group">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+                                        <i class="fa-solid fa-credit-card"></i>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label id="txt-step4-expiry-date" class="block text-xs font-medium text-gray-700 mb-1"></label>
-                                    <input type="text" placeholder="MM / AA" value="08 / 28" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
-                                </div>
-                                <div>
-                                    <label id="txt-step4-cvv" class="block text-xs font-medium text-gray-700 mb-1"></label>
-                                    <input type="text" placeholder="123" value="888" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
-                                </div>
+                                    <span class="font-bold text-xs text-gray-800">Carte Bancaire (CB)</span>
+                                </button>
+
+                                <button id="btn-select-iban" type="button" class="p-4 border-2 border-gray-200 hover:border-blue-600 bg-white hover:bg-blue-50/30 rounded-xl flex flex-col items-center justify-center space-y-2 transition text-center group">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+                                        <i class="fa-solid fa-building-columns"></i>
+                                    </div>
+                                    <span class="font-bold text-xs text-gray-800">Coordonnées IBAN</span>
+                                </button>
                             </div>
                         </div>
 
@@ -460,6 +461,90 @@
                     </div>
                 </div>
 
+            </div>
+
+            <!-- POPIN DE SAISIE DE CARTE BANCAIRE (CB) -->
+            <div id="payment-modal-cb" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 text-gray-800">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                        <h3 class="font-bold text-base text-gray-900 flex items-center">
+                            <i class="fa-solid fa-credit-card text-blue-600 mr-2"></i> Empreinte Carte Bancaire
+                        </h3>
+                        <button type="button" onclick="window.TradeInModule.closePaymentModals()" class="text-gray-400 hover:text-gray-600 p-1">
+                            <i class="fa-solid fa-xmark text-lg"></i>
+                        </button>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Numéro de carte</label>
+                            <div class="relative">
+                                <input type="text" placeholder="1234 5678 9012 3456" value="1234 5678 9012 3456" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                                <div class="absolute right-3 top-2.5 flex space-x-1">
+                                    <span class="bg-blue-900 text-white font-bold text-[9px] px-1.5 py-0.5 rounded">VISA</span>
+                                    <span class="bg-red-600 text-white font-bold text-[9px] px-1.5 py-0.5 rounded">MC</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Date d'expiration</label>
+                                <input type="text" placeholder="MM / AA" value="08 / 28" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Cryptogramme (CVV)</label>
+                                <input type="text" placeholder="123" value="888" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-gray-100 flex space-x-2">
+                        <button type="button" onclick="window.TradeInModule.closePaymentModals()" class="w-1/3 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 text-xs transition">Annuler</button>
+                        <button type="button" onclick="window.TradeInModule.confirmPayment('cb')" class="w-2/3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition shadow">Valider la Carte</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POPIN DE SAISIE DES COORDONNÉES IBAN -->
+            <div id="payment-modal-iban" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 text-gray-800">
+                    <div class="flex justify-between items-start border-b border-gray-100 pb-3">
+                        <h3 class="font-bold text-lg text-slate-900">Coordonnées bancaires</h3>
+                        <button type="button" onclick="window.TradeInModule.closePaymentModals()" class="text-gray-400 hover:text-gray-600 p-1">
+                            <i class="fa-solid fa-xmark text-lg"></i>
+                        </button>
+                    </div>
+
+                    <div class="space-y-3 text-xs leading-relaxed text-slate-700">
+                        <p>
+                            Les virements SEPA font désormais l'objet d'une <strong class="text-slate-900">vérification du bénéficiaire</strong>. Assurez-vous que <strong class="text-slate-900">le nom du titulaire et l'IBAN indiqués correspondent exactement à ceux enregistrés auprès de votre banque</strong>, afin d'éviter tout blocage de paiement.
+                        </p>
+
+                        <p class="text-slate-600">Veuillez entrer les informations du compte à utiliser.</p>
+
+                        <div class="flex items-center space-x-2 text-sky-600 bg-sky-50/60 p-2.5 rounded-lg border border-sky-100 text-xs">
+                            <i class="fa-solid fa-circle-info text-sky-500"></i>
+                            <span>Seuls les comptes bancaires situés dans la zone SEPA sont acceptés.</span>
+                        </div>
+
+                        <div class="space-y-3 pt-1">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-900 mb-1.5">Nom du bénéficiaire*</label>
+                                <input type="text" id="iban-beneficiary-input" value="Raoul Lafoule" class="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-900 mb-1.5">IBAN*</label>
+                                <input type="text" id="iban-number-input" placeholder="FRXX XXXX XXXX XXXX XXXX XXXX XXX" value="FR76 3000 6000 0112 3456 7890 189" class="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-gray-100 flex space-x-2">
+                        <button type="button" onclick="window.TradeInModule.closePaymentModals()" class="w-1/3 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 text-xs transition">Annuler</button>
+                        <button type="button" onclick="window.TradeInModule.confirmPayment('iban')" class="w-2/3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition shadow">Valider l'IBAN</button>
+                    </div>
+                </div>
             </div>
         `;
 
@@ -514,9 +599,6 @@
         let swiklyTxt = t.step4.swikly_info || "";
         document.getElementById('txt-step4-swikly-info').innerHTML = swiklyTxt.replace(/\{amount\}|147\s*€/g, '<strong id="swikly-amount-summary">0 €</strong>');
 
-        document.getElementById('txt-step4-card-number').textContent = t.step4.card_number;
-        document.getElementById('txt-step4-expiry-date').textContent = t.step4.expiry_date;
-        document.getElementById('txt-step4-cvv').textContent = t.step4.cvv;
         document.getElementById('txt-step4-secure-info').textContent = t.step4.secure_info;
         document.getElementById('btn-back-step4').textContent = t.common.back;
         document.getElementById('btn-finish-process').textContent = t.step4.btn_validate;
@@ -541,6 +623,13 @@
         }
     }
 
+    function closePaymentModals() {
+        const modalCb = document.getElementById('payment-modal-cb');
+        const modalIban = document.getElementById('payment-modal-iban');
+        if (modalCb) modalCb.classList.add('hidden');
+        if (modalIban) modalIban.classList.add('hidden');
+    }
+
     function attachEvents() {
         document.getElementById('tradein-close-btn').onclick = () => TradeInModule.close();
         document.getElementById('tradein-modal-overlay').onclick = (e) => {
@@ -554,6 +643,15 @@
         document.getElementById('btn-back-step3').onclick = () => goToStep(2);
         document.getElementById('btn-back-step4').onclick = () => goToStep(3);
         document.getElementById('btn-finish-process').onclick = finishProcess;
+
+        // ÉTAPE 4 : Ouverture des Sous-Popins de Paiement CB et IBAN
+        document.getElementById('btn-select-cb').onclick = () => {
+            document.getElementById('payment-modal-cb').classList.remove('hidden');
+        };
+
+        document.getElementById('btn-select-iban').onclick = () => {
+            document.getElementById('payment-modal-iban').classList.remove('hidden');
+        };
 
         // VERIFICATION DE SAISIE DE L'IMEI A L'ETAPE 3
         document.getElementById('btn-continue-step3').onclick = () => {
@@ -575,7 +673,6 @@
             imeiInput.classList.remove('border-red-500');
             appState.imei = val;
             
-            // Passage direct à l'étape 4
             goToStep(4);
         };
 
@@ -1120,6 +1217,12 @@
         }
     }
 
+    function confirmPayment(type) {
+        appState.paymentMethod = type;
+        closePaymentModals();
+        finishProcess();
+    }
+
     function finishProcess() {
         const tradeInValue = appState.price || 0;
         const initialCart = appState.cartAmount;
@@ -1132,6 +1235,7 @@
                 initialCartAmount: initialCart,
                 finalCartAmount: finalCart,
                 imei: appState.imei,
+                paymentMethod: appState.paymentMethod || 'cb',
                 lang: appState.lang
             }
         });
@@ -1234,6 +1338,8 @@
                 resetState();
             }, 300);
         },
+        closePaymentModals: closePaymentModals,
+        confirmPayment: confirmPayment,
         _selectAnswer: _selectAnswer
     };
 
