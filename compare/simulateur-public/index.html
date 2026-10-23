@@ -331,6 +331,65 @@
 
         </div>
 
+        <!-- Encart Bonus & Offres en cours (Carrousel) -->
+        <div class="p-6 sm:p-7 rounded-3xl bg-slate-50/70 border border-slate-200/90 shadow-sm space-y-5">
+          <!-- En-tête du bloc -->
+          <div class="flex items-center justify-between gap-4">
+            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">
+              En plus du prix de reprise de votre produit,<br class="hidden sm:inline" />
+              bénéficiez des offres bonus en cours :
+            </h3>
+            
+            <!-- Flèches de navigation du carrousel -->
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button type="button" id="bonus-prev" class="w-9 h-9 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-brand-600 hover:border-brand-300 shadow-sm flex items-center justify-center transition" aria-label="Offre précédente">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <button type="button" id="bonus-next" class="w-9 h-9 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-brand-600 hover:border-brand-300 shadow-sm flex items-center justify-center transition" aria-label="Offre suivante">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Carte Bonus Carrousel -->
+          <div class="relative bg-white rounded-2xl border border-slate-200/80 shadow-md p-4 sm:p-6 overflow-hidden">
+            <div id="bonus-card-content" class="grid sm:grid-cols-12 gap-5 items-center transition-opacity duration-300">
+              
+              <!-- Visuel produit / offre (img/bonus.jpg) -->
+              <div class="sm:col-span-5 flex items-center justify-center rounded-xl p-3 ">
+                <img id="bonus-img" src="img/bonus.png" alt="Offre Bonus" class="max-h-56 sm:max-h-64 object-contain" />
+              </div>
+
+              <!-- Détails de l'offre -->
+              <div class="sm:col-span-7 space-y-3.5">
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <span id="bonus-amount" class="inline-flex items-center px-3 py-1 rounded-full text-base font-black bg-brand-500 text-white shadow-sm shadow-brand-500/30">
+                    100€
+                  </span>
+                  <span id="bonus-dates" class="text-xs sm:text-sm font-extrabold text-slate-900 tracking-tight">
+                    Du 12 octobre Au 31 décembre 2026
+                  </span>
+                </div>
+
+                <p id="bonus-desc" class="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
+                  100€ de bonus pour la reprise d'un smartphone à l'achat d'un Samsung Galaxy S21 ou S25 Ultra.
+                </p>
+
+                <div class="pt-2">
+                  <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 bg-brand-50 border border-brand-200 px-3 py-1 rounded-lg">
+                    <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    Cumulable avec votre prix de reprise
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Indicateurs de pagination (dots) -->
+            <div id="bonus-dots" class="flex justify-center items-center gap-2 mt-4 pt-2 border-t border-slate-100"></div>
+          </div>
+        </div>        
+
         <!-- Démarche écologique & Information légale -->
         <div class="py-6 space-y-4">
           <!-- Carte Éco-engagée avec icône fleur et ambiance végétale -->
@@ -915,6 +974,70 @@
       selectionSection.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    // --- GESTION DU CARROUSEL DES BONUS ---
+    const bonusOffers = [
+      {
+        img: 'img/bonus.png',
+        amount: '100€',
+        dates: 'Du 12 octobre Au 31 décembre 2026',
+        desc: "100€ de bonus pour la reprise d'un smartphone à l'achat d'un Samsung Galaxy S21 ou S25 Ultra."
+      },
+      {
+        img: 'img/bonus-02.png',
+        amount: '70€',
+        dates: 'Offre spéciale ce mois-ci',
+        desc: "70€ de bonus supplémentaire pour toute reprise d'un produit Apple réinjecté dans l'achat d'un iPhone 16 ou 17."
+      }
+    ];
+
+    let currentBonusIndex = 0;
+    const bonusImg = document.getElementById('bonus-img');
+    const bonusAmount = document.getElementById('bonus-amount');
+    const bonusDates = document.getElementById('bonus-dates');
+    const bonusDesc = document.getElementById('bonus-desc');
+    const bonusCardContent = document.getElementById('bonus-card-content');
+    const bonusDots = document.getElementById('bonus-dots');
+
+    function renderBonus(index) {
+      if (!bonusOffers.length) return;
+      const offer = bonusOffers[index];
+      
+      bonusCardContent.classList.add('opacity-0');
+      setTimeout(() => {
+        bonusImg.src = offer.img;
+        bonusAmount.textContent = offer.amount;
+        bonusDates.textContent = offer.dates;
+        bonusDesc.textContent = offer.desc;
+        bonusCardContent.classList.remove('opacity-0');
+      }, 150);
+
+      // Met à jour les puces
+      bonusDots.innerHTML = '';
+      bonusOffers.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = `w-2 h-2 rounded-full transition-all ${i === index ? 'w-6 bg-brand-500' : 'bg-slate-300 hover:bg-slate-400'}`;
+        dot.onclick = () => {
+          currentBonusIndex = i;
+          renderBonus(currentBonusIndex);
+        };
+        bonusDots.appendChild(dot);
+      });
+    }
+
+    document.getElementById('bonus-prev')?.addEventListener('click', () => {
+      currentBonusIndex = (currentBonusIndex - 1 + bonusOffers.length) % bonusOffers.length;
+      renderBonus(currentBonusIndex);
+    });
+
+    document.getElementById('bonus-next')?.addEventListener('click', () => {
+      currentBonusIndex = (currentBonusIndex + 1) % bonusOffers.length;
+      renderBonus(currentBonusIndex);
+    });
+
+    // Initialisation
+    renderBonus(currentBonusIndex);
 
     // Lancement au chargement
     renderCategories();
