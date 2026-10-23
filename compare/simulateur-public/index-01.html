@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparecycle | Estimez et Revendez votre Appareil</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts : Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Canvas Confetti pour l'effet Whaou -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              900: '#064e3b',
+            },
+            accentBlue: '#2563eb', // Bleu mis en avant pour les valorisations
+          },
+          boxShadow: {
+            'glow': '0 0 25px -5px rgba(16, 185, 129, 0.3)',
+            'card': '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .fade-in {
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .bg-grid-pattern {
+      background-image: radial-gradient(rgba(16, 185, 129, 0.12) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    /* Scrollbar discrète pour les dropdowns */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col bg-grid-pattern">
+
+  <!-- ==========================================
+       A01. EN-TÊTE (HEADER)
+       ========================================== -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/85 border-b border-slate-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- LOGO OFFICIEL + ICÔNE ANIMÉE -->
+      <a href="#" class="flex items-center gap-3 group">
+        <!-- Icône dynamique rotative conservée -->
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-teal-400 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform shrink-0">
+          <svg class="w-6 h-6 animate-[spin_12s_linear_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </div>
+
+        <!-- Visuel officiel [img/logo.png] avec fallback texte -->
+        <div class="flex items-center">
+          <img src="img/logo.png" 
+               alt="Comparecycle" 
+               class="h-9 w-auto max-w-[180px] object-contain"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          
+          <!-- Fallback gracieux si img/logo.png est absent en local -->
+          <div style="display:none" class="flex flex-col">
+            <span class="text-xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              Compare<span class="text-brand-600">cycle</span>
+            </span>
+            <span class="text-[10px] uppercase tracking-widest font-semibold text-slate-500">Reprise & Éco-tech</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Actions Droite : Langue & Bouton "Je revends" -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        
+        <!-- Sélecteur de Langue -->
+        <div class="relative">
+          <select id="lang-select" class="appearance-none bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-sm font-semibold pl-4 pr-8 py-2.5 rounded-full border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 transition cursor-pointer">
+            <option value="fr">🇫🇷 FR</option>
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-500">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </div>
+
+        <!-- Bouton "Je revends" (Redirection externe) -->
+        <a href="https://www.comparecycle.com" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 bg-slate-900 hover:bg-brand-600 text-white font-semibold text-sm px-5 py-2.5 rounded-full shadow-md hover:shadow-glow transition-all duration-300">
+          <span>Je revends</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       ZONE CENTRALE : WIZARD & RÉSULTAT
+       ========================================== -->
+  <main class="flex-grow max-w-4xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-16">
+    
+    <!-- SECTION FORMULAIRE DE SÉLECTION (A02) -->
+    <section id="selection-section" class="transition-all">
+      
+      <!-- Titre principal -->
+      <div class="text-center mb-10">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Estimez le prix de reprise de votre produit
+        </h1>
+        <p class="text-slate-500 text-base sm:text-lg mt-2 max-w-xl mx-auto">
+          Sélectionnez les détails de votre appareil pour débloquer sa valorisation maximale instantanément.
+        </p>
+      </div>
+
+      <!-- MOTEUR DE RECHERCHE PRÉDICTIF DIRECT (Accès rapide Étape 4) -->
+      <div class="relative max-w-2xl mx-auto mb-10 z-30">
+        <div class="relative flex items-center">
+          <!-- Icône Loupe parfaitement centrée et espacée -->
+          <div class="absolute inset-y-0 left-0 pl-4 sm:pl-5 flex items-center pointer-events-none text-slate-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+
+          <!-- Champ de saisie avec le texte aligné après la loupe -->
+          <input 
+            type="text" 
+            id="quick-search-input" 
+            placeholder="Rechercher par nom du produit ou IMEI." 
+            autocomplete="off"
+            class="w-full pl-11 sm:pl-12 pr-11 py-3.5 bg-white border border-slate-200/90 rounded-2xl shadow-sm text-sm sm:text-base font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+          />
+
+          <!-- Bouton Effacer centré à droite -->
+          <button 
+            type="button" 
+            id="quick-search-clear" 
+            class="hidden absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition"
+            aria-label="Effacer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Menu déroulant des résultats prédictifs instantanés -->
+        <div 
+          id="quick-search-results" 
+          class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-200/90 shadow-2xl overflow-hidden max-h-80 overflow-y-auto divide-y divide-slate-100 z-50">
+        </div>
+
+        <!-- Séparateur visuel -->
+        <div class="relative flex items-center justify-center my-8">
+          <div class="border-t border-slate-200 w-full"></div>
+          <span class="bg-[#f8fafc] px-4 text-xs uppercase tracking-wider font-bold text-slate-400 shrink-0">
+            ou sélectionnez étape par étape
+          </span>
+          <div class="border-t border-slate-200 w-full"></div>
+        </div>
+      </div>      
+
+      <!-- Barre de progression -->
+      <div class="mb-10 max-w-2xl mx-auto">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-400 mb-2 px-1">
+          <span id="step-lbl-1" class="text-brand-600">1. Catégorie</span>
+          <span id="step-lbl-2">2. Marque</span>
+          <span id="step-lbl-3">3. Modèle</span>
+          <span id="step-lbl-4">4. Produit</span>
+        </div>
+        <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+          <div id="progress-bar" class="bg-gradient-to-r from-brand-500 to-teal-400 h-2 w-1/4 rounded-full transition-all duration-500"></div>
+        </div>
+      </div>
+
+      <!-- Conteneur des étapes -->
+      <div class="space-y-6">
+
+        <!-- ÉTAPE 1 : CATÉGORIES (Encarts avec visuels & valorisation max) -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card">
+          <label class="block text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">
+            Choisissez une catégorie
+          </label>
+          <div id="categories-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <!-- Injecté en JS -->
+          </div>
+        </div>
+
+        <!-- ÉTAPE 2 : MARQUE (Dropdown stylé Nom à gauche / Prix max à droite en Bleu) -->
+        <div id="step-brand" class="hidden fade-in bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card">
+          <div class="flex items-center justify-between mb-4">
+            <label class="block text-sm font-bold uppercase tracking-wider text-slate-500">
+              Sélectionnez une marque
+            </label>
+          </div>
+          
+          <!-- Dropdown sur mesure -->
+          <div class="relative" id="dropdown-brand-container">
+            <button id="dropdown-brand-trigger" type="button" class="w-full bg-slate-50 hover:bg-slate-100/80 border-2 border-slate-200 rounded-2xl px-5 py-4 text-left font-semibold text-slate-500 flex items-center justify-between transition focus:outline-none focus:border-brand-500">
+              <span id="dropdown-brand-label">-- Choisissez la marque --</span>
+              <svg class="w-5 h-5 text-slate-400 transition-transform duration-200" id="dropdown-brand-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+
+            <div id="dropdown-brand-menu" class="hidden absolute z-30 mt-2 w-full bg-white border border-slate-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto custom-scroll p-2 divide-y divide-slate-100">
+              <!-- Injecté en JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 3 : MODÈLE (Dropdown stylé Nom à gauche / Prix max à droite en Bleu) -->
+        <div id="step-model" class="hidden fade-in bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card">
+          <label class="block text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">
+            Sélectionnez un modèle
+          </label>
+          
+          <!-- Dropdown sur mesure -->
+          <div class="relative" id="dropdown-model-container">
+            <button id="dropdown-model-trigger" type="button" class="w-full bg-slate-50 hover:bg-slate-100/80 border-2 border-slate-200 rounded-2xl px-5 py-4 text-left font-semibold text-slate-500 flex items-center justify-between transition focus:outline-none focus:border-brand-500">
+              <span id="dropdown-model-label">-- Choisissez le modèle --</span>
+              <svg class="w-5 h-5 text-slate-400 transition-transform duration-200" id="dropdown-model-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+
+            <div id="dropdown-model-menu" class="hidden absolute z-30 mt-2 w-full bg-white border border-slate-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto custom-scroll p-2 divide-y divide-slate-100">
+              <!-- Injecté en JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 4 : PRODUIT (ALIGNÉS LES UNS EN DESSOUS DES AUTRES) -->
+        <div id="step-product" class="hidden fade-in bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card">
+          <div class="flex items-center justify-between mb-5">
+            <label class="block text-sm font-bold uppercase tracking-wider text-slate-500">
+              Sélectionnez votre produit
+            </label>
+          </div>
+
+          <!-- Empilement vertical (1 colonne : flex flex-col) -->
+          <div id="products-list" class="flex flex-col gap-3">
+            <!-- Injecté en JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+       A03. PAGE DE RÉSULTAT DE VALORISATION
+       ========================================== -->
+    <section id="result-section" class="hidden fade-in space-y-6">
+
+      <!-- Titre principal épuré (identique à l'entête de sélection) -->
+      <div class="text-center mb-8">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-700 border border-brand-200 mb-3">
+          <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          Diagnostic terminé
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Prix de reprise estimatif du produit <span class="text-brand-600">*</span>
+        </h2>
+      </div>
+
+      <!-- CARTE CENTRALE : Design blanc et respirant, sans emboîtement inutile -->
+      <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-card">
+        
+        <!-- Bloc Produit & Montants -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8 pb-8 border-b border-slate-100">
+          
+          <!-- Visuel + Nom & Marque -->
+          <div class="flex items-center gap-5 w-full md:w-auto">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-50 border border-slate-200/80 p-2 shrink-0 flex items-center justify-center">
+              <img id="res-product-img" src="" alt="Produit" class="max-h-full max-w-full object-contain">
+            </div>
+            <div>
+              <span id="res-product-brand" class="text-xs font-bold uppercase tracking-wider text-slate-500"></span>
+              <h3 id="res-product-name" class="text-xl sm:text-2xl font-extrabold text-slate-900 leading-snug"></h3>
+            </div>
+          </div>
+
+          <!-- Les Prix (Min et Max côte à côte, typographie forte) -->
+          <div class="flex items-center gap-6 sm:gap-10 w-full md:w-auto justify-between md:justify-end pt-4 md:pt-0 border-t md:border-t-0 border-slate-100">
+            <!-- Min -->
+            <div class="text-left md:text-right">
+              <span class="block text-xs font-bold uppercase text-slate-400 tracking-wider">Reprise min</span>
+              <div class="text-2xl sm:text-3xl font-bold text-slate-600 tracking-tight mt-0.5">
+                <span id="res-price-min">82</span> €
+              </div>
+            </div>
+
+            <div class="h-10 w-px bg-slate-200"></div>
+
+            <!-- Max mis en avant avec le vert de la charte -->
+            <div class="text-right">
+              <span class="block text-xs font-bold uppercase text-brand-600 tracking-wider">Reprise max</span>
+              <div class="text-3xl sm:text-4xl font-extrabold text-brand-600 tracking-tight mt-0.5">
+                <span id="res-price-max">157</span> €
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Démarche écologique & Information légale -->
+        <div class="py-6 space-y-4">
+          <!-- Texte d'engagement écologique -->
+          <div class="flex items-start gap-3.5 text-slate-700">
+            <div class="p-1.5 bg-brand-50 rounded-lg text-brand-600 shrink-0 mt-0.5">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </div>
+            <p class="text-sm sm:text-base leading-relaxed text-slate-600">
+              Recycler est un acte écologique fort mais aussi un moyen de gagner de l’argent en revendant son produit à un professionnel qui saura lui donner une seconde vie en le reconditionnant.
+            </p>
+          </div>
+
+          <!-- Condition astérisque -->
+          <p class="text-xs text-slate-400 italic pl-8">
+            * Les prix de reprise affichés sont indicatifs pour une reprise en ligne. Le prix définitif sera confirmé après diagnostic de l'état du produit.
+          </p>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="pt-6 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
+          <button id="btn-restart" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            Évaluer un autre appareil
+          </button>
+
+          <a href="https://www.comparecycle.com/reprise" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full font-extrabold text-white bg-slate-900 hover:bg-brand-600 shadow-md hover:shadow-glow transition-all duration-300">
+            <span>Finaliser ma reprise</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       PIED DE PAGE (FOOTER)
+       ========================================== -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-6 text-center text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4">
+      © 2026 Comparecycle - Tous droits réservés. Économie circulaire & Reprise certifiée.
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       LOGIQUE JAVASCRIPT
+       ========================================== -->
+  <script>
+    // 1. Structure de données
+    const DATA = {
+      categories: [
+        {
+          id: 'mobile',
+          name: 'Mobile',
+          maxVal: '850 €',
+          svg: `<svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>`,
+          img: `<img src="img/mobile.png" alt="MOBILE" class="h-20 w-auto object-contain">`,
+          brands: ['Apple', 'Samsung', 'Xiaomi', 'FairPhone']
+        },
+        {
+          id: 'tablette',
+          name: 'Tablette',
+          maxVal: '690 €',
+          svg: `<svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>`,
+          img: `<img src="img/tablette.png" alt="TABLETTE" class="h-16 w-auto object-contain">`,
+          brands: ['Apple', 'Samsung', 'Xiaomi']
+        },
+        {
+          id: 'casque',
+          name: 'Casque',
+          maxVal: '280 €',
+          svg: `<svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/></svg>`,
+          img: `<img src="img/audio.png" alt="AUDIO" class="h-16 w-auto object-contain">`,
+          brands: ['Apple', 'Sony', 'Bose']
+        },
+        {
+          id: 'ordinateur',
+          name: 'Ordinateur',
+          maxVal: '1 250 €',
+          svg: `<svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
+          img: `<img src="img/ordinateur.png" alt="ORDINATEUR" class="h-16 w-auto object-contain">`,
+          brands: ['Apple', 'Dell', 'Lenovo']
+        }
+      ],
+      brandsValuation: {
+        'Apple': '850 €',
+        'Samsung': '620 €',
+        'Xiaomi': '340 €',
+        'FairPhone': '290 €',
+        'Sony': '280 €',
+        'Bose': '220 €',
+        'Dell': '890 €',
+        'Lenovo': '780 €'
+      },
+      models: {
+        'Apple': [
+          { name: 'iPhone 17', maxVal: '850 €' },
+          { name: 'iPhone 14', maxVal: '340 €' },
+          { name: 'iPhone 13', maxVal: '157 €' }
+        ],
+        'Samsung': [
+          { name: 'Galaxy S25', maxVal: '620 €' },
+          { name: 'Galaxy S24', maxVal: '450 €' }
+        ],
+        'Xiaomi': [
+          { name: '14T Pro', maxVal: '340 €' },
+          { name: 'Redmi Note 13', maxVal: '180 €' }
+        ],
+        'FairPhone': [
+          { name: 'Fairphone 5', maxVal: '290 €' }
+        ]
+      },
+      products: {
+        'iPhone 17': [
+          { name: 'iPhone 17 512Go', maxVal: '850 €', minPrice: 420, maxPrice: 850, img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&auto=format&fit=crop&q=80' },
+          { name: 'iPhone 17 256Go', maxVal: '750 €', minPrice: 380, maxPrice: 750, img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&auto=format&fit=crop&q=80' }
+        ],
+        'iPhone 14': [
+          { name: 'iPhone 14 256Go', maxVal: '340 €', minPrice: 190, maxPrice: 340, img: 'https://images.unsplash.com/photo-1663499482523-1c0c1bae8ce1?w=300&auto=format&fit=crop&q=80' },
+          { name: 'iPhone 14 128Go', maxVal: '290 €', minPrice: 150, maxPrice: 290, img: 'https://images.unsplash.com/photo-1663499482523-1c0c1bae8ce1?w=300&auto=format&fit=crop&q=80' }
+        ],
+        'iPhone 13': [
+          { name: 'iPhone 13 128Go', maxVal: '157 €', minPrice: 82, maxPrice: 157, img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&auto=format&fit=crop&q=80' }
+        ],
+        'Galaxy S25': [
+          { name: 'Galaxy S25 512Go', maxVal: '620 €', minPrice: 310, maxPrice: 620, img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=300&auto=format&fit=crop&q=80' }
+        ],
+        'Galaxy S24': [
+          { name: 'Galaxy S24 258Go', maxVal: '450 €', minPrice: 240, maxPrice: 450, img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=300&auto=format&fit=crop&q=80' },
+          { name: 'Galaxy S24 128Go', maxVal: '390 €', minPrice: 200, maxPrice: 390, img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=300&auto=format&fit=crop&q=80' }
+        ]
+      }
+    };
+
+    let currentSelection = {
+      category: null,
+      brand: null,
+      model: null,
+      product: null
+    };
+
+    // Éléments du DOM
+    const categoriesGrid = document.getElementById('categories-grid');
+    const stepBrand = document.getElementById('step-brand');
+    const dropdownBrandTrigger = document.getElementById('dropdown-brand-trigger');
+    const dropdownBrandLabel = document.getElementById('dropdown-brand-label');
+    const dropdownBrandMenu = document.getElementById('dropdown-brand-menu');
+    const dropdownBrandArrow = document.getElementById('dropdown-brand-arrow');
+
+    const stepModel = document.getElementById('step-model');
+    const dropdownModelTrigger = document.getElementById('dropdown-model-trigger');
+    const dropdownModelLabel = document.getElementById('dropdown-model-label');
+    const dropdownModelMenu = document.getElementById('dropdown-model-menu');
+    const dropdownModelArrow = document.getElementById('dropdown-model-arrow');
+
+    const stepProduct = document.getElementById('step-product');
+    const productsList = document.getElementById('products-list');
+    
+    const selectionSection = document.getElementById('selection-section');
+    const resultSection = document.getElementById('result-section');
+    const progressBar = document.getElementById('progress-bar');
+    const btnRestart = document.getElementById('btn-restart');
+
+    // Mise à jour de la barre d'avancement
+    function updateProgress(stepNumber) {
+      progressBar.style.width = ((stepNumber / 4) * 100) + '%';
+      for(let i = 1; i <= 4; i++) {
+        const lbl = document.getElementById(`step-lbl-${i}`);
+        if(i <= stepNumber) {
+          lbl.classList.add('text-brand-600');
+          lbl.classList.remove('text-slate-400');
+        } else {
+          lbl.classList.remove('text-brand-600');
+          lbl.classList.add('text-slate-400');
+        }
+      }
+    }
+
+    // Gestion de la fermeture des dropdowns lors d'un clic extérieur
+    window.addEventListener('click', (e) => {
+      if (!document.getElementById('dropdown-brand-container').contains(e.target)) {
+        closeDropdown(dropdownBrandMenu, dropdownBrandArrow);
+      }
+      if (!document.getElementById('dropdown-model-container').contains(e.target)) {
+        closeDropdown(dropdownModelMenu, dropdownModelArrow);
+      }
+    });
+
+    function toggleDropdown(menu, arrow) {
+      const isOpen = !menu.classList.contains('hidden');
+      if (isOpen) {
+        closeDropdown(menu, arrow);
+      } else {
+        menu.classList.remove('hidden');
+        arrow.classList.add('rotate-180');
+      }
+    }
+
+    function closeDropdown(menu, arrow) {
+      menu.classList.add('hidden');
+      arrow.classList.remove('rotate-180');
+    }
+
+    dropdownBrandTrigger.addEventListener('click', () => toggleDropdown(dropdownBrandMenu, dropdownBrandArrow));
+    dropdownModelTrigger.addEventListener('click', () => toggleDropdown(dropdownModelMenu, dropdownModelArrow));
+
+    // ==========================================
+    // MOTEUR DE RECHERCHE PRÉDICTIF DIRECT
+    // ==========================================
+    const searchInput = document.getElementById('quick-search-input');
+    const searchResults = document.getElementById('quick-search-results');
+    const searchClear = document.getElementById('quick-search-clear');
+
+    // Génération de l'index complet à partir de votre objet DATA
+    const allProductsIndex = [];
+    Object.keys(DATA.models).forEach(brandName => {
+      DATA.models[brandName].forEach(model => {
+        const prods = DATA.products[model.name] || [];
+        prods.forEach(prod => {
+          allProductsIndex.push({
+            brand: brandName,
+            model: model.name,
+            ...prod
+          });
+        });
+      });
+    });
+
+    // Écoute de la saisie utilisateur
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.trim().toLowerCase();
+      
+      if (query.length > 0) {
+        searchClear.classList.remove('hidden');
+      } else {
+        searchClear.classList.add('hidden');
+        searchResults.classList.add('hidden');
+        return;
+      }
+
+      // Recherche multi-champs (nom produit, marque, modèle, etc.)
+      const matches = allProductsIndex.filter(item => {
+        const fullText = `${item.brand} ${item.name} ${item.model}`.toLowerCase();
+        return fullText.includes(query);
+      });
+
+      renderPredictiveResults(matches, query);
+    });
+
+    // Affichage des suggestions
+    function renderPredictiveResults(items, query) {
+      searchResults.innerHTML = '';
+
+      if (items.length === 0) {
+        searchResults.innerHTML = `
+          <div class="p-4 text-center text-sm text-slate-500">
+            Aucun appareil trouvé pour "<strong>${query}</strong>"
+          </div>`;
+        searchResults.classList.remove('hidden');
+        return;
+      }
+
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer transition';
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 p-1 flex items-center justify-center shrink-0">
+              <img src="${item.img}" alt="${item.name}" class="max-h-full max-w-full object-contain">
+            </div>
+            <div>
+              <p class="text-xs uppercase font-bold tracking-wider text-slate-400">${item.brand}</p>
+              <p class="text-sm font-bold text-slate-800">${item.name}</p>
+            </div>
+          </div>
+          <div class="text-right pl-3 shrink-0">
+            <span class="text-xs uppercase text-slate-400 block font-semibold">Jusqu'à</span>
+            <span class="text-sm font-extrabold text-blue-600">${item.maxVal}</span>
+          </div>
+        `;
+
+        row.addEventListener('click', () => {
+          // Renseigne le contexte sélectionné
+          currentSelection.brand = item.brand;
+          currentSelection.model = item.model;
+          currentSelection.product = item;
+
+          // Ferme le volet et nettoie le champ
+          searchResults.classList.add('hidden');
+          searchInput.value = '';
+          searchClear.classList.add('hidden');
+
+          // Affiche directement la page résultat
+          showFinalResult(item);
+        });
+
+        searchResults.appendChild(row);
+      });
+
+      searchResults.classList.remove('hidden');
+    }
+
+    // Bouton pour vider la recherche
+    searchClear.addEventListener('click', () => {
+      searchInput.value = '';
+      searchClear.classList.add('hidden');
+      searchResults.classList.add('hidden');
+      searchInput.focus();
+    });
+
+    // Fermeture automatique du dropdown si clic en dehors
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        searchResults.classList.add('hidden');
+      }
+    });    
+
+    // ÉTAPE 1 : CATÉGORIES
+    function renderCategories() {
+      categoriesGrid.innerHTML = '';
+      DATA.categories.forEach(cat => {
+        const card = document.createElement('div');
+        const isSelected = currentSelection.category === cat.id;
+        card.className = `cursor-pointer rounded-2xl p-5 border-2 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-lg flex flex-col items-center justify-between ${
+          isSelected 
+            ? 'border-brand-500 bg-brand-50/50 shadow-md ring-2 ring-brand-400/30' 
+            : 'border-slate-100 bg-slate-50/70 hover:border-brand-300 hover:bg-white'
+        }`;
+        card.innerHTML = `
+          <div class="p-3 rounded-xl">
+            ${cat.img}
+          </div>
+          <span class="font-bold text-slate-800 text-base">${cat.name}</span>
+          <span class="mt-2 text-xs font-semibold px-2.5 py-1 rounded-full bg-brand-100 text-brand-800">
+            Jusqu'à ${cat.maxVal}
+          </span>
+        `;
+        card.addEventListener('click', () => onSelectCategory(cat));
+        categoriesGrid.appendChild(card);
+      });
+    }
+
+    // Clic Catégorie
+    function onSelectCategory(cat) {
+      currentSelection.category = cat.id;
+      currentSelection.brand = null;
+      currentSelection.model = null;
+      currentSelection.product = null;
+
+      renderCategories();
+
+      // Reset Triggers
+      dropdownBrandLabel.innerHTML = '-- Choisissez la marque --';
+      dropdownBrandTrigger.classList.remove('text-slate-900', 'border-brand-500');
+      dropdownBrandTrigger.classList.add('text-slate-500', 'border-slate-200');
+
+      dropdownModelLabel.innerHTML = '-- Choisissez le modèle --';
+      dropdownModelTrigger.classList.remove('text-slate-900', 'border-brand-500');
+      dropdownModelTrigger.classList.add('text-slate-500', 'border-slate-200');
+
+      // Construction du Dropdown Marque
+      dropdownBrandMenu.innerHTML = '';
+      cat.brands.forEach(brandName => {
+        const maxVal = DATA.brandsValuation[brandName] || '500 €';
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50/60 cursor-pointer transition group';
+        item.innerHTML = `
+          <span class="font-semibold text-slate-800 text-base group-hover:text-blue-600">${brandName}</span>
+          <span class="font-extrabold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg text-sm border border-blue-200/60">
+            Jusqu'à ${maxVal}
+          </span>
+        `;
+        item.addEventListener('click', () => onSelectBrand(brandName, maxVal));
+        dropdownBrandMenu.appendChild(item);
+      });
+
+      stepBrand.classList.remove('hidden');
+      stepModel.classList.add('hidden');
+      stepProduct.classList.add('hidden');
+
+      closeDropdown(dropdownBrandMenu, dropdownBrandArrow);
+      updateProgress(2);
+      stepBrand.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ÉTAPE 2 : SÉLECTION MARQUE
+    function onSelectBrand(brandName, maxVal) {
+      currentSelection.brand = brandName;
+      currentSelection.model = null;
+      currentSelection.product = null;
+
+      // Affichage stylé dans le trigger sélectionné : Nom à gauche / Prix max à droite en Bleu
+      dropdownBrandLabel.innerHTML = `
+        <div class="flex items-center justify-between w-full pr-4">
+          <span class="font-bold text-slate-900">${brandName}</span>
+          <span class="font-extrabold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-lg text-sm border border-blue-200">
+            Jusqu'à ${maxVal}
+          </span>
+        </div>
+      `;
+      dropdownBrandTrigger.classList.add('text-slate-900', 'border-brand-500');
+      dropdownBrandTrigger.classList.remove('text-slate-500', 'border-slate-200');
+      closeDropdown(dropdownBrandMenu, dropdownBrandArrow);
+
+      // Construction du Dropdown Modèles
+      dropdownModelMenu.innerHTML = '';
+      dropdownModelLabel.innerHTML = '-- Choisissez le modèle --';
+      dropdownModelTrigger.classList.remove('text-slate-900', 'border-brand-500');
+      dropdownModelTrigger.classList.add('text-slate-500', 'border-slate-200');
+
+      const availableModels = DATA.models[brandName] || [];
+      if(availableModels.length > 0) {
+        availableModels.forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50/60 cursor-pointer transition group';
+          item.innerHTML = `
+            <span class="font-semibold text-slate-800 text-base group-hover:text-blue-600">${m.name}</span>
+            <span class="font-extrabold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg text-sm border border-blue-200/60">
+              Jusqu'à ${m.maxVal}
+            </span>
+          `;
+          item.addEventListener('click', () => onSelectModel(m));
+          dropdownModelMenu.appendChild(item);
+        });
+      } else {
+        dropdownModelMenu.innerHTML = '<div class="p-4 text-center text-sm text-slate-400">Aucun modèle disponible</div>';
+      }
+
+      stepModel.classList.remove('hidden');
+      stepProduct.classList.add('hidden');
+
+      updateProgress(3);
+      stepModel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ÉTAPE 3 : SÉLECTION MODÈLE
+    function onSelectModel(modelObj) {
+      currentSelection.model = modelObj.name;
+      currentSelection.product = null;
+
+      // Trigger Modèle stylé : Nom à gauche / Prix max à droite en Bleu
+      dropdownModelLabel.innerHTML = `
+        <div class="flex items-center justify-between w-full pr-4">
+          <span class="font-bold text-slate-900">${modelObj.name}</span>
+          <span class="font-extrabold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-lg text-sm border border-blue-200">
+            Jusqu'à ${modelObj.maxVal}
+          </span>
+        </div>
+      `;
+      dropdownModelTrigger.classList.add('text-slate-900', 'border-brand-500');
+      dropdownModelTrigger.classList.remove('text-slate-500', 'border-slate-200');
+      closeDropdown(dropdownModelMenu, dropdownModelArrow);
+
+      // ÉTAPE 4 : PRODUITS LES UNS EN DESSOUS DES AUTRES (VERTICAL STACK)
+      productsList.innerHTML = '';
+      const availableProducts = DATA.products[modelObj.name] || [];
+
+      if(availableProducts.length > 0) {
+        availableProducts.forEach(prod => {
+          const card = document.createElement('div');
+          // Format horizontal les uns en dessous des autres
+          card.className = 'group w-full flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 border-slate-200 bg-slate-50/70 hover:border-brand-500 hover:bg-white transition-all cursor-pointer hover:shadow-md';
+          card.innerHTML = `
+            <div class="flex items-center gap-4 sm:gap-5">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white p-1 border border-slate-200/80 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <img src="${prod.img}" alt="${prod.name}" class="max-h-full max-w-full object-contain">
+              </div>
+              <div class="text-left">
+                <h4 class="font-extrabold text-slate-900 text-base sm:text-lg">${prod.name}</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Testé & certifié par nos experts</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="text-right">
+                <span class="block text-[11px] font-bold text-slate-400 uppercase">Valorisation max</span>
+                <span class="text-base sm:text-xl font-extrabold text-blue-600 bg-blue-50 px-3 py-1 rounded-xl border border-blue-200 inline-block">
+                  Jusqu'à ${prod.maxVal}
+                </span>
+              </div>
+              <div class="hidden sm:flex text-slate-300 group-hover:text-brand-500 group-hover:translate-x-1 transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          `;
+          card.addEventListener('click', () => onSelectProduct(prod));
+          productsList.appendChild(card);
+        });
+      } else {
+        productsList.innerHTML = `<div class="p-6 text-center text-slate-400 bg-slate-50 rounded-2xl">Aucune déclinaison disponible</div>`;
+      }
+
+      stepProduct.classList.remove('hidden');
+      updateProgress(4);
+      stepProduct.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ÉTAPE 4 : SÉLECTION DU PRODUIT & AFFICHAGE PAGE RÉSULTAT (A03)
+    function onSelectProduct(prod) {
+      currentSelection.product = prod;
+
+      document.getElementById('res-product-name').textContent = prod.name;
+      document.getElementById('res-product-brand').textContent = currentSelection.brand;
+      document.getElementById('res-product-img').src = prod.img;
+      document.getElementById('res-price-min').textContent = prod.minPrice;
+      document.getElementById('res-price-max').textContent = prod.maxPrice;
+
+      selectionSection.classList.add('hidden');
+      resultSection.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Effet Whaou
+      confetti({
+        particleCount: 85,
+        spread: 65,
+        origin: { y: 0.6 },
+        colors: ['#10b981', '#2563eb', '#38bdf8']
+      });
+    }
+
+    // BOUTON "ÉVALUER UN AUTRE APPAREIL"
+    btnRestart.addEventListener('click', () => {
+      currentSelection = { category: null, brand: null, model: null, product: null };
+      stepBrand.classList.add('hidden');
+      stepModel.classList.add('hidden');
+      stepProduct.classList.add('hidden');
+      
+      renderCategories();
+      updateProgress(1);
+
+      resultSection.classList.add('hidden');
+      selectionSection.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Lancement au chargement
+    renderCategories();
+  </script>
+</body>
+</html>
