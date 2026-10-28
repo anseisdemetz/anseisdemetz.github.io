@@ -48,9 +48,6 @@
             </a>
 
             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-2 pt-4">Composants complexes</div>
-            <a href="#kpi-cards" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
-                <i class="fa-solid fa-chart-pie text-emerald-600 w-4"></i> Cartes KPI & Graphiques
-            </a>
             <a href="#tables" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
                 <i class="fa-solid fa-table text-emerald-600 w-4"></i> Tableau & Actions
             </a>
@@ -211,10 +208,11 @@
             </section>
 
             <!-- FORMULAIRES & FILTRES -->
+                        <!-- FORMULAIRES & FILTRES -->
             <section id="forms" class="space-y-4">
                 <div class="border-b border-slate-200 pb-3">
                     <h2 class="text-lg font-bold text-slate-900">5. Formulaires & Switch de dates</h2>
-                    <p class="text-xs text-slate-500">Champs de saisie et composant de commutation de période.</p>
+                    <p class="text-xs text-slate-500">Champs de saisie, composants de commutation et listes déroulantes personnalisées.</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 w-full">
@@ -260,50 +258,150 @@
                             </div>
                         </div>
 
-                        <!-- BLOC 2: Chapitres et icônes de filtres -->
+                        <!-- BLOC 2: En-têtes de sections de filtres -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
                             <span class="text-[10px] text-slate-400 font-mono uppercase block mb-1">En-têtes de sections de filtres</span>
                             
                             <div class="space-y-2.5 pt-1">
-
-                            <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm space-y-3">
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                                    <i class="fa-solid fa-hashtag text-emerald-600"></i> N° de transaction
-                                </span>
-                                <div class="relative">
-                                    <i class="fa-solid fa-barcode absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                                    <input type="text" id="filterNumTrans" placeholder="Ex: TRX-102938" class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                <div class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm space-y-2">
+                                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                        <i class="fa-solid fa-hashtag text-emerald-600"></i> N° de transaction
+                                    </span>
+                                    <div class="relative">
+                                        <i class="fa-solid fa-barcode absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                        <input type="text" id="filterNumTrans" placeholder="Ex: TRX-102938" class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                    </div>
                                 </div>
-                            </div>
 
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-200/60 shadow-sm">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2.5 rounded-lg border border-slate-200/60 shadow-sm">
                                     <i class="fa-solid fa-mobile-screen text-emerald-600"></i>
                                     <span>Produit & Marque</span>
                                 </span>
 
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-200/60 shadow-sm">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2.5 rounded-lg border border-slate-200/60 shadow-sm">
                                     <i class="fa-solid fa-list-check text-emerald-600"></i> 
                                     <span>Grades & Validation</span>
                                 </span>
                             </div>
                         </div>
 
-                        <!-- BLOC 3: Liste déroulante -->
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
-                            <span class="text-[10px] text-slate-400 font-mono uppercase block mb-1">Liste déroulante posée sur les interfaces (Facturation)</span>
+                        <!-- BLOC 3: Liste déroulante personnalisée (Regroupant Statut, Recherche, Multi-Select) -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-4">
+                            <span class="text-[10px] text-slate-400 font-mono uppercase block">Liste déroulante personnalisée</span>
                             
-                            <div class="space-y-2.5 pt-1">
-                                <label class="block text-xs font-medium text-slate-500 mb-1">Statut</label>
-                                    <div id="demoContainerRelative" class="relative">                                    
-                                        <select class="w-full py-2 pl-3 pr-9 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer appearance-none shadow-sm">
-                                            <option value="billed">Facturé</option>
-                                            <option value="paied">Payé</option>
-                                            <option value="late">En retard</option>
-                                        </select>
-                                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
+                            <!-- Sous-élément A: Statut de la facture (Select simple sans recherche) -->
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-800 block">Statut de la facture</label>
+                                
+                                <div class="relative">
+                                    <button type="button" onclick="toggleSearchSelect('statusSelectDropdown')" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm flex items-center justify-between transition">
+                                        <span id="statusSelectLabel" class="truncate font-bold text-slate-800">Facturé</span>
+                                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-2"></i>
+                                    </button>
+
+                                    <div id="statusSelectDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                                        <ul class="max-h-48 overflow-y-auto p-1 text-xs text-slate-700 font-medium space-y-0.5">
+                                            <li onclick="selectSingleOption('statusSelectLabel', 'statusSelectDropdown', 'Facturé')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Facturé</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('statusSelectLabel', 'statusSelectDropdown', 'Payé')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Payé</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('statusSelectLabel', 'statusSelectDropdown', 'En retard')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>En retard</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sous-élément B: Select avec recherche -->
+                            <div class="space-y-1 pt-2 border-t border-slate-200/60">
+                                <label class="text-xs font-bold text-slate-800 block">Sélectionner un partenaire</label>
+                                
+                                <div class="relative">
+                                    <button type="button" onclick="toggleSearchSelect('partnerSelectDropdown')" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm flex items-center justify-between transition">
+                                        <span id="partnerSelectLabel" class="truncate text-slate-500">Choisir un partenaire...</span>
+                                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-2"></i>
+                                    </button>
+
+                                    <div id="partnerSelectDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                                        <div class="p-2 border-b border-slate-100">
+                                            <div class="relative">
+                                                <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]"></i>
+                                                <input type="text" onkeyup="filterSelectOptions(this, 'partnerOptionsList')" placeholder="Rechercher..." class="w-full pl-8 pr-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white">
+                                            </div>
+                                        </div>
+                                        <ul id="partnerOptionsList" class="max-h-48 overflow-y-auto p-1 text-xs text-slate-700 font-medium space-y-0.5">
+                                            <li onclick="selectSingleOption('partnerSelectLabel', 'partnerSelectDropdown', 'Fnac Darty')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Fnac Darty</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('partnerSelectLabel', 'partnerSelectDropdown', 'Boulanger')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Boulanger</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('partnerSelectLabel', 'partnerSelectDropdown', 'Orange France')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Orange France</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('partnerSelectLabel', 'partnerSelectDropdown', 'SFR Trade-In')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>SFR Trade-In</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sous-élément C: Select avec saisie multiple -->
+                            <div class="space-y-1 pt-2 border-t border-slate-200/60">
+                                <label class="text-xs font-bold text-slate-800 block">Grades autorisés</label>
+                                
+                                <div class="relative">
+                                    <div onclick="focusMultiSelectInput('multiGradeInput')" class="w-full min-h-[42px] p-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus-within:ring-2 focus-within:ring-emerald-500 shadow-sm flex flex-wrap items-center gap-1.5 cursor-pointer transition">
+                                        
+                                        <div id="multiGradeTagsContainer" class="flex flex-wrap items-center gap-1.5">
+                                            <span data-value="Grade A" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">
+                                                Grade A
+                                                <button type="button" onclick="event.stopPropagation(); removeMultiTag(this, 'Grade A', 'multiGradeDropdown')" class="hover:text-emerald-900"><i class="fa-solid fa-xmark text-[10px]"></i></button>
+                                            </span>
+                                            <span data-value="Grade B" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">
+                                                Grade B
+                                                <button type="button" onclick="event.stopPropagation(); removeMultiTag(this, 'Grade B', 'multiGradeDropdown')" class="hover:text-emerald-900"><i class="fa-solid fa-xmark text-[10px]"></i></button>
+                                            </span>
+                                        </div>
+
+                                        <input type="text" id="multiGradeInput" onfocus="openMultiSelectDropdown('multiGradeDropdown')" onkeyup="filterMultiOptions(this, 'multiGradeOptionsList')" placeholder="Rechercher..." class="flex-1 min-w-[80px] bg-transparent text-xs text-slate-800 focus:outline-none py-0.5">
+
+                                        <div class="ml-auto flex items-center pl-1 pr-1 pointer-events-none">
+                                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                                        </div>
                                     </div>
 
+                                    <div id="multiGradeDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-30 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                                        <ul id="multiGradeOptionsList" class="max-h-48 overflow-y-auto p-1 text-xs text-slate-700 font-medium space-y-0.5">
+                                            <li data-value="Grade A" onclick="selectMultiOption(this, 'Grade A', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="hidden px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade A</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                            <li data-value="Grade B" onclick="selectMultiOption(this, 'Grade B', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="hidden px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade B</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                            <li data-value="Grade C" onclick="selectMultiOption(this, 'Grade C', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade C</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                            <li data-value="Grade D" onclick="selectMultiOption(this, 'Grade D', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade D</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                            <li data-value="Grade Hors Service" onclick="selectMultiOption(this, 'Grade Hors Service', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade Hors Service</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
 
                     </div>
@@ -331,10 +429,6 @@
                                 <button title="Éditer / Modifier" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-emerald-600 flex items-center justify-center transition">
                                     <i class="fa-solid fa-pencil text-xs"></i>
                                 </button>
-                            </div>
-
-                            <!-- Option 2: Rapport avec texte -->
-                            <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
                                 <button title="Télécharger le rapport" class="inline-flex items-center gap-1.5 font-bold text-xs text-emerald-600 hover:text-emerald-700 transition px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 rounded-md">
                                     <i class="fa-solid fa-file-arrow-up"></i>
                                     <span>Importer</span>
@@ -692,6 +786,121 @@
             navigator.clipboard.writeText(input.value);
             alert('Clé API copiée dans le presse-papier !');
         }
+        // Afficher / Masquer le menu déroulant
+        function toggleSearchSelect(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) dropdown.classList.toggle('hidden');
+        }
+
+        // Filtrer les éléments de la liste selon la recherche
+        function filterSelectOptions(input, listId) {
+            const filter = input.value.toLowerCase();
+            const list = document.getElementById(listId);
+            const options = list.getElementsByTagName('li');
+
+            for (let i = 0; i < options.length; i++) {
+                const text = options[i].textContent || options[i].innerText;
+                if (text.toLowerCase().indexOf(filter) > -1) {
+                    options[i].style.display = "";
+                } else {
+                    options[i].style.display = "none";
+                }
+            }
+        }
+
+        // Sélectionner un élément dans le Select simple avec Recherche
+        function selectSingleOption(labelId, dropdownId, value) {
+            const label = document.getElementById(labelId);
+            label.textContent = value;
+            label.classList.remove('text-slate-500');
+            label.classList.add('text-slate-800', 'font-bold');
+            
+            toggleSearchSelect(dropdownId);
+        }
+        // Focus sur l'input de recherche
+        function focusMultiSelectInput(inputId) {
+            document.getElementById(inputId).focus();
+        }
+
+        // Ouverture du menu déroulant
+        function openMultiSelectDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) dropdown.classList.remove('hidden');
+        }
+
+        // Sélection d'un item : création du tag et élimination de la liste
+        function selectMultiOption(optionElem, value, tagsContainerId, dropdownId, inputId) {
+            const tagsContainer = document.getElementById(tagsContainerId);
+            
+            // 1. Masquer l'élément dans la liste déroulante
+            optionElem.classList.add('hidden');
+
+            // 2. Créer le tag visuel
+            const tag = document.createElement('span');
+            tag.setAttribute('data-value', value);
+            tag.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px] animate-in fade-in zoom-in-95 duration-100';
+            tag.innerHTML = `
+                ${value}
+                <button type="button" onclick="event.stopPropagation(); removeMultiTag(this, '${value}', '${dropdownId}')" class="hover:text-emerald-900">
+                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                </button>
+            `;
+            
+            tagsContainer.appendChild(tag);
+
+            // 3. Réinitialiser la recherche
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.value = '';
+                filterMultiOptions(input, optionElem.parentElement.id);
+            }
+        }
+
+        // Suppression d'un tag : retrait de la zone et réapparition dans la liste
+        function removeMultiTag(btnElem, value, dropdownId) {
+            // 1. Supprimer le tag
+            const tag = btnElem.closest('span');
+            if (tag) tag.remove();
+
+            // 2. Re-faire apparaître l'item dans la liste déroulante
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) {
+                const optionItem = dropdown.querySelector(`li[data-value="${value}"]`);
+                if (optionItem) {
+                    optionItem.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Filtrage dynamique des options restantes
+        function filterMultiOptions(input, listId) {
+            const filter = input.value.toLowerCase();
+            const list = document.getElementById(listId);
+            const options = list.getElementsByTagName('li');
+
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                const text = option.textContent || option.innerText;
+                
+                // On ne filtre que les éléments qui ne sont pas déjà sélectionnés (masqués)
+                if (!option.classList.contains('hidden') || filter === '') {
+                    if (text.toLowerCase().indexOf(filter) > -1) {
+                        option.style.display = "";
+                    } else {
+                        option.style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Fermeture automatique au clic en dehors
+        document.addEventListener('click', function(e) {
+            const multiSelect = document.getElementById('multiGradeDropdown');
+            const input = document.getElementById('multiGradeInput');
+            if (multiSelect && input && !multiSelect.contains(e.target) && !input.contains(e.target)) {
+                multiSelect.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>

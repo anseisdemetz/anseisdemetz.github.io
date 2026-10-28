@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design System & UI Library - Trade-In Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 antialiased overflow-hidden">
+
+    <!-- TOP HEADER / BRANDING -->
+    <header class="bg-slate-900 text-white px-8 py-4 flex items-center justify-between border-b border-slate-800 shrink-0">
+        <div class="flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-emerald-500 text-slate-900 font-black flex items-center justify-center text-base shadow-lg shadow-emerald-500/30">
+                <i class="fa-solid fa-cube"></i>
+            </span>
+            <div>
+                <h1 class="text-base font-bold tracking-tight leading-none">Design System & UI Library</h1>
+                <p class="text-xs text-slate-400 mt-1">Guide de référence des composants graphiques et fonctionnels</p>
+            </div>
+        </div>
+        <span class="text-xs font-mono bg-slate-800 text-emerald-400 px-3 py-1.5 rounded-lg border border-slate-700">v1.0.0</span>
+    </header>
+
+    <!-- MAIN LAYOUT: NAVIGATION + CONTENT -->
+    <div class="flex-1 flex min-h-0 overflow-hidden">
+
+        <!-- SIDE NAVIGATION -->
+        <nav class="w-64 bg-white border-r border-slate-200 p-4 space-y-1 overflow-y-auto shrink-0 text-xs font-medium">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-2">Fondations</div>
+            <a href="#colors" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-palette text-emerald-600 w-4"></i> Couleurs & Nuancier
+            </a>
+            <a href="#typography" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-font text-emerald-600 w-4"></i> Typographie
+            </a>
+
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-2 pt-4">Éléments de base</div>
+            <a href="#buttons" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-hand-pointer text-emerald-600 w-4"></i> Boutons & Actions
+            </a>
+            <a href="#badges" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-tag text-emerald-600 w-4"></i> Badges & Statuts
+            </a>
+            <a href="#forms" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-sliders text-emerald-600 w-4"></i> Formulaires & Filtres
+            </a>
+
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-2 pt-4">Composants complexes</div>
+            <a href="#tables" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-table text-emerald-600 w-4"></i> Tableau & Actions
+            </a>
+            <a href="#drawers" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-bars-staggered text-emerald-600 w-4"></i> Tiroir de filtres (Drawer)
+            </a>
+            <a href="#modals" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-window-restore text-emerald-600 w-4"></i> Modales & Pop-in
+            </a>
+        </nav>
+
+        <!-- MAIN SHOWCASE CONTENT -->
+        <main class="flex-1 p-8 overflow-y-auto space-y-12">
+
+            <!-- COULEURS -->
+            <section id="colors" class="space-y-4">
+                <div class="border-b border-slate-200 pb-3">
+                    <h2 class="text-lg font-bold text-slate-900">1. Couleurs & Nuancier</h2>
+                    <p class="text-xs text-slate-500">Palette de couleurs primaires, neutres et fonctionnelles.</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 text-xs font-semibold">
+                    <div class="space-y-1.5">
+                        <div class="h-16 rounded-xl bg-emerald-600 shadow-sm flex items-end p-2 text-white text-[10px]">#059669</div>
+                        <span class="block text-slate-800">Emerald 600</span>
+                        <span class="block text-[10px] text-slate-400">Couleur primaire / Actions</span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="h-16 rounded-xl bg-emerald-50 border border-emerald-200 shadow-sm flex items-end p-2 text-emerald-800 text-[10px]">#ecfdf5</div>
+                        <span class="block text-slate-800">Emerald 50</span>
+                        <span class="block text-[10px] text-slate-400">Fonds de sélections / Badges</span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="h-16 rounded-xl bg-slate-900 shadow-sm flex items-end p-2 text-white text-[10px]">#0f172a</div>
+                        <span class="block text-slate-800">Slate 900</span>
+                        <span class="block text-[10px] text-slate-400">Textes principaux / Headers</span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="h-16 rounded-xl bg-slate-100 border border-slate-200 shadow-sm flex items-end p-2 text-slate-700 text-[10px]">#f1f5f9</div>
+                        <span class="block text-slate-800">Slate 100</span>
+                        <span class="block text-[10px] text-slate-400">Arrière-plans secondaires</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TYPOGRAPHIE -->
+            <section id="typography" class="space-y-4">
+                <div class="border-b border-slate-200 pb-3">
+                    <h2 class="text-lg font-bold text-slate-900">2. Typographie</h2>
+                    <p class="text-xs text-slate-500">Hiérarchie des titres, sous-titres et corps de texte.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div>
+                        <span class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Titre de page (H1)</span>
+                        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Tableau de bord des transactions</h1>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Titre de section (H2)</span>
+                        <h2 class="text-base font-bold text-slate-900">Dashboard financier</h2>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Titre de carte / Sous-titre (H3)</span>
+                        <h3 class="text-sm font-bold text-slate-800">Quel est l'état du contour/châssis du mobile ?</h3>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Corps de texte standard</span>
+                        <p class="text-xs text-slate-600 leading-normal">Il s'allume, s'éteint et se charge complètement. Le déblocage par reconnaissance faciale est fonctionnel.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BOUTONS & ACTIONS -->
+            <section id="buttons" class="space-y-4">
+                <div class="border-b border-slate-200 pb-3">
+                    <h2 class="text-lg font-bold text-slate-900">3. Boutons & Actions</h2>
+                    <p class="text-xs text-slate-500">Bibliothèque des boutons réels et actions réutilisables à travers l'application.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+
+                    <!-- GROUPE 1: Actions de barre d'outils (Tables) -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] text-slate-400 font-mono uppercase block">Actions de barre d'outils (Tableaux)</span>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
+                                <i class="fa-solid fa-download text-slate-500"></i>
+                                <span>Exporter</span>
+                            </button>
+                            
+                            <button onclick="openDemoDrawer()" class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
+                                <i class="fa-solid fa-sliders text-slate-500"></i>
+                                <span>Filtres</span>
+                            </button>
+                            
+                            <button class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
+                                <i class="fa-solid fa-table-columns text-slate-500"></i>
+                                <span>Colonnes</span>
+                                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- GROUPE 2: Actions Métier & Import/Export -->
+                    <div class="space-y-2 pt-4 border-t border-slate-100">
+                        <span class="text-[10px] text-slate-400 font-mono uppercase block">Actions Métier & Gestion</span>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-md shadow-emerald-600/20 transition">
+                                <i class="fa-solid fa-upload"></i> Importer / Mettre à jour
+                            </button>
+
+                            <label class="inline-flex items-center cursor-pointer gap-2.5 px-3.5 py-2 bg-white border border-slate-300 rounded-lg shadow-sm hover:bg-slate-50 transition select-none">
+                                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Top Trade-in</span>
+                                <input type="checkbox" id="topTradeInToggle" class="hidden peer" checked>
+                                <div class="relative w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- GROUPE 3: Création & Assistance -->
+                    <div class="space-y-2 pt-4 border-t border-slate-100">
+                        <span class="text-[10px] text-slate-400 font-mono uppercase block">Création & Documentation</span>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-md shadow-emerald-600/20 transition">
+                                <i class="fa-solid fa-plus text-sm"></i>
+                                <span>AJOUTER</span>
+                            </button>
+
+                            <button class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
+                                <i class="fa-solid fa-book text-slate-500"></i>
+                                <span>Documentation</span>
+                            </button>                            
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- BADGES & STATUTS -->
+            <section id="badges" class="space-y-4">
+                <div class="border-b border-slate-200 pb-3">
+                    <h2 class="text-lg font-bold text-slate-900">4. Statuts</h2>
+                    <p class="text-xs text-slate-500">Indicateurs d'état.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="space-y-2">
+                        <span class="text-[10px] text-slate-400 font-mono uppercase block">Statuts du partenaire</span>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span>Connecté</span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                <span>Déconnecté</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FORMULAIRES & FILTRES -->
+            <section id="forms" class="space-y-4">
+                <div class="border-b border-slate-200 pb-3">
+                    <h2 class="text-lg font-bold text-slate-900">5. Formulaires & Switch de dates</h2>
+                    <p class="text-xs text-slate-500">Champs de saisie et composant de commutation de période.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 w-full">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                        <!-- BLOC 1: Switch Date Relative / Plage de dates -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-regular fa-calendar-days text-emerald-600"></i> 
+                                <span>Date de création</span>
+                            </span>
+                            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-200/60 rounded-lg">
+                                <label class="cursor-pointer text-center">
+                                    <input type="radio" name="demoDateType" value="relative" checked onclick="demoSwitchDate('relative')" class="hidden peer">
+                                    <span class="block py-1.5 rounded-md text-xs font-semibold text-slate-600 peer-checked:bg-white peer-checked:text-emerald-700 peer-checked:shadow-sm transition">Date relative</span>
+                                </label>
+                                <label class="cursor-pointer text-center">
+                                    <input type="radio" name="demoDateType" value="range" onclick="demoSwitchDate('range')" class="hidden peer">
+                                    <span class="block py-1.5 rounded-md text-xs font-semibold text-slate-600 peer-checked:bg-white peer-checked:text-emerald-700 peer-checked:shadow-sm transition">Plage de dates</span>
+                                </label>
+                            </div>
+
+                            <div id="demoContainerRelative" class="pt-1 relative">
+                                <select class="w-full py-2 pl-3 pr-9 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer appearance-none shadow-sm">
+                                    <option value="today">Aujourd'hui</option>
+                                    <option value="yesterday">Hier</option>
+                                    <option value="this_week">Cette semaine</option>
+                                    <option value="last_week">La semaine dernière</option>
+                                    <option value="from_last_month">À partir du mois dernier</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
+                            </div>
+
+                            <div id="demoContainerRange" class="hidden space-y-2 pt-1">
+                                <div>
+                                    <label class="block text-[10px] font-semibold text-slate-500 mb-1">Date de début</label>
+                                    <input type="date" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-semibold text-slate-500 mb-1">Date de fin</label>
+                                    <input type="date" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BLOC 2: En-têtes de sections de filtres -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+                            <span class="text-[10px] text-slate-400 font-mono uppercase block mb-1">En-têtes de sections de filtres</span>
+                            
+                            <div class="space-y-2.5 pt-1">
+                                <div class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm space-y-2">
+                                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                        <i class="fa-solid fa-hashtag text-emerald-600"></i> N° de transaction
+                                    </span>
+                                    <div class="relative">
+                                        <i class="fa-solid fa-barcode absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                        <input type="text" id="filterNumTrans" placeholder="Ex: TRX-102938" class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                    </div>
+                                </div>
+
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2.5 rounded-lg border border-slate-200/60 shadow-sm">
+                                    <i class="fa-solid fa-mobile-screen text-emerald-600"></i>
+                                    <span>Produit & Marque</span>
+                                </span>
+
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2.5 rounded-lg border border-slate-200/60 shadow-sm">
+                                    <i class="fa-solid fa-list-check text-emerald-600"></i> 
+                                    <span>Grades & Validation</span>
+                                </span>
+                            </div>
+                        </div>
+
+<!-- BLOC 3: Liste déroulante personnalisée (Facturation) -->
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+    <span class="text-[10px] text-slate-400 font-mono uppercase block mb-1">Liste déroulante personnalisée</span>
+    <div class="space-y-1">
+        <label class="text-xs font-bold text-slate-800 block">Statut de la facture</label>
+        
+        <!-- Container du Select Personnalisé -->
+        <div class="relative">
+            <!-- Bouton principal du Select -->
+            <button type="button" onclick="toggleSearchSelect('statusSelectDropdown')" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm flex items-center justify-between transition">
+                <span id="statusSelectLabel" class="truncate font-bold text-slate-800">Facturé</span>
+                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-2"></i>
+            </button>
+
+            <!-- Menu surgissant avec options -->
+            <div id="statusSelectDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                <ul class="max-h-48 overflow-y-auto p-1 text-xs text-slate-700 font-medium space-y-0.5">
+                    <li onclick="selectSingleOption('statusSelectLabel', 'statusSelectDropdown', 'Facturé')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                        <span>Facturé</span>
+                    </li>
+                    <li onclick="selectSingleOption('statusSelectLabel', 'statusSelectDropdown', 'Payé')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                        <span>Payé</span>
+                    </li>
+                    <li onclick="selectSingleOption('statusSelectLabel', 'statusSelectDropdown', 'En retard')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                        <span>En retard</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+                        <!-- BLOC 4: Select avec zone de recherche -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+                            <span class="text-[10px] text-slate-400 font-mono uppercase block mb-1">01. Select avec recherche</span>
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-800 block">Sélectionner un partenaire</label>
+                                
+                                <div class="relative">
+                                    <button type="button" onclick="toggleSearchSelect('partnerSelectDropdown')" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm flex items-center justify-between transition">
+                                        <span id="partnerSelectLabel" class="truncate text-slate-500">Choisir un partenaire...</span>
+                                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-2"></i>
+                                    </button>
+
+                                    <div id="partnerSelectDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                                        <div class="p-2 border-b border-slate-100">
+                                            <div class="relative">
+                                                <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]"></i>
+                                                <input type="text" onkeyup="filterSelectOptions(this, 'partnerOptionsList')" placeholder="Rechercher..." class="w-full pl-8 pr-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white">
+                                            </div>
+                                        </div>
+                                        <ul id="partnerOptionsList" class="max-h-48 overflow-y-auto p-1 text-xs text-slate-700 font-medium space-y-0.5">
+                                            <li onclick="selectSingleOption('partnerSelectLabel', 'partnerSelectDropdown', 'Fnac Darty')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Fnac Darty</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('partnerSelectLabel', 'partnerSelectDropdown', 'Boulanger')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Boulanger</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('partnerSelectLabel', 'partnerSelectDropdown', 'Orange France')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Orange France</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('partnerSelectLabel', 'partnerSelectDropdown', 'SFR Trade-In')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>SFR Trade-In</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BLOC 5: Select avec saisie multiple dynamique -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+                            <span class="text-[10px] text-slate-400 font-mono uppercase block mb-1">02. Select avec saisie multiple</span>
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-800 block">Grades autorisés</label>
+                                
+                                <div class="relative">
+                                    <div onclick="focusMultiSelectInput('multiGradeInput')" class="w-full min-h-[42px] p-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus-within:ring-2 focus-within:ring-emerald-500 shadow-sm flex flex-wrap items-center gap-1.5 cursor-pointer transition">
+                                        
+                                        <div id="multiGradeTagsContainer" class="flex flex-wrap items-center gap-1.5">
+                                            <span data-value="Grade A" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">
+                                                Grade A
+                                                <button type="button" onclick="event.stopPropagation(); removeMultiTag(this, 'Grade A', 'multiGradeDropdown')" class="hover:text-emerald-900"><i class="fa-solid fa-xmark text-[10px]"></i></button>
+                                            </span>
+                                            <span data-value="Grade B" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">
+                                                Grade B
+                                                <button type="button" onclick="event.stopPropagation(); removeMultiTag(this, 'Grade B', 'multiGradeDropdown')" class="hover:text-emerald-900"><i class="fa-solid fa-xmark text-[10px]"></i></button>
+                                            </span>
+                                        </div>
+
+                                        <input type="text" id="multiGradeInput" onfocus="openMultiSelectDropdown('multiGradeDropdown')" onkeyup="filterMultiOptions(this, 'multiGradeOptionsList')" placeholder="Rechercher..." class="flex-1 min-w-[80px] bg-transparent text-xs text-slate-800 focus:outline-none py-0.5">
+
+                                        <div class="ml-auto flex items-center pl-1 pr-1 pointer-events-none">
+                                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                                        </div>
+                                    </div>
+
+                                    <div id="multiGradeDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-30 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                                        <ul id="multiGradeOptionsList" class="max-h-48 overflow-y-auto p-1 text-xs text-slate-700 font-medium space-y-0.5">
+                                            <li data-value="Grade A" onclick="selectMultiOption(this, 'Grade A', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="hidden px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade A</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                            <li data-value="Grade B" onclick="selectMultiOption(this, 'Grade B', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="hidden px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade B</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                            <li data-value="Grade C" onclick="selectMultiOption(this, 'Grade C', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade C</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                            <li data-value="Grade D" onclick="selectMultiOption(this, 'Grade D', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade D</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                            <li data-value="Grade Hors Service" onclick="selectMultiOption(this, 'Grade Hors Service', 'multiGradeTagsContainer', 'multiGradeDropdown', 'multiGradeInput')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Grade Hors Service</span>
+                                                <i class="fa-solid fa-plus text-[10px] text-slate-400"></i>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- TABLEAU & ICÔNES D'ACTIONS -->
+            <section id="tables" class="space-y-4">
+                <div class="border-b border-slate-200 pb-3">
+                    <h2 class="text-lg font-bold text-slate-900">6. Tableau de rubrique & Icônes d'actions</h2>
+                    <p class="text-xs text-slate-500">Modèle standard de tableau de données avec barre d'outils, badges d'état et actions en bout de ligne.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    
+                    <!-- ENCART 1: MODÈLES DE BOUTONS D'ACTIONS EN LIGNE -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+                        <span class="text-[10px] text-slate-400 font-mono uppercase block">Modèles d'icônes & boutons d'actions en bout de ligne</span>
+                        <div class="flex flex-wrap items-center gap-4">
+                            <!-- Option 1: Voir + Éditer -->
+                            <div class="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+                                <button title="Voir les détails" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition">
+                                    <i class="fa-solid fa-eye text-xs"></i>
+                                </button>
+                                <button title="Éditer / Modifier" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-emerald-600 flex items-center justify-center transition">
+                                    <i class="fa-solid fa-pencil text-xs"></i>
+                                </button>
+                            </div>
+
+                            <!-- Option 2: Rapport avec texte -->
+                            <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+                                <button title="Télécharger le rapport" class="inline-flex items-center gap-1.5 font-bold text-xs text-emerald-600 hover:text-emerald-700 transition px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 rounded-md">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
+                                    <span>Importer</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DATA TABLE CONTAINER -->
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+                        
+                        <!-- Toolbar interne au tableau (Search & Actions) -->
+                        <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/50 relative">
+                            <div class="relative flex-1 w-full">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input type="text" placeholder="Rechercher dans le tableau (N°, marque, produit...)" class="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+                            </div>
+
+                            <div class="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0 relative">
+                                <button onclick="openDemoDrawer()" class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition shrink-0">
+                                    <i class="fa-solid fa-sliders text-slate-500"></i>
+                                    <span>Filtres</span>
+                                </button>
+
+                                <div class="relative">
+                                    <button onclick="toggleDemoColumnPicker('demoColumnPickerPanel')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold transition border border-slate-300 shadow-sm shrink-0">
+                                        <i class="fa-solid fa-table-columns text-slate-500"></i>
+                                        <span>Colonnes</span>
+                                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+                                    </button>
+
+                                    <div id="demoColumnPickerPanel" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
+                                        <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
+                                            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Colonnes affichées</span>
+                                            <button onclick="resetDemoColumnVisibility('demoColumnPickerPanel')" class="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700">Réinitialiser</button>
+                                        </div>
+                                        <div class="space-y-1.5 text-xs text-slate-700 font-medium max-h-72 overflow-y-auto pr-1">
+                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                                <span>N° Transaction</span>
+                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                            </label>
+                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                                <span>Date</span>
+                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                            </label>
+                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                                <span>Marque & Produit</span>
+                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                            </label>
+                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                                <span>Grade validé</span>
+                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                            </label>
+                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                                <span>Prix validé</span>
+                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                            </label>
+                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                                <span>Statut</span>
+                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                            </label>
+                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                                <span>État Facture</span>
+                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                            </label>
+                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                                <span>Actions</span>
+                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Zone déroulante du tableau -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse min-w-[1000px]">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none whitespace-nowrap">
+                                        <th class="py-3 px-4">N° Transaction</th>
+                                        <th class="py-3 px-4 text-center">Date</th>
+                                        <th class="py-3 px-4">Marque & Produit</th>
+                                        <th class="py-3 px-4 text-center">Grade validé</th>
+                                        <th class="py-3 px-4 text-center">Prix validé</th>
+                                        <th class="py-3 px-4 text-center">Statut</th>
+                                        <th class="py-3 px-4 text-center">État Facture</th>
+                                        <th class="py-3 px-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-xs whitespace-nowrap">
+                                    <tr class="hover:bg-slate-50/80 transition group">
+                                        <td class="py-3.5 px-4 font-bold text-slate-800">TRX-2026-9041</td>
+                                        <td class="py-3.5 px-4 text-center text-slate-600">24/10/2026</td>
+                                        <td class="py-3.5 px-4">
+                                            <span class="font-bold text-slate-900 block">iPhone 15 Pro 256Go</span>
+                                            <span class="text-[10px] text-slate-400 font-semibold">Apple • Smartphone</span>
+                                        </td>
+                                        <td class="py-3.5 px-4 text-center">
+                                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800">Grade A</span>
+                                        </td>
+                                        <td class="py-3.5 px-4 text-center font-bold text-emerald-600">620,00 €</td>
+                                        <td class="py-3.5 px-4 text-center">
+                                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Validée
+                                            </span>
+                                        </td>
+                                        <td class="py-3.5 px-4 text-center">
+                                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">Facturée</span>
+                                        </td>
+                                        <td class="py-3.5 px-4 text-right">
+                                            <div class="flex items-center justify-end gap-1.5">
+                                                <button title="Voir les détails" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition">
+                                                    <i class="fa-solid fa-eye text-xs"></i>
+                                                </button>
+                                                <button title="Éditer" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-emerald-600 flex items-center justify-center transition">
+                                                    <i class="fa-solid fa-pencil text-xs"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Footer du tableau & Pagination -->
+                        <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                            <div>
+                                Affichage de <span class="font-semibold text-slate-800">1</span> à <span class="font-semibold text-slate-800">1</span> sur <span class="font-semibold text-slate-800">882</span> éléments
+                            </div>
+
+                            <div class="flex items-center space-x-1">
+                                <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angles-left"></i></button>
+                                <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angle-left"></i></button>
+                                <button class="px-3 py-1.5 rounded border border-emerald-600 bg-emerald-600 text-white font-bold">1</button>
+                                <button class="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold">2</button>
+                                <button class="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold">3</button>
+                                <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition"><i class="fa-solid fa-angle-right"></i></button>
+                                <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition"><i class="fa-solid fa-angles-right"></i></button>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span>Par page:</span>
+                                <select class="bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:outline-none">
+                                    <option>10</option>
+                                    <option>25</option>
+                                    <option>50</option>
+                                    <option selected>100</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>         
+
+            <!-- TIROIR DE FILTRES (DRAWER) -->
+            <section id="drawers" class="space-y-4">
+                <div class="border-b border-slate-200 pb-3">
+                    <h2 class="text-lg font-bold text-slate-900">7. Tiroir de filtres (Drawer Coulissant)</h2>
+                    <p class="text-xs text-slate-500">Panneau latéral réutilisable pour les filtres complexes.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Tester le Tiroir de filtres</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Ouvre le panneau latéral coulissant interactif.</p>
+                    </div>
+                    <button onclick="openDemoDrawer()" class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+                        <i class="fa-solid fa-sliders"></i> Ouvrir le tiroir
+                    </button>
+                </div>
+            </section>
+
+            <!-- FENÊTRES SURGISSANTES (POPIN & MODALES) -->
+            <section id="modals" class="space-y-4">
+                <div class="border-b border-slate-200 pb-3">
+                    <h2 class="text-lg font-bold text-slate-900">8. Modèles de Fenêtres Surgissantes (Pop-in & Modales)</h2>
+                    <p class="text-xs text-slate-500">Composants de boîtes de dialogue pour la confirmation, la gestion de clés API ou la saisie d'informations.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Pop-in Clé API & Modales de confirmation</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Ouvre la fenêtre modale centrée avec fond flouté (backdrop blur).</p>
+                    </div>
+                    <button onclick="openApiModalDemo()" class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2 shrink-0">
+                        <i class="fa-solid fa-key"></i> Tester la Pop-in Clé API
+                    </button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- DEMO DRAWER MODAL -->
+    <div id="demoDrawerBackdrop" onclick="closeDemoDrawer()" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity"></div>
+
+    <div id="demoDrawer" class="fixed top-0 right-0 h-full w-80 sm:w-[420px] bg-white shadow-2xl border-l border-slate-200 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/50">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-sliders"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-900">Filtres avancés</h3>
+                    <p class="text-[11px] text-slate-400">Exemple de tiroir réutilisable</p>
+                </div>
+            </div>
+            <button onclick="closeDemoDrawer()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto flex-1 space-y-4 text-xs">
+            <p class="text-slate-500">Contenu exemple du tiroir de filtres.</p>
+        </div>
+        <div class="p-4 border-t border-slate-200 bg-white shrink-0 flex items-center gap-3">
+            <button onclick="closeDemoDrawer()" class="w-1/3 py-2.5 px-3 border border-slate-300 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition text-center flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-rotate-left text-slate-400"></i> Effacer
+            </button>
+            <button onclick="closeDemoDrawer()" class="w-2/3 py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-md shadow-emerald-600/20 transition text-center flex items-center justify-center gap-2">
+                <i class="fa-solid fa-check"></i> Appliquer les filtres
+            </button>
+        </div>
+    </div>
+
+    <!-- POP-IN MODALE DEMO (CLÉ API) -->
+    <div id="apiModalBackdrop" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div id="apiModal" class="hidden bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden animate-in fade-in duration-150">
+            <div class="p-8">
+                <h2 class="text-xl font-medium text-slate-800 mb-6 tracking-tight">Nouvelle Clé API</h2>
+
+                <div class="space-y-6">
+                    <div class="relative">
+                        <div id="addKeyNameInputContainer" class="border border-slate-300 rounded focus-within:border-[#007b92] p-3 relative bg-white transition">
+                            <label class="absolute -top-2.5 left-3 bg-white px-1 text-[11px] text-slate-500 font-medium">Nom de la clé *</label>
+                            <input type="text" id="addKeyNameInput" class="w-full text-sm text-slate-800 focus:outline-none bg-transparent">
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="border-b border-slate-300 focus-within:border-[#007b92] py-2 relative bg-white flex items-center justify-between">
+                            <div class="w-full">
+                                <label class="block text-[11px] text-slate-500 font-medium mb-0.5">Partenaire *</label>
+                                <select id="addKeyPartnerSelect" class="w-full text-sm text-slate-800 focus:outline-none bg-transparent cursor-pointer">
+                                    <option value="1293 - Grading-Largo">1293 - Grading-Largo</option>
+                                    <option value="1294 - CompaRecycle Retail">1294 - CompaRecycle Retail</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-500 font-medium mb-2">Permission en Lecture *</label>
+                        <div class="flex items-center space-x-6 text-sm text-slate-700">
+                            <label class="inline-flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="addKeyReadPerm" value="Oui" checked class="w-4 h-4 text-[#007b92] focus:ring-0">
+                                <span class="text-xs font-medium">Oui</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="addKeyReadPerm" value="Non" class="w-4 h-4 text-[#007b92] focus:ring-0">
+                                <span class="text-xs font-medium">Non</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-500 font-medium mb-2">Permission en Ecriture *</label>
+                        <div class="flex items-center space-x-6 text-sm text-slate-700">
+                            <label class="inline-flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="addKeyWritePerm" value="Oui" checked class="w-4 h-4 text-[#007b92] focus:ring-0">
+                                <span class="text-xs font-medium">Oui</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="addKeyWritePerm" value="Non" class="w-4 h-4 text-[#007b92] focus:ring-0">
+                                <span class="text-xs font-medium">Non</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex items-center justify-end space-x-6 text-xs font-bold tracking-wider uppercase">
+                    <button onclick="closeApiModalDemo()" class="text-[#e91e63] hover:text-[#c2185b] transition">ANNULER</button>
+                    <button onclick="closeApiModalDemo()" class="text-emerald-600 hover:text-emerald-700 transition">CRÉER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE DEMO JS -->
+    <script>
+        // Switch de dates relatives / plage
+        function demoSwitchDate(type) {
+            const containerRelative = document.getElementById('demoContainerRelative');
+            const containerRange = document.getElementById('demoContainerRange');
+
+            if (type === 'relative') {
+                containerRelative.classList.remove('hidden');
+                containerRange.classList.add('hidden');
+            } else {
+                containerRange.classList.remove('hidden');
+                containerRelative.classList.add('hidden');
+            }
+        }
+
+        // Gestion du Drawer
+        function openDemoDrawer() {
+            document.getElementById('demoDrawerBackdrop').classList.remove('hidden');
+            document.getElementById('demoDrawer').classList.remove('translate-x-full');
+        }
+
+        function closeDemoDrawer() {
+            document.getElementById('demoDrawerBackdrop').classList.add('hidden');
+            document.getElementById('demoDrawer').classList.add('translate-x-full');
+        }
+
+        // Affichage du sélecteur de colonnes
+        function toggleDemoColumnPicker(elem) {
+            const panel = document.getElementById(elem);
+            if (panel) panel.classList.toggle('hidden');
+        }
+
+        function resetDemoColumnVisibility(elem) {
+            const checkboxes = document.querySelectorAll(`#${elem} input[type="checkbox"]`);
+            checkboxes.forEach(cb => cb.checked = true);
+        }
+
+        // Gestion de la Pop-in Modale Clé API
+        function openApiModalDemo() {
+            document.getElementById('apiModalBackdrop').classList.remove('hidden');
+            document.getElementById('apiModal').classList.remove('hidden');
+        }
+
+        function closeApiModalDemo() {
+            document.getElementById('apiModalBackdrop').classList.add('hidden');
+            document.getElementById('apiModal').classList.add('hidden');
+        }
+
+        // Afficher / Masquer le menu déroulant
+        function toggleSearchSelect(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) dropdown.classList.toggle('hidden');
+        }
+
+        // Filtrer les éléments de la liste selon la recherche
+        function filterSelectOptions(input, listId) {
+            const filter = input.value.toLowerCase();
+            const list = document.getElementById(listId);
+            const options = list.getElementsByTagName('li');
+
+            for (let i = 0; i < options.length; i++) {
+                const text = options[i].textContent || options[i].innerText;
+                if (text.toLowerCase().indexOf(filter) > -1) {
+                    options[i].style.display = "";
+                } else {
+                    options[i].style.display = "none";
+                }
+            }
+        }
+
+        // Sélectionner un élément dans le Select simple avec Recherche
+        function selectSingleOption(labelId, dropdownId, value) {
+            const label = document.getElementById(labelId);
+            label.textContent = value;
+            label.classList.remove('text-slate-500');
+            label.classList.add('text-slate-800', 'font-bold');
+            
+            toggleSearchSelect(dropdownId);
+        }
+
+        // Focus sur l'input de recherche multi-select
+        function focusMultiSelectInput(inputId) {
+            document.getElementById(inputId).focus();
+        }
+
+        // Ouverture du menu déroulant multi-select
+        function openMultiSelectDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) dropdown.classList.remove('hidden');
+        }
+
+        // Sélection d'un item : création du tag et élimination de la liste
+        function selectMultiOption(optionElem, value, tagsContainerId, dropdownId, inputId) {
+            const tagsContainer = document.getElementById(tagsContainerId);
+            
+            // 1. Masquer l'élément dans la liste déroulante
+            optionElem.classList.add('hidden');
+
+            // 2. Créer le tag visuel
+            const tag = document.createElement('span');
+            tag.setAttribute('data-value', value);
+            tag.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px] animate-in fade-in zoom-in-95 duration-100';
+            tag.innerHTML = `
+                ${value}
+                <button type="button" onclick="event.stopPropagation(); removeMultiTag(this, '${value}', '${dropdownId}')" class="hover:text-emerald-900">
+                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                </button>
+            `;
+            
+            tagsContainer.appendChild(tag);
+
+            // 3. Réinitialiser la recherche
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.value = '';
+                filterMultiOptions(input, optionElem.parentElement.id);
+            }
+        }
+
+        // Suppression d'un tag : retrait de la zone et réapparition dans la liste
+        function removeMultiTag(btnElem, value, dropdownId) {
+            // 1. Supprimer le tag
+            const tag = btnElem.closest('span');
+            if (tag) tag.remove();
+
+            // 2. Re-faire apparaître l'item dans la liste déroulante
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) {
+                const optionItem = dropdown.querySelector(`li[data-value="${value}"]`);
+                if (optionItem) {
+                    optionItem.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Filtrage dynamique des options restantes
+        function filterMultiOptions(input, listId) {
+            const filter = input.value.toLowerCase();
+            const list = document.getElementById(listId);
+            const options = list.getElementsByTagName('li');
+
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                const text = option.textContent || option.innerText;
+                
+                if (!option.classList.contains('hidden') || filter === '') {
+                    if (text.toLowerCase().indexOf(filter) > -1) {
+                        option.style.display = "";
+                    } else {
+                        option.style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Fermeture automatique au clic en dehors du multi-select
+        document.addEventListener('click', function(e) {
+            const multiSelect = document.getElementById('multiGradeDropdown');
+            const input = document.getElementById('multiGradeInput');
+            if (multiSelect && input && !multiSelect.contains(e.target) && !input.contains(e.target)) {
+                multiSelect.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
