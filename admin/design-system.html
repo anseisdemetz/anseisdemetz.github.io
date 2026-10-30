@@ -41,15 +41,24 @@
                 <i class="fa-solid fa-hand-pointer text-emerald-600 w-4"></i> Boutons & Actions
             </a>
             <a href="#badges" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
-                <i class="fa-solid fa-tag text-emerald-600 w-4"></i> Badges & Statuts
+                <i class="fa-solid fa-tag text-emerald-600 w-4"></i> Statuts & Badges
             </a>
             <a href="#forms" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
                 <i class="fa-solid fa-sliders text-emerald-600 w-4"></i> Formulaires & Filtres
+            </a>
+            <a href="#kpi" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-chart-line text-emerald-600 w-4"></i> Encarts Chiffrés & KPIs
+            </a>
+            <a href="#info" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-circle-info text-emerald-600 w-4"></i> Designs d'Information
             </a>
 
             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-2 pt-4">Composants complexes</div>
             <a href="#tables" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
                 <i class="fa-solid fa-table text-emerald-600 w-4"></i> Tableau & Actions
+            </a>
+            <a href="#popup-tables" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
+                <i class="fa-solid fa-table-cells text-emerald-600 w-4"></i> Tableaux pour Popup
             </a>
             <a href="#drawers" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
                 <i class="fa-solid fa-bars-staggered text-emerald-600 w-4"></i> Tiroir de filtres (Drawer)
@@ -68,7 +77,7 @@
                     <h2 class="text-lg font-bold text-slate-900">1. Couleurs & Nuancier</h2>
                     <p class="text-xs text-slate-500">Palette de couleurs primaires, neutres et fonctionnelles.</p>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 text-xs font-semibold">
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 text-xs font-semibold">
                     <div class="space-y-1.5">
                         <div class="h-16 rounded-xl bg-emerald-600 shadow-sm flex items-end p-2 text-white text-[10px]">#059669</div>
                         <span class="block text-slate-800">Emerald 600</span>
@@ -80,6 +89,16 @@
                         <span class="block text-[10px] text-slate-400">Fonds de sélections / Badges</span>
                     </div>
                     <div class="space-y-1.5">
+                        <div class="h-16 rounded-xl bg-[rgb(225_29_72)] shadow-sm flex items-end p-2 text-white text-[10px]">#e11d48</div>
+                        <span class="block text-slate-800">Rose / Rouge 600</span>
+                        <span class="block text-[10px] text-slate-400">Alerte / Statuts & Badges</span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="h-16 rounded-xl bg-rose-50 border border-rose-200 shadow-sm flex items-end p-2 text-rose-800 text-[10px]">#fff1f2</div>
+                        <span class="block text-slate-800">Rose / Red 50</span>
+                        <span class="block text-[10px] text-slate-400">Fond de badges / Erreurs</span>
+                    </div>
+                    <div class="space-y-1.5">
                         <div class="h-16 rounded-xl bg-slate-900 shadow-sm flex items-end p-2 text-white text-[10px]">#0f172a</div>
                         <span class="block text-slate-800">Slate 900</span>
                         <span class="block text-[10px] text-slate-400">Textes principaux / Headers</span>
@@ -88,6 +107,11 @@
                         <div class="h-16 rounded-xl bg-slate-100 border border-slate-200 shadow-sm flex items-end p-2 text-slate-700 text-[10px]">#f1f5f9</div>
                         <span class="block text-slate-800">Slate 100</span>
                         <span class="block text-[10px] text-slate-400">Arrière-plans secondaires</span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="h-16 rounded-xl bg-blue-600 shadow-sm flex items-end p-2 text-white text-[10px]">#2563eb</div>
+                        <span class="block text-slate-800">Blue 600</span>
+                        <span class="block text-[10px] text-slate-400">Information / Encarts</span>
                     </div>
                 </div>
             </section>
@@ -132,19 +156,24 @@
                         <span class="text-[10px] text-slate-400 font-mono uppercase block">Actions de barre d'outils (Tableaux)</span>
                         <div class="flex flex-wrap items-center gap-3">
                             <button class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
-                                <i class="fa-solid fa-download text-slate-500"></i>
+                                <i class="fa-solid fa-download text-emerald-700"></i>
                                 <span>Exporter</span>
                             </button>
                             
                             <button onclick="openDemoDrawer()" class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
-                                <i class="fa-solid fa-sliders text-slate-500"></i>
+                                <i class="fa-solid fa-sliders text-emerald-700"></i>
                                 <span>Filtres</span>
                             </button>
                             
                             <button class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
-                                <i class="fa-solid fa-table-columns text-slate-500"></i>
+                                <i class="fa-solid fa-table-columns text-emerald-700"></i>
                                 <span>Colonnes</span>
                                 <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+                            </button>
+
+                            <button onclick="" title="Consulter le guide" class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">
+                                <i class="fa-solid fa-book-open text-emerald-700"></i>
+                                <span>Guide & Aide</span>
                             </button>
                         </div>
                     </div>
@@ -185,30 +214,120 @@
             </section>
 
             <!-- BADGES, STATUTS & GRADES -->
+            <!-- STATUTS & BADGES -->
             <section id="badges" class="space-y-4">
                 <div class="border-b border-slate-200 pb-3">
-                    <h2 class="text-lg font-bold text-slate-900">4. Statuts</h2>
-                    <p class="text-xs text-slate-500">Indicateurs d'état.</p>
+                    <h2 class="text-lg font-bold text-slate-900">4. Statuts & Badges</h2>
+                    <p class="text-xs text-slate-500">Indicateurs d'état fonctionnels et badges visuels de classification d'argus et de reconditionnement.</p>
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                    <div class="space-y-2">
-                        <span class="text-[10px] text-slate-400 font-mono uppercase block">Statuts du partenaire</span>
-                        <div class="flex flex-wrap items-center gap-3">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+
+                    <!-- BLOC 1 : STATUTS PARTENAIRE -->
+                    <div class="space-y-3">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-100 pb-2">
+                            Statuts Partenaire
+                        </span>
+                        <div class="flex flex-wrap items-center gap-3 pt-1">
                             <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                 <span>Connecté</span>
                             </span>
                             <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-[rgb(225_29_72)]"></span>
                                 <span>Déconnecté</span>
+                            </span>                           
+                        </div>
+                    </div>
+
+                    <!-- BLOC 2 : BADGES DE STATUT DANS LES TABLEAUX -->
+                    <div class="space-y-3">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-100 pb-2">
+                            Badges dans les tableaux
+                        </span>
+
+                        <div class="flex flex-wrap items-center gap-3 pt-1">
+                            <!-- STATUT : RÉSERVÉ -->
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/80">
+                                <span>Réservé</span>
+                            </span>
+
+                            <!-- STATUT : VALIDÉ -->
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                                <span>Validé</span>
+                            </span>
+
+                            <!-- STATUT : EN ATTENTE -->
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80">
+                                <span>En attente</span>
+                            </span>
+
+                            <!-- STATUT : ANNULÉE -->
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200/80">
+                                <span>Annulée</span>
                             </span>
                         </div>
                     </div>
+
+                    <!-- BLOC 3 : BADGES DE GRADES & PRIX ARGUS -->
+                    <div class="space-y-4">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-100 pb-2">
+                            Badges de Grades
+                        </span>
+
+                        <!-- Badges des Grades (Grade A à Grade D-) -->
+                        <div class="space-y-2">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">Grade A</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Grade A-</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">Grade B</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">Grade C</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">Grade C-</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-100 text-[rgb(225_29_72)] border border-rose-200">Grade D</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">Grade D-</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <!-- BLOC 4 : BADGES DE PRIX -->
+                    <div class="space-y-4">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-100 pb-2">
+                            Badges de Prix
+                        </span>
+
+                        <!-- Badges de Prix Argus -->
+                        <div class="space-y-2 pt-2">
+                            <div class="flex flex-wrap items-center gap-3">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-500 text-white font-mono font-bold text-xs rounded-xl shadow-sm">                                    
+                                    <span>340 €</span>                                    
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BLOC 4 : BADGES DE TABLEAU -->
+                    <div class="space-y-4">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-100 pb-2">
+                            Badges dans les tableaux simples
+                        </span>
+
+                        <!-- Badges de Prix Argus -->
+                        <div class="space-y-2 pt-2">
+                            <div class="flex flex-wrap items-center gap-3">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">Non conforme</span>
+                            
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Conforme</span>
+
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">En cours</span>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             </section>
 
             <!-- FORMULAIRES & FILTRES -->
-                        <!-- FORMULAIRES & FILTRES -->
             <section id="forms" class="space-y-4">
                 <div class="border-b border-slate-200 pb-3">
                     <h2 class="text-lg font-bold text-slate-900">5. Formulaires & Switch de dates</h2>
@@ -216,14 +335,56 @@
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 w-full">
+                    
+                    <!-- LIGNE 1 : Encadrement & En-têtes de filtres -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- BLOC 1: Encadrement des sections de filtres -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+                            <span class="text-[10px] text-slate-400 font-mono uppercase block mb-1">Encadrement des sections de filtre</span>
+
+                            <div class="space-y-2.5 pt-1">
+                                <div class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm space-y-2">
+                                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                        <i class="fa-solid fa-hashtag text-emerald-600"></i> N° de transaction
+                                    </span>
+                                    <div class="relative">
+                                        <i class="fa-solid fa-barcode absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                        <input type="text" id="filterNumTrans" placeholder="Ex: TRX-102938" class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BLOC 2: Liste des en-têtes de filtres -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+                            <span class="text-[10px] text-slate-400 font-mono uppercase block">Liste des en-tête de section de filtre</span>
+
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2.5 rounded-lg border border-slate-200/60 shadow-sm">
+                                    <i class="fa-solid fa-mobile-screen text-emerald-600"></i>
+                                    <span>Produit & Marque</span>
+                                </span>
+
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2.5 rounded-lg border border-slate-200/60 shadow-sm">
+                                    <i class="fa-solid fa-list-check text-emerald-600"></i>
+                                    <span>Grades & Validation</span>
+                                </span>
+
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2.5 rounded-lg border border-slate-200/60 shadow-sm">
+                                    <i class="fa-regular fa-calendar-days text-emerald-600"></i> 
+                                    <span>Date de création</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LIGNE 2 : Listes déroulantes, Switchs & Champs -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                        <!-- BLOC 1: Switch Date Relative / Plage de dates -->
+                        <!-- BLOC 3: Switch Date Relative / Plage de dates -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
-                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-regular fa-calendar-days text-emerald-600"></i> 
-                                <span>Date de création</span>
-                            </span>
+                            <span class="text-[10px] text-slate-400 font-mono uppercase block">Switch Période & Dates</span>
+                            
                             <div class="grid grid-cols-2 gap-2 p-1 bg-slate-200/60 rounded-lg">
                                 <label class="cursor-pointer text-center">
                                     <input type="radio" name="demoDateType" value="relative" checked onclick="demoSwitchDate('relative')" class="hidden peer">
@@ -235,15 +396,30 @@
                                 </label>
                             </div>
 
-                            <div id="demoContainerRelative" class="pt-1 relative">
-                                <select class="w-full py-2 pl-3 pr-9 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer appearance-none shadow-sm">
-                                    <option value="today">Aujourd'hui</option>
-                                    <option value="yesterday">Hier</option>
-                                    <option value="this_week">Cette semaine</option>
-                                    <option value="last_week">La semaine dernière</option>
-                                    <option value="from_last_month">À partir du mois dernier</option>
-                                </select>
-                                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
+                            <div class="space-y-1">
+                                <div id="demoContainerRelative" class="relative">
+                                    <button type="button" onclick="toggleSearchSelect('dateSelectDropdown')" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm flex items-center justify-between transition">
+                                        <span id="dateSelectLabel" class="truncate font-bold text-slate-800">Aujourd'hui</span>
+                                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-2"></i>
+                                    </button>
+
+                                    <div id="dateSelectDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                                        <ul class="max-h-48 overflow-y-auto p-1 text-xs text-slate-700 font-medium space-y-0.5">
+                                            <li onclick="selectSingleOption('dateSelectLabel', 'dateSelectDropdown', 'Hier')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Hier</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('dateSelectLabel', 'dateSelectDropdown', 'Cette semaine')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Cette semaine</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('dateSelectLabel', 'dateSelectDropdown', 'La semaine dernière')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>La semaine dernière</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('dateSelectLabel', 'dateSelectDropdown', 'À partir du mois dernier')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>À partir du mois dernier</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
 
                             <div id="demoContainerRange" class="hidden space-y-2 pt-1">
@@ -258,41 +434,13 @@
                             </div>
                         </div>
 
-                        <!-- BLOC 2: En-têtes de sections de filtres -->
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
-                            <span class="text-[10px] text-slate-400 font-mono uppercase block mb-1">En-têtes de sections de filtres</span>
-                            
-                            <div class="space-y-2.5 pt-1">
-                                <div class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm space-y-2">
-                                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                                        <i class="fa-solid fa-hashtag text-emerald-600"></i> N° de transaction
-                                    </span>
-                                    <div class="relative">
-                                        <i class="fa-solid fa-barcode absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                                        <input type="text" id="filterNumTrans" placeholder="Ex: TRX-102938" class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                                    </div>
-                                </div>
-
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2.5 rounded-lg border border-slate-200/60 shadow-sm">
-                                    <i class="fa-solid fa-mobile-screen text-emerald-600"></i>
-                                    <span>Produit & Marque</span>
-                                </span>
-
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white p-2.5 rounded-lg border border-slate-200/60 shadow-sm">
-                                    <i class="fa-solid fa-list-check text-emerald-600"></i> 
-                                    <span>Grades & Validation</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- BLOC 3: Liste déroulante personnalisée (Regroupant Statut, Recherche, Multi-Select) -->
+                        <!-- BLOC 4: Listes déroulantes personnalisées -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-4">
-                            <span class="text-[10px] text-slate-400 font-mono uppercase block">Liste déroulante personnalisée</span>
+                            <span class="text-[10px] text-slate-400 font-mono uppercase block">Listes déroulantes personnalisées</span>
                             
-                            <!-- Sous-élément A: Statut de la facture (Select simple sans recherche) -->
+                            <!-- 01. Select simple -->
                             <div class="space-y-1">
-                                <label class="text-xs font-bold text-slate-800 block">Statut de la facture</label>
-                                
+                                <label class="text-xs font-bold text-slate-800 block">01. Liste déroulante simple</label>
                                 <div class="relative">
                                     <button type="button" onclick="toggleSearchSelect('statusSelectDropdown')" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm flex items-center justify-between transition">
                                         <span id="statusSelectLabel" class="truncate font-bold text-slate-800">Facturé</span>
@@ -315,10 +463,48 @@
                                 </div>
                             </div>
 
-                            <!-- Sous-élément B: Select avec recherche -->
+                            <!-- 02. Select avec infobulle -->
+                            <div class="space-y-1.5">
+                                <div class="flex items-center gap-1.5">
+                                    <label class="text-xs font-bold text-slate-800 block">02. Liste déroulante avec infobulle</label>
+                                    <div class="relative flex items-center group">
+                                        <button type="button" aria-label="Information sur le statut" class="w-4 h-4 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-600 flex items-center justify-center text-[10px] font-bold transition-colors cursor-help">
+                                            <i class="fa-solid fa-info text-[9px]"></i>
+                                        </button>
+                                        <div class="absolute bottom-full right-0 mb-2 hidden group-hover:flex flex-col items-end w-60 z-30 pointer-events-none animate-in fade-in duration-150">
+                                            <div class="bg-slate-900 text-white text-[11px] font-medium p-2.5 rounded-xl shadow-xl leading-relaxed text-left">
+                                                Explication détaillée de la donnée attendue dans ce champ.
+                                            </div>
+                                            <div class="w-2 h-2 bg-slate-900 rotate-45 mr-1.5 -mt-1"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="relative">
+                                    <button type="button" onclick="toggleSearchSelect('statusInfobulleSelectDropdown')" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm flex items-center justify-between transition">
+                                        <span id="statusInfobulleSelectLabel" class="truncate font-bold text-slate-800">Facturé</span>
+                                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-2"></i>
+                                    </button>
+
+                                    <div id="statusInfobulleSelectDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                                        <ul class="max-h-48 overflow-y-auto p-1 text-xs text-slate-700 font-medium space-y-0.5">
+                                            <li onclick="selectSingleOption('statusInfobulleSelectLabel', 'statusInfobulleSelectDropdown', 'Facturé')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Facturé</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('statusInfobulleSelectLabel', 'statusInfobulleSelectDropdown', 'Payé')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>Payé</span>
+                                            </li>
+                                            <li onclick="selectSingleOption('statusInfobulleSelectLabel', 'statusInfobulleSelectDropdown', 'En retard')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                                <span>En retard</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>                            
+
+                            <!-- 03. Select avec recherche -->
                             <div class="space-y-1 pt-2 border-t border-slate-200/60">
-                                <label class="text-xs font-bold text-slate-800 block">Sélectionner un partenaire</label>
-                                
+                                <label class="text-xs font-bold text-slate-800 block">03. Liste déroulante avec recherche</label>
                                 <div class="relative">
                                     <button type="button" onclick="toggleSearchSelect('partnerSelectDropdown')" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm flex items-center justify-between transition">
                                         <span id="partnerSelectLabel" class="truncate text-slate-500">Choisir un partenaire...</span>
@@ -350,13 +536,11 @@
                                 </div>
                             </div>
 
-                            <!-- Sous-élément C: Select avec saisie multiple -->
+                            <!-- 04. Multi-tag select -->
                             <div class="space-y-1 pt-2 border-t border-slate-200/60">
-                                <label class="text-xs font-bold text-slate-800 block">Grades autorisés</label>
-                                
+                                <label class="text-xs font-bold text-slate-800 block">04. Liste déroulante multi-tag</label>
                                 <div class="relative">
                                     <div onclick="focusMultiSelectInput('multiGradeInput')" class="w-full min-h-[42px] p-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus-within:ring-2 focus-within:ring-emerald-500 shadow-sm flex flex-wrap items-center gap-1.5 cursor-pointer transition">
-                                        
                                         <div id="multiGradeTagsContainer" class="flex flex-wrap items-center gap-1.5">
                                             <span data-value="Grade A" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">
                                                 Grade A
@@ -402,505 +586,960 @@
                                 </div>
                             </div>
 
-                        </div>
+                            <!-- 05. Radio switch -->
+                            <div class="space-y-1.5 pt-2 border-t border-slate-200/60">
+                                <label class="block text-xs font-bold text-slate-700">05. Radio switch</label>
+                                <div class="relative bg-slate-100/80 p-1 rounded-xl border border-slate-200/80 flex items-center select-none">
+                                    <div id="read" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm border border-slate-200/60 transition-transform duration-200 ease-in-out"></div>
+                                    <label onclick="moveSwitchPill('read', 'oui', 'readIconOui', 'readTextOui', 'readTextNon')" 
+                                    class="relative z-10 flex-1 flex items-center justify-center gap-1.5 py-1 px-2 rounded-lg cursor-pointer text-xs font-bold transition-colors duration-200 text-emerald-700">
+                                        <input type="radio" name="addKeyReadPerm" value="Oui" checked class="hidden">
+                                        <i id="readIconOui" class="fa-solid fa-check text-[10px] transition-all duration-200 opacity-100 scale-100"></i>
+                                        <span id="readTextOui">Oui</span>
+                                    </label>
 
-                    </div>
-                </div>
-            </section>
-
-            <!-- TABLEAU & ICÔNES D'ACTIONS -->
-            <section id="tables" class="space-y-4">
-                <div class="border-b border-slate-200 pb-3">
-                    <h2 class="text-lg font-bold text-slate-900">6. Tableau de rubrique & Icônes d'actions</h2>
-                    <p class="text-xs text-slate-500">Modèle standard de tableau de données avec barre d'outils, badges d'état et actions en bout de ligne.</p>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                    
-                    <!-- ENCART 1: MODÈLES DE BOUTONS D'ACTIONS EN LIGNE -->
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
-                        <span class="text-[10px] text-slate-400 font-mono uppercase block">Modèles d'icônes & boutons d'actions en bout de ligne</span>
-                        <div class="flex flex-wrap items-center gap-4">
-                            <!-- Option 1: Voir + Éditer -->
-                            <div class="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
-                                <button title="Voir les détails" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition">
-                                    <i class="fa-solid fa-eye text-xs"></i>
-                                </button>
-                                <button title="Éditer / Modifier" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-emerald-600 flex items-center justify-center transition">
-                                    <i class="fa-solid fa-pencil text-xs"></i>
-                                </button>
-                                <button title="Télécharger le rapport" class="inline-flex items-center gap-1.5 font-bold text-xs text-emerald-600 hover:text-emerald-700 transition px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 rounded-md">
-                                    <i class="fa-solid fa-file-arrow-up"></i>
-                                    <span>Importer</span>
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- DATA TABLE CONTAINER -->
-                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
-                        
-                        <!-- Toolbar interne au tableau (Search & Actions) -->
-                        <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/50 relative">
-                            <div class="relative flex-1 w-full">
-                                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                                <input type="text" placeholder="Rechercher dans le tableau (N°, marque, produit...)" class="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
-                            </div>
-
-                            <div class="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0 relative">
-                                <button onclick="openDemoDrawer()" class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition shrink-0">
-                                    <i class="fa-solid fa-sliders text-slate-500"></i>
-                                    <span>Filtres</span>
-                                </button>
-
-                                <div class="relative">
-                                    <button onclick="toggleDemoColumnPicker('demoColumnPickerPanel')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold transition border border-slate-300 shadow-sm shrink-0">
-                                        <i class="fa-solid fa-table-columns text-slate-500"></i>
-                                        <span>Colonnes</span>
-                                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
-                                    </button>
-
-                                    <div id="demoColumnPickerPanel" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
-                                        <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
-                                            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Colonnes affichées</span>
-                                            <button onclick="resetDemoColumnVisibility('demoColumnPickerPanel')" class="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700">Réinitialiser</button>
-                                        </div>
-                                        <div class="space-y-1.5 text-xs text-slate-700 font-medium max-h-72 overflow-y-auto pr-1">
-                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
-                                                <span>N° Transaction</span>
-                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                                            </label>
-                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
-                                                <span>Date</span>
-                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                                            </label>
-                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
-                                                <span>Marque & Produit</span>
-                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                                            </label>
-                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
-                                                <span>Grade validé</span>
-                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                                            </label>
-                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
-                                                <span>Prix validé</span>
-                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                                            </label>
-                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
-                                                <span>Statut</span>
-                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                                            </label>
-                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
-                                                <span>État Facture</span>
-                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                                            </label>
-                                            <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
-                                                <span>Actions</span>
-                                                <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                                            </label>
-                                        </div>
-                                    </div>
+                                    <label onclick="moveSwitchPill('read', 'non', 'readIconOui', 'readTextOui', 'readTextNon')" 
+                                    class="relative z-10 flex-1 flex items-center justify-center gap-1.5 py-1 px-2 rounded-lg cursor-pointer text-xs font-bold transition-colors duration-200 text-slate-500 hover:text-slate-700">
+                                        <input type="radio" name="addKeyReadPerm" value="Non" class="hidden">
+                                        <span id="readTextNon">Non</span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Zone déroulante du tableau -->
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse min-w-[1000px]">
-                                <thead>
-                                    <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none whitespace-nowrap">
-                                        <th class="py-3 px-4">N° Transaction</th>
-                                        <th class="py-3 px-4 text-center">Date</th>
-                                        <th class="py-3 px-4">Marque & Produit</th>
-                                        <th class="py-3 px-4 text-center">Grade validé</th>
-                                        <th class="py-3 px-4 text-center">Prix validé</th>
-                                        <th class="py-3 px-4 text-center">Statut</th>
-                                        <th class="py-3 px-4 text-center">État Facture</th>
-                                        <th class="py-3 px-4 text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-100 text-xs whitespace-nowrap">
-                                    <tr class="hover:bg-slate-50/80 transition group">
-                                        <td class="py-3.5 px-4 font-bold text-slate-800">TRX-2026-9041</td>
-                                        <td class="py-3.5 px-4 text-center text-slate-600">24/10/2026</td>
-                                        <td class="py-3.5 px-4">
-                                            <span class="font-bold text-slate-900 block">iPhone 15 Pro 256Go</span>
-                                            <span class="text-[10px] text-slate-400 font-semibold">Apple • Smartphone</span>
-                                        </td>
-                                        <td class="py-3.5 px-4 text-center">
-                                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800">Grade A</span>
-                                        </td>
-                                        <td class="py-3.5 px-4 text-center font-bold text-emerald-600">620,00 €</td>
-                                        <td class="py-3.5 px-4 text-center">
-                                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Validée
-                                            </span>
-                                        </td>
-                                        <td class="py-3.5 px-4 text-center">
-                                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">Facturée</span>
-                                        </td>
-                                        <td class="py-3.5 px-4 text-right">
-                                            <div class="flex items-center justify-end gap-1.5">
-                                                <button title="Voir les détails" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition">
-                                                    <i class="fa-solid fa-eye text-xs"></i>
-                                                </button>
-                                                <button title="Éditer" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-emerald-600 flex items-center justify-center transition">
-                                                    <i class="fa-solid fa-pencil text-xs"></i>
-                                                </button>
+                        <!-- BLOC 5: Champs de saisie & Filtres à cocher trendy -->
+                        <div class="space-y-6">
+                            
+                            <!-- Champs de saisie -->
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-4">
+                                <span class="text-[10px] text-slate-400 font-mono uppercase block">Champs de saisie</span>
+
+                                <div class="space-y-1.5">
+                                    <label for="inputSimple" class="block text-xs font-bold text-slate-700">
+                                        01. Champ de saisie simple <span class="text-rose-500">*</span>
+                                    </label>
+                                    <div class="relative">
+                                        <input 
+                                        type="text" 
+                                        id="inputSimple" 
+                                        placeholder="placeholder" 
+                                        class="w-full pl-3 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1.5">
+                                    <label for="inputWithInsideInfo" class="block text-xs font-bold text-slate-700">
+                                        02. Champ de saisie avec infobulle <span class="text-rose-500">*</span>
+                                    </label>
+
+                                    <div class="relative">
+                                        <input 
+                                        type="text" 
+                                        id="inputWithInsideInfo" 
+                                        placeholder="placeholder" 
+                                        class="w-full pl-3 pr-9 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+
+                                        <div class="absolute right-2.5 top-1/2 -translate-y-1/2 group flex items-center">
+                                            <button type="button" aria-label="Information" class="w-4 h-4 rounded-full bg-slate-200/70 hover:bg-slate-300 text-slate-500 flex items-center justify-center text-[10px] font-bold transition-colors cursor-help">
+                                                <i class="fa-solid fa-info text-[9px]"></i>
+                                            </button>
+
+                                            <div class="absolute bottom-full right-0 mb-2 hidden group-hover:flex flex-col items-end w-60 z-30 pointer-events-none animate-in fade-in duration-150">
+                                                <div class="bg-slate-900 text-white text-[11px] font-medium p-2.5 rounded-xl shadow-xl leading-relaxed text-left">
+                                                    Explication détaillée de la donnée attendue dans ce champ.
+                                                </div>
+                                                <div class="w-2 h-2 bg-slate-900 rotate-45 mr-1.5 -mt-1"></div>
                                             </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <!-- Footer du tableau & Pagination -->
-                        <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-                            <div>
-                                Affichage de <span class="font-semibold text-slate-800">1</span> à <span class="font-semibold text-slate-800">1</span> sur <span class="font-semibold text-slate-800">882</span> éléments
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-bold text-slate-700">03. Champ de saisie avec Tag</label>
+
+                                    <div 
+                                    onclick="document.getElementById('tagInput').focus()" 
+                                    class="w-full min-h-[42px] p-1.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus-within:ring-2 focus-within:ring-emerald-500 shadow-sm flex flex-wrap items-center gap-1.5 cursor-text transition">
+
+                                        <div id="tagsContainer" class="flex flex-wrap items-center gap-1.5">
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-bold text-xs animate-in fade-in zoom-in-95 duration-150">
+                                                Smartphone
+                                                <button type="button" onclick="event.stopPropagation(); this.parentElement.remove()" class="hover:text-emerald-900 transition">
+                                                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+
+                                        <input type="text" id="tagInput" placeholder="Ajouter un tag..." 
+                                        class="flex-1 min-w-[120px] bg-transparent text-xs text-slate-800 placeholder-slate-400 focus:outline-none py-1">
+                                    </div>
+                                </div>                            
                             </div>
 
-                            <div class="flex items-center space-x-1">
-                                <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angles-left"></i></button>
-                                <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angle-left"></i></button>
-                                <button class="px-3 py-1.5 rounded border border-emerald-600 bg-emerald-600 text-white font-bold">1</button>
-                                <button class="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold">2</button>
-                                <button class="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold">3</button>
-                                <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition"><i class="fa-solid fa-angle-right"></i></button>
-                                <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition"><i class="fa-solid fa-angles-right"></i></button>
-                            </div>
-
-                            <div class="flex items-center gap-2">
-                                <span>Par page:</span>
-                                <select class="bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:outline-none">
-                                    <option>10</option>
-                                    <option>25</option>
-                                    <option>50</option>
-                                    <option selected>100</option>
-                                </select>
-                            </div>
                         </div>
 
                     </div>
 
                 </div>
-            </section>         
-
-            <!-- TIROIR DE FILTRES (DRAWER) -->
-            <section id="drawers" class="space-y-4">
-                <div class="border-b border-slate-200 pb-3">
-                    <h2 class="text-lg font-bold text-slate-900">7. Tiroir de filtres (Drawer Coulissant)</h2>
-                    <p class="text-xs text-slate-500">Panneau latéral réutilisable pour les filtres complexes.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800">Tester le Tiroir de filtres</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Ouvre le panneau latéral coulissant interactif.</p>
-                    </div>
-                    <button onclick="openDemoDrawer()" class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
-                        <i class="fa-solid fa-sliders"></i> Ouvrir le tiroir
-                    </button>
-                </div>
-            </section>
-
-                <!-- FENÊTRES SURGISSANTES (POPIN & MODALES) -->
-            <section id="modals" class="space-y-4">
-                <div class="border-b border-slate-200 pb-3">
-                    <h2 class="text-lg font-bold text-slate-900">8. Modèles de Fenêtres Surgissantes (Pop-in & Modales)</h2>
-                    <p class="text-xs text-slate-500">Composants de boîtes de dialogue pour la confirmation, la gestion de clés API ou la saisie d'informations.</p>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800">Pop-in Clé API & Modales de confirmation</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Ouvre la fenêtre modale centrée avec fond flouté (backdrop blur).</p>
-                    </div>
-                    <button onclick="openApiModalDemo()" class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2 shrink-0">
-                        <i class="fa-solid fa-key"></i> Tester la Pop-in Clé API
-                    </button>
-                </div>
-            </section>
-
-        </main>
+            </section><!-- ENCARTS CHIFFRÉS & KPIS -->
+<section id="kpi" class="space-y-4">
+    <div class="border-b border-slate-200 pb-3">
+        <h2 class="text-lg font-bold text-slate-900">Encarts Chiffrés & Facturation</h2>
+        <p class="text-xs text-slate-500">Cartes de synthèse chiffrée, indicateurs de performance financiers et résumés de facturation.</p>
     </div>
 
-    <!-- DEMO DRAWER MODAL -->
-    <div id="demoDrawerBackdrop" onclick="closeDemoDrawer()" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity"></div>
+    <!-- Encart Synthèse de Facturation -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-    <div id="demoDrawer" class="fixed top-0 right-0 h-full w-80 sm:w-[420px] bg-white shadow-2xl border-l border-slate-200 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
-        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/50">
-            <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
-                    <i class="fa-solid fa-sliders"></i>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 relative overflow-hidden">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Facturé HT</span>
+            <div class="flex items-baseline gap-2">
+                <span class="text-2xl font-black text-blue-600 tracking-tight">128 450,00 €</span>
+            </div>
+            <div class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                +12.4% <span class="text-slate-500 font-bold">vs mois dernier</span>
+            </div>
+        </div>
+
+        
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 relative overflow-hidden">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Encours en Retard</span>
+            <div class="flex items-baseline gap-2">
+                <span class="text-2xl font-black text-[rgb(225_29_72)] tracking-tight">14 250,00 €</span>
+            </div>
+            <div class="text-[11px] text-rose-600 font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-clock"></i>
+                <span class="text-slate-500 font-bold">4 factures en attente</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 relative overflow-hidden">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Volume Reprises</span>
+            <div class="flex items-baseline gap-2">
+                <span class="text-2xl font-black text-slate-900 tracking-tight">1 420</span>
+            </div>
+            <div class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                Panier moyen : <span class="font-bold text-slate-800">90,45 €</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- DESIGNS D'INFORMATION -->
+<section id="info" class="space-y-4">
+    <div class="border-b border-slate-200 pb-3">
+        <h2 class="text-lg font-bold text-slate-900">Designs d'Information & Messages</h2>
+        <p class="text-xs text-slate-500">Point d'information inline et blocs explicatifs repliables pour les définitions et règles de gestion.</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+
+        <!-- 1. Points d'information (i) en bleu -->
+        <div class="space-y-3">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">1. Point d'information (i) bleu (ligne unique & multi-lignes)</span>
+            
+            <!-- Ligne unique -->
+            <div class="p-3.5 bg-blue-50/80 border border-blue-200/80 rounded-xl flex items-center gap-3 text-blue-900 text-xs">
+                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 font-bold text-[11px] shadow-sm">
+                    <i class="fa-solid fa-info"></i>
                 </div>
-                <div>
-                    <h3 class="text-base font-bold text-slate-900">Filtres avancés</h3>
-                    <p class="text-[11px] text-slate-400">Exemple de tiroir réutilisable</p>
+                <span class="font-medium">Les tarifs d'argus sont mis à jour automatiquement chaque soir à minuit.</span>
+            </div>
+
+            <!-- Multi-lignes avec titre -->
+            <div class="p-4 bg-blue-50/80 border border-blue-200/80 rounded-xl flex items-start gap-3.5 text-blue-900 text-xs">
+                <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 font-bold text-xs shadow-sm mt-0.5">
+                    <i class="fa-solid fa-info"></i>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="font-bold text-blue-950 text-xs">Information sur le calcul des commissions</h4>
+                    <p class="text-blue-900/90 leading-relaxed text-[11px]">
+                        Le montant total affiché inclut la marge partenaire ainsi que le bonus constructeur. 
+                        En cas de litige sur le grade à la réception du produit, un délai de contestation de 14 jours s'applique.
+                    </p>
                 </div>
             </div>
-            <button onclick="closeDemoDrawer()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center">
+        </div>
+
+        <!-- 2. Bloc d'information dépliable au clic (Définitions de statuts) -->
+        <div class="space-y-3 pt-4 border-t border-slate-100">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">2. Bloc d'information cliquable (Affichage / Masquage)</span>
+            
+            <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-slate-50/50">
+                <!-- En-tête cliquable -->
+                <button type="button" onclick="toggleInfoBlock('infoDefinitionsContent', 'infoChevronIcon')" class="w-full px-4 py-3 bg-white hover:bg-slate-50 transition flex items-center justify-between text-left">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-book-open text-blue-600 text-sm"></i>
+                        <span class="text-xs font-bold text-slate-800">Guide & Définition des statuts de transactions</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-400">
+                        <span class="text-[11px] font-medium">Cliquez pour afficher</span>
+                        <i id="infoChevronIcon" class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+                    </div>
+                </button>
+
+                <!-- Contenu masqué / affiché -->
+                <div id="infoDefinitionsContent" class="hidden p-4 bg-white border-t border-slate-100 text-xs space-y-3 animate-in fade-in duration-150">
+                    <div class="space-y-2">
+
+                        <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-lg border border-slate-200/60">
+                            <span class="shrink-0 w-8 h-6 flex items-center justify-center rounded-md bg-blue-100 text-blue-700 text-[11px] font-bold">R1</span>
+                            <p class="text-[11px] text-slate-700 leading-relaxed">
+                                Une capacité supérieure ne peut pas être valorisée moins cher que la capacité inférieure.
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-lg border border-slate-200/60">
+                            <span class="shrink-0 w-8 h-6 flex items-center justify-center rounded-md bg-blue-100 text-blue-700 text-[11px] font-bold">R2</span>
+                            <p class="text-[11px] text-slate-700 leading-relaxed">
+                                Le prix d'un grade supérieur ne peut pas être inférieur au prix d'un grade inférieur.
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-lg border border-slate-200/60">
+                            <span class="shrink-0 w-8 h-6 flex items-center justify-center rounded-md bg-blue-100 text-blue-700 text-[11px] font-bold">R3</span>
+                            <p class="text-[11px] text-slate-700 leading-relaxed">
+                                Tout prix dépassant les paliers autorisés seront soumis à une validation auprès de Comparecycle.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- TABLEAU & ICÔNES D'ACTIONS -->
+<section id="tables" class="space-y-4">
+    <div class="border-b border-slate-200 pb-3">
+        <h2 class="text-lg font-bold text-slate-900">6. Tableau de rubrique & Icônes d'actions</h2>
+        <p class="text-xs text-slate-500">Modèle standard de tableau de données avec barre d'outils, badges d'état et actions en bout de ligne.</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+
+        <!-- ENCART 1: MODÈLES DE BOUTONS D'ACTIONS EN LIGNE -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+            <span class="text-[10px] text-slate-400 font-mono uppercase block">Modèles d'icônes & boutons d'actions en bout de ligne</span>
+            <div class="flex flex-wrap items-center gap-4">
+                <!-- Option 1: Voir + Éditer -->
+                <div class="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+
+                    <button title="Voir les détails" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition">
+                        <i class="fa-solid fa-eye text-xs"></i>
+                    </button>
+
+                    <button title="Éditer / Modifier" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-emerald-600 flex items-center justify-center transition">
+                        <i class="fa-solid fa-pencil text-xs"></i>
+                    </button>
+
+                    <button title="Télécharger le rapport" class="border border-slate-200 inline-flex items-center gap-1.5 font-bold text-xs text-emerald-600 hover:text-emerald-700 transition px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 rounded-md">
+                        <i class="fa-solid fa-file-arrow-up"></i>
+                        <span>Importer</span>
+                    </button>
+
+
+                    <button title="Télécharger le rapport" class="border border-slate-200 inline-flex items-center gap-1.5 font-bold text-xs text-emerald-600 hover:text-emerald-700 transition px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 rounded-md">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Télécharger</span>
+                    </button>
+                </div>
+
+                
+
+            </div>
+        </div>
+
+        <!-- DATA TABLE CONTAINER -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+
+            <!-- Toolbar interne au tableau (Search & Actions) -->
+            <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/50 relative">
+                <div class="relative flex-1 w-full">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" placeholder="Rechercher dans le tableau (N°, marque, produit...)" class="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+                </div>
+
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0 relative">
+                    <button onclick="openDemoDrawer()" class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition shrink-0">
+                        <i class="fa-solid fa-sliders text-slate-500"></i>
+                        <span>Filtres</span>
+                    </button>
+
+                    <div class="relative">
+                        <button onclick="toggleDemoColumnPicker('demoColumnPickerPanel')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold transition border border-slate-300 shadow-sm shrink-0">
+                            <i class="fa-solid fa-table-columns text-slate-500"></i>
+                            <span>Colonnes</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+                        </button>
+
+                        <div id="demoColumnPickerPanel" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
+                            <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
+                                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Colonnes affichées</span>
+                                <button onclick="resetDemoColumnVisibility('demoColumnPickerPanel')" class="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700">Réinitialiser</button>
+                            </div>
+                            <div class="space-y-1.5 text-xs text-slate-700 font-medium max-h-72 overflow-y-auto pr-1">
+                                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                    <span>N° Transaction</span>
+                                    <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                </label>
+                                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                    <span>Date</span>
+                                    <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                </label>
+                                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                    <span>Marque & Produit</span>
+                                    <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                </label>
+                                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                    <span>Grade validé</span>
+                                    <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                </label>
+                                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                    <span>Prix validé</span>
+                                    <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                </label>
+                                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                    <span>Statut</span>
+                                    <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                </label>
+                                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                    <span>État Facture</span>
+                                    <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                </label>
+                                <label class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
+                                    <span>Actions</span>
+                                    <input type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone déroulante du tableau -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[1000px]">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none whitespace-nowrap">
+                            <th class="py-3 px-4">N° Transaction</th>
+                            <th class="py-3 px-4 text-center">Date</th>
+                            <th class="py-3 px-4">Marque & Produit</th>
+                            <th class="py-3 px-4 text-center">Grade validé</th>
+                            <th class="py-3 px-4 text-center">Prix validé</th>
+                            <th class="py-3 px-4 text-center">Statut</th>
+                            <th class="py-3 px-4 text-center">État Facture</th>
+                            <th class="py-3 px-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-xs whitespace-nowrap">
+                        <tr class="hover:bg-slate-50/80 transition group">
+                            <td class="py-3.5 px-4 font-bold text-slate-800">TRX-2026-9041</td>
+                            <td class="py-3.5 px-4 text-center text-slate-600">24/10/2026</td>
+                            <td class="py-3.5 px-4">
+                                <span class="font-bold text-slate-900 block">iPhone 15 Pro 256Go</span>
+                                <span class="text-[10px] text-slate-400 font-semibold">Apple • Smartphone</span>
+                            </td>
+                            <td class="py-3.5 px-4 text-center">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800">Grade A</span>
+                            </td>
+                            <td class="py-3.5 px-4 text-center font-bold text-emerald-600">620,00 €</td>
+                            <td class="py-3.5 px-4 text-center">
+                                Validée
+                            </td>
+                            <td class="py-3.5 px-4 text-center">
+                                Facturée
+                            </td>
+                            <td class="py-3.5 px-4 text-right">
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <button title="Voir les détails" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition">
+                                        <i class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+                                    <button title="Éditer" class="w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-emerald-600 flex items-center justify-center transition">
+                                        <i class="fa-solid fa-pencil text-xs"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Footer du tableau & Pagination -->
+            <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <div>
+                    Affichage de <span class="font-semibold text-slate-800">1</span> à <span class="font-semibold text-slate-800">1</span> sur <span class="font-semibold text-slate-800">882</span> éléments
+                </div>
+
+                <div class="flex items-center space-x-1">
+                    <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angles-left"></i></button>
+                    <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition disabled:opacity-50" disabled><i class="fa-solid fa-angle-left"></i></button>
+                    <button class="px-3 py-1.5 rounded border border-emerald-600 bg-emerald-600 text-white font-bold">1</button>
+                    <button class="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold">2</button>
+                    <button class="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold">3</button>
+                    <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition"><i class="fa-solid fa-angle-right"></i></button>
+                    <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 transition"><i class="fa-solid fa-angles-right"></i></button>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span>Par page:</span>
+                    <select class="bg-white border border-slate-200 rounded px-2 py-1 text-xs focus:outline-none">
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                        <option selected>100</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- TABLEAUX POUR POPUP -->
+<section id="popup-tables" class="space-y-4">
+    <div class="border-b border-slate-200 pb-3">
+        <h2 class="text-lg font-bold text-slate-900">Tableaux Simplifiés pour Modales & Popups</h2>
+        <p class="text-xs text-slate-500">Structure de tableau épurée, compacte, sans pagination, avec coins arrondis idéale pour une intégration dans des boîtes de dialogue.</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Modèle de Tableau Compact sans Pagination</span>
+        
+        <!-- TABLEAU COMPACT DE POPUP -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-white">
+            <div class="max-h-64 overflow-y-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead class="bg-slate-50 sticky top-0 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                        <tr>
+                            <th class="py-2.5 px-3.5">Étape / Audit</th>
+                            <th class="py-2.5 px-3.5">Critère</th>
+                            <th class="py-2.5 px-3.5 text-center">Résultat</th>
+                            <th class="py-2.5 px-3.5 text-right">Valeur</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="py-2.5 px-3.5 font-bold text-slate-800">Écran & Affichage</td>
+                            <td class="py-2.5 px-3.5 text-slate-500">Luminosité & Pixels morts</td>
+                            <td class="py-2.5 px-3.5 text-center">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Conforme</span>
+                            </td>
+                            <td class="py-2.5 px-3.5 text-right font-mono font-bold">Grade A</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="py-2.5 px-3.5 font-bold text-slate-800">Châssis & Boutons</td>
+                            <td class="py-2.5 px-3.5 text-slate-[500]">Micro-rayures latérales</td>
+                            <td class="py-2.5 px-3.5 text-center">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">Non conforme</span>
+                            </td>
+                            <td class="py-2.5 px-3.5 text-right font-mono font-bold">Grade B</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="py-2.5 px-3.5 font-bold text-slate-800">Batterie & Charge</td>
+                            <td class="py-2.5 px-3.5 text-slate-500">Capacité maximale 89%</td>
+                            <td class="py-2.5 px-3.5 text-center">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">Non conforme</span>
+                            </td>
+                            <td class="py-2.5 px-3.5 text-right font-mono font-bold">OK</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="py-2.5 px-3.5 font-bold text-slate-800">Comptes & Blocage</td>
+                            <td class="py-2.5 px-3.5 text-slate-500">iCloud / Find My iPhone</td>
+                            <td class="py-2.5 px-3.5 text-center">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">En attente</span>
+                            </td>
+                            <td class="py-2.5 px-3.5 text-right font-mono font-bold">OK</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</section>         
+
+<!-- TIROIR DE FILTRES (DRAWER) -->
+<section id="drawers" class="space-y-4">
+    <div class="border-b border-slate-200 pb-3">
+        <h2 class="text-lg font-bold text-slate-900">7. Tiroir de filtres (Drawer Coulissant)</h2>
+        <p class="text-xs text-slate-500">Panneau latéral réutilisable pour les filtres complexes.</p>
+    </div>
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+            <h3 class="text-sm font-bold text-slate-800">Tester le Tiroir de filtres</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Ouvre le panneau latéral coulissant interactif.</p>
+        </div>
+        <button onclick="openDemoDrawer()" class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+            <i class="fa-solid fa-sliders"></i> Ouvrir le tiroir
+        </button>
+    </div>
+</section>
+
+<!-- FENÊTRES SURGISSANTES (POPIN & MODALES) -->
+<!-- FENÊTRES SURGISSANTES (POPIN & MODALES) -->
+<section id="modals" class="space-y-6">
+    <div class="border-b border-slate-200 pb-3">
+        <h2 class="text-lg font-bold text-slate-900">8. Modèles de Fenêtres Surgissantes (Pop-in & Modales)</h2>
+        <p class="text-xs text-slate-500">Composants de boîtes de dialogue pour la confirmation, la gestion de clés API, l'upload de fichiers et les boutons d'action.</p>
+    </div>
+
+    <!-- CARTE 1: BOUTONS D'ACTIONS DE PIED DE MODALE (A07) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div>
+            <h3 class="text-sm font-bold text-slate-800">Boutons de Pied de Modale Standardisés</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Combinaisons d'actions pour la validation, l'annulation et la fermeture de popups.</p>
+        </div>
+
+        <div class="p-4 bg-slate-50/80 rounded-xl border border-slate-200/80 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-4 p-3 bg-white rounded-lg border border-slate-200 shadow-sm">
+                <span class="text-xs font-bold text-slate-700">Variante 1 : Annuler + Enregistrer</span>
+                <div class="flex items-center gap-2.5">
+                    <button type="button" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl transition">
+                        Annuler
+                    </button>
+                    <button type="button" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-check"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-4 p-3 bg-white rounded-lg border border-slate-200 shadow-sm">
+                <span class="text-xs font-bold text-slate-700">Variante 2 : Fermer uniquement (Consulter)</span>
+                <div class="flex items-center gap-2.5">
+                    <button type="button" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl transition">
+                        Fermer
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-4 p-3 bg-white rounded-lg border border-slate-200 shadow-sm">
+                <span class="text-xs font-bold text-slate-700">Variante 3 : Suppression / Action Destructive</span>
+                <div class="flex items-center gap-2.5">
+                    <button type="button" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl transition">
+                        Annuler
+                    </button>
+                    <button type="button" class="px-4 py-2 bg-[rgb(225_29_72)] hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-md shadow-rose-600/20 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-trash-can"></i> Supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARTE 2: POP-IN CLÉ API & TEST (Original) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+            <h3 class="text-sm font-bold text-slate-800">Pop-in Clé API & Modales de confirmation</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Ouvre la fenêtre modale centrée avec fond flouté (backdrop blur).</p>
+        </div>
+        <button onclick="openApiModalDemo()" class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2 shrink-0">
+            <i class="fa-solid fa-key"></i> Tester la Pop-in Clé API
+        </button>
+    </div>
+
+    <!-- CARTE 3: POP-IN UPLOAD DE FICHIERS AVEC ÉTATS (A06) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-sm font-bold text-slate-800">Pop-in d'Upload de Fichiers (3 États)</h3>
+                <p class="text-xs text-slate-500 mt-0.5">États visuels : En attente d'upload, En cours de chargement, et Uploadé avec succès.</p>
+            </div>
+            <button onclick="openUploadModalDemo()" class="py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/20 transition flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Tester la Pop-in Upload
+            </button>
+        </div>
+    </div>
+
+</section>
+
+</main>
+</div>
+
+<!-- DEMO DRAWER MODAL -->
+<div id="demoDrawerBackdrop" onclick="closeDemoDrawer()" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity"></div>
+
+<div id="demoDrawer" class="fixed top-0 right-0 h-full w-80 sm:w-[420px] bg-white shadow-2xl border-l border-slate-200 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+    <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/50">
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+                <i class="fa-solid fa-sliders"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-slate-900">Filtres avancés</h3>
+                <p class="text-[11px] text-slate-400">Exemple de tiroir réutilisable</p>
+            </div>
+        </div>
+        <button onclick="closeDemoDrawer()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center">
+            <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+    </div>
+    <div class="p-6 overflow-y-auto flex-1 space-y-6 text-xs bg-slate-50/30">
+
+        <!-- SECTION 1: Période / Dates -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm space-y-3">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-regular fa-calendar-days text-emerald-600"></i> Date de création
+            </span>
+            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-lg">
+                <label class="cursor-pointer text-center">
+                    <input type="radio" name="demoDrawerDateType" value="relative" checked onclick="document.getElementById('demoDrawerContainerRelative').classList.remove('hidden'); document.getElementById('demoDrawerContainerRange').classList.add('hidden');" class="sr-only peer">
+                    <span class="block py-1.5 rounded-md text-xs font-semibold text-slate-600 peer-checked:bg-white peer-checked:text-emerald-700 peer-checked:shadow-sm transition">Date relative</span>
+                </label>
+                <label class="cursor-pointer text-center">
+                    <input type="radio" name="demoDrawerDateType" value="range" onclick="document.getElementById('demoDrawerContainerRange').classList.remove('hidden'); document.getElementById('demoDrawerContainerRelative').classList.add('hidden');" class="sr-only peer">
+                    <span class="block py-1.5 rounded-md text-xs font-semibold text-slate-600 peer-checked:bg-white peer-checked:text-emerald-700 peer-checked:shadow-sm transition">Plage de dates</span>
+                </label>
+            </div>
+
+            <!-- CONTENEUR 1 : DATE RELATIVE -->
+            <div id="demoDrawerContainerRelative" class="pt-1">
+                <select id="demoDrawerSelectRelativeDate" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                    <option value="today">Aujourd'hui</option>
+                    <option value="yesterday">Hier</option>
+                    <option value="this_week">Cette semaine</option>
+                    <option value="last_week">La semaine dernière</option>
+                    <option value="from_last_month">À partir du mois dernier</option>
+                </select>
+            </div>
+
+            <!-- CONTENEUR 2 : PLAGE DE DATES -->
+            <div id="demoDrawerContainerRange" class="hidden space-y-2 pt-1">
+                <div>
+                    <label class="block text-[10px] font-semibold text-slate-500 mb-1">Date de début</label>
+                    <input type="date" id="demoDrawerFilterStartDate" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-semibold text-slate-500 mb-1">Date de fin</label>
+                    <input type="date" id="demoDrawerFilterEndDate" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: Recherche spécifique -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm space-y-3">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-hashtag text-emerald-600"></i> N° de transaction
+            </span>
+            <div class="relative">
+                <i class="fa-solid fa-barcode absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="demoDrawerFilterNumTrans" placeholder="Ex: TRX-102938" class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            </div>
+        </div>
+
+        <!-- SECTION 3: Produit & Marque -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm space-y-3">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-mobile-screen text-emerald-600"></i> Produit & Marque
+            </span>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Catégorie</label>
+                    <select id="demoDrawerFilterCategory" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                        <option value="">Toutes les catégories</option>
+                        <option value="Smartphone">Smartphone</option>
+                        <option value="Tablette">Tablette</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Marque</label>
+                    <select id="demoDrawerFilterBrand" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                        <option value="">Toutes les marques</option>
+                        <option value="Apple">Apple</option>
+                        <option value="Samsung">Samsung</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Modèle / Produit</label>
+                    <select id="demoDrawerFilterProduct" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                        <option value="">Tous les produits</option>
+                        <option value="iPhone 17 Pro Max 2To">iPhone 17 Pro Max 2To</option>
+                        <option value="Galaxy S25 FE 512Go">Galaxy S25 FE 512Go</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: Grades & Statuts -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm space-y-3">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-emerald-600"></i> Grades & Validation
+            </span>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Grade initial</label>
+                    <select id="demoDrawerFilterGradeInitial" class="w-full py-2 px-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                        <option value="">Tous</option>
+                        <option value="Grade A">Grade A</option>
+                        <option value="Grade B">Grade B</option>
+                        <option value="Grade C">Grade C</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Grade validé</label>
+                    <select id="demoDrawerFilterGradeValide" class="w-full py-2 px-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                        <option value="">Tous</option>
+                        <option value="Grade A">Grade A</option>
+                        <option value="Grade B">Grade B</option>
+                        <option value="Grade C">Grade C</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-1">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Type de TVA</label>
+                    <select id="demoDrawerFilterTypeTva" class="w-full py-2 px-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                        <option value="">Tous</option>
+                        <option value="Marge">Marge</option>
+                        <option value="Standard">Standard</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">État</label>
+                    <select id="demoDrawerFilterEtat" class="w-full py-2 px-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                        <option value="">Tous</option>
+                        <option value="Validée">Validée</option>
+                        <option value="En cours">En cours</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Sticky Drawer Footer Actions -->
+    <div class="p-4 border-t border-slate-200 bg-white shrink-0 flex items-center gap-3">
+        <button onclick="closeDemoDrawer()" class="w-1/3 py-2.5 px-3 border border-slate-300 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition text-center flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-rotate-left text-slate-400"></i> Effacer
+        </button>
+        <button onclick="closeDemoDrawer()" class="w-2/3 py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-md shadow-emerald-600/20 transition text-center flex items-center justify-center gap-2">
+            <i class="fa-solid fa-check"></i> Appliquer les filtres
+        </button>
+    </div>
+</div>
+
+<!-- POP-IN MODALE DEMO (CLÉ API) - ALIGNÉE SUR LE DESIGN SYSTEM -->
+<div id="apiModalBackdrop" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div id="apiModal" class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-key text-base"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-900">Nouvelle Clé API</h3>
+                    <p class="text-[11px] text-slate-400">Générez une clé d'accès sécurisée pour vos intégrations</p>
+                </div>
+            </div>
+            <button onclick="closeApiModalDemo()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center">
                 <i class="fa-solid fa-xmark text-base"></i>
             </button>
         </div>
-        <div class="p-6 overflow-y-auto flex-1 space-y-4 text-xs">
-            <p class="text-slate-500">Contenu exemple du tiroir de filtres.</p>
-        </div>
-        <!-- Sticky Drawer Footer Actions -->
-        <div class="p-4 border-t border-slate-200 bg-white shrink-0 flex items-center gap-3">
-            <button onclick="closeDemoDrawer()" class="w-1/3 py-2.5 px-3 border border-slate-300 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition text-center flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-rotate-left text-slate-400"></i> Effacer
-            </button>
-            <button onclick="closeDemoDrawer()" class="w-2/3 py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-md shadow-emerald-600/20 transition text-center flex items-center justify-center gap-2">
-                <i class="fa-solid fa-check"></i> Appliquer les filtres
-            </button>
-        </div>
-    </div>
 
-    <!-- POP-IN MODALE DEMO (CLÉ API) -->
-    <div id="apiModalBackdrop" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden animate-in fade-in duration-150">
-        <div class="p-8">
-            <h2 class="text-xl font-medium text-slate-800 mb-6 tracking-tight">Nouvelle Clé API</h2>
-
-            <div class="space-y-6">
+        <!-- Body -->
+        <div class="p-6 space-y-4 text-xs">
+            <!-- Champ : Nom de la clé -->
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">Nom de la clé <span class="text-rose-500">*</span></label>
                 <div class="relative">
-                    <div id="addKeyNameInputContainer" class="border border-slate-300 rounded focus-within:border-[#007b92] p-3 relative bg-white transition">
-                        <label class="absolute -top-2.5 left-3 bg-white px-1 text-[11px] text-slate-500 font-medium">Nom de la clé *</label>
-                        <input type="text" id="addKeyNameInput" oninput="hideAddKeyNameError()" class="w-full text-sm text-slate-800 focus:outline-none bg-transparent">
-                    </div>
-                    <div id="addKeyNameErrorMsg" class="hidden text-xs font-semibold text-rose-600 flex items-center gap-1.5 mt-1.5">
-                        <i class="fa-solid fa-circle-exclamation text-rose-500"></i>
-                        <span>Veuillez renseigner le nom de la clé.</span>
-                    </div>
+                    <input type="text" id="addKeyNameInput" placeholder="Ex: Clé Production Webhooks" class="w-full pl-3 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition placeholder-slate-400">
                 </div>
+                <div id="addKeyNameErrorMsg" class="hidden text-[11px] font-semibold text-rose-600 flex items-center gap-1.5 pt-0.5">
+                    <i class="fa-solid fa-circle-exclamation text-rose-500"></i>
+                    <span>Veuillez renseigner le nom de la clé.</span>
+                </div>
+            </div>
 
-                <div class="relative">
-                    <div class="border-b border-slate-300 focus-within:border-[#007b92] py-2 relative bg-white flex items-center justify-between">
-                        <div class="w-full">
-                            <label class="block text-[11px] text-slate-500 font-medium mb-0.5">Partenaire *</label>
-                            <select id="addKeyPartnerSelect" class="w-full text-sm text-slate-800 focus:outline-none bg-transparent cursor-pointer">
-                                <option value="1293 - Grading-Largo">1293 - Grading-Largo</option>
-                                <option value="1294 - CompaRecycle Retail">1294 - CompaRecycle Retail</option>
-                            </select>
+            <!-- Champ : Partenaire -->
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">Partenaire <span class="text-rose-500">*</span></label>
+
+                <div class="space-y-1">
+                    <div class="relative">
+                        <button type="button" onclick="toggleSearchSelect('statusBillSelectDropdown')" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm flex items-center justify-between transition">
+                            <span id="statusBillSelectLabelDropdown" class="truncate font-bold text-slate-800">1293 - Grading-Largo</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-2"></i>
+                        </button>
+
+                        <div id="statusBillSelectDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                            <ul class="max-h-48 overflow-y-auto p-1 text-xs text-slate-700 font-medium space-y-0.5">
+                                <li onclick="selectSingleOption('statusBillSelectLabelDropdown', 'statusBillSelectDropdown', '1293 - Grading-Largo')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                    <span>1293 - Grading-Largo</span>
+                                </li>
+                                <li onclick="selectSingleOption('statusBillSelectLabelDropdown', 'statusBillSelectDropdown', '1294 - CompaRecycle Retail')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                    <span>1294 - CompaRecycle Retail</span>
+                                </li>
+                                <li onclick="selectSingleOption('statusBillSelectLabelDropdown', 'statusBillSelectDropdown', '1285 - CompaRecycle Bol')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition flex items-center justify-between">
+                                    <span>1285 - CompaRecycle Bol</span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <!-- Champ : Permissions -->
+            <div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Permission en Lecture</label>
+                    <div class="relative bg-slate-100/80 p-1 rounded-xl border border-slate-200/80 flex items-center select-none">
+                        <!-- Pilule blanche d'arrière-plan glissante -->
+                        <div id="readPermPill" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm border border-slate-200/60 transition-transform duration-200 ease-in-out"></div>
+                        
+                        <!-- Option Oui -->
+                        <label onclick="moveSwitchPill('readPermPill', 'oui', 'readPermIconOui', 'readPermTextOui', 'readPermTextNon')" 
+                        class="relative z-10 flex-1 flex items-center justify-center gap-1.5 py-1 px-2 rounded-lg cursor-pointer text-xs font-bold transition-colors duration-200 text-emerald-700">
+                        <input type="radio" name="addKeyReadPerm" value="Oui" checked class="hidden">
+                        <i id="readPermIconOui" class="fa-solid fa-check text-[10px] transition-all duration-200 opacity-100 scale-100"></i>
+                        <span id="readPermTextOui">Oui</span>
+                    </label>
+
+                    <!-- Option Non -->
+                    <label onclick="moveSwitchPill('readPermPill', 'non', 'readPermIconOui', 'readPermTextOui', 'readPermTextNon')" 
+                    class="relative z-10 flex-1 flex items-center justify-center gap-1.5 py-1 px-2 rounded-lg cursor-pointer text-xs font-bold transition-colors duration-200 text-slate-500 hover:text-slate-700">
+                    <input type="radio" name="addKeyReadPerm" value="Non" class="hidden">
+                    <span id="readPermTextNon">Non</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="space-y-1.5">
+            <label class="block text-xs font-bold text-slate-700">Permission en Écriture</label>
+            <div class="relative bg-slate-100/80 p-1 rounded-xl border border-slate-200/80 flex items-center select-none">
+                <!-- Pilule blanche d'arrière-plan glissante -->
+                <div id="writePermPill" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm border border-slate-200/60 transition-transform duration-200 ease-in-out"></div>
+                
+                <!-- Option Oui -->
+                <label onclick="moveSwitchPill('writePermPill', 'oui', 'writePermIconOui', 'writePermTextOui', 'writePermTextNon')" 
+                class="relative z-10 flex-1 flex items-center justify-center gap-1.5 py-1 px-2 rounded-lg cursor-pointer text-xs font-bold transition-colors duration-200 text-emerald-700">
+                <input type="radio" name="addKeyReadPerm" value="Oui" checked class="hidden">
+                <i id="writePermIconOui" class="fa-solid fa-check text-[10px] transition-all duration-200 opacity-100 scale-100"></i>
+                <span id="writePermTextOui">Oui</span>
+            </label>
+
+            <!-- Option Non -->
+            <label onclick="moveSwitchPill('writePermPill', 'non', 'writePermIconOui', 'writePermTextOui', 'writePermTextNon')" 
+            class="relative z-10 flex-1 flex items-center justify-center gap-1.5 py-1 px-2 rounded-lg cursor-pointer text-xs font-bold transition-colors duration-200 text-slate-500 hover:text-slate-700">
+            <input type="radio" name="addKeyReadPerm" value="Non" class="hidden">
+            <span id="writePermTextNon">Non</span>
+        </label>
+    </div>
+</div>
+</div>
+</div>
+
+<!-- Footer Actions -->
+<div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-end gap-2.5">
+    <button type="button" onclick="closeApiModalDemo()" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl transition">
+        Annuler
+    </button>
+    <button type="button" onclick="closeApiModalDemo()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-key text-[11px]"></i> Créer la clé
+    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- POP-IN UPLOAD DE FICHIERS (DEMO 3 ÉTATS) -->
+<div id="uploadModalBackdrop" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div id="uploadModal" class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+                </div>
                 <div>
-                    <label class="block text-xs text-slate-500 font-medium mb-2">Permission en Lecture *</label>
-                    <div class="flex items-center space-x-6 text-sm text-slate-700">
-                        <label class="inline-flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="addKeyReadPerm" value="Oui" checked class="w-4 h-4 text-[#007b92] focus:ring-0">
-                            <span class="text-xs font-medium">Oui</span>
-                        </label>
-                        <label class="inline-flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="addKeyReadPerm" value="Non" class="w-4 h-4 text-[#007b92] focus:ring-0">
-                            <span class="text-xs font-medium">Non</span>
-                        </label>
+                    <h3 class="text-base font-bold text-slate-900">Importer un catalogue / tarif</h3>
+                    <p class="text-[11px] text-slate-400">Formats acceptés : CSV, XLSX, PDF (Max 10 Mo)</p>
+                </div>
+            </div>
+            <button onclick="closeUploadModalDemo()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+        </div>
+
+        <!-- Body with Tabs for 3 States -->
+        <div class="p-6 space-y-4 text-xs">
+
+            <!-- ÉTAT 1 : EN ATTENTE D'UPLOAD -->
+            <div id="uploadStatePending" class="border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-2xl p-8 text-center bg-slate-50/50 hover:bg-emerald-50/30 transition cursor-pointer group">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 group-hover:bg-emerald-100 text-slate-400 group-hover:text-emerald-600 flex items-center justify-center mx-auto text-xl transition mb-3">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                </div>
+                <p class="font-bold text-slate-800 text-xs mb-1">Glissez-déposez votre fichier ici</p>
+                <p class="text-[11px] text-slate-400 mb-4">ou cliquez pour parcourir vos dossiers</p>
+                <button type="button" onclick="switchUploadDemoState('loading')" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl shadow-sm transition inline-flex items-center gap-2">
+                    <i class="fa-solid fa-folder-open text-slate-400"></i> Parcourir un fichier
+                </button>
+            </div>
+
+            <!-- ÉTAT 2 : EN COURS DE CHARGEMENT -->
+            <div id="uploadStateLoading" class="border border-slate-200 rounded-2xl p-6 bg-slate-50/50 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-base shrink-0">
+                            <i class="fa-solid fa-file-csv"></i>
+                        </div>
+                        <div class="truncate">
+                            <h4 class="font-bold text-slate-800 text-xs truncate">catalogue_argus_octobre_2026.csv</h4>
+                            <p class="text-[11px] text-slate-400">2.4 Mo sur 4.8 Mo • Téléversement...</p>
+                        </div>
                     </div>
+                    <i class="fa-solid fa-spinner fa-spin text-blue-600 text-lg"></i>
                 </div>
 
-                <div>
-                    <label class="block text-xs text-slate-500 font-medium mb-2">Permission en Ecriture *</label>
-                    <div class="flex items-center space-x-6 text-sm text-slate-700">
-                        <label class="inline-flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="addKeyWritePerm" value="Oui" checked class="w-4 h-4 text-[#007b92] focus:ring-0">
-                            <span class="text-xs font-medium">Oui</span>
-                        </label>
-                        <label class="inline-flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="addKeyWritePerm" value="Non" class="w-4 h-4 text-[#007b92] focus:ring-0">
-                            <span class="text-xs font-medium">Non</span>
-                        </label>
+                <!-- Barre de progression -->
+                <div class="space-y-1">
+                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                        <div class="bg-blue-600 h-full rounded-full w-1/2 transition-all duration-300"></div>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] text-slate-400 font-medium">
+                        <span>Chargement en cours...</span>
+                        <span class="font-bold text-blue-600">50%</span>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-8 flex items-center justify-end space-x-6 text-xs font-bold tracking-wider uppercase">
-                <button onclick="closeApiModalDemo()" class="text-[#e91e63] hover:text-[#c2185b] transition">ANNULER</button>
-                <button onclick="closeApiModalDemo()" class="text-emerald-600 hover:text-emerald-700 transition">CRÉER</button>
+            <!-- ÉTAT 3 : UPLOADÉ AVEC SUCCÈS -->
+            <div id="uploadStateCompleted" class="border border-emerald-200 rounded-2xl p-5 bg-emerald-50/40 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base shrink-0">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="truncate">
+                            <h4 class="font-bold text-slate-900 text-xs truncate">catalogue_argus_octobre_2026.csv</h4>
+                            <p class="text-[11px] text-emerald-700 font-medium">Fichier téléversé avec succès (4.8 Mo)</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-end gap-2.5">
+            <button type="button" onclick="closeUploadModalDemo()" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl transition">
+                Annuler
+            </button>
+            <button type="button" onclick="closeUploadModalDemo()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-check"></i> Enregistrer
+            </button>
         </div>
     </div>
 </div>
 
-    <!-- SCRIPT DE DEMO JS -->
-    <script>
-        function demoSwitchDate(type) {
-            const containerRelative = document.getElementById('demoContainerRelative');
-            const containerRange = document.getElementById('demoContainerRange');
+<script src="design-system-script.js"></script>
 
-            if (type === 'relative') {
-                containerRelative.classList.remove('hidden');
-                containerRange.classList.add('hidden');
-            } else {
-                containerRange.classList.remove('hidden');
-                containerRelative.classList.add('hidden');
-            }
-        }
-
-        function openDemoDrawer() {
-            document.getElementById('demoDrawerBackdrop').classList.remove('hidden');
-            document.getElementById('demoDrawer').classList.remove('translate-x-full');
-        }
-
-        function closeDemoDrawer() {
-            document.getElementById('demoDrawerBackdrop').classList.add('hidden');
-            document.getElementById('demoDrawer').classList.add('translate-x-full');
-        }
-
-        function toggleDemoColumnPicker(elem) {
-            const panel = document.getElementById(elem);
-            if (panel) panel.classList.toggle('hidden');
-        }
-
-        function resetDemoColumnVisibility(elem) {
-            const checkboxes = document.querySelectorAll(`#${elem} input[type="checkbox"]`);
-            checkboxes.forEach(cb => cb.checked = true);
-        }
-
-        function openApiModalDemo() {
-            document.getElementById('apiModalBackdrop').classList.remove('hidden');
-            document.getElementById('apiModal').classList.remove('hidden');
-        }
-
-        function closeApiModalDemo() {
-            document.getElementById('apiModalBackdrop').classList.add('hidden');
-            document.getElementById('apiModal').classList.add('hidden');
-        }
-
-        function toggleApiKeyVisibility() {
-            const input = document.getElementById('demoApiKeyInput');
-            const icon = document.getElementById('eyeIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fa-solid fa-eye-slash text-xs';
-            } else {
-                input.type = 'password';
-                icon.className = 'fa-solid fa-eye text-xs';
-            }
-        }
-
-        function copyApiKeyDemo() {
-            const input = document.getElementById('demoApiKeyInput');
-            navigator.clipboard.writeText(input.value);
-            alert('Clé API copiée dans le presse-papier !');
-        }
-        // Afficher / Masquer le menu déroulant
-        function toggleSearchSelect(dropdownId) {
-            const dropdown = document.getElementById(dropdownId);
-            if (dropdown) dropdown.classList.toggle('hidden');
-        }
-
-        // Filtrer les éléments de la liste selon la recherche
-        function filterSelectOptions(input, listId) {
-            const filter = input.value.toLowerCase();
-            const list = document.getElementById(listId);
-            const options = list.getElementsByTagName('li');
-
-            for (let i = 0; i < options.length; i++) {
-                const text = options[i].textContent || options[i].innerText;
-                if (text.toLowerCase().indexOf(filter) > -1) {
-                    options[i].style.display = "";
-                } else {
-                    options[i].style.display = "none";
-                }
-            }
-        }
-
-        // Sélectionner un élément dans le Select simple avec Recherche
-        function selectSingleOption(labelId, dropdownId, value) {
-            const label = document.getElementById(labelId);
-            label.textContent = value;
-            label.classList.remove('text-slate-500');
-            label.classList.add('text-slate-800', 'font-bold');
-            
-            toggleSearchSelect(dropdownId);
-        }
-        // Focus sur l'input de recherche
-        function focusMultiSelectInput(inputId) {
-            document.getElementById(inputId).focus();
-        }
-
-        // Ouverture du menu déroulant
-        function openMultiSelectDropdown(dropdownId) {
-            const dropdown = document.getElementById(dropdownId);
-            if (dropdown) dropdown.classList.remove('hidden');
-        }
-
-        // Sélection d'un item : création du tag et élimination de la liste
-        function selectMultiOption(optionElem, value, tagsContainerId, dropdownId, inputId) {
-            const tagsContainer = document.getElementById(tagsContainerId);
-            
-            // 1. Masquer l'élément dans la liste déroulante
-            optionElem.classList.add('hidden');
-
-            // 2. Créer le tag visuel
-            const tag = document.createElement('span');
-            tag.setAttribute('data-value', value);
-            tag.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px] animate-in fade-in zoom-in-95 duration-100';
-            tag.innerHTML = `
-                ${value}
-                <button type="button" onclick="event.stopPropagation(); removeMultiTag(this, '${value}', '${dropdownId}')" class="hover:text-emerald-900">
-                    <i class="fa-solid fa-xmark text-[10px]"></i>
-                </button>
-            `;
-            
-            tagsContainer.appendChild(tag);
-
-            // 3. Réinitialiser la recherche
-            const input = document.getElementById(inputId);
-            if (input) {
-                input.value = '';
-                filterMultiOptions(input, optionElem.parentElement.id);
-            }
-        }
-
-        // Suppression d'un tag : retrait de la zone et réapparition dans la liste
-        function removeMultiTag(btnElem, value, dropdownId) {
-            // 1. Supprimer le tag
-            const tag = btnElem.closest('span');
-            if (tag) tag.remove();
-
-            // 2. Re-faire apparaître l'item dans la liste déroulante
-            const dropdown = document.getElementById(dropdownId);
-            if (dropdown) {
-                const optionItem = dropdown.querySelector(`li[data-value="${value}"]`);
-                if (optionItem) {
-                    optionItem.classList.remove('hidden');
-                }
-            }
-        }
-
-        // Filtrage dynamique des options restantes
-        function filterMultiOptions(input, listId) {
-            const filter = input.value.toLowerCase();
-            const list = document.getElementById(listId);
-            const options = list.getElementsByTagName('li');
-
-            for (let i = 0; i < options.length; i++) {
-                const option = options[i];
-                const text = option.textContent || option.innerText;
-                
-                // On ne filtre que les éléments qui ne sont pas déjà sélectionnés (masqués)
-                if (!option.classList.contains('hidden') || filter === '') {
-                    if (text.toLowerCase().indexOf(filter) > -1) {
-                        option.style.display = "";
-                    } else {
-                        option.style.display = "none";
-                    }
-                }
-            }
-        }
-
-        // Fermeture automatique au clic en dehors
-        document.addEventListener('click', function(e) {
-            const multiSelect = document.getElementById('multiGradeDropdown');
-            const input = document.getElementById('multiGradeInput');
-            if (multiSelect && input && !multiSelect.contains(e.target) && !input.contains(e.target)) {
-                multiSelect.classList.add('hidden');
-            }
-        });
-    </script>
 </body>
 </html>
