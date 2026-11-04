@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSMA Device Database Explorer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#f0f7ff',
+                100: '#e0effe',
+                500: '#0284c7',
+                600: '#0265d2',
+                700: '#0369a1',
+                900: '#0c4a6e',
+              }
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="h-full text-slate-800 antialiased font-sans flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-brand-600 rounded-lg text-white">
+                        <i data-lucide="smartphone" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight">GSMA Device Database</h1>
+                        <p class="text-xs text-slate-400">Catalogue des produits regroupés par nom standardisé</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+
+        <!-- Barre de progression pour le chargement automatique -->
+        <div id="loading-progress" class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-3">
+            <div class="flex items-center gap-2 text-sm font-semibold text-brand-600">
+                <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+                <span id="loading-status-text">Chargement automatique de la base de données...</span>
+            </div>
+            <div class="w-full max-w-md bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div id="loading-bar" class="bg-brand-600 h-2.5 rounded-full w-0 transition-all duration-200"></div>
+            </div>
+        </div>
+
+        <!-- Bloc de Configuration Générale (API Keys & Identifiants) -->
+        <div class="hidden bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="settings" class="w-4 h-4 text-brand-600"></i>
+                    <h3 class="font-bold text-slate-900 text-sm">Configuration des API (Gemini & Icecat)</h3>
+                </div>
+                <button onclick="saveGlobalConfig()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all">
+                    <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                    <span>Enregistrer la configuration</span>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center gap-1">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-600"></i> Clé API Gemini
+                    </label>
+                    <input type="password" id="cfg-gemini-key" placeholder="Clé API Gemini..." class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none bg-slate-50 font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center gap-1">
+                        <i data-lucide="user" class="w-3.5 h-3.5 text-brand-600"></i> Icecat UserName
+                    </label>
+                    <input type="text" id="cfg-icecat-user" placeholder="Nom d'utilisateur Icecat..." class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none bg-slate-50 font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center gap-1">
+                        <i data-lucide="key" class="w-3.5 h-3.5 text-brand-600"></i> Icecat AppKey
+                    </label>
+                    <input type="password" id="cfg-icecat-key" placeholder="Clé d'application Icecat..." class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none bg-slate-50 font-mono">
+                </div>
+            </div>
+        </div>
+
+        <!-- Cartes Statistiques -->
+        <div class="hidden grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-blue-50 text-blue-600 rounded-lg"><i data-lucide="database" class="w-5 h-5"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500">Produits Uniques</p>
+                    <h3 id="stat-total" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-purple-50 text-purple-600 rounded-lg"><i data-lucide="cpu" class="w-5 h-5"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500">eSim-Only (Oui)</p>
+                    <h3 id="stat-esim" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg"><i data-lucide="tag" class="w-5 h-5"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500">Marques</p>
+                    <h3 id="stat-brands" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-amber-50 text-amber-600 rounded-lg"><i data-lucide="layers" class="w-5 h-5"></i></div>
+                <div>
+                    <p class="text-xs font-medium text-slate-500">Catégories</p>
+                    <h3 id="stat-types" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres et Recherche -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                <div class="md:col-span-4 relative">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" placeholder="Rechercher nom, marque, modèle, réf..." class="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div class="md:col-span-3">
+                    <select id="filter-brand" class="w-full py-2 px-3 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                        <option value="">Toutes les marques</option>
+                    </select>
+                </div>
+                <div class="md:col-span-3">
+                    <select id="filter-type" class="w-full py-2 px-3 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                        <option value="">Toutes les catégories</option>
+                    </select>
+                </div>
+                <div class="hidden md:col-span-2">
+                    <select id="filter-esim" class="w-full py-2 px-3 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                        <option value="">eSim-Only: Tous</option>
+                        <option value="Oui">eSim-Only: Oui</option>
+                        <option value="Non">eSim-Only: Non</option>
+                        <option value="Inconnu">eSim-Only: Inconnu</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-100 pt-3">
+                <div>Résultats : <span id="filtered-count" class="font-semibold text-slate-800">0</span> produit(s)</div>
+                <button id="reset-filters-btn" class="inline-flex items-center gap-1 text-slate-600 hover:text-brand-600 font-medium">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Réinitialiser
+                </button>
+            </div>
+        </div>
+
+        <!-- Tableau des produits -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1 flex flex-col">
+            <div class="overflow-x-auto flex-1">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium text-xs uppercase tracking-wider">
+                            <th class="py-3 px-4 cursor-pointer hover:bg-slate-100" onclick="sortTable('Nom')">
+                                <div class="flex items-center gap-1.5">Nom du produit <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-400"></i></div>
+                            </th>
+                            <th class="py-3 px-4 cursor-pointer hover:bg-slate-100" onclick="sortTable('Marque')">
+                                <div class="flex items-center gap-1.5">Marque <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-400"></i></div>
+                            </th>
+                            <th class="py-3 px-4 cursor-pointer hover:bg-slate-100" onclick="sortTable('Catégorie')">
+                                <div class="flex items-center gap-1.5">Catégorie <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-400"></i></div>
+                            </th>
+                            <th class="hidden py-3 px-4 cursor-pointer hover:bg-slate-100" onclick="sortTable('eSim-Only')">
+                                <div class="flex items-center gap-1.5">eSim-Only <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-400"></i></div>
+                            </th>
+                            <th class="hidden py-3 px-4">Référence GSX (TACs)</th>
+                            <th class="hidden py-3 px-4">Modèle</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+
+            <div id="empty-state" class="hidden py-12 text-center">
+                <i data-lucide="search-x" class="w-10 h-10 text-slate-300 mx-auto mb-3"></i>
+                <h3 class="text-slate-700 font-medium">Aucun produit ne correspond</h3>
+            </div>
+
+            <!-- Pagination -->
+            <div class="bg-slate-50 border-t border-slate-200 px-4 py-3 flex items-center justify-between flex-wrap gap-4 text-xs text-slate-600">
+                <div class="flex items-center gap-2">
+                    <span>Afficher</span>
+                    <select id="page-size-select" class="py-1 px-2 border border-slate-300 rounded bg-white font-medium">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>par page</span>
+                </div>
+                <div id="pagination-info" class="font-medium">Affichage 0 - 0 sur 0</div>
+                <div class="flex items-center gap-1" id="pagination-controls"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Fiche Produit -->
+    <div id="detail-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl border border-slate-100 flex flex-col max-h-[92vh]">
+            
+            <!-- Modal Header -->
+            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="info" class="w-5 h-5 text-brand-500"></i>
+                    <h3 class="font-semibold text-base">Fiche Modèle</h3>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6 overflow-y-auto flex-1">
+                
+                <!-- Zone Studio Blanc e-commerce -->
+                <div id="illustration-box" class="w-full min-h-56 bg-white border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center relative overflow-hidden transition-colors shadow-inner p-4">
+                    
+                    <!-- Prompt Initial -->
+                    <div id="img-prompt" onclick="handleIllustrationBoxClick()" class="flex flex-col items-center gap-2 text-slate-400 hover:text-brand-600 cursor-pointer transition-colors text-center py-6">
+                        <i data-lucide="image-plus" class="w-8 h-8"></i>
+                        <span class="text-xs font-medium">Charger le visuel studio officiel (rendu e-commerce via Icecat)</span>
+                    </div>
+
+                    <!-- Loader Progress -->
+                    <div id="img-loader" class="hidden flex flex-col items-center gap-2 text-brand-600 text-center py-6">
+                        <i data-lucide="loader-2" class="w-7 h-7 animate-spin"></i>
+                        <span id="img-loader-text" class="text-xs font-semibold">Génération des 10 EAN potentiels via Gemini...</span>
+                    </div>
+
+                    <!-- Liste des EANs testés -->
+                    <div id="ean-chips-container" class="hidden w-full mb-3 flex flex-wrap gap-1.5 justify-center"></div>
+
+                    <!-- Carrousel d'images -->
+                    <div id="img-carousel" class="hidden w-full h-56 relative flex items-center justify-center bg-white p-2">
+                        <img id="carousel-img" referrerpolicy="no-referrer" src="" alt="Illustration Officielle" class="h-full w-full object-contain cursor-pointer transition-all duration-200 drop-shadow-md" onclick="selectCurrentImage(event)">
+
+                        <div id="selected-badge" class="hidden absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md flex items-center gap-1 z-10">
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                            <span>Visuel Officiel Sélectionné</span>
+                        </div>
+
+                        <button onclick="prevImage(event)" class="absolute left-2 p-1.5 rounded-full bg-slate-800/80 text-white hover:bg-slate-900 shadow transition-colors z-10">
+                            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                        </button>
+
+                        <button onclick="nextImage(event)" class="absolute right-2 p-1.5 rounded-full bg-slate-800/80 text-white hover:bg-slate-900 shadow transition-colors z-10">
+                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                        </button>
+
+                        <div class="absolute bottom-2 bg-slate-800/80 text-white text-[11px] font-mono px-2.5 py-0.5 rounded-full backdrop-blur-sm shadow">
+                            <span id="img-index-display">1 / 1</span>
+                        </div>
+                    </div>
+
+                    <!-- Formulaire de saisie manuelle si aucun visuel trouvé -->
+                    <div id="manual-ean-container" class="hidden w-full max-w-md bg-amber-50 border border-amber-200 rounded-lg p-3 text-center space-y-2 my-2">
+                        <div class="flex items-center justify-center gap-1.5 text-xs font-semibold text-amber-800">
+                            <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600"></i>
+                            <span>Aucun visuel trouvé avec les 10 EAN générés.</span>
+                        </div>
+                        <p class="text-[11px] text-amber-700">Saisissez manuellement le code EAN/GTIN officiel pour effectuer la recherche sur Icecat :</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="manual-ean-input" placeholder="Ex: 0195949038228" class="flex-1 px-3 py-1.5 text-xs border border-amber-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:outline-none font-mono bg-white">
+                            <button onclick="submitManualEan()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-md transition-colors inline-flex items-center gap-1">
+                                <i data-lucide="search" class="w-3.5 h-3.5"></i>
+                                <span>Lancer Icecat</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations Textuelles -->
+                <div id="modal-fields" class="space-y-3 text-sm"></div>
+
+                <!-- Section SEO -->
+                <div class="border-t border-slate-200 pt-4 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-purple-600"></i>
+                            <h4 class="font-bold text-slate-900 text-sm">Optimisation SEO (CompaRecycle)</h4>
+                        </div>
+                        <button id="btn-generate-ai" onclick="generateSeoWithAI()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all">
+                            <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
+                            <span id="ai-btn-text">Créer avec l'IA</span>
+                        </button>
+                    </div>
+
+                    <!-- Champ 1 : Description SEO -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Description Structurée SEO</label>
+                        <textarea id="seo-description" rows="5" placeholder="Cliquez sur 'Créer avec l'IA' pour générer la description..." class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none bg-slate-50 font-sans"></textarea>
+                    </div>
+
+                    <!-- Champ 2 : Mots clés SEO -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-semibold text-slate-700">Mots-clés SEO (350 mots-clés séparés par des virgules)</label>
+                        <textarea id="seo-keywords" rows="3" placeholder="Mots-clés générés pour viser la position N°1 Google..." class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none bg-slate-50 font-mono"></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 flex justify-end shrink-0">
+                <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-medium rounded-lg">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Web Worker embarqué -->
+    <script id="worker-script" type="text/template">
+        let dataset = [];
+
+        self.onmessage = function(e) {
+            const { type, data } = e.data;
+
+            if (type === 'PARSE') {
+                try {
+                    dataset = typeof data === 'string' ? JSON.parse(data) : data;
+                    const brands = new Set();
+                    const types = new Set();
+                    let esimCount = 0;
+
+                    for (let i = 0; i < dataset.length; i++) {
+                        const item = dataset[i];
+                        if (item["Marque"]) brands.add(item["Marque"]);
+                        if (item["Catégorie"]) types.add(item["Catégorie"]);
+                        if (item["eSim-Only"] === "Oui") esimCount++;
+                    }
+
+                    self.postMessage({
+                        type: 'PARSED_SUCCESS',
+                        total: dataset.length,
+                        esimCount: esimCount,
+                        brands: Array.from(brands).sort(),
+                        types: Array.from(types).sort()
+                    });
+                } catch (err) {
+                    self.postMessage({ type: 'ERROR', error: err.message });
+                }
+            } 
+            else if (type === 'FILTER') {
+                const { query, brand, category, esim, sortColumn, sortAscending } = e.data;
+                const filtered = [];
+                const q = query ? query.toLowerCase() : '';
+
+                for (let i = 0; i < dataset.length; i++) {
+                    const item = dataset[i];
+                    if (brand && item["Marque"] !== brand) continue;
+                    if (category && item["Catégorie"] !== category) continue;
+                    if (esim && item["eSim-Only"] !== esim) continue;
+
+                    if (q) {
+                        const gsxJoined = Array.isArray(item["Référence GSX"]) ? item["Référence GSX"].join(' ') : '';
+                        const match = 
+                            (item["Nom"] && item["Nom"].toLowerCase().includes(q)) ||
+                            (item["Marque"] && item["Marque"].toLowerCase().includes(q)) ||
+                            (item["Modèle"] && item["Modèle"].toLowerCase().includes(q)) ||
+                            (item["Référence"] && item["Référence"].toLowerCase().includes(q)) ||
+                            (item["DeviceAtlas ID"] && item["DeviceAtlas ID"].toLowerCase().includes(q)) ||
+                            gsxJoined.includes(q);
+                        if (!match) continue;
+                    }
+                    filtered.push(item);
+                }
+
+                filtered.sort((a, b) => {
+                    let valA = a[sortColumn] || '';
+                    let valB = b[sortColumn] || '';
+                    if (typeof valA === 'string') valA = valA.toLowerCase();
+                    if (typeof valB === 'string') valB = valB.toLowerCase();
+                    if (valA < valB) return sortAscending ? -1 : 1;
+                    if (valA > valB) return sortAscending ? 1 : -1;
+                    return 0;
+                });
+
+                self.postMessage({ type: 'FILTERED_SUCCESS', results: filtered });
+            }
+        };
+    </script>
+
+    <script>
+        const JSON_PATH = 'data/devices_grouped.json';
+
+        const workerBlob = new Blob([document.getElementById('worker-script').textContent], { type: 'application/javascript' });
+        const worker = new Worker(URL.createObjectURL(workerBlob));
+
+        let currentFilteredResults = [];
+        let activeProduct = null;
+        let currentPage = 1;
+        let pageSize = 25;
+        let sortColumn = 'Nom';
+        let sortAscending = true;
+
+        let fetchedImages = [];
+        let currentImgIndex = 0;
+        let selectedImgUrl = null;
+
+        const searchInput = document.getElementById('search-input');
+        const filterBrand = document.getElementById('filter-brand');
+        const filterType = document.getElementById('filter-type');
+        const filterEsim = document.getElementById('filter-esim');
+        const tableBody = document.getElementById('table-body');
+        const emptyState = document.getElementById('empty-state');
+        const filteredCountEl = document.getElementById('filtered-count');
+        const pageSizeSelect = document.getElementById('page-size-select');
+        const paginationInfo = document.getElementById('pagination-info');
+        const paginationControls = document.getElementById('pagination-controls');
+        const resetFiltersBtn = document.getElementById('reset-filters-btn');
+
+        const loadingProgress = document.getElementById('loading-progress');
+        const loadingBar = document.getElementById('loading-bar');
+        const loadingStatusText = document.getElementById('loading-status-text');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadGlobalConfig();
+            setupEventListeners();
+            autoLoadJson();
+        });
+
+        // --- Gestion de la Configuration Globale (LocalStorage) ---
+
+        function saveGlobalConfig() {
+            const geminiKey = document.getElementById('cfg-gemini-key').value.trim();
+            const icecatUser = document.getElementById('cfg-icecat-user').value.trim();
+            const icecatKey = document.getElementById('cfg-icecat-key').value.trim();
+
+            localStorage.setItem('GEMINI_API_KEY', geminiKey);
+            localStorage.setItem('ICECAT_USER_NAME', icecatUser);
+            localStorage.setItem('ICECAT_APP_KEY', icecatKey);
+
+            alert("Configuration enregistrée dans votre navigateur !");
+        }
+
+        function loadGlobalConfig() {
+            document.getElementById('cfg-gemini-key').value = localStorage.getItem('GEMINI_API_KEY') || '';
+            document.getElementById('cfg-icecat-user').value = localStorage.getItem('ICECAT_USER_NAME') || '';
+            document.getElementById('cfg-icecat-key').value = localStorage.getItem('ICECAT_APP_KEY') || '';
+        }
+
+        function getSavedConfig() {
+            return {
+                geminiKey: localStorage.getItem('GEMINI_API_KEY') || document.getElementById('cfg-gemini-key').value.trim(),
+                icecatUser: localStorage.getItem('ICECAT_USER_NAME') || document.getElementById('cfg-icecat-user').value.trim(),
+                icecatKey: localStorage.getItem('ICECAT_APP_KEY') || document.getElementById('cfg-icecat-key').value.trim()
+            };
+        }
+
+        // Chargement automatique du JSON via fetch()
+        async function autoLoadJson() {
+            try {
+                loadingProgress.classList.remove('hidden');
+                loadingBar.style.width = '30%';
+                loadingStatusText.textContent = `Chargement de ${JSON_PATH}...`;
+
+                const response = await fetch(JSON_PATH);
+                if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
+
+                loadingBar.style.width = '60%';
+                loadingStatusText.textContent = "Lecture des données...";
+                const jsonData = await response.text();
+
+                loadingBar.style.width = '85%';
+                loadingStatusText.textContent = "Analyse en arrière-plan (Worker)...";
+                worker.postMessage({ type: 'PARSE', data: jsonData });
+
+            } catch (err) {
+                console.error("Impossible de charger le fichier JSON :", err);
+                loadingStatusText.textContent = `Erreur : Vérifiez que ${JSON_PATH} existe et est servi par un serveur web HTTP.`;
+                loadingStatusText.classList.add('text-red-600');
+            }
+        }
+
+        worker.onmessage = function(e) {
+            const { type } = e.data;
+            if (type === 'PARSED_SUCCESS') {
+                loadingBar.style.width = '100%';
+                document.getElementById('stat-total').textContent = e.data.total.toLocaleString('fr-FR');
+                document.getElementById('stat-esim').textContent = e.data.esimCount.toLocaleString('fr-FR');
+                document.getElementById('stat-brands').textContent = e.data.brands.length.toLocaleString('fr-FR');
+                document.getElementById('stat-types').textContent = e.data.types.length.toLocaleString('fr-FR');
+
+                filterBrand.innerHTML = '<option value="">Toutes les marques</option>' + 
+                    e.data.brands.map(b => `<option value="${b}">${b}</option>`).join('');
+
+                filterType.innerHTML = '<option value="">Toutes les catégories</option>' + 
+                    e.data.types.map(t => `<option value="${t}">${t}</option>`).join('');
+
+                setTimeout(() => {
+                    loadingProgress.classList.add('hidden');
+                    requestFilterWorker();
+                }, 300);
+            } else if (type === 'FILTERED_SUCCESS') {
+                currentFilteredResults = e.data.results;
+                currentPage = 1;
+                filteredCountEl.textContent = currentFilteredResults.length.toLocaleString('fr-FR');
+                renderTable();
+            }
+        };
+
+        function setupEventListeners() {
+            let debounceTimer;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(requestFilterWorker, 200);
+            });
+
+            filterBrand.addEventListener('change', requestFilterWorker);
+            filterType.addEventListener('change', requestFilterWorker);
+            filterEsim.addEventListener('change', requestFilterWorker);
+            
+            pageSizeSelect.addEventListener('change', (e) => {
+                pageSize = parseInt(e.target.value);
+                currentPage = 1;
+                renderTable();
+            });
+
+            resetFiltersBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                filterBrand.value = '';
+                filterType.value = '';
+                filterEsim.value = '';
+                requestFilterWorker();
+            });
+        }
+
+        function requestFilterWorker() {
+            worker.postMessage({
+                type: 'FILTER',
+                query: searchInput.value,
+                brand: filterBrand.value,
+                category: filterType.value,
+                esim: filterEsim.value,
+                sortColumn: sortColumn,
+                sortAscending: sortAscending
+            });
+        }
+
+        function sortTable(column) {
+            if (sortColumn === column) sortAscending = !sortAscending;
+            else { sortColumn = column; sortAscending = true; }
+            requestFilterWorker();
+        }
+
+        function renderTable() {
+            tableBody.innerHTML = '';
+            if (currentFilteredResults.length === 0) {
+                emptyState.classList.remove('hidden');
+                paginationInfo.textContent = 'Affichage 0 - 0 sur 0';
+                paginationControls.innerHTML = '';
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, currentFilteredResults.length);
+            const pageItems = currentFilteredResults.slice(startIndex, endIndex);
+
+            let rowsHtml = '';
+            for (let i = 0; i < pageItems.length; i++) {
+                const product = pageItems[i];
+                let esimBadge = '';
+
+                if (product["eSim-Only"] === "Oui") {
+                    esimBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-700 border border-purple-200"><i data-lucide="check-circle-2" class="w-3 h-3 mr-1"></i> Oui</span>`;
+                } else if (product["eSim-Only"] === "Non") {
+                    esimBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">Non</span>`;
+                } else {
+                    esimBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200">Inconnu</span>`;
+                }
+
+                const gsxList = Array.isArray(product["Référence GSX"]) ? product["Référence GSX"] : [];
+                const gsxDisplay = gsxList.length > 0 
+                    ? `<span class="font-mono text-xs text-slate-700">${gsxList[0]}</span> ${gsxList.length > 1 ? `<span class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded text-[10px] font-semibold">+${gsxList.length - 1}</span>` : ''}`
+                    : '-';
+
+                rowsHtml += `
+                    <tr class="hover:bg-slate-50/80 cursor-pointer transition-colors" onclick="openModalByIndex(${startIndex + i})">
+                        <td class="py-3 px-4 font-medium text-slate-900">${product["Nom"] || "N/A"}</td>
+                        <td class="py-3 px-4 text-slate-600 font-medium">${product["Marque"] || '-'}</td>
+                        <td class="py-3 px-4 text-slate-600">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">${product["Catégorie"] || '-'}</span>
+                        </td>
+                        <td class="hidden py-3 px-4">${esimBadge}</td>
+                        <td class="hidden py-3 px-4">${gsxDisplay}</td>
+                        <td class="hidden py-3 px-4 text-slate-500 text-xs">${product["Modèle"] || '-'}</td>
+                    </tr>
+                `;
+            }
+
+            tableBody.innerHTML = rowsHtml;
+            lucide.createIcons();
+            renderPagination(startIndex, endIndex);
+        }
+
+        function renderPagination(startIndex, endIndex) {
+            const totalPages = Math.ceil(currentFilteredResults.length / pageSize);
+            paginationInfo.textContent = `Affichage ${startIndex + 1} - ${endIndex} sur ${currentFilteredResults.length.toLocaleString('fr-FR')}`;
+            paginationControls.innerHTML = '';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.className = `p-1.5 rounded border border-slate-300 ${currentPage === 1 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100'}`;
+            prevBtn.innerHTML = `<i data-lucide="chevron-left" class="w-4 h-4"></i>`;
+            prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderTable(); } };
+            paginationControls.appendChild(prevBtn);
+
+            const pageIndicator = document.createElement('span');
+            pageIndicator.className = "px-3 py-1 font-semibold text-xs text-slate-700";
+            pageIndicator.textContent = `Page ${currentPage} / ${totalPages}`;
+            paginationControls.appendChild(pageIndicator);
+
+            const nextBtn = document.createElement('button');
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+            nextBtn.className = `p-1.5 rounded border border-slate-300 ${currentPage === totalPages || totalPages === 0 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100'}`;
+            nextBtn.innerHTML = `<i data-lucide="chevron-right" class="w-4 h-4"></i>`;
+            nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderTable(); } };
+            paginationControls.appendChild(nextBtn);
+
+            lucide.createIcons();
+        }
+
+        function openModalByIndex(index) {
+            openModal(currentFilteredResults[index]);
+        }
+
+        function openModal(product) {
+            activeProduct = product;
+            resetIllustrationBox();
+
+            document.getElementById('seo-description').value = product.seoDescription || '';
+            document.getElementById('seo-keywords').value = product.seoKeywords || '';
+
+            const modalFields = document.getElementById('modal-fields');
+
+            // 1. Encart de date et prix de lancement
+            const launchInfoBox = (product.releaseDate || product.launchPrice) 
+                ? `<div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-3 flex items-center justify-between text-xs">
+                     <div class="flex items-center gap-2">
+                       <i data-lucide="calendar" class="w-4 h-4 text-brand-600"></i>
+                       <span class="text-slate-600">Sortie :</span>
+                       <span class="font-semibold text-slate-900">${product.releaseDate || 'Non spécifiée'}</span>
+                     </div>
+                     <div class="flex items-center gap-2">
+                       <i data-lucide="tag" class="w-4 h-4 text-indigo-600"></i>
+                       <span class="text-slate-600">Prix de lancement :</span>
+                       <span class="font-semibold text-slate-900">${product.launchPrice || 'Non spécifié'}</span>
+                     </div>
+                   </div>`
+                : `<div id="launch-info-placeholder" class="hidden"></div>`;
+
+            // 2. Filtre statique par attributs
+            const attributeFilterHtml = `
+                <section class="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+                    <div class="px-4 py-3 border-b border-slate-200 bg-slate-50 flex items-center gap-2">
+                        <i data-lucide="list-filter" class="w-4 h-4 text-slate-500"></i>
+                        <h4 class="text-xs font-bold tracking-wide text-slate-800">ATTRIBUTS</h4>
+                    </div>
+                    <div class="grid grid-cols-2 min-h-[14rem]">
+                        <div class="min-w-0 border-r border-slate-200 flex flex-col">
+                            <div class="px-3 py-2.5 border-b border-slate-100 text-[10px] font-bold tracking-wider text-slate-500">GROUPES D'ATTRIBUTS</div>
+                            <div id="attribute-group-list" class="p-2 space-y-1 overflow-y-auto max-h-56" aria-label="Groupes d'attributs">
+                                <button type="button" class="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left text-xs rounded-lg bg-[#1a1a2e] text-white font-bold" aria-current="true"><span>Capacités</span><span class="shrink-0 inline-flex items-center justify-center min-w-[1.35rem] h-[1.35rem] px-1 rounded-full text-[10px] font-bold bg-white text-[#1a1a2e]">5</span></button>
+                            </div>
+                        </div>
+                        <div class="min-w-0 flex flex-col">
+                            <div class="p-2 border-b border-slate-100">
+                                <label class="relative block">
+                                    <i data-lucide="search" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400"></i>
+                                    <input id="attribute-search" type="search" placeholder="Rechercher un attribut" class="w-full pl-8 pr-2 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-300">
+                                </label>
+                            </div>
+                            <div id="attribute-value-list" class="overflow-y-auto max-h-48" aria-label="Attributs du groupe sélectionné">
+                                <label class="flex items-start gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 cursor-pointer border-b border-slate-100"><input type="checkbox" class="mt-0.5 rounded border-slate-300 text-slate-900 focus:ring-slate-500"><span class="min-w-0"><span class="block font-medium break-words">128Go</span></span></label>
+                                <label class="flex items-start gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 cursor-pointer border-b border-slate-100"><input type="checkbox" class="mt-0.5 rounded border-slate-300 text-slate-900 focus:ring-slate-500"><span class="min-w-0"><span class="block font-medium break-words">256Go</span></span></label>
+                                <label class="flex items-start gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 cursor-pointer border-b border-slate-100"><input type="checkbox" class="mt-0.5 rounded border-slate-300 text-slate-900 focus:ring-slate-500"><span class="min-w-0"><span class="block font-medium break-words">512Go</span></span></label>
+                                <label class="flex items-start gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 cursor-pointer border-b border-slate-100"><input type="checkbox" class="mt-0.5 rounded border-slate-300 text-slate-900 focus:ring-slate-500"><span class="min-w-0"><span class="block font-medium break-words">1To</span></span></label>
+                                <label class="flex items-start gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="mt-0.5 rounded border-slate-300 text-slate-900 focus:ring-slate-500"><span class="min-w-0"><span class="block font-medium break-words">2To</span></span></label>
+                            </div>
+                        </div>
+                    </div>
+                </section>`;
+
+            // 3. Construction du tableau défilant des TACs (Outil de vérification GSMA)
+            const tacList = Array.isArray(product.TAC_Details) ? product.TAC_Details : [];
+            let tacTableHtml = '';
+
+            if (tacList.length > 0) {
+                const rows = tacList.map(item => `
+                    <tr class="hover:bg-slate-100 text-xs border-b border-slate-100 transition-colors">
+                        <td class="py-1.5 px-2 font-mono font-bold text-slate-800">${item.TAC || '-'}</td>
+                        <td class="py-1.5 px-2 text-slate-700">${item.GSMA_MarketingName || '-'}</td>
+                        <td class="py-1.5 px-2 text-slate-600">${item.GSMA_ModelName || '-'}</td>
+                        <td class="py-1.5 px-2 text-slate-600">${item.Standardised_MarketingName || '-'}</td>
+                        <td class="py-1.5 px-2 font-mono text-slate-600">${item.DeviceAtlas_ID || '-'}</td>
+                        <td class="py-1.5 px-2 text-slate-500">${item.GSMA_CountryCode || '-'}</td>
+                    </tr>
+                `).join('');
+
+                tacTableHtml = `
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-700">Détail des TACs associés (${tacList.length})</span>
+                            <span class="text-[10px] text-slate-400">Outil de vérification GSMA</span>
+                        </div>
+                        <div class="max-h-80 overflow-y-auto border border-slate-200 rounded-lg bg-white shadow-inner">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-100 text-[11px] font-semibold text-slate-600 sticky top-0 border-b border-slate-200 z-10">
+                                    <tr>
+                                        <th class="py-1.5 px-2">TAC</th>
+                                        <th class="py-1.5 px-2">GSMA Marketing Name</th>
+                                        <th class="py-1.5 px-2">GSMA Model Name</th>
+                                        <th class="py-1.5 px-2">Std Marketing Name</th>
+                                        <th class="py-1.5 px-2">DeviceAtlas ID</th>
+                                        <th class="py-1.5 px-2">Country Code</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    ${rows}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Fallback si le JSON utilise l'ancien tableau simple de TACs ("Référence GSX")
+                const gsxList = Array.isArray(product["Référence GSX"]) ? product["Référence GSX"] : [];
+                const gsxBadges = gsxList.length > 0 
+                    ? gsxList.map(t => `<span class="inline-block bg-slate-100 font-mono text-xs px-2 py-1 rounded border border-slate-200 mr-1 mb-1">${t}</span>`).join('')
+                    : '-';
+
+                tacTableHtml = `
+                    <div>
+                        <span class="text-xs text-slate-400 block mb-1">Référence GSX (Codes TAC associés - ${gsxList.length})</span>
+                        <div class="max-h-24 overflow-y-auto p-2 bg-slate-50 rounded-lg border border-slate-200">
+                            ${gsxBadges}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 3. Rendu global de la modal
+            modalFields.innerHTML = `
+                <div class="border-b border-slate-100 pb-2">
+                    <span class="text-xs text-slate-400 block">Nom complet</span>
+                    <span class="font-bold text-slate-900 text-base">${product["Nom"] || '-'}</span>
+                </div>
+
+                ${launchInfoBox}
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Marque</span>
+                        <span class="font-medium text-slate-800">${product["Marque"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Catégorie</span>
+                        <span class="font-medium text-slate-800">${product["Catégorie"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Modèle</span>
+                        <span class="font-medium text-slate-800">${product["Modèle"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Référence(s)</span>
+                        <span class="font-medium text-slate-800">${product["Référence"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">eSim-Only</span>
+                        <span class="font-medium text-slate-800">${product["eSim-Only"] || '-'}</span>
+                    </div>
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs text-slate-400 block">Code Pays</span>
+                        <span class="font-medium text-slate-800">${product["Code Pays"] || '-'}</span>
+                    </div>
+                </div>
+
+                ${attributeFilterHtml}
+
+                ${tacTableHtml}
+            `;
+
+            document.getElementById('detail-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // --- Moteur SEO via Gemini API ---
+
+        async function generateSeoWithAI() {
+            if (!activeProduct) return;
+
+            const cfg = getSavedConfig();
+            if (!cfg.geminiKey) {
+                alert("Veuillez configurer votre clé API Gemini dans le bloc de configuration général.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-generate-ai');
+            const btnText = document.getElementById('ai-btn-text');
+            const descArea = document.getElementById('seo-description');
+            const kwArea = document.getElementById('seo-keywords');
+
+            btn.disabled = true;
+            btnText.textContent = "Génération IA en cours...";
+
+            const productName = activeProduct["Nom"].replace(/\(eSim-Only\)/i, '').trim();
+
+            const promptInfo = `Pour le produit high-tech "${productName}", donne-moi :
+1. Sa date officielle de lancement ou d'annonce (mois et année ou année).
+2. Son prix indicatif de lancement (en Euros € ou $ USD).
+
+Réponds EXCLUSIVEMENT au format JSON strict avec exactement ces clés :
+{"releaseDate": "Mois Année", "launchPrice": "XXX €"}
+Sans aucun markdown, sans guillemets de code, sans texte additionnel.`;
+
+            const promptDescription = `Fais moi un texte méga optimisé SEO pour les ${productName}, axé sur la revente, reprise et rachat au meilleur prix avec CompaRecycle avec des parties specs techniques sans picto avec un ton humoristique, ou avec un ton rassurant, ou avec une partie tips.
+            IMPORTANT : Ne fais AUCUNE introduction, AUCUNE phrase de politesse et AUCUNE conclusion. Ne dis pas "Voici le texte". Renvoie UNIQUEMENT le texte brut demandé.`;
+
+            const promptKeywords = `Fais moi une liste de 350 mots clé autour de la reprise, rachat, revente, vente, meilleur prix sur le produit ${productName} SEO maximisée, formatée avec des virgules, prête à l’emploi en ayant pour objectif d'être N°1 en positionnement sur le référencement naturel du moteur de recherche Google.
+            IMPORTANT : Ne fais AUCUNE introduction (ex: "Voici la liste"), AUCUNE phrase de politesse et AUCUNE conclusion. Renvoie UNIQUEMENT les mots-clés séparés par des virgules et absolument rien d'autre.`;
+
+            try {
+                // 1. Récupération Date et Prix
+                try {
+                    const infoRaw = await callGeminiAPI(cfg.geminiKey, promptInfo);
+                    const cleanedJson = infoRaw.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const infoParsed = JSON.parse(cleanedJson);
+                    
+                    activeProduct.releaseDate = infoParsed.releaseDate || 'Inconnue';
+                    activeProduct.launchPrice = infoParsed.launchPrice || 'Inconnu';
+
+                    openModal(activeProduct); // Rafraîchit l'encart avec la date et le prix
+                } catch (e) {
+                    console.warn("Échec de la récupération date/prix :", e);
+                }
+
+                // 2. Génération Description SEO
+                const descResult = await callGeminiAPI(cfg.geminiKey, promptDescription);
+                descArea.value = descResult;
+                activeProduct.seoDescription = descResult;
+
+                // 3. Génération Mots-clés
+                const kwResult = await callGeminiAPI(cfg.geminiKey, promptKeywords);
+                kwArea.value = kwResult;
+                activeProduct.seoKeywords = kwResult;
+
+            } catch (err) {
+                alert("Erreur lors de la génération Gemini : " + err.message);
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = "Créer avec l'IA";
+            }
+        }
+
+        async function callGeminiAPI(apiKey, promptText, jsonSchema = null) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+            
+            const bodyPayload = {
+                contents: [{
+                    parts: [{ text: promptText }]
+                }]
+            };
+
+            if (jsonSchema) {
+                bodyPayload.generationConfig = {
+                    responseMimeType: "application/json",
+                    responseSchema: jsonSchema
+                };
+            }
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bodyPayload)
+            });
+
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error?.message || response.statusText);
+            }
+
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text.trim();
+        }
+
+        // --- Moteur de visuels officiels via Icecat (Test de 10 EANs) ---
+
+        function resetIllustrationBox() {
+            fetchedImages = [];
+            currentImgIndex = 0;
+            selectedImgUrl = null;
+
+            document.getElementById('img-prompt').classList.remove('hidden');
+            document.getElementById('img-loader').classList.add('hidden');
+            document.getElementById('img-carousel').classList.add('hidden');
+            document.getElementById('selected-badge').classList.add('hidden');
+            document.getElementById('manual-ean-container').classList.add('hidden');
+            
+            const chipsBox = document.getElementById('ean-chips-container');
+            chipsBox.innerHTML = '';
+            chipsBox.classList.add('hidden');
+        }
+
+        function handleIllustrationBoxClick() {
+            if (fetchedImages.length === 0) {
+                fetchOfficialProductImages();
+            }
+        }
+
+        async function fetchOfficialProductImages() {
+            if (!activeProduct) return;
+
+            const cfg = getSavedConfig();
+            if (!cfg.geminiKey || !cfg.icecatUser || !cfg.icecatKey) {
+                alert("Veuillez configurer la clé Gemini, l'UserName et l'AppKey Icecat dans le bloc de configuration général.");
+                return;
+            }
+
+            document.getElementById('img-prompt').classList.add('hidden');
+            document.getElementById('img-loader').classList.remove('hidden');
+            document.getElementById('manual-ean-container').classList.add('hidden');
+            const loaderText = document.getElementById('img-loader-text');
+            const chipsBox = document.getElementById('ean-chips-container');
+
+            try {
+                // Étape 1 : Demander 10 EANs potentiels à Gemini (Format JSON Strict)
+                loaderText.textContent = "Génération des 10 codes EAN potentiels via Gemini...";
+                const cleanName = activeProduct["Nom"].replace(/\(eSim-Only\)/i, '').trim();
+                const brand = activeProduct["Marque"] || "";
+                const model = activeProduct["Modèle"] || "";
+
+                const promptEans = `Tu es une base de données EAN/GTIN. Pour le produit : "${model}", fournis un tableau de 10 codes EAN quelle que soit la couleur ou la capacité`;
+
+                const schemaEans = {
+                    type: "OBJECT",
+                    properties: {
+                        eans: {
+                            type: "ARRAY",
+                            items: { type: "STRING" },
+                            description: "Liste de 10 codes EAN"
+                        }
+                    },
+                    required: ["eans"]
+                };
+
+                const rawJson = await callGeminiAPI(cfg.geminiKey, promptEans, schemaEans);
+                const parsedEans = JSON.parse(rawJson);
+                const eanList = Array.isArray(parsedEans.eans) ? parsedEans.eans.map(e => e.replace(/\D/g, '').trim()).filter(e => e.length >= 8).slice(0, 10) : [];
+
+                if (eanList.length === 0) {
+                    throw new Error("Aucun EAN généré par l'IA.");
+                }
+
+                // Affichage des chips EAN dans le bloc
+                chipsBox.innerHTML = eanList.map(e => `<span id="chip-${e}" class="inline-block bg-slate-100 text-slate-600 font-mono text-[10px] px-2 py-0.5 rounded border border-slate-200">${e}</span>`).join('');
+                chipsBox.classList.remove('hidden');
+
+                // Étape 2 : Tester chaque EAN auprès d'Icecat jusqu'à trouver une image
+                fetchedImages = [];
+                let successfulEan = null;
+
+                for (let i = 0; i < eanList.length; i++) {
+                    const currentEan = eanList[i];
+                    loaderText.textContent = `Test Icecat (${i + 1}/${eanList.length}) : EAN ${currentEan}...`;
+
+                    const chipEl = document.getElementById(`chip-${currentEan}`);
+                    if (chipEl) {
+                        chipEl.className = "inline-block bg-brand-100 text-brand-700 font-mono text-[10px] px-2 py-0.5 rounded border border-brand-300 font-bold animate-pulse";
+                    }
+
+                    const images = await testEanWithIcecat(cfg.icecatUser, cfg.icecatKey, currentEan);
+
+                    if (images.length > 0) {
+                        fetchedImages = images;
+                        successfulEan = currentEan;
+                        if (chipEl) {
+                            chipEl.className = "inline-block bg-emerald-100 text-emerald-700 font-mono text-[10px] px-2 py-0.5 rounded border border-emerald-300 font-bold";
+                        }
+                        break;
+                    } else {
+                        if (chipEl) {
+                            chipEl.className = "inline-block bg-rose-50 text-rose-400 font-mono text-[10px] px-2 py-0.5 rounded border border-rose-200 line-through opacity-60";
+                        }
+                    }
+                }
+
+                // Étape 3 : Afficher les images ou proposer la saisie manuelle
+                document.getElementById('img-loader').classList.add('hidden');
+
+                if (fetchedImages.length > 0) {
+                    currentImgIndex = 0;
+                    displayCurrentImage();
+                    document.getElementById('img-carousel').classList.remove('hidden');
+                } else {
+                    document.getElementById('manual-ean-container').classList.remove('hidden');
+                }
+
+            } catch (err) {
+                console.warn("Erreur lors de la recherche automatique :", err);
+                document.getElementById('img-loader').classList.add('hidden');
+                document.getElementById('manual-ean-container').classList.remove('hidden');
+            }
+        }
+
+        // Fonction auxiliaire pour interroger Icecat sur un EAN donné
+        async function testEanWithIcecat(userName, appKey, ean) {
+            try {
+                const icecatUrl = `https://live.icecat.biz/api/?UserName=${encodeURIComponent(userName)}&AppKey=${encodeURIComponent(appKey)}&Language=fr&GTIN=${ean}`;
+                const response = await fetch(icecatUrl);
+                if (!response.ok) return [];
+
+                const icecatData = await response.json();
+                const images = [];
+
+                if (icecatData && icecatData.data) {
+                    if (icecatData.data.Image && icecatData.data.Image.Pic500x500) {
+                        images.push(icecatData.data.Image.Pic500x500);
+                    }
+                    if (Array.isArray(icecatData.data.Gallery)) {
+                        icecatData.data.Gallery.forEach(item => {
+                            if (item.Pic500x500 && !images.includes(item.Pic500x500)) {
+                                images.push(item.Pic500x500);
+                            }
+                        });
+                    }
+                }
+                return images;
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // Soumission manuelle d'un EAN par l'administrateur
+        async function submitManualEan() {
+            const manualInput = document.getElementById('manual-ean-input').value.trim();
+            const cleanEan = manualInput.replace(/\D/g, '');
+
+            if (!cleanEan || cleanEan.length < 8) {
+                alert("Veuillez saisir un code EAN/GTIN valide à 8 chiffres minimum.");
+                return;
+            }
+
+            const cfg = getSavedConfig();
+            if (!cfg.icecatUser || !cfg.icecatKey) {
+                alert("Veuillez configurer l'UserName et l'AppKey Icecat dans la section globale.");
+                return;
+            }
+
+            document.getElementById('manual-ean-container').classList.add('hidden');
+            document.getElementById('img-loader').classList.remove('hidden');
+            document.getElementById('img-loader-text').textContent = `Recherche Icecat avec l'EAN manuel : ${cleanEan}...`;
+
+            const images = await testEanWithIcecat(cfg.icecatUser, cfg.icecatKey, cleanEan);
+            document.getElementById('img-loader').classList.add('hidden');
+
+            if (images.length > 0) {
+                fetchedImages = images;
+                currentImgIndex = 0;
+                displayCurrentImage();
+                document.getElementById('img-carousel').classList.remove('hidden');
+            } else {
+                alert(`Aucun visuel trouvé sur Icecat avec l'EAN ${cleanEan}.`);
+                document.getElementById('manual-ean-container').classList.remove('hidden');
+            }
+        }
+
+        function displayCurrentImage() {
+            const imgEl = document.getElementById('carousel-img');
+            const indexEl = document.getElementById('img-index-display');
+            const badgeEl = document.getElementById('selected-badge');
+
+            const currentUrl = fetchedImages[currentImgIndex];
+            imgEl.src = currentUrl;
+            indexEl.textContent = `${currentImgIndex + 1} / ${fetchedImages.length}`;
+
+            if (selectedImgUrl === currentUrl) {
+                badgeEl.classList.remove('hidden');
+                imgEl.classList.add('ring-4', 'ring-emerald-500');
+            } else {
+                badgeEl.classList.add('hidden');
+                imgEl.classList.remove('ring-4', 'ring-emerald-500');
+            }
+        }
+
+        function selectCurrentImage(e) {
+            e.stopPropagation();
+            selectedImgUrl = fetchedImages[currentImgIndex];
+            displayCurrentImage();
+        }
+
+        function prevImage(e) {
+            e.stopPropagation();
+            if (fetchedImages.length === 0) return;
+            currentImgIndex = (currentImgIndex - 1 + fetchedImages.length) % fetchedImages.length;
+            displayCurrentImage();
+        }
+
+        function nextImage(e) {
+            e.stopPropagation();
+            if (fetchedImages.length === 0) return;
+            currentImgIndex = (currentImgIndex + 1) % fetchedImages.length;
+            displayCurrentImage();
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+            activeProduct = null;
+        }
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -36,6 +36,11 @@
                 <i class="fa-solid fa-font text-emerald-600 w-4"></i> Typographie
             </a>
 
+            <a href="#menu" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+                <i class="fa-solid fa-bars text-slate-400 w-4 text-center"></i>
+                <span>Menu & Navigation</span>
+            </a>
+
             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-2 pt-4">Éléments de base</div>
             <a href="#buttons" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition font-semibold">
                 <i class="fa-solid fa-hand-pointer text-emerald-600 w-4"></i> Boutons & Actions
@@ -141,6 +146,114 @@
                     </div>
                 </div>
             </section>
+
+<section id="menu" class="space-y-4">
+    <div class="border-b border-slate-200 pb-3">
+        <h2 class="text-lg font-bold text-slate-900">0. Liste des icônes du menu</h2>
+        <p class="text-xs text-slate-500">Icônes des rubriques, icône unique des sous-rubriques</p>
+    </div>
+
+    <!-- Grille 3 colonnes -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Colonne 1 : Partenaire -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
+                <h3 class="text-sm font-bold text-slate-900">Partenaire</h3>
+            </div>
+
+            <div class="space-y-3">
+                <div class="flex items-center gap-2.5 text-xs text-slate-700">
+                    <i class="fa-solid fa-tags w-5 text-center shrink-0"></i>
+                    <span class="sidebar-text truncate">Argus</span>    
+                </div>
+
+                <div class="flex items-center gap-2.5 text-xs text-slate-700">
+                    <i class="fa-solid fa-truck-fast w-5 text-center shrink-0"></i>
+                    <span class="sidebar-text truncate">Expédition</span>
+                </div>
+
+                <div class="flex items-center gap-2.5 text-xs text-slate-700">
+                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center shrink-0"></i>
+                    <span class="sidebar-text truncate">Facturation</span>
+                </div>
+
+                <div class="flex items-center gap-2.5 text-xs text-slate-700">
+                    <i class="fa-solid fa-calculator w-5 text-center shrink-0"></i>
+                    <span class="sidebar-text truncate">Simulateur</span>
+                </div>
+
+                <div class="flex items-center gap-2.5 text-xs text-slate-700">
+                    <i class="fa-solid fa-key w-5 text-center shrink-0"></i>
+                    <span class="sidebar-text truncate">Clé Api</span>
+                </div>
+
+                <div class="flex items-center gap-2.5 text-xs text-slate-700">
+                    <i class="fa-solid fa-book-open w-5 text-center shrink-0"></i>
+                    <span class="sidebar-text truncate">Documentation & guides</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Colonne 2 : Affilié -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
+                <h3 class="text-sm font-bold text-slate-900">Affilié</h3>
+            </div>
+
+            <div class="space-y-3">
+                
+
+
+            </div>
+        </div>
+
+        <!-- Colonne 3 : Compare -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
+                <h3 class="text-sm font-bold text-slate-900">Comparecycle</h3>
+            </div>
+
+            <div class="space-y-3">
+                
+                <!-- NOUVELLE RUBRIQUE : CATALOGUE AVEC SOUS-RUBRIQUES -->
+                <div class="relative">
+                    <button type="button" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-900 hover:text-white hover:bg-slate-800 transition group focus:outline-none">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-boxes-stacked w-5 text-center shrink-0 text-slate-900 group-hover:text-white transition"></i>
+                            <span class="sidebar-text truncate">Catalogue</span>
+                        </div>
+                        <i id="catalogueChevron" class="sidebar-text fa-solid fa-chevron-down text-[10px] text-slate-900 transition-transform duration-200"></i>
+                    </button>
+
+                    <!-- Sous-menu arborescent -->
+                    <div id="catalogueSubmenu" class="pl-3 py-1 space-y-1 ml-5 border-l-2 border-slate-700/60">
+                        <a href="#" onclick="loadPage('pages/catalogue-categories.html', this); return false;" class="nav-item flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs text-slate-900 hover:text-white hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-circle text-[5px] shrink-0 opacity-70 text-slate-900"></i>
+                            <span class="sidebar-text truncate">Catégorie</span>
+                        </a>
+                        <a href="#" onclick="loadPage('pages/catalogue-marques.html', this); return false;" class="nav-item flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs text-slate-900 hover:text-white hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-circle text-[5px] shrink-0 opacity-70 text-slate-900"></i>
+                            <span class="sidebar-text truncate">Marque</span>
+                        </a>
+                        <a href="#" onclick="loadPage('pages/catalogue-modeles.html', this); return false;" class="nav-item flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs text-slate-900 hover:text-white hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-circle text-[5px] shrink-0 opacity-70 text-slate-900"></i>
+                            <span class="sidebar-text truncate">Modèle</span>
+                        </a>
+                        <a href="#" onclick="loadPage('pages/catalogue-produits.html', this); return false;" class="nav-item flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs text-slate-900 hover:text-white hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-circle text-[5px] shrink-0 opacity-70 text-slate-900"></i>
+                            <span class="sidebar-text truncate">Produit</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
 
             <!-- BOUTONS & ACTIONS -->
             <section id="buttons" class="space-y-4">

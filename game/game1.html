@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Game 1</title>
+	<style>
+		canvas {
+			border: 2px solid #333;
+		}
+	</style>
+</head>
+<body>
+
+	<canvas id="game1" width="600" height="350"></canvas>
+
+	<script src="paddle.js"></script>
+	<script src="brique.js"></script>
+	<script src="balle.js"></script>
+	<script>
+
+		const canvas = document.getElementById("game1");
+		const ctx = canvas.getContext('2d');
+
+		const modele_mur = [
+			[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+		];
+
+		const mur_de_briques = [];
+
+		// Configuration des briques
+		const brique_pos_x_init = 10;
+		const brique_pos_y_init = 10;
+		const brique_width = 51; 
+		const brique_height = 15;
+		const brique_gap = 8;
+
+		// mettre le paddle 15px au-dessus du sol
+		const marge = 15;
+
+		const paddle = new Paddle(canvas, 60, 15, '#333333', 10, marge);
+		paddle.eventListener();
+
+		// (canvas, rayon = 10, vitesse = 4, couleur = "#333333")
+		const balle = new Balle(canvas, 8, 8, "#333333");
+
+		// 1. INITIALISATION DU MUR (Exécutée une seule fois au chargement)
+		function initialiserMur() {
+			for (let i = 0; i < modele_mur.length; i++) {
+				for (let j = 0; j < modele_mur[i].length; j++) {
+					if (modele_mur[i][j] === 1) {
+						let x = brique_pos_x_init + j * (brique_width + brique_gap);
+						let y = brique_pos_y_init + i * (brique_height + brique_gap);
+						
+						// Attention à l'ordre des arguments : x, y, width, height, couleur, i, j
+						mur_de_briques.push(new Brique(x, y, brique_width, brique_height, '#333333', i, j));
+					}
+				}
+			}
+		}
+
+		// 2. RENDU DE LA SCÈNE (Exécuté à chaque frame)
+		function scene() {
+			// Dessin des briques existantes
+			mur_de_briques.forEach(brique => brique.dessiner(ctx));
+
+			// Raquette
+			paddle.logique();
+			paddle.dessiner(ctx);
+
+			// Balle
+			balle.logique();
+			balle.verifierCollisionPaddle(paddle);
+			balle.verifierCollisionBriques(modele_mur, mur_de_briques);
+			balle.dessiner(ctx);
+		}
+
+		// 3. BOUCLE D'ANIMATION
+		function boucle() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			scene();			
+
+			requestAnimationFrame(boucle);
+		}
+
+		// --- MAIN ---
+		initialiserMur(); // Création initiale du mur
+		boucle();         // Lancement de la boucle d'animation
+
+	</script>
+
+</body>
+</html>

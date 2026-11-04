@@ -74,35 +74,81 @@
                 </button>
             </div>
 
-                        <nav class="p-3 space-y-1 text-sm font-medium">
+            <nav class="p-3 space-y-1 text-sm font-medium">
+                <!-- Tableau de bord -->
                 <a href="#" onclick="loadPage('pages/dashboard.html', this); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
                     <i class="fa-solid fa-chart-pie w-5 text-center shrink-0"></i>
                     <span class="sidebar-text truncate">Tableau de bord</span>
                 </a>
+
+                <!-- NOUVELLE RUBRIQUE : CATALOGUE AVEC SOUS-RUBRIQUES -->
+                <div class="relative">
+                    <button type="button" onclick="toggleCatalogueMenu()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition group focus:outline-none">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-boxes-stacked w-5 text-center shrink-0 text-slate-400 group-hover:text-white transition"></i>
+                            <span class="sidebar-text truncate">Catalogue</span>
+                        </div>
+                        <i id="catalogueChevron" class="sidebar-text fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200"></i>
+                    </button>
+
+                    <!-- Sous-menu arborescent -->
+                    <div id="catalogueSubmenu" class="hidden pl-3 py-1 space-y-1 ml-5 border-l-2 border-slate-700/60">
+                        <a href="#" onclick="loadPage('pages/catalogue-categories.html', this); return false;" class="nav-item flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-circle text-[5px] shrink-0 opacity-70"></i>
+                            <span class="sidebar-text truncate">Catégorie</span>
+                        </a>
+                        <a href="#" onclick="loadPage('pages/catalogue-marques.html', this); return false;" class="nav-item flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-circle text-[5px] shrink-0 opacity-70"></i>
+                            <span class="sidebar-text truncate">Marque</span>
+                        </a>
+                        <a href="#" onclick="loadPage('pages/catalogue-modeles.html', this); return false;" class="nav-item flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-circle text-[5px] shrink-0 opacity-70"></i>
+                            <span class="sidebar-text truncate">Modèle</span>
+                        </a>
+                        <a href="#" onclick="loadPage('pages/catalogue-produits.html', this); return false;" class="nav-item flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                            <i class="fa-solid fa-circle text-[5px] shrink-0 opacity-70"></i>
+                            <span class="sidebar-text truncate">Produit</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Transactions -->
                 <a href="#" onclick="loadPage('pages/transactions.html', this); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
                     <i class="fa-solid fa-list-check w-5 text-center shrink-0"></i>
                     <span class="sidebar-text truncate">Transactions</span>
                 </a>
-                <a href="#" id="defaultNavBtn" onclick="loadPage('pages/argus.html', this); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg shadow-emerald-900/30">
+
+                <!-- Argus -->
+                <a href="#" id="defaultNavBtn" onclick="loadPage('pages/argus.html', this); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold">
                     <i class="fa-solid fa-tags w-5 text-center shrink-0"></i>
                     <span class="sidebar-text truncate">Argus</span>
                 </a>
+
+                <!-- Expédition -->
                 <a href="#" onclick="loadPage('pages/expedition.html', this); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
                     <i class="fa-solid fa-truck-fast w-5 text-center shrink-0"></i>
                     <span class="sidebar-text truncate">Expédition</span>
                 </a>
+
+                <!-- Facturation -->
                 <a href="#" onclick="loadPage('pages/facturation.html', this); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
                     <i class="fa-solid fa-file-invoice-dollar w-5 text-center shrink-0"></i>
                     <span class="sidebar-text truncate">Facturation</span>
                 </a>
+
+                <!-- Simulateur -->
                 <a href="#" onclick="loadPage('pages/simulateur.html', this); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
                     <i class="fa-solid fa-calculator w-5 text-center shrink-0"></i>
                     <span class="sidebar-text truncate">Simulateur</span>
                 </a>
+
+                <!-- Clé Api -->
                 <a href="#" onclick="loadPage('pages/cle-api.html', this); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
                     <i class="fa-solid fa-key w-5 text-center shrink-0"></i>
                     <span class="sidebar-text truncate">Clé Api</span>
                 </a>
+
+                <!-- Documentation -->
                 <a href="#" onclick="loadPage('pages/documentation.html', this); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
                     <i class="fa-solid fa-book-open w-5 text-center shrink-0"></i>
                     <span class="sidebar-text truncate">Documentation & guides</span>
@@ -123,6 +169,7 @@
     <!-- GLOBAL DATA & CORE ENGINE SCRIPT -->
     <script>
         let GLOBAL_DATA = {};
+        let isCatalogueExpanded = false;
 
         async function initData() {
             try {
@@ -138,11 +185,14 @@
         async function loadPage(pageUrl, linkElement) {
             const mainContent = document.getElementById('main-content');
 
+            // Mise à jour propre des classes actives sans détruire les spécificités des sous-onglets
             document.querySelectorAll('.nav-item').forEach(el => {
-                el.className = "nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition";
+                el.classList.remove('bg-emerald-600', 'text-white', 'font-semibold');
+                el.classList.add('text-slate-400');
             });
             if (linkElement) {
-                linkElement.className = "nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg shadow-emerald-900/30";
+                linkElement.classList.remove('text-slate-400');
+                linkElement.classList.add('bg-emerald-600', 'text-white', 'font-semibold');
             }
 
             try {
@@ -162,27 +212,64 @@
                 mainContent.innerHTML = `
                     <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-center my-auto">
                         <i class="fa-solid fa-triangle-exclamation text-4xl text-amber-500 mb-3"></i>
-                        
+                        <h3 class="text-base font-semibold text-slate-800">Page en cours de développement</h3>
+                        <p class="text-xs text-slate-500 mt-1">${pageUrl}</p>
                     </div>
                 `;
+            }
+        }
+
+        // Accordéon pour le menu Catalogue
+        function toggleCatalogueMenu() {
+            const sidebar = document.getElementById('sidebar');
+            // Si la sidebar était fermée, on la réouvre d'abord
+            if (sidebar && sidebar.classList.contains('w-16')) {
+                toggleSidebar();
+            }
+
+            const submenu = document.getElementById('catalogueSubmenu');
+            const chevron = document.getElementById('catalogueChevron');
+            if (!submenu || !chevron) return;
+
+            isCatalogueExpanded = !isCatalogueExpanded;
+            if (isCatalogueExpanded) {
+                submenu.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                submenu.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
             }
         }
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const collapseIcon = document.getElementById('collapseIcon');
+            const submenu = document.getElementById('catalogueSubmenu');
             if (!sidebar || !collapseIcon) return;
+
             const isCollapsed = sidebar.classList.contains('w-16');
             if (isCollapsed) {
+                // Dépliage de la sidebar
                 sidebar.classList.remove('w-16');
                 sidebar.classList.add('w-60');
                 collapseIcon.classList.remove('rotate-180');
                 document.querySelectorAll('.sidebar-text').forEach(el => el.classList.remove('hidden'));
+                
+                // Rétablir l'état du sous-menu s'il était ouvert
+                if (isCatalogueExpanded && submenu) {
+                    submenu.classList.remove('hidden');
+                }
             } else {
+                // Repliage de la sidebar
                 sidebar.classList.remove('w-60');
                 sidebar.classList.add('w-16');
                 collapseIcon.classList.add('rotate-180');
                 document.querySelectorAll('.sidebar-text').forEach(el => el.classList.add('hidden'));
+                
+                // Masquer temporairement le sous-menu en mode icônes réduites
+                if (submenu) {
+                    submenu.classList.add('hidden');
+                }
             }
         }
 
