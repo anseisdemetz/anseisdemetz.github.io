@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suivi de reprise - Comparecycle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-green: #2da557;
+      --primary-green-hover: #268e4a;
+      --dark-navy: #18313e;
+      --dark-navy-hover: #12242e;
+      --text-main: #1f2937;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --card-bg: #ffffff;
+      --bg-page: #f8fafc;
+      --warning-bg: #fffbeb;
+      --warning-border: #fef3c7;
+      --warning-text: #92400e;
+      --badge-orange-bg: #fef3c7;
+      --badge-orange-text: #d97706;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      padding: 30px 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .captcha{
+      text-align: center;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    /* A01: Affiliation / Widget Bar */
+    .affiliate-banner {
+      display: none;
+      background-color: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #3730a3;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .affiliate-banner.active {
+      display: flex;
+    }
+
+    /* A03: Formulaire de recherche */
+    .search-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .search-card h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--dark-navy);
+    }
+
+    .search-card p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    .search-input-group {
+      display: flex;
+      max-width: 500px;
+      margin: 0 auto 16px;
+      gap: 10px;
+    }
+
+    .search-input-group input {
+      flex: 1;
+      padding: 14px 18px;
+      font-size: 1rem;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-full);
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .search-input-group input:focus {
+      border-color: var(--primary-green);
+    }
+
+    /* Boutons standards */
+    .btn {
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-green {
+      background-color: var(--primary-green);
+      color: #fff;
+    }
+    .btn-green:hover { background-color: var(--primary-green-hover); }
+
+    .btn-dark {
+      background-color: var(--dark-navy);
+      color: #fff;
+    }
+    .btn-dark:hover { background-color: var(--dark-navy-hover); }
+
+    .btn-outline-green {
+      background-color: transparent;
+      border: 1.5px solid var(--primary-green);
+      color: var(--primary-green);
+    }
+    .btn-outline-green:hover {
+      background-color: rgba(45, 165, 87, 0.05);
+    }
+
+    .btn-outline-dark {
+      background-color: #fff;
+      border: 1.5px solid var(--dark-navy);
+      color: var(--dark-navy);
+    }
+    .btn-outline-dark:hover {
+      background-color: #f8fafc;
+    }
+
+    /* A04: Carte principale de suivi */
+    .tracking-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04);
+      display: none;
+    }
+
+    .tracking-card.active {
+      display: block;
+    }
+
+    /* En-tête produit */
+    .product-header {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .product-image {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-md);
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .product-image img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .badge-orange {
+      background-color: #fef08a;
+      color: #b45309;
+    }
+
+    .badge-green {
+      background-color: var(--primary-green);
+      color: white;
+    }
+
+    .product-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--dark-navy);
+      margin-bottom: 2px;
+    }
+
+    .product-price {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 6px;
+    }
+
+    .link-track {
+      color: var(--primary-green);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: underline;
+      display: inline-block;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .order-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .order-meta strong {
+      color: var(--text-main);
+    }
+
+    /* Stepper horizontal */
+    .stepper-wrapper {
+      margin: 32px 0 24px;
+    }
+
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 20px;
+      right: 20px;
+      height: 3px;
+      background: #e2e8f0;
+      z-index: 1;
+    }
+
+    .step-item {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1;
+    }
+
+    .step-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot svg {
+      display: none;
+      width: 16px;
+      height: 16px;
+      fill: #fff;
+    }
+
+    .step-item.completed .step-dot {
+      background-color: var(--primary-green);
+      border-color: var(--primary-green);
+    }
+
+    .step-item.completed .step-dot svg {
+      display: block;
+    }
+
+    .step-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      max-width: 120px;
+    }
+
+    .step-item.active .step-label {
+      font-weight: 700;
+      color: var(--dark-navy);
+    }
+
+    /* Notification d'alerte */
+    .alert-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      color: var(--text-main);
+      margin-bottom: 28px;
+    }
+
+    .alert-banner svg {
+      flex-shrink: 0;
+      color: #64748b;
+    }
+
+    /* C14 : détails et paiement alignés à gauche, annulation à droite */
+    .actions-group-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin: 0 0 36px 0;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .actions-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .actions-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .actions-left .btn,
+    .actions-right .btn {
+      white-space: nowrap;
+    }
+
+    @media (max-width: 720px) {
+      .actions-group-wrapper {
+        align-items: flex-start;
+      }
+      .actions-left {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .actions-right {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+
+    #detailsCollapsible { display: none; }
+
+    /* Accordéon / Détails */
+    .details-section {
+      border-top: 1px solid var(--border-color);
+      padding-top: 24px;
+      margin-bottom: 24px;
+    }
+
+    .details-section h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--dark-navy);
+      margin-bottom: 16px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 40px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 8px;
+      font-size: 0.92rem;
+    }
+
+    .info-row span:first-child {
+      color: var(--text-muted);
+    }
+
+    .info-row span:last-child {
+      font-weight: 700;
+      color: var(--dark-navy);
+    }
+
+    /* A05: Modale de vérification (Code spécifique sécurisé) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      max-width: 440px;
+      width: 100%;
+      padding: 32px 28px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      animation: popIn 0.25s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-icon {
+      width: 60px;
+      height: 60px;
+      background-color: #ecfdf5;
+      color: var(--primary-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--dark-navy);
+      margin-bottom: 8px;
+    }
+
+    .modal-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .otp-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .otp-input {
+      width: 44px;
+      height: 52px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-align: center;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .otp-input:focus {
+      border-color: var(--primary-green);
+    }
+
+    .modal-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Simulation Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--dark-navy);
+      color: white;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      z-index: 10000;
+    }
+    .toast.active { display: flex; }
+
+    /* C08: En-tête avec logo de l'affilié */
+    .affiliate-header {
+      display: none;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 24px;
+      padding: 10px 0;
+    }
+
+    .affiliate-header.active { display: flex; }
+
+    .affiliate-logo-placeholder {
+      color: var(--dark-navy);
+      font-weight: 700;
+      padding: 8px 12px;
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+
+    .affiliate-logo {
+      max-height: 50px;
+      max-width: 200px;
+      object-fit: contain;
+      display: block;
+    }   
+    /* C09 & C10: Actions internes au bloc Détails / Diagnostic */
+    .diagnostic-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+    }
+
+    .bottom-danger-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+      padding-top: 16px;
+    }
+
+    /* C11: Footer pour le bouton Nous contacter */
+    .page-footer {
+      display: none;
+      text-align: center;
+      padding: 32px 0 48px 0;
+      border-top: 1px solid var(--border-color);
+      margin-top: 24px;
+    }
+    /* C13: Bouton d'aide discret pour le Footer */
+    .btn-contact-discreet {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-contact-discreet:hover {
+      color: var(--dark-navy);
+      border-color: #cbd5e1;
+      background-color: #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-contact-discreet svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+    }
+    /* ==========================================================================
+       A06 - Popin / Modale Nous contacter
+       ========================================================================== */
+    .contact-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .contact-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .contact-modal-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 640px;
+      max-height: 100vh;
+      overflow-y: auto;
+      border-radius: var(--radius-lg);
+      padding: 36px 32px 32px 32px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+      position: relative;
+      transform: translateY(12px) scale(0.98);
+      transition: all 0.25s ease;
+    }
+
+    .contact-modal-overlay.active .contact-modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .contact-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      line-height: 1;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      transition: color 0.15s ease;
+    }
+
+    .contact-modal-close:hover {
+      color: var(--dark-navy);
+    }
+
+    .contact-modal-title {
+      font-family: inherit;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--dark-navy);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .contact-summary {
+      margin: 0 0 20px;
+      padding: 15px 18px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: #f8fafc;
+    }
+
+    .contact-summary h3 {
+      margin: 0 0 11px;
+      color: var(--dark-navy);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .contact-summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 18px;
+    }
+
+    .contact-summary-grid div { min-width: 0; }
+    .contact-summary-grid dt {
+      margin-bottom: 2px;
+      color: var(--text-muted);
+      font-size: 0.76rem;
+    }
+    .contact-summary-grid dd {
+      overflow-wrap: anywhere;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 580px) {
+      .contact-summary-grid {
+        grid-template-columns: 1fr;
+      }
+      .contact-modal-card {
+        padding: 24px 20px;
+      }
+    }
+
+    .contact-form-group {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contact-form-group label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--dark-navy);
+      margin-bottom: 6px;
+    }
+
+    .contact-form-group input,
+    .contact-form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      color: var(--text-main);
+      font-family: inherit;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .contact-form-group input::placeholder,
+    .contact-form-group textarea::placeholder {
+      color: #94a3b8;
+    }
+
+    .contact-form-group input:focus,
+    .contact-form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(0, 196, 122, 0.15);
+    }
+
+    .contact-form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* Boîte d'acceptation avec toggle switch */
+    .contact-consent-box {
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 18px 0;
+      background: #f8fafc;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #cbd5e1;
+      border-radius: 24px;
+      transition: 0.2s ease;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.2s ease;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: var(--primary-green);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    .contact-consent-text {
+      font-size: 0.80rem;
+      font-weight: 600;
+      color: var(--dark-navy);
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .contact-legal-text {
+      font-size: 0.75rem;
+      color: #64748b;
+      line-height: 1.45;
+      margin-bottom: 20px;
+    }
+
+    .contact-legal-text a {
+      color: var(--primary-green);
+      text-decoration: underline;
+    }
+
+    .btn-contact-submit {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+    }    
+
+    @media (max-width: 768px) {
+      .info-grid { grid-template-columns: 1fr; }
+      .search-input-group { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- C08: Logo de l'affilié -->
+    <header id="affiliateHeader" class="affiliate-header">
+      <img src="img/logo.png" alt="Logo Partenaire" class="affiliate-logo" id="affiliateLogoImg" onerror="this.hidden=true; document.getElementById('affiliateLogoPlaceholder').hidden=false;"><span id="affiliateLogoPlaceholder" class="affiliate-logo-placeholder" hidden>Partenaire</span>
+    </header>
+    
+    <!-- A01: Bandeau d'affiliation / Widget (si ?affiliate=xxx présent) -->
+    <div id="affiliateBanner" class="affiliate-banner">
+      <span>Partenaire affilié actif : <strong id="affiliateName">Widget Partenaire</strong></span>
+      <span style="font-size: 0.75rem; text-transform: uppercase; background: #c7d2fe; padding: 2px 8px; border-radius: 4px;">Mode Widget Intégré</span>
+    </div>
+
+    <!-- A02 & A03: Zone de recherche si accès hors email ou sans code en URL -->
+    <section id="inputScreen" class="search-card">
+      <h2>Suivre l'état de votre reprise</h2>
+      <p>Saisissez votre numéro de commande ou code de reprise pour consulter l'avancement de votre dossier.</p>
+      <form id="searchForm" onsubmit="handleSearch(event)">
+        <div class="search-input-group">
+          <input type="text" id="trackInput" placeholder="Code envoyé par email" required autocomplete="off">
+          <button type="submit" class="btn btn-green">Rechercher</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- A04: Carte principale de suivi de colis et de reprise -->
+    <main id="trackingContent" class="tracking-card">
+      
+      <!-- Infos produit et état de la reprise (sans bonus) -->
+      <div class="product-header">
+        <div class="product-image">
+          <img src="img/produit.jpg" alt="Apple iPhone 13 512 Go">
+        </div>
+        <div class="product-info">
+          <span class="badge badge-orange" id="statusBadge">En attente d'expédition</span>
+          <h1 class="product-title" id="productTitle">Apple iPhone 13 512 Go</h1>
+          <div class="product-price">Votre offre de reprise : <span id="offerPrice">485,00€</span></div>
+          <a class="link-track" onclick="triggerSensitiveAction('Suivi transporteur Colissimo')">Suivre mon colis</a>
+          
+          <div class="order-meta">
+            N° de commande : <strong>GRA0001766673</strong><br>
+            Code de suivi : <strong id="orderNumberDisplay">123456</strong><br>
+            Passée le 21/05/2025
+          </div>
+        </div>
+      </div>
+
+      <!-- Stepper horizontal -->
+      <div class="stepper-wrapper">
+        <div class="stepper">
+          <!-- Étape 1 -->
+          <div class="step-item completed">
+            <div class="step-dot">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div class="step-label active">Demande finalisée</div>
+          </div>
+          <!-- Étape 2 -->
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-label">Produit envoyé</div>
+          </div>
+          <!-- Étape 3 -->
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-label">Produit reçu</div>
+          </div>
+          <!-- Étape 4 -->
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-label">Diagnostic en cours</div>
+          </div>
+          <!-- Étape 5 -->
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-label">Paiement effectué</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avertissement délai -->
+      <div class="alert-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <span>N’oubliez pas d’expédier votre appareil dans un délai de 7 jours à compter de la validation de votre reprise sinon votre offre de reprise expirera.</span>
+      </div>
+
+      <!-- C14 : détails et paiement à gauche, annulation à droite -->
+      <div class="actions-group-wrapper">
+        <div class="actions-left">
+          <button class="btn btn-green" id="toggleDetailsBtn" onclick="toggleDetails()">
+            <span id="toggleText">Voir les détails</span>
+            <svg id="chevronIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+          </button>
+          <button class="btn btn-outline-dark" onclick="triggerSensitiveAction('Modification du mode de paiement')">
+            Modifier mon mode de paiement
+          </button>
+        </div>
+
+        <div class="actions-right">
+          <button class="btn btn-outline-green" onclick="triggerSensitiveAction('Annulation de la reprise')">
+            Annuler ma reprise
+          </button>
+        </div>
+      </div>
+
+      <!-- Section Accordéon (Détails et Diagnostic) -->
+      <div id="detailsCollapsible">
+
+        <div class="details-section">
+          <h3>Diagnostic</h3>
+          <div class="info-grid">
+            <div class="info-row">
+              <span>Écran</span>
+              <span>Comme neuf</span>
+            </div>
+            <div class="info-row">
+              <span>Arrière du téléphone</span>
+              <span>Micro rayure</span>
+            </div>
+            <div class="info-row">
+              <span>Châssis</span>
+              <span>Rayure(s)</span>
+            </div>
+            <div class="info-row">
+              <span>Téléphone fonctionnel</span>
+              <span>Oui</span>
+            </div>
+          </div>
+
+          <!-- C09: Bons déplacés dans le bloc Diagnostic -->
+          <div class="diagnostic-actions">
+            <button class="btn btn-outline-dark" onclick="window.print()">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Bon de cession
+            </button>
+            <button class="btn btn-outline-dark" onclick="window.print()">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Bon de transport
+            </button>
+          </div>
+        </div>
+        
+      </div>
+
+    </main>
+
+    <!-- C15 : footer affiché uniquement avec le suivi -->
+    <footer class="page-footer" id="pageFooter">
+      <button type="button" class="btn-contact-discreet" onclick="openContactModal()">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span>Une question ? Nous contacter</span>
+      </button>
+    </footer>
+  </div>
+
+  <!-- A05: Modale de Sécurité pour Action Sensible (Code OTP) -->
+  <div id="otpModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h3 class="modal-title">Action sécurisée</h3>
+      <p class="modal-desc">
+        Pour réaliser : <strong id="sensitiveActionLabel" style="color:var(--dark-navy)">...</strong>, 
+        veuillez saisir le code de vérification à 6 chiffres envoyé à votre adresse email associée.
+        <br><small style="color:var(--primary-green); font-weight:700;">Code test démo : 123456</small>
+      </p>
+
+      <form onsubmit="handleOtpSubmit(event)">
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 0)" autofocus>
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 1)">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 2)">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 3)">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 4)">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 5)">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-green">Confirmer l'action</button>
+          <button type="button" class="btn btn-outline-dark" onclick="closeOtpModal()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2da557" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <span id="toastMessage">Action autorisée avec succès !</span>
+  </div>
+
+  <script>
+    let pendingAction = null;
+    let toastTimer = null;
+    let lastContactTrigger = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const affiliate = params.get('affiliate') || params.get('partner');
+      if (affiliate) {
+        document.getElementById('affiliateBanner').classList.add('active');
+        document.getElementById('affiliateName').textContent = affiliate.toUpperCase();
+        document.getElementById('affiliateHeader').classList.add('active');
+      }
+
+      const code = (params.get('tracking') || params.get('track') || params.get('code') || '').trim();
+      // updateContactSummary(code);
+      if (code) {
+        displayTrackingView(code);
+      } else {
+        document.getElementById('inputScreen').style.display = 'block';
+        document.getElementById('trackingContent').classList.remove('active');
+        document.getElementById('pageFooter').style.display = 'none';
+      }
+    });
+
+    function handleSearch(event) {
+      event.preventDefault();
+      const code = document.getElementById('trackInput').value.trim();
+      if (code) displayTrackingView(code);
+    }
+
+    function displayTrackingView(code) {
+      document.getElementById('inputScreen').style.display = 'none';
+      const tracking = document.getElementById('trackingContent');
+      tracking.classList.add('active');
+      document.getElementById('pageFooter').style.display = 'block';
+      document.getElementById('orderNumberDisplay').textContent = code;
+      const orderNumber = document.getElementById('gridOrderNum');
+      if (orderNumber) orderNumber.textContent = code;
+      // updateContactSummary(code);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function quickLoad(code) {
+      document.getElementById('trackInput').value = code;
+      displayTrackingView(code);
+    }
+
+    function toggleDetails() {
+      const content = document.getElementById('detailsCollapsible');
+      const isHidden = window.getComputedStyle(content).display === 'none';
+      content.style.display = isHidden ? 'block' : 'none';
+      document.getElementById('toggleText').textContent = isHidden ? 'Masquer les détails' : 'Voir les détails';
+      document.getElementById('chevronIcon').style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
+    function triggerSensitiveAction(actionName) {
+      pendingAction = actionName;
+      document.getElementById('sensitiveActionLabel').textContent = actionName;
+      const inputs = document.querySelectorAll('.otp-input');
+      inputs.forEach(input => { input.value = ''; });
+      document.getElementById('otpModal').classList.add('active');
+      inputs[0].focus();
+    }
+
+    function closeOtpModal() {
+      document.getElementById('otpModal').classList.remove('active');
+      pendingAction = null;
+    }
+
+    function moveNext(input, index) {
+      input.value = input.value.replace(/\D/g, '').slice(0, 1);
+      const inputs = document.querySelectorAll('.otp-input');
+      if (input.value && index < inputs.length - 1) inputs[index + 1].focus();
+    }
+
+    function handleOtpSubmit(event) {
+      event.preventDefault();
+      const inputs = [...document.querySelectorAll('.otp-input')];
+      const code = inputs.map(input => input.value).join('');
+      if (code === '123456') {
+        const action = pendingAction;
+        closeOtpModal();
+        showToast(`Sécurité validée : « ${action} » autorisée.`);
+      } else {
+        alert('Code invalide. Veuillez saisir 123456 pour cette démonstration.');
+        inputs.forEach(input => { input.value = ''; });
+        inputs[0].focus();
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.add('active');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('active'), 4000);
+    }
+
+    function openContactModal() {
+      lastContactTrigger = document.activeElement;
+      const overlay = document.getElementById('contactModalOverlay');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      overlay.querySelector('input:not([type="checkbox"])').focus();
+    }
+
+    function closeContactModal() {
+      document.getElementById('contactModalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      if (lastContactTrigger) lastContactTrigger.focus();
+    }
+
+    function handleContactOverlayClick(event) {
+      if (event.target.id === 'contactModalOverlay') closeContactModal();
+    }
+
+    function handleContactSubmit(event) {
+      event.preventDefault();
+      closeContactModal();
+      showToast('Votre message a bien été envoyé. Notre équipe vous répondra rapidement.');
+      document.getElementById('contactForm').reset();
+      document.getElementById('contactSujet').value = 'Service client';
+    }
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        if (document.getElementById('contactModalOverlay').classList.contains('active')) closeContactModal();
+        if (document.getElementById('otpModal').classList.contains('active')) closeOtpModal();
+      }
+    });
+  </script>
+
+  <!-- A06: Modale Nous contacter -->
+  <div class="contact-modal-overlay" id="contactModalOverlay" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" onclick="handleContactOverlayClick(event)">
+    <div class="contact-modal-card">
+      <button type="button" class="contact-modal-close" onclick="closeContactModal()" aria-label="Fermer">&times;</button>
+      
+      <h2 class="contact-modal-title" id="contactModalTitle">Nous contacter</h2>
+      
+      <form id="contactForm" onsubmit="handleContactSubmit(event)">
+        <section class="contact-summary" aria-label="Récapitulatif de vos informations">
+          <h3>Vos informations</h3>
+          <dl class="contact-summary-grid">
+            <div><dt>Prénom</dt><dd>Armelle</dd></div>
+            <div><dt>Nom</dt><dd>Caramelle</dd></div>
+            <div><dt>Adresse email</dt><dd>armelle.caramelle@exotic.com</dd></div>
+            <div><dt>N° de commande</dt><dd>GRA0001766673</dd></div>
+          </dl>
+        </section>
+
+        <div class="contact-form-group">
+          <label for="contactSujet">Sujet*</label>
+          <input type="text" id="contactSujet" value="Service client" required>
+        </div>
+
+        <div class="contact-form-group">
+          <label for="contactMessage">Message*</label>
+          <textarea id="contactMessage" placeholder="Message" required></textarea>
+        </div>
+
+        <div class="contact-consent-box">
+          <label class="toggle-switch">
+            <input type="checkbox" id="contactConsent" required>
+            <span class="toggle-slider"></span>
+          </label>
+          <p class="contact-consent-text">
+            J'accepte d'être recontacté par CompaRecycle afin de traiter ma demande
+          </p>
+        </div>
+
+        <p class="contact-legal-text">
+          Comparecycle, en tant que responsable de traitement, collecte et traite vos données à caractère personnel à des fins de communication avec vous/paiement de votre appareil repris/traitement de votre demande de reprise. Pour en savoir plus, consulter notre <a href="#" onclick="event.preventDefault();">Politique des cookies</a>.
+        </p>
+
+        <div class="captcha">
+          <img src="img/captcha.png" height="75"/>
+        </div>
+
+        <button type="submit" class="btn btn-green btn-contact-submit">
+          Envoyer le message
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
