@@ -76,6 +76,11 @@ function switchLanguage(lang) {
         btnEn.className = "flex-1 sm:flex-none flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-150 text-indigo-100 hover:text-white";
     }
 
+    // Mettre à jour le bouton Leitner pour la nouvelle langue sélectionnée
+    if (typeof updateLeitnerHeaderButton === 'function') {
+        updateLeitnerHeaderButton();
+    }
+
     renderApp();
 }
 

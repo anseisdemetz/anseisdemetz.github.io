@@ -13,7 +13,7 @@ function openFlashcardSetup() {
 
     // Calcul du nombre de mots par score (1 à 10)
     for (let s = 1; s <= 10; s++) {
-        const count = list.filter(w => (w.score || 1) === s).length;
+        const count = list.filter(w => w.status === 'known' && (w.score || 1) === s).length;
         const label = document.createElement('label');
         
         label.className = `p-2 rounded-xl border text-xs font-semibold block cursor-pointer transition ${

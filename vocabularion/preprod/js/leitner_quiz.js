@@ -1,6 +1,22 @@
 // ==========================================
-// [A044] QUIZ RYTHME DE LEITNER
+// [A044] QUIZ RYTHME DE LEITNER (MAJ C01 & C02)
 // ==========================================
+
+
+/*
+
+- tous les jours passer en revue la boîte 1
+- tous les 2 jours passer en revue la boîte 2
+- tous les 3 jours passer en revue la boîte 3
+- tous les 4 jours passer en revue la boîte 4
+- tous les 5 jours passer en revue la boîte 5
+- tous les 8 jours passer en revue la boîte 6
+- tous les 12 jours passer en revue la boîte 7
+- tous les 27 jours passer en revue la boîte 8
+- tous les 56 jours passer en revue la boîte 9
+- tous les 100 jours passer en revue la boîte 10
+
+*/
 
 const LEITNER_START_DATE = '2026-11-05';
 
@@ -36,13 +52,12 @@ function getLeitnerDayNumber() {
     const startDate = new Date(LEITNER_START_DATE);
     const today = new Date();
     
-    // Normalisation à minuit
     startDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
     
     const diffTime = today - startDate;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    return Math.max(1, diffDays + 1); // Jour 1 commence le 05/11/2026
+    return Math.max(1, diffDays + 1);
 }
 
 // 2. Déterminer les boîtes à réviser pour un jour N donné
@@ -60,14 +75,13 @@ function getDueBoxesForDay(dayNum) {
 // 3. Obtenir la date effective de reset (6h du matin)
 function getLeitnerResetDateStr() {
     const now = new Date();
-    // Si avant 6h du matin, la journée courante au sens Leitner est la veille
     if (now.getHours() < 6) {
         now.setDate(now.getDate() - 1);
     }
     return now.toISOString().split('T')[0];
 }
 
-// 4. Mettre à jour l'état du bouton dans le Header
+// 4. Mettre à jour l'état du bouton dans le Header [C01]
 function updateLeitnerHeaderButton() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const btn = document.getElementById('btn-leitner-quiz');
@@ -79,16 +93,12 @@ function updateLeitnerHeaderButton() {
     const dueBoxes = getDueBoxesForDay(dayNum);
 
     const allWords = (db && db.languages && db.languages[activeLang]) ? db.languages[activeLang].vocabulary : [];
-
-    // Mots révisés aujourd'hui (stockés dans LocalStorage)
     const sessionKey = `leitner_completed_${activeLang}_${resetDateStr}`;
     const completedIds = JSON.parse(localStorage.getItem(sessionKey) || '[]');
 
-    // Filtre des mots de la boîte > 0 et faisant partie des boîtes dues
     const eligibleWords = allWords.filter(w => {
         const score = w.score || 1;
         const status = w.status || 'unstudied';
-        // Exclure la Boîte 0 (Score 1 + unstudied)
         if (score === 1 && status === 'unstudied') return false;
         return dueBoxes.includes(score) && !completedIds.includes(w.id);
     });
@@ -96,28 +106,16 @@ function updateLeitnerHeaderButton() {
     const pendingCount = eligibleWords.length;
 
     if (badge) {
-        if (pendingCount > 0) {
-            badge.innerText = pendingCount;
-            badge.classList.remove('hidden');
-        } else {
-            badge.classList.add('hidden');
-        }
+        badge.innerText = pendingCount;
+        badge.classList.remove('hidden');
     }
 
-    // Si tout est révisé pour aujourd'hui, on désactive le bouton
-    const isFinishedKey = `leitner_finished_${activeLang}_${resetDateStr}`;
-    const isFinished = localStorage.getItem(isFinishedKey) === 'true';
-
-    if (pendingCount === 0 || isFinished) {
-        btn.disabled = true;
-        btn.title = "Session Leitner du jour effectuée. Rendez-vous demain après 06:00 !";
-    } else {
-        btn.disabled = false;
-        btn.title = "Lancer la session Rythme Leitner du jour";
-    }
+    // [C01] Le bouton ne s'interdit plus jamais d'être cliqué
+    btn.disabled = false;
+    btn.title = `Session Rythme Leitner (${activeLang === 'english' ? 'Anglais' : 'Italien'}) - ${pendingCount} mot(s) restant(s)`;
 }
 
-// 5. Lancement du Quiz Leitner
+// 5. Lancement du Quiz Leitner [C02]
 function startLeitnerQuiz() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const resetDateStr = getLeitnerResetDateStr();
@@ -128,7 +126,6 @@ function startLeitnerQuiz() {
     const sessionKey = `leitner_completed_${activeLang}_${resetDateStr}`;
     const completedIds = JSON.parse(localStorage.getItem(sessionKey) || '[]');
 
-    // Éligibles : Boîtes dues du jour, SAUF Boîte 0, SAUF déjà révisés aujourd'hui
     const queue = allWords.filter(w => {
         const score = w.score || 1;
         const status = w.status || 'unstudied';
@@ -136,13 +133,21 @@ function startLeitnerQuiz() {
         return dueBoxes.includes(score) && !completedIds.includes(w.id);
     });
 
+    // [C02] S'il n'y a pas de mots à réviser, on affiche directement l'écran de fin/récapitulatif
     if (queue.length === 0) {
-        alert("Aucun mot à réviser dans le rythme Leitner aujourd'hui !");
-        updateLeitnerHeaderButton();
+        leitnerSessionState = {
+            currentDay: dayNum,
+            targetBoxesToday: dueBoxes,
+            queue: [],
+            currentIndex: 0,
+            totalToReview: 0,
+            stats: { total: completedIds.length, promoted: 0, demoted: 0 }
+        };
+        openModal('leitner-quiz-modal');
+        finishLeitnerQuiz();
         return;
     }
 
-    // Mélanger la file d'attente
     const shuffledQueue = [...queue].sort(() => 0.5 - Math.random());
 
     leitnerSessionState = {
@@ -154,12 +159,11 @@ function startLeitnerQuiz() {
         stats: { total: 0, promoted: 0, demoted: 0 }
     };
 
-    // Afficher l'écran actif et masquer l'écran de fin
     document.getElementById('leitner-active-screen').classList.remove('hidden');
     document.getElementById('leitner-results-screen').classList.add('hidden');
     
-    // Mettre à jour les libellés de l'en-tête
-    document.getElementById('leitner-subtitle-info').innerText = `Jour ${dayNum} • Boîtes : ${dueBoxes.join(', ')}`;
+    const langLabel = activeLang === 'english' ? '🇬🇧 Anglais' : '🇮🇹 Italien';
+    document.getElementById('leitner-subtitle-info').innerText = `${langLabel} • Jour ${dayNum} • Boîtes : ${dueBoxes.join(', ')}`;
     
     openModal('leitner-quiz-modal');
     renderLeitnerQuestion();
@@ -181,7 +185,6 @@ function renderLeitnerQuestion() {
     document.getElementById('leitner-progress-badge').innerText = `${currentIndex + 1} / ${totalToReview}`;
     document.getElementById('leitner-word-box-badge').innerText = `Boîte ${currentItem.score || 1}`;
 
-    // Sens aléatoire : 0 (Terme -> Fr) ou 1 (Fr -> Terme)
     const isReversed = Math.random() < 0.5;
     const promptText = isReversed ? currentItem.translation : currentItem.term;
     const correctAnswer = isReversed ? currentItem.term : currentItem.translation;
@@ -189,7 +192,6 @@ function renderLeitnerQuestion() {
     document.getElementById('leitner-direction-label').innerText = isReversed ? "Quelle est la bonne traduction ?" : `Que signifie ce mot en Français ?`;
     document.getElementById('leitner-question-prompt').innerText = promptText;
 
-    // Générer 3 leurres parmi l'ensemble du vocabulaire
     const pool = allWords.filter(w => w.id !== currentItem.id);
     const shuffledPool = [...pool].sort(() => 0.5 - Math.random());
     const distractors = shuffledPool.slice(0, 3).map(w => isReversed ? w.term : w.translation);
@@ -208,9 +210,8 @@ function renderLeitnerQuestion() {
     });
 }
 
-// 7. Traitement d'une réponse (Sauvegarde immédiate BDD + LocalStorage)
+// 7. Traitement d'une réponse
 async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
-    // Bloquer les clics multiples
     const container = document.getElementById('leitner-options-container');
     const buttons = container.querySelectorAll('button');
     buttons.forEach(b => b.disabled = true);
@@ -225,22 +226,16 @@ async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
         selectedBtn.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200');
         selectedBtn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
         
-        // +1 Boîte (Plafond à 10)
         newScore = Math.min(10, oldScore + 1);
         newStatus = 'known';
         leitnerSessionState.stats.promoted++;
     } else {
-        // Afficher la réponse sélectionnée en rouge
         selectedBtn.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200');
         selectedBtn.classList.add('bg-rose-500', 'text-white', 'border-rose-600');
 
-        // [CORRECTION A044] Identifier la bonne réponse de manière infaillible :
-        // La bonne réponse est l'unique choix qui n'est NI le mot affiché dans la question, NI un leurre.
-        // On retrouve le bouton dont le texte correspond soit à item.term, soit à item.translation
         buttons.forEach(btn => {
             const btnText = btn.querySelector('span') ? btn.querySelector('span').innerText.trim() : btn.innerText.trim();
             if (btnText === item.term.trim() || btnText === item.translation.trim()) {
-                // Si ce texte correspond au mot posé en question, ce n'est pas la réponse (c'est la question)
                 const promptText = document.getElementById('leitner-question-prompt').innerText.trim();
                 if (btnText !== promptText) {
                     btn.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200');
@@ -249,11 +244,10 @@ async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
             }
         });
 
-        // -2 Boîtes (Plancher à 1 + unstudied si < 1)
         newScore = oldScore - 2;
         if (newScore < 1) {
             newScore = 1;
-            newStatus = 'unstudied'; // Retour en Boîte 0
+            newStatus = 'unstudied';
         } else {
             newStatus = 'unknown';
         }
@@ -262,11 +256,9 @@ async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
 
     leitnerSessionState.stats.total++;
 
-    // Mise à jour locale du mot
     item.score = newScore;
     item.status = newStatus;
 
-    // 1. Sauvegarde dans le LocalStorage pour exclure le mot de la session du jour
     const sessionKey = `leitner_completed_${activeLang}_${resetDateStr}`;
     const completedIds = JSON.parse(localStorage.getItem(sessionKey) || '[]');
     if (!completedIds.includes(item.id)) {
@@ -274,7 +266,6 @@ async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
         localStorage.setItem(sessionKey, JSON.stringify(completedIds));
     }
 
-    // 2. Persistance immédiate en BDD Supabase
     try {
         const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
         await supabaseClient
@@ -285,22 +276,19 @@ async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
         console.error("Erreur de sauvegarde Supabase Leitner:", err);
     }
 
-    // Rafraîchir le reste de l'UI si disponible
     if (typeof renderApp === 'function') renderApp();
 
-    // Délai à 1,2s pour bien mémoriser la bonne réponse affichée en vert
     setTimeout(() => {
         leitnerSessionState.currentIndex++;
         renderLeitnerQuestion();
     }, 1200);
 }
 
-// 8. Écran de Fin de Session Leitner
+// 8. Écran de Fin de Session Leitner [C02]
 function finishLeitnerQuiz() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const resetDateStr = getLeitnerResetDateStr();
     
-    // Marquer la session comme terminée
     const isFinishedKey = `leitner_finished_${activeLang}_${resetDateStr}`;
     localStorage.setItem(isFinishedKey, 'true');
 
@@ -314,7 +302,6 @@ function finishLeitnerQuiz() {
 
     document.getElementById('leitner-summary-boxes-today').innerText = targetBoxesToday.join(', ');
 
-    // Calcul des boîtes du lendemain (Jour N+1)
     const nextDay = currentDay + 1;
     const nextBoxes = getDueBoxesForDay(nextDay);
     document.getElementById('leitner-next-day-num').innerText = nextDay;
@@ -323,7 +310,6 @@ function finishLeitnerQuiz() {
     updateLeitnerHeaderButton();
 }
 
-// Initialisation au chargement
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         updateLeitnerHeaderButton();
