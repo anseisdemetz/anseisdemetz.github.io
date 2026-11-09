@@ -2,22 +2,6 @@
 // [A044] QUIZ RYTHME DE LEITNER (MAJ C01 & C02)
 // ==========================================
 
-
-/*
-
-- tous les jours passer en revue la boîte 1
-- tous les 2 jours passer en revue la boîte 2
-- tous les 3 jours passer en revue la boîte 3
-- tous les 4 jours passer en revue la boîte 4
-- tous les 5 jours passer en revue la boîte 5
-- tous les 8 jours passer en revue la boîte 6
-- tous les 12 jours passer en revue la boîte 7
-- tous les 27 jours passer en revue la boîte 8
-- tous les 56 jours passer en revue la boîte 9
-- tous les 100 jours passer en revue la boîte 10
-
-*/
-
 const LEITNER_START_DATE = '2026-11-05';
 
 // Fréquences par boîte : { score: intervalle_jours }
@@ -110,7 +94,6 @@ function updateLeitnerHeaderButton() {
         badge.classList.remove('hidden');
     }
 
-    // [C01] Le bouton ne s'interdit plus jamais d'être cliqué
     btn.disabled = false;
     btn.title = `Session Rythme Leitner (${activeLang === 'english' ? 'Anglais' : 'Italien'}) - ${pendingCount} mot(s) restant(s)`;
 }
@@ -133,7 +116,6 @@ function startLeitnerQuiz() {
         return dueBoxes.includes(score) && !completedIds.includes(w.id);
     });
 
-    // [C02] S'il n'y a pas de mots à réviser, on affiche directement l'écran de fin/récapitulatif
     if (queue.length === 0) {
         leitnerSessionState = {
             currentDay: dayNum,
@@ -220,7 +202,7 @@ async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
     const resetDateStr = getLeitnerResetDateStr();
     let oldScore = item.score || 1;
     let newScore = oldScore;
-    let newStatus = item.status || 'unstudied';
+    let newStatus = 'known'; // Forcer le statut à 'known' par défaut dans le Leitner
 
     if (isCorrect) {
         selectedBtn.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200');
@@ -244,21 +226,25 @@ async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
             }
         });
 
-        newScore = oldScore - 2;
-        if (newScore < 1) {
+        const calculatedScore = oldScore - 2;
+        if (calculatedScore < 1) {
             newScore = 1;
-            newStatus = 'unstudied';
+            newStatus = 'unstudied'; // Retour strict en Boîte 0
         } else {
-            newStatus = 'unknown';
+            newScore = calculatedScore;
+            newStatus = 'known'; // Reste connu si score >= 1
         }
+        
         leitnerSessionState.stats.demoted++;
     }
 
     leitnerSessionState.stats.total++;
 
+    // Mise à jour de l'objet en mémoire
     item.score = newScore;
     item.status = newStatus;
 
+    // 1. Marquer le mot comme révisé dans la session du jour
     const sessionKey = `leitner_completed_${activeLang}_${resetDateStr}`;
     const completedIds = JSON.parse(localStorage.getItem(sessionKey) || '[]');
     if (!completedIds.includes(item.id)) {
@@ -266,6 +252,10 @@ async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
         localStorage.setItem(sessionKey, JSON.stringify(completedIds));
     }
 
+    // 2. Enregistrer dans l'historique global "Mots des quiz"
+    recordLeitnerWordToHistory(item, oldScore, newScore, newStatus);
+
+    // 3. Persistance immédiate en BDD Supabase (Garantit l'absence de 'unknown')
     try {
         const tableName = (typeof VOCAB_TABLE !== 'undefined') ? VOCAB_TABLE : 'vocabulary';
         await supabaseClient
@@ -284,7 +274,7 @@ async function handleLeitnerAnswer(isCorrect, item, selectedBtn) {
     }, 1200);
 }
 
-// 8. Écran de Fin de Session Leitner [C02]
+// 8. Écran de Fin de Session Leitner
 function finishLeitnerQuiz() {
     const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
     const resetDateStr = getLeitnerResetDateStr();
@@ -315,3 +305,42 @@ document.addEventListener('DOMContentLoaded', () => {
         updateLeitnerHeaderButton();
     }, 500);
 });
+
+// Helper : Enregistre le mot révisé dans l'historique global
+function recordLeitnerWordToHistory(item, oldScore, newScore, newStatus) {
+    const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'english';
+    const todayStr = new Date().toISOString().split('T')[0];
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const storageKey = `quiz_history_${activeLang}_${todayStr}`;
+
+    const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+    let currentSession = history.find(s => s.isLeitnerSession);
+
+    if (!currentSession) {
+        currentSession = {
+            isLeitnerSession: true,
+            time: timeStr,
+            words: []
+        };
+        history.push(currentSession);
+    }
+
+    const existingWordIndex = currentSession.words.findIndex(w => w.term === item.term);
+    const wordEntry = {
+        term: item.term,
+        translation: item.translation,
+        sentence: item.sentence || '',
+        scoreBefore: oldScore,
+        scoreAfter: newScore,
+        statusAfter: (newScore === 1 && newStatus === 'unstudied') ? 'unstudied' : 'known'
+    };
+
+    if (existingWordIndex > -1) {
+        currentSession.words[existingWordIndex] = wordEntry;
+    } else {
+        currentSession.words.push(wordEntry);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(history));
+}
