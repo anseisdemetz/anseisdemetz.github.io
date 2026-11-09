@@ -799,7 +799,7 @@
                             </div>
 
                             <div class="pt-2">
-                                <a id="btn-tracking-link" href="#" target="_blank" class="inline-flex items-center justify-center space-x-2 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow transition text-xs">
+                                <a id="btn-tracking-link" href="/widget/suivi.html" target="_blank" class="inline-flex items-center justify-center space-x-2 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow transition text-xs">
                                     <span>Accéder à ma page de suivi de dossier</span>
                                     <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                                 </a>
@@ -1284,7 +1284,7 @@
         document.getElementById('final-dossier-id').textContent = randomDossier;
         document.getElementById('final-payout-val').textContent = `${appState.price || 0} €`;
         document.getElementById('viva-confirmed-amount').textContent = `${appState.price || 0} €`;
-        document.getElementById('btn-tracking-link').href = `https://mon-site.com/suivi-reprise?dossier=${randomDossier}`;
+        document.getElementById('btn-tracking-link').href = `/widget/suivi.html?id=95&dossier=${randomDossier}`;
 
         const badge = document.getElementById('final-payout-method-badge');
         const desc = document.getElementById('final-payout-description');
