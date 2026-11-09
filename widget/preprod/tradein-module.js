@@ -1,5 +1,5 @@
 /**
- * TradeInModule - Module de reprise autonome (Version Démo & Workflow Versement Immédiat)
+ * TradeInModule - Module de reprise autonome (Version Démo & Workflow Versement Immédiat + Résumé Panier)
  */
 (function (window) {
     'use strict';
@@ -79,7 +79,7 @@
         return currentI18n;
     }
 
-function resetState() {
+    function resetState() {
         // 1. Réinitialisation des étapes et sélections produit
         appState.currentStep = 1;
         appState.selectedProductTypeId = null;
@@ -151,6 +151,10 @@ function resetState() {
 
         const swiklyCard = document.getElementById('swikly-status-card');
         if (swiklyCard) swiklyCard.className = "border-2 border-dashed border-blue-300 bg-blue-50/50 p-4 rounded-xl space-y-3";
+
+        // Réinitialisation du bloc résumé panier
+        const cartSummaryBlock = document.getElementById('step4-cart-summary-block');
+        if (cartSummaryBlock) cartSummaryBlock.classList.add('hidden');
 
         // 6. Réinitialisation de l'Étape 5 (Vérification d'identité)
         const rectoZone = document.getElementById('id-recto-zone');
@@ -472,6 +476,26 @@ function resetState() {
                         <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-xl text-white space-y-1">
                             <span class="text-[10px] uppercase font-bold tracking-wider opacity-80">Versement Immédiat</span>
                             <div class="text-lg font-black" id="step4-payout-amount-display">Montant de la reprise : -- €</div>
+                        </div>
+
+                        <!-- BLOC RÉSUMÉ DU PANIER SITE COMMERÇANT -->
+                        <div id="step4-cart-summary-block" class="hidden bg-blue-50/70 p-3.5 rounded-xl border border-blue-200 text-xs space-y-2">
+                            <div class="font-bold text-blue-900 flex items-center justify-between">
+                                <span id="txt-step4-cart-summary-title">Impact sur votre panier actuel</span>
+                                <i class="fa-solid fa-cart-shopping text-blue-500"></i>
+                            </div>
+                            <div class="flex justify-between items-center text-gray-600">
+                                <span id="txt-step4-initial-cart">Montant initial du panier :</span>
+                                <span id="summary-initial-cart" class="line-through">-- €</span>
+                            </div>
+                            <div class="flex justify-between items-center text-green-700 font-medium">
+                                <span id="txt-step4-tradein-deduction">Déduction de votre reprise :</span>
+                                <span id="summary-tradein-discount">- -- €</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-blue-200/80 font-bold text-sm text-gray-900">
+                                <span id="txt-step4-final-cart">Reste à payer après reprise :</span>
+                                <span id="summary-final-cart" class="text-green-600 text-base font-black">-- €</span>
+                            </div>
                         </div>
 
                         <!-- BLOC SWIKLY -->
@@ -836,6 +860,26 @@ function resetState() {
         if (vivaModal) vivaModal.classList.add('hidden');
     }
 
+    function updateStep4CartSummary() {
+        const cartBlock = document.getElementById('step4-cart-summary-block');
+        if (!cartBlock) return;
+
+        if (appState.showCartSummary && appState.cartAmount > 0 && appState.price !== null) {
+            const finalCart = Math.max(0, appState.cartAmount - appState.price);
+            const initCartElem = document.getElementById('summary-initial-cart');
+            const discountElem = document.getElementById('summary-tradein-discount');
+            const finalCartElem = document.getElementById('summary-final-cart');
+
+            if (initCartElem) initCartElem.textContent = `${appState.cartAmount} €`;
+            if (discountElem) discountElem.textContent = `- ${appState.price} €`;
+            if (finalCartElem) finalCartElem.textContent = `${finalCart} €`;
+
+            cartBlock.classList.remove('hidden');
+        } else {
+            cartBlock.classList.add('hidden');
+        }
+    }
+
     function attachEvents() {
         document.getElementById('tradein-close-btn').onclick = () => TradeInModule.close();
         document.getElementById('tradein-modal-overlay').onclick = (e) => {
@@ -851,6 +895,7 @@ function resetState() {
             appState.imei = "353000000000000";
 
             document.getElementById('step4-payout-amount-display').textContent = "Montant de la reprise : 450 €";
+            updateStep4CartSummary();
             goToStep(4);
         };
 
@@ -1429,9 +1474,11 @@ function resetState() {
                 appState.price = price;
                 priceElem.textContent = `${price} €`;
                 document.getElementById('step4-payout-amount-display').textContent = `Montant de la reprise : ${price} €`;
+                updateStep4CartSummary();
             } else {
                 appState.price = 0;
                 priceElem.textContent = "0 €";
+                updateStep4CartSummary();
             }
         } catch (e) { 
             priceElem.textContent = "Erreur"; 
@@ -1538,11 +1585,15 @@ function resetState() {
 
     function finishProcess() {
         const tradeInValue = appState.price || 0;
+        const initialCart = appState.cartAmount;
+        const finalCart = Math.max(0, initialCart - tradeInValue);
 
         const event = new CustomEvent('tradein:completed', {
             detail: {
                 productName: appState.selectedProductName || appState.selectedModelName,
                 tradeInDiscount: tradeInValue,
+                initialCartAmount: initialCart,
+                finalCartAmount: finalCart,
                 imei: appState.imei,
                 customerInfo: appState.customerInfo,
                 swiklyDone: appState.swiklyDone,
