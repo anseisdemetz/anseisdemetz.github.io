@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Liste d'expédition</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background: #ffffff;
+    color: #344767;
+  }
+
+  .container {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 40px 90px;
+  }
+
+  /* ============ EN-TÊTE ============ */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 90px;
+  }
+
+  .header h1 {
+    font-size: 34px;
+    font-weight: 800;
+    color: #1f3348;
+  }
+
+  .header-actions { display: flex; gap: 20px; }
+
+  .btn {
+    border: none;
+    border-radius: 8px;
+    padding: 16px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-grey { background-color: #b5b5b5; }
+  .btn-grey:hover { background-color: #a6a6a6; }
+  .btn-green { background-color: #21b23c; }
+  .btn-green:hover { background-color: #1c9c34; }
+
+  .btn svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2; }
+
+  /* ============ TABLEAU ============ */
+  .table-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .table-toolbar, .table-footer {
+    background-color: #2a4a63;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+    padding: 18px 24px;
+    font-size: 14px;
+  }
+
+  .table-toolbar select, .table-footer select {
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .table-toolbar select option, .table-footer select option { color: #333; }
+
+  .nav-arrows { display: flex; gap: 24px; }
+  .nav-arrows button {
+    background: none; border: none; color: #fff;
+    font-size: 18px; cursor: pointer;
+  }
+  .nav-arrows button:disabled { opacity: 0.4; cursor: default; }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    background-color: #ffffff;
+    color: #344767;
+    font-size: 17px;
+    font-weight: 700;
+    text-align: center;
+    padding: 14px 10px;
+    border-bottom: 1px solid #d0d0d0;
+  }
+
+  tbody td {
+    text-align: center;
+    font-size: 15px;
+    padding: 22px 10px;
+    border-right: 1px solid #d0d0d0;
+  }
+  tbody td:last-child { border-right: none; }
+
+  .num-liste { font-weight: 700; color: #3b5166; }
+
+  /* ============ BOUTONS D'ACTION ============ */
+  .btn-action {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+  }
+  .btn-action:hover { background-color: rgba(42, 74, 99, 0.08); }
+
+  .btn-action svg {
+    width: 22px; height: 22px;
+    fill: none;
+    stroke: #2a4a63;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #1f3348;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1f3348;
+  }
+  .btn-action:hover .tooltip { visibility: visible; opacity: 1; }
+
+  /* Badge nombre de documents sur l'icône répertoire */
+  .btn-action .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: #21b23c;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+  }
+
+  /* ============ POPIN ============ */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 51, 72, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #ffffff;
+    border-radius: 10px;
+    width: 640px;
+    max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    animation: modalIn 0.2s ease-out;
+  }
+
+  @keyframes modalIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);   opacity: 1; }
+  }
+
+  .modal-header {
+    background-color: #2a4a63;
+    color: #ffffff;
+    padding: 20px 28px;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-header h2 { font-size: 19px; font-weight: 700; }
+  .modal-header .subtitle { font-size: 13px; font-weight: 400; opacity: 0.8; margin-top: 3px; }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.15); }
+
+  .modal-body { padding: 24px 28px; overflow-y: auto; }
+
+  /* Zone d'upload */
+  .dropzone {
+    border: 2px dashed #2a4a63;
+    border-radius: 8px;
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    margin-bottom: 24px;
+  }
+  .dropzone:hover, .dropzone.dragover {
+    background-color: rgba(42, 74, 99, 0.05);
+    border-color: #21b23c;
+  }
+
+  .dropzone svg {
+    width: 36px; height: 36px;
+    fill: none; stroke: #2a4a63;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-bottom: 8px;
+  }
+
+  .dropzone p { font-size: 14px; color: #344767; font-weight: 600; }
+  .dropzone .formats {
+    font-size: 12px;
+    color: #8a97a5;
+    margin-top: 6px;
+    font-weight: 400;
+  }
+
+  /* Liste des documents */
+  .doc-list-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f3348;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .doc-empty {
+    font-size: 14px;
+    color: #8a97a5;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+  }
+
+  .doc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    transition: box-shadow 0.2s;
+  }
+  .doc-item:hover { box-shadow: 0 2px 8px rgba(31,51,72,0.1); }
+
+  .doc-icon {
+    width: 40px; height: 40px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .doc-icon.pdf  { background-color: #d64541; }
+  .doc-icon.img  { background-color: #2a9d8f; }
+  .doc-icon.img img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+
+  .doc-infos { flex: 1; min-width: 0; }
+
+  .doc-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f3348;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .doc-name input {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f3348;
+    border: 1px solid #2a4a63;
+    border-radius: 4px;
+    padding: 4px 8px;
+    outline: none;
+  }
+  .doc-meta { font-size: 12px; color: #8a97a5; margin-top: 3px; }
+
+  .doc-actions { display: flex; gap: 6px; }
+
+  .doc-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+  }
+  .doc-actions button:hover { background-color: rgba(42, 74, 99, 0.08); }
+  .doc-actions button.delete:hover { background-color: rgba(214, 69, 65, 0.1); }
+  .doc-actions svg {
+    width: 18px; height: 18px;
+    fill: none;
+    stroke: #2a4a63;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .doc-actions button.delete svg { stroke: #d64541; }
+
+  .modal-footer {
+    padding: 18px 28px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .modal-footer .btn { padding: 12px 22px; font-size: 14px; }
+
+  /* Aperçu image plein écran */
+  .preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 51, 72, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    cursor: zoom-out;
+  }
+  .preview-overlay.open { display: flex; }
+  .preview-overlay img, .preview-overlay iframe {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    background: #fff;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- En-tête -->
+    <div class="header">
+      <h1>Liste d'expédition</h1>
+      <div class="header-actions">
+        <button class="btn btn-grey" id="btnCloturer">
+          <svg viewBox="0 0 24 24"><path d="M1 5h13v11H1z M14 8h4l3 3v5h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+          Clôturer le précédent bon de transport
+        </button>
+        <button class="btn btn-green" id="btnKit">
+          <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>
+          Commander kit de collecte
+        </button>
+      </div>
+    </div>
+
+    <!-- Tableau -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <span>Lignes par page</span>
+        <select id="lignesParPage">
+          <option>10</option><option>25</option><option>50</option><option selected>100</option>
+        </select>
+        <span id="paginationHaut">1 à 3 sur 3</span>
+        <div class="nav-arrows">
+          <button id="prevHaut" disabled>&#10094;</button>
+          <button id="nextHaut" disabled>&#10095;</button>
+        </div>
+      </div>
+
+      <table id="tableau">
+        <thead>
+          <tr>
+            <th>N° de liste</th>
+            <th>N° de transport</th>
+            <th>Nombre attendu</th>
+            <th>Nombre présent</th>
+            <th>Valeur totale</th>
+            <th>État</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <!-- généré par JS -->
+        </tbody>
+      </table>
+
+      <div class="table-footer">
+        <span>Lignes par page</span>
+        <select id="lignesParPageBas">
+          <option>10</option><option>25</option><option>50</option><option selected>100</option>
+        </select>
+        <span id="paginationBas">1 à 3 sur 3</span>
+        <div class="nav-arrows">
+          <button id="prevBas" disabled>&#10094;</button>
+          <button id="nextBas" disabled>&#10095;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ POPIN DOCUMENTS ============ -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div>
+          <h2>Documents de la liste <span id="modalNumListe"></span></h2>
+          <div class="subtitle">Ajoutez, consultez, renommez ou supprimez vos justificatifs</div>
+        </div>
+        <button class="modal-close" id="modalClose" title="Fermer">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Zone d'upload -->
+        <div class="dropzone" id="dropzone">
+          <svg viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/></svg>
+          <p>Cliquez ou glissez-déposez vos fichiers ici</p>
+          <div class="formats">Formats acceptés : PDF, JPG, PNG, HEIC (iPhone)</div>
+          <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.heic" hidden>
+        </div>
+
+        <!-- Liste des documents -->
+        <div class="doc-list-title">Documents chargés</div>
+        <div id="docList"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-grey" id="btnFermerPopin">Fermer</button>
+        <button class="btn btn-green" id="btnValiderPopin">Valider</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aperçu plein écran -->
+  <div class="preview-overlay" id="previewOverlay">
+    <div id="previewContent"></div>
+  </div>
+
+<script>
+/* ================================================================
+   DONNÉES
+================================================================ */
+const listes = [
+  { num: '428422', transport: '',          attendu: 3,  present: 3,  valeur: '817.00 €',   etat: 'En cours de préparation' },
+  { num: '428395', transport: 'TR-884512', attendu: 12, present: 12, valeur: '2 354.50 €', etat: 'Expédiée' },
+  { num: '428310', transport: 'TR-879004', attendu: 7,  present: 6,  valeur: '1 128.30 €', etat: 'Reçue en atelier' },
+];
+
+// Stockage des documents par n° de liste : { id, nom, type, taille, dataUrl }
+const documents = {};
+listes.forEach(l => documents[l.num] = []);
+
+const ACCEPTED = ['application/pdf', 'image/jpeg', 'image/png', 'image/heic', 'image/heif'];
+let currentListe = null;
+let docIdCounter = 1;
+
+/* ================================================================
+   RENDU DU TABLEAU
+================================================================ */
+function renderTable() {
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+
+  listes.forEach(l => {
+    const nbDocs = documents[l.num].length;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="num-liste">${l.num}</td>
+      <td>${l.transport}</td>
+      <td>${l.attendu}</td>
+      <td>${l.present}</td>
+      <td>${l.valeur}</td>
+      <td>${l.etat}</td>
+      <td>
+        ${nbDocs > 0
+          ? `<button class="btn-action btn-folder" data-liste="${l.num}">
+               <svg viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z"/></svg>
+               <span class="badge">${nbDocs}</span>
+               <span class="tooltip">Documents</span>
+             </button>`
+          : `<button class="btn-action btn-upload" data-liste="${l.num}">
+               <svg viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/></svg>
+               <span class="tooltip">Document</span>
+             </button>`
+        }
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  bindActionButtons();
+  updatePagination();
+}
+
+function bindActionButtons() {
+  document.querySelectorAll('.btn-upload, .btn-folder').forEach(btn => {
+    btn.addEventListener('click', () => openModal(btn.dataset.liste));
+  });
+}
+
+function updatePagination() {
+  const total = listes.length;
+  const texte = `1 à ${total} sur ${total}`;
+  document.getElementById('paginationHaut').textContent = texte;
+  document.getElementById('paginationBas').textContent = texte;
+}
+
+/* ================================================================
+   POPIN
+================================================================ */
+const overlay = document.getElementById('modalOverlay');
+
+function openModal(numListe) {
+  currentListe = numListe;
+  document.getElementById('modalNumListe').textContent = 'n° ' + numListe;
+  renderDocList();
+  overlay.classList.add('open');
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  currentListe = null;
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('btnFermerPopin').addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+document.getElementById('btnValiderPopin').addEventListener('click', () => {
+  // TODO: appel API pour persister les documents de currentListe
+  alert(`Documents de la liste ${currentListe} enregistrés (à brancher sur l'API).`);
+  closeModal();
+  renderTable();
+});
+
+/* ================================================================
+   UPLOAD (CRUD - Create)
+================================================================ */
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+
+dropzone.addEventListener('click', () => fileInput.click());
+
+fileInput.addEventListener('change', () => { addFiles(fileInput.files); fileInput.value = ''; });
+
+['dragover', 'dragleave', 'drop'].forEach(evt => {
+  dropzone.addEventListener(evt, e => {
+    e.preventDefault();
+    dropzone.classList.toggle('dragover', evt === 'dragover');
+    if (evt === 'drop') addFiles(e.dataTransfer.files);
+  });
+});
+
+function addFiles(fileList) {
+  [...fileList].forEach(file => {
+    const ok = ACCEPTED.includes(file.type) ||
+               /\.(pdf|jpe?g|png|heic|heif)$/i.test(file.name); // HEIC parfois mal typé
+    if (!ok) { alert(`Format non supporté : ${file.name}`); return; }
+
+    const doc = {
+      id: docIdCounter++,
+      nom: file.name,
+      type: file.type || guessType(file.name),
+      taille: file.size,
+      dataUrl: null,
+      file: file
+    };
+
+    // Aperçu local pour images, vignette générique pour PDF/HEIC
+    if (file.type === 'image/jpeg' || file.type === 'image/png') {
+      const reader = new FileReader();
+      reader.onload = e => { doc.dataUrl = e.target.result; renderDocList(); };
+      reader.readAsDataURL(file);
+    }
+    documents[currentListe].push(doc);
+  });
+  renderDocList();
+}
+
+function guessType(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  return { pdf: 'application/pdf', jpg: 'image/jpeg', jpeg: 'image/jpeg',
+           png: 'image/png', heic: 'image/heic' }[ext] || 'unknown';
+}
+
+/* ================================================================
+   LISTE DES DOCUMENTS (Read / Update / Delete)
+================================================================ */
+/* ================================================================
+   LISTE DES DOCUMENTS (Read / Delete)
+================================================================ */
+function renderDocList() {
+  const list = document.getElementById('docList');
+  const docs = documents[currentListe];
+  list.innerHTML = '';
+
+  if (!docs.length) {
+    list.innerHTML = '<div class="doc-empty">Aucun document chargé.</div>';
+    return;
+  }
+
+  docs.forEach(doc => {
+    const isImage = doc.type === 'image/jpeg' || doc.type === 'image/png';
+    const isPdf = doc.type === 'application/pdf';
+
+    const item = document.createElement('div');
+    item.className = 'doc-item';
+    item.innerHTML = `
+      <div class="doc-icon ${isImage ? 'img' : isPdf ? 'pdf' : 'img'}">
+        ${isImage && doc.dataUrl
+          ? `<img src="${doc.dataUrl}" alt="">`
+          : isPdf ? 'PDF' : 'FIC'}
+      </div>
+      <div class="doc-infos">
+        <span class="doc-name" title="${doc.nom}">${doc.nom}</span>
+        <span class="doc-meta">${formatSize(doc.taille)} • ${doc.type}</span>
+      </div>
+      <div class="doc-actions">
+        <button title="Afficher" onclick="viewDoc(${doc.id})">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+        <button class="delete" title="Supprimer" onclick="deleteDoc(${doc.id})">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+        </button>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+/* Afficher */
+function viewDoc(docId) {
+  const doc = documents[currentListe].find(d => d.id === docId);
+  if (!doc) return;
+
+  const preview = document.getElementById('previewOverlay');
+  const content = document.getElementById('previewContent');
+
+  if (doc.type === 'image/jpeg' || doc.type === 'image/png') {
+    content.innerHTML = `<img src="${doc.dataUrl}" alt="${doc.nom}">`;
+  } else {
+    content.innerHTML = `
+      <div style="color:#fff; text-align:center; font-size:15px;">
+        <p style="margin-bottom:10px; font-weight:700;">${doc.nom}</p>
+        <p style="opacity:0.8;">L'aperçu n'est pas disponible pour ce format.<br>Téléchargez le fichier pour le consulter.</p>
+        <a href="${doc.dataUrl || '#'}" download="${doc.nom}"
+           style="display:inline-block; margin-top:16px; background:#21b23c; color:#fff;
+                  padding:12px 22px; border-radius:8px; text-decoration:none; font-weight:700;">
+          Télécharger
+        </a>
+      </div>`;
+  }
+  preview.classList.add('open');
+}
+
+/* Supprimer */
+function deleteDoc(docId) {
+  const doc = documents[currentListe].find(d => d.id === docId);
+  if (!doc) return;
+  if (!confirm(`Supprimer le document « ${doc.nom} » ?`)) return;
+  documents[currentListe] = documents[currentListe].filter(d => d.id !== docId);
+  renderDocList();
+}
+
+document.getElementById('previewOverlay').addEventListener('click', function () {
+  this.classList.remove('open');
+});
+
+/* Utilitaire */
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' o';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' Ko';
+  return (bytes / 1048576).toFixed(1) + ' Mo';
+}
+
+/* ================================================================
+   BOUTONS DE LA PAGE MAÎTRESSE
+================================================================ */
+document.getElementById('btnCloturer').addEventListener('click', () => {
+  alert('Clôture du précédent bon de transport');
+});
+document.getElementById('btnKit').addEventListener('click', () => {
+  alert('Commande d\'un kit de collecte');
+});
+
+/* ================================================================
+   INIT
+================================================================ */
+renderTable();
+</script>
+</body>
+</html>
