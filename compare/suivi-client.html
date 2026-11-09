@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes reprises - Espace Client</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-dark: #102e38;
+      --primary-green: #22c55e;
+      --primary-green-hover: #1eb354;
+      --badge-red: #ea4335;
+      --badge-orange: #f59e0b;
+      --text-muted: #6b7280;
+      --border-gray: #e5e7eb;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #ffffff;
+      font-family: var(--font-main);
+      color: var(--primary-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    /* ---------------------------------
+       NAVIGATION / ONGLETS
+    --------------------------------- */
+    .tabs-nav {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      gap: 36px;
+      margin-bottom: 45px;
+      padding-bottom: 2px;
+    }
+
+    .tabs-nav::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #e5e7eb;
+      border-radius: 2px;
+      z-index: 1;
+    }
+
+    .tab-item {
+      position: relative;
+      padding-bottom: 14px;
+      font-size: 15.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    .tab-item:hover {
+      color: var(--primary-dark);
+    }
+
+    .tab-item.active {
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .tab-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: var(--primary-green);
+      border-radius: 4px;
+      z-index: 3;
+    }
+
+    /* ---------------------------------
+       TITRE DE LA PAGE
+    --------------------------------- */
+    .page-title {
+      text-align: center;
+      font-size: 27px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 35px;
+      letter-spacing: -0.3px;
+    }
+
+    /* ---------------------------------
+       CARTE DE REPRISE
+    --------------------------------- */
+    .trade-in-card {
+      background: #ffffff;
+      border: 1px solid var(--border-gray);
+      border-radius: 14px;
+      padding: 34px 38px;
+    }
+
+    .product-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .product-thumb {
+      width: 58px;
+      height: 74px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 5px;
+    }
+
+    .product-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .badge-status {
+      display: inline-block;
+      background-color: var(--badge-orange);
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 3.5px 14px;
+      border-radius: 9999px;
+      margin-bottom: 9px;
+    }
+
+    .product-name {
+      font-size: 18.5px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+      letter-spacing: -0.2px;
+    }
+
+    .offer-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+    }
+
+    .offer-value .amount {
+      color: var(--primary-green);
+    }
+
+    .order-meta {
+      font-size: 14px;
+      color: var(--primary-dark);
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    /* ---------------------------------
+       PROGRESSION / STEPPER
+    --------------------------------- */
+    .stepper-container {
+      width: 100%;
+      margin: 30px 0 24px 0;
+    }
+
+    .stepper-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .step-label {
+      font-size: 13px;
+      color: #9ca3af;
+      text-align: center;
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .step-label:first-child {
+      text-align: left;
+      padding-left: 12px;
+    }
+
+    .step-label:last-child {
+      text-align: right;
+      padding-right: 12px;
+    }
+
+    .step-label.active {
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .stepper-track-wrap {
+      position: relative;
+      height: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .stepper-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #e5e7eb;
+      z-index: 1;
+    }
+
+    .stepper-points {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+      padding: 0 45px;
+    }
+
+    .step-dot {
+      width: 5px;
+      height: 5px;
+      background-color: #2b3940;
+      border-radius: 50%;
+    }
+
+    /* ---------------------------------
+       RUBRIQUE "ACTION À MENER"
+    --------------------------------- */
+    .action-section {
+      margin: 26px 0 28px 0;
+      border: 1px solid var(--border-gray);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .action-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      background-color: #fef3c7;
+      border-bottom: 1px solid #fde68a;
+      font-size: 14px;
+      font-weight: 700;
+      color: #92400e;
+    }
+
+    .action-header svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .action-header.success {
+      background-color: #dcfce7;
+      border-bottom-color: #86efac;
+      color: #166534;
+    }
+
+    .action-body {
+      padding: 20px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--primary-dark);
+    }
+
+    .action-body p {
+      margin-bottom: 14px;
+    }
+
+    .payout-choice {
+      display: flex;
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .payout-btn {
+      flex: 1;
+      font-family: inherit;
+      height: 52px;
+      border-radius: 12px;
+      border: 2px solid var(--border-gray);
+      background-color: #ffffff;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: border-color 0.2s, background-color 0.2s, opacity 0.2s;
+    }
+
+    .payout-btn:hover:not(:disabled) {
+      border-color: var(--primary-green);
+      background-color: #f0fdf4;
+    }
+
+    .payout-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .action-success {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #166534;
+    }
+
+    .action-success .success-icon {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-success .success-icon svg {
+      width: 17px;
+      height: 17px;
+      stroke: #ffffff;
+      stroke-width: 3;
+      fill: none;
+    }
+
+    .action-success .success-sub {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* ---------------------------------
+       BOUTONS D'ACTION
+    --------------------------------- */
+    .actions-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: inherit;
+      height: 48px;
+      border-radius: 9999px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn:active {
+      transform: scale(0.99);
+    }
+
+    .btn-primary {
+      flex: 1;
+      background-color: var(--primary-green);
+      color: #ffffff;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-green-hover);
+    }
+
+    .btn-primary svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-primary.expanded svg {
+      transform: rotate(180deg);
+    }
+
+    .btn-dark {
+      background-color: var(--primary-dark);
+      color: #ffffff;
+      padding: 0 34px;
+      white-space: nowrap;
+    }
+
+    .btn-dark:hover {
+      background-color: #173b47;
+    }
+
+    .details-panel {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f9fafb;
+      border-radius: 10px;
+      font-size: 13.5px;
+      border: 1px dashed var(--border-gray);
+    }
+
+    .details-panel.show {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------------------------------
+       POPIN / MODALE IBAN
+    --------------------------------- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(16, 46, 56, 0.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background-color: #ffffff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 580px;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+      padding: 32px;
+      position: relative;
+      animation: fadeIn 0.2s ease-in-out;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      color: #172b3a;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background-color: #f3f4f6;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: background-color 0.2s;
+    }
+
+    .modal-close:hover {
+      background-color: #e5e7eb;
+    }
+
+    .modal-close svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #172b3a;
+      margin-bottom: 12px;
+      letter-spacing: -0.3px;
+      padding-right: 32px;
+    }
+
+    .modal-sub {
+      color: #526170;
+      font-size: 13px;
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+
+    .iban-instruction {
+      color: #334155;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* ---------------------------------
+       SELECT DÉROULANT DES COMPTES
+    --------------------------------- */
+    .form-group-select {
+      margin-bottom: 14px;
+    }
+
+    .form-group-select label {
+      display: block;
+      color: #172b3a;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-account {
+      width: 100%;
+      height: 48px;
+      border: 1.5px solid var(--border-gray);
+      border-radius: 10px;
+      padding: 0 42px 0 14px;
+      font-family: inherit;
+      color: #172b3a;
+      font-size: 13.5px;
+      font-weight: 500;
+      background-color: #ffffff;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .select-account:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+    }
+
+    .select-account optgroup {
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .select-chevron {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+      stroke: #64748b;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* APERÇU DU COMPTE SÉLECTIONNÉ */
+    .selected-account-preview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid #e2e8f0;
+      background-color: #f8fafc;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-size: 12.5px;
+    }
+
+    .preview-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .preview-bank {
+      font-weight: 700;
+      color: #172b3a;
+    }
+
+    .preview-iban {
+      font-family: monospace;
+      color: #475569;
+      font-size: 12px;
+    }
+
+    .preview-owner {
+      color: #64748b;
+      font-size: 11.5px;
+    }
+
+    .preview-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      background-color: #dcfce7;
+      color: #166534;
+      white-space: nowrap;
+    }
+
+    /* ---------------------------------
+       CHAMPS NOUVEL IBAN
+    --------------------------------- */
+    .new-iban-container {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+      margin-top: 16px;
+    }
+
+    .new-iban-container.active {
+      display: block;
+    }
+
+    .sepa-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      color: #0284c7;
+      font-size: 12.5px;
+      font-weight: 600;
+      line-height: 1.45;
+      margin: 0 0 16px;
+    }
+
+    .sepa-info-icon {
+      width: 17px;
+      height: 17px;
+      flex: 0 0 17px;
+      margin-top: 1px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #172b3a;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .required {
+      color: #172b3a;
+    }
+
+    .form-group input {
+      width: 100%;
+      height: 46px;
+      border: 1px solid var(--border-gray);
+      border-radius: 9px;
+      padding: 0 14px;
+      font-family: inherit;
+      color: #334155;
+      font-size: 13px;
+      letter-spacing: 0.25px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input::placeholder {
+      color: #9ca3af;
+      opacity: 1;
+    }
+
+    .form-group input:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+    }
+
+    .form-error {
+      display: none;
+      font-size: 12.5px;
+      color: var(--badge-red);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .form-error.show {
+      display: block;
+    }
+
+    .save-toggle-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 15px 16px;
+      margin: 0 0 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 11px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      flex: 0 0 42px;
+      width: 42px;
+      height: 24px;
+      padding: 0;
+      margin-top: 1px;
+      border: 0;
+      border-radius: 999px;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: background-color 0.18s ease;
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
+      transition: transform 0.18s ease;
+    }
+
+    .toggle-switch[aria-checked="true"] {
+      background: #0284c7;
+    }
+
+    .toggle-switch[aria-checked="true"] .toggle-thumb {
+      transform: translateX(18px);
+    }
+
+    .save-toggle-text {
+      display: block;
+      min-width: 0;
+      color: #1f2937;
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+
+    .save-toggle-text > strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .save-toggle-sub {
+      display: block;
+      color: #5b6572;
+    }
+
+    .save-toggle-sub a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .modal-submit {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: 9999px;
+      background-color: var(--primary-green);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background-color 0.2s;
+    }
+
+    .modal-submit:hover {
+      background-color: var(--primary-green-hover);
+    }
+
+    .modal-note {
+      font-size: 11.5px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 520px) {
+      .modal-box { padding: 26px 20px 22px; }
+      .modal-title { font-size: 19px; }
+      .save-toggle-block { gap: 11px; padding: 13px 12px; }
+    }
+
+    @media (max-width: 768px) {
+      .tabs-nav {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 8px;
+        gap: 20px;
+      }
+      .trade-in-card { padding: 24px 20px; }
+      .actions-row { flex-direction: column; }
+      .btn { width: 100%; }
+      .payout-choice { flex-direction: column; }
+      .stepper-labels { font-size: 11px; }
+      .step-label:first-child, .step-label:last-child { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- BARRE D'ONGLETS -->
+    <nav class="tabs-nav" id="tabsNav">
+      <a class="tab-item active" href="#reprises">Mes reprises</a>
+      <a class="tab-item" href="#devis">Mes devis</a>
+      <a class="tab-item" href="#profil">Mon profil</a>
+      <a class="tab-item" href="#parametres">Paramètres du compte</a>
+      <a class="tab-item" href="#banque">Information bancaire</a>
+    </nav>
+
+    <!-- TITRE -->
+    <h1 class="page-title">Mes reprises</h1>
+
+    <!-- CARTE PRINCIPALE -->
+    <div class="trade-in-card">
+
+      <!-- EN-TÊTE PRODUIT -->
+      <div class="product-header">
+        <div class="product-thumb">
+          <svg viewBox="0 0 70 90" width="100%" height="100%">
+            <rect x="5" y="2" width="38" height="84" rx="9" fill="#E8D7C8" stroke="#D3BFAD" stroke-width="1.5" />
+            <rect x="9" y="6" width="20" height="20" rx="5" fill="#F4E8DC" />
+            <circle cx="14" cy="11" r="3.2" fill="#1C1B1A" stroke="#C5B09E" stroke-width="0.8" />
+            <circle cx="14" cy="21" r="3.2" fill="#1C1B1A" stroke="#C5B09E" stroke-width="0.8" />
+            <circle cx="23" cy="16" r="3.2" fill="#1C1B1A" stroke="#C5B09E" stroke-width="0.8" />
+            <circle cx="23" cy="9.5" r="1.3" fill="#FFFBEB" stroke="#D3BFAD" stroke-width="0.5" />
+            <circle cx="23" cy="22.5" r="0.8" fill="#5A4E45" />
+            <rect x="42" y="8" width="22" height="74" rx="7" fill="#101010" />
+            <rect x="43.5" y="9.5" width="19" height="71" rx="5.5" fill="#3A3026" />
+            <path d="M43.5 40 Q 52 30 62.5 55 L62.5 80.5 L43.5 80.5 Z" fill="#D3A775" opacity="0.85" />
+            <path d="M43.5 55 Q 54 45 62.5 68 L62.5 80.5 L43.5 80.5 Z" fill="#F2D5A7" opacity="0.9" />
+          </svg>
+        </div>
+
+        <div class="product-info">
+          <div><span class="badge-status">Versement en attente</span></div>
+          <h2 class="product-name">Apple iPhone 11 Pro 512Go</h2>
+          <div class="offer-value">
+            Votre offre de reprise : <span class="amount">110 €</span>
+          </div>
+          <div class="order-meta">
+            <div>N° de commande : GRA0003964348</div>
+            <div>Passée le 15/10/2026</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPES DE SUIVI (STEPPER) -->
+      <div class="stepper-container">
+        <div class="stepper-labels">
+          <span class="step-label">Demande finalisée</span>
+          <span class="step-label">Produit envoyé</span>
+          <span class="step-label">Produit reçu</span>
+          <span class="step-label active">Diagnostic en cours</span>
+          <span class="step-label">Paiement effectué</span>
+        </div>
+
+        <div class="stepper-track-wrap">
+          <div class="stepper-line"></div>
+          <div class="stepper-points">
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION À MENER -->
+      <div class="action-section" id="actionSection">
+        <div class="action-header" id="actionHeader">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="actionHeaderIcon">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <span id="actionHeaderText">Une action est requise de votre part</span>
+        </div>
+
+        <div class="action-body" id="actionBody">
+          <p id="actionMessage">
+            Le versement de vos fonds d'un montant de <strong>110 €</strong> n'a pas pu aboutir sur votre carte bancaire.
+            Pour percevoir votre argent, merci de sélectionner un moyen de versement :
+          </p>
+
+          <div class="payout-choice" id="payoutChoice">
+            <button class="payout-btn" id="btnPayoutCard" type="button" onclick="alert('Module de paiement carte bancaire');">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+              Carte bancaire
+            </button>
+
+            <button class="payout-btn" id="btnPayoutIban" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Virement IBAN
+            </button>
+          </div>
+
+          <div class="action-success" id="actionSuccess" style="display:none;">
+            <span class="success-icon">
+              <svg viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <span>
+              Vos coordonnées bancaires ont été enregistrées avec succès.
+              <span class="success-sub" id="successSub">Le versement de vos fonds va être relancé automatiquement dans un délai de 24 à 48 heures ouvrées.</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOUTONS D'ACTION -->
+      <div class="actions-row">
+        <button class="btn btn-primary" id="toggleDetailsBtn">
+          <span>Voir les détails</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <button class="btn btn-dark" onclick="alert('Ouverture de l\'assistance...');">
+          Nous contacter
+        </button>
+      </div>
+
+      <!-- DÉTAILS DÉPLIABLES -->
+      <div class="details-panel" id="detailsPanel">
+        <p><strong>Détails du dossier de reprise :</strong></p>
+        <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
+          <li>IMEI : 35 849204 928401 2</li>
+          <li>Statut : Diagnostic validé – versement des fonds en attente de vos coordonnées bancaires</li>
+          <li>Mode de renvoi : Étiquette Chronopost prépayée</li>
+          <li>Montant à verser : 110 €</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       POPIN : COORDONNÉES BANCAIRES (LISTE DÉROULANTE)
+  =========================================================== -->
+  <div class="modal-overlay" id="modalIban" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="ibanModalTitle">
+      <button class="modal-close" data-close="modalIban" type="button" aria-label="Fermer">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <h2 class="modal-title" id="ibanModalTitle">Coordonnées bancaires</h2>
+      <p class="modal-sub">Les virements SEPA font désormais l'objet d'une <strong>vérification du bénéficiaire</strong>. Assurez-vous que le nom du titulaire et l'IBAN indiqués correspondent exactement à ceux enregistrés auprès de votre banque, afin d'éviter tout blocage de paiement.</p>
+      <p class="iban-instruction">Veuillez sélectionner le compte à créditer ou choisir d'en ajouter un nouveau.</p>
+
+      <!-- LISTE DÉROULANTE DES COMPTES -->
+      <div class="form-group-select">
+        <label for="accountSelect">Compte bancaire de versement</label>
+        <div class="select-wrapper">
+          <select id="accountSelect" class="select-account">
+            <!-- Rempli dynamiquement en JS -->
+          </select>
+          <svg class="select-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <!-- APERÇU DU COMPTE ENREGISTRÉ SÉLECTIONNÉ -->
+      <div class="selected-account-preview" id="accountPreview">
+        <div class="preview-info">
+          <span class="preview-bank" id="previewBankName">BNP Paribas (Compte courant)</span>
+          <span class="preview-iban" id="previewIban">FR76 •••• •••• •••• •••• •••• 4892</span>
+          <span class="preview-owner" id="previewOwner">Titulaire : Jean Dupont</span>
+        </div>
+        <span class="preview-badge" id="previewBadge">Principal</span>
+      </div>
+
+      <!-- BLOC CONDITIONNEL : SAISIE D'UN NOUVEL IBAN -->
+      <div class="new-iban-container" id="newIbanContainer">
+        <div class="sepa-info" role="note">
+          <svg class="sepa-info-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="currentColor"/><path d="M10 8.4v5.1M10 5.9h.01" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>Seuls les comptes bancaires situés dans la zone SEPA sont acceptés.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="bank_iban">IBAN<span class="required">*</span></label>
+          <input type="text" id="bank_iban" name="bank_iban" placeholder="FRXX XXXX XXXX XXXX XXXX XXXX XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="42" aria-describedby="ibanError">
+          <div class="form-error" id="ibanError" role="alert">Merci de saisir un IBAN valide situé dans la zone SEPA.</div>
+        </div>
+
+        <div class="save-toggle-block">
+          <button class="toggle-switch" id="saveIbanSwitch" type="button" role="switch" aria-checked="false" aria-label="Enregistrer ces coordonnées bancaires dans mon compte">
+            <span class="toggle-thumb" aria-hidden="true"></span>
+          </button>
+          <div class="save-toggle-text">
+            <strong>Enregistrer ces coordonnées bancaires dans mon compte</strong>
+            <span class="save-toggle-sub">J'accepte que CompaRecycle sauvegarde mes coordonnées bancaires. Celles-ci seront déjà préremplies pour faciliter le traitement lors de mes prochaines reprises. Vous pourrez à tout moment modifier ou supprimer vos coordonnées bancaires sauvegardées <a href="/contact" target="_blank" rel="noopener noreferrer">ici</a>. Plus d'informations dans les pages <strong><a href="/legal/cgu" target="_blank" rel="noopener noreferrer">Conditions générales d'utilisation</a></strong> et <strong><a href="/legal/cgr" target="_blank" rel="noopener noreferrer">Conditions générales de reprise</a></strong>.</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="modal-submit" id="ibanSubmit" type="button">Valider ce compte</button>
+      <div class="modal-note">Vos coordonnées bancaires seront utilisées uniquement pour le versement de vos fonds.</div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // DONNÉES DES COMPTES DU CLIENT
+    // =========================================================
+    const savedAccounts = [
+      {
+        id: "acc_1",
+        bankName: "BNP Paribas",
+        accountType: "Compte courant",
+        maskedIban: "FR76 •••• •••• •••• •••• •••• 4892",
+        shortIban: "FR76 •••• 4892",
+        lastDigits: "4892",
+        holder: "Jean Dupont",
+        isPrimary: true
+      },
+      {
+        id: "acc_2",
+        bankName: "Boursorama Banque",
+        accountType: "Compte épargne",
+        maskedIban: "FR76 •••• •••• •••• •••• •••• 9104",
+        shortIban: "FR76 •••• 9104",
+        lastDigits: "9104",
+        holder: "Jean Dupont",
+        isPrimary: false
+      },
+      {
+        id: "acc_3",
+        bankName: "Crédit Agricole",
+        accountType: "Compte secondaire",
+        maskedIban: "FR76 •••• •••• •••• •••• •••• 1337",
+        shortIban: "FR76 •••• 1337",
+        lastDigits: "1337",
+        holder: "Jean Dupont",
+        isPrimary: false
+      }
+    ];
+
+    // =========================================================
+    // GESTION DU SELECT & APERÇU
+    // =========================================================
+    const accountSelect = document.getElementById('accountSelect');
+    const accountPreview = document.getElementById('accountPreview');
+    const previewBankName = document.getElementById('previewBankName');
+    const previewIban = document.getElementById('previewIban');
+    const previewOwner = document.getElementById('previewOwner');
+    const previewBadge = document.getElementById('previewBadge');
+
+    const newIbanContainer = document.getElementById('newIbanContainer');
+    const ibanInput = document.getElementById('bank_iban');
+    const ibanError = document.getElementById('ibanError');
+    const ibanSubmit = document.getElementById('ibanSubmit');
+
+    function populateSelect() {
+      let optionsHtml = '<optgroup label="Mes comptes enregistrés">';
+      savedAccounts.forEach(acc => {
+        const primaryTag = acc.isPrimary ? ' (Principal)' : '';
+        optionsHtml += `<option value="${acc.id}">${acc.bankName} - ${acc.shortIban}${primaryTag}</option>`;
+      });
+      optionsHtml += '</optgroup>';
+      optionsHtml += '<optgroup label="Autre">';
+      optionsHtml += '<option value="new">+ Saisir un nouvel IBAN</option>';
+      optionsHtml += '</optgroup>';
+
+      accountSelect.innerHTML = optionsHtml;
+      updateUI();
+    }
+
+    function updateUI() {
+      const selectedValue = accountSelect.value;
+
+      if (selectedValue === 'new') {
+        accountPreview.style.display = 'none';
+        newIbanContainer.classList.add('active');
+        ibanSubmit.textContent = 'Valider ce nouvel IBAN';
+        setTimeout(() => ibanInput.focus(), 80);
+      } else {
+        const acc = savedAccounts.find(a => a.id === selectedValue);
+        if (acc) {
+          accountPreview.style.display = 'flex';
+          newIbanContainer.classList.remove('active');
+          ibanError.classList.remove('show');
+
+          previewBankName.textContent = `${acc.bankName} (${acc.accountType})`;
+          previewIban.textContent = acc.maskedIban;
+          previewOwner.textContent = `Titulaire : ${acc.holder}`;
+          previewBadge.textContent = acc.isPrimary ? 'Principal' : 'Enregistré';
+          previewBadge.style.backgroundColor = acc.isPrimary ? '#dcfce7' : '#f1f5f9';
+          previewBadge.style.color = acc.isPrimary ? '#166534' : '#475569';
+
+          ibanSubmit.textContent = `Valider le virement vers ${acc.bankName}`;
+        }
+      }
+    }
+
+    accountSelect.addEventListener('change', updateUI);
+    populateSelect();
+
+    // =========================================================
+    // MODALE : OUVERTURE / FERMETURE
+    // =========================================================
+    const modalIban = document.getElementById('modalIban');
+    function openModal(modal) { if (!modal) return; modal.classList.add('show'); modal.setAttribute('aria-hidden', 'false'); }
+    function closeModal(modal) { if (!modal) return; modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); }
+
+    document.getElementById('btnPayoutIban').addEventListener('click', () => openModal(modalIban));
+    document.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', () => closeModal(document.getElementById(btn.dataset.close)));
+    });
+    modalIban.addEventListener('click', (e) => { if (e.target === modalIban) closeModal(modalIban); });
+
+    // =========================================================
+    // SWITCH & FORMATAGE NOUVEL IBAN
+    // =========================================================
+    const saveIbanSwitch = document.getElementById('saveIbanSwitch');
+    saveIbanSwitch.addEventListener('click', () => {
+      saveIbanSwitch.setAttribute('aria-checked', saveIbanSwitch.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+    });
+
+    function formatIban(value) {
+      const compact = value.replace(/[^a-z0-9]/gi, '').toUpperCase().slice(0, 34);
+      return compact.match(/.{1,4}/g)?.join(' ') || '';
+    }
+
+    ibanInput.addEventListener('input', () => {
+      ibanInput.value = formatIban(ibanInput.value);
+      ibanError.classList.remove('show');
+    });
+
+    const sepaIbanLengths = {
+      AD:24, AL:28, AT:20, BA:20, BE:16, BG:22, CH:21, CY:28, CZ:24, DE:22,
+      DK:18, EE:20, ES:24, FI:18, FR:27, GB:22, GI:23, GR:27, HR:21, HU:28, IE:22,
+      IS:26, IT:27, LI:21, LT:20, LU:20, LV:21, MC:27, MD:24, ME:22, MK:19,
+      MT:31, NL:18, NO:15, PL:28, PT:25, RO:24, RS:22, SE:24, SI:19, SK:24,
+      SM:27, VA:22, XK:20
+    };
+
+    function isValidSepaIban(value) {
+      const compact = value.replace(/\s/g, '').toUpperCase();
+      const country = compact.slice(0, 2);
+      if (!/^[A-Z]{2}[0-9A-Z]+$/.test(compact) || !sepaIbanLengths[country] || compact.length !== sepaIbanLengths[country]) return false;
+      const rearranged = compact.slice(4) + compact.slice(0, 4);
+      let remainder = 0;
+      for (const char of rearranged) {
+        const digits = /[A-Z]/.test(char) ? String(char.charCodeAt(0) - 55) : char;
+        for (const digit of digits) remainder = (remainder * 10 + Number(digit)) % 97;
+      }
+      return remainder === 1;
+    }
+
+    // =========================================================
+    // SOUMISSION & NOTIFICATION DE SUCCÈS
+    // =========================================================
+    function showSuccess(customMessage) {
+      document.getElementById('actionMessage').style.display = 'none';
+      document.getElementById('payoutChoice').style.display = 'none';
+      document.getElementById('actionSuccess').style.display = 'flex';
+
+      const header = document.getElementById('actionHeader');
+      header.classList.add('success');
+      document.getElementById('actionHeaderText').textContent = 'Action effectuée avec succès';
+      document.getElementById('actionHeaderIcon').innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+
+      if (customMessage) {
+        document.getElementById('successSub').textContent = customMessage;
+      }
+    }
+
+    ibanSubmit.addEventListener('click', () => {
+      const selectedValue = accountSelect.value;
+
+      if (selectedValue === 'new') {
+        const iban = ibanInput.value.replace(/\s/g, '').toUpperCase();
+        if (isValidSepaIban(iban)) {
+          ibanError.classList.remove('show');
+          closeModal(modalIban);
+          showSuccess(`Le virement de 110 € sera effectué sur votre nouveau compte (${iban.slice(0, 4)} •••• ${iban.slice(-4)}) sous 24 à 48 heures ouvrées.`);
+        } else {
+          ibanError.classList.add('show');
+        }
+      } else {
+        const selectedAccount = savedAccounts.find(a => a.id === selectedValue);
+        closeModal(modalIban);
+        showSuccess(`Le virement de 110 € sera effectué sur votre compte ${selectedAccount.bankName} (•••• ${selectedAccount.lastDigits}) sous 24 à 48 heures ouvrées.`);
+      }
+    });
+
+    // Onglets & volet détails
+    document.querySelectorAll('.tab-item').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    const toggleBtn = document.getElementById('toggleDetailsBtn');
+    const detailsPanel = document.getElementById('detailsPanel');
+    toggleBtn.addEventListener('click', () => {
+      const isExpanded = detailsPanel.classList.toggle('show');
+      toggleBtn.classList.toggle('expanded', isExpanded);
+    });
+  </script>
+</body>
+</html>
