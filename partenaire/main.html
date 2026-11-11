@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CompaRecycle – Portail Partenaires Reconditionneurs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .portal-input, .portal-select, .portal-textarea {
+      display: block;
+      width: 100%;
+      background-color: #ffffff !important;
+      border: 1.5px solid #cbd5e1 !important;
+      border-radius: 0.625rem !important;
+      padding: 0.65rem 0.95rem !important;
+      font-size: 0.875rem !important;
+      line-height: 1.25rem !important;
+      color: #0f172a !important;
+      transition: all 0.15s ease-in-out;
+      outline: none;
+    }
+    .portal-input::placeholder, .portal-textarea::placeholder {
+      color: #94a3b8 !important;
+    }
+    .portal-input:focus, .portal-select:focus, .portal-textarea:focus {
+      border-color: #0f766e !important;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15) !important;
+    }
+    .portal-label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.35rem;
+    }
+    .portal-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 1.75rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col font-sans text-slate-800 antialiased bg-slate-50">
+
+  <!-- BARRE OUTILS DEMONSTRATEUR -->
+  <aside aria-label="Contrôle de démonstration" class="bg-slate-900 text-white text-xs px-4 py-2 border-b border-slate-800 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-bold tracking-wide uppercase text-slate-300">Mode Démonstrateur :</span>
+        <span class="text-slate-400">Aucune validation requise • Navigation libre</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button onclick="goToView('part1')" id="tab-p1" class="px-3 py-1 rounded-md bg-brand-700 text-white font-medium hover:bg-brand-600 transition">
+          Partie 1 : Candidature (01-1 à 01-3)
+        </button>
+        <button onclick="goToView('pending')" id="tab-p-mid" class="px-3 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 transition">
+          Validation Manuelle (Transition)
+        </button>
+        <button onclick="goToView('part2')" id="tab-p2" class="px-3 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 transition">
+          Partie 2 : Dossier Complet (02-1 à 02-6)
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- EN-TETE PRINCIPAL DU PORTAIL -->
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-2xl font-black tracking-tight text-brand-800">Compa<span class="text-emerald-500">Recycle</span></span>
+          <span class="hidden sm:inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+            Portail Partenaires
+          </span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4 text-xs">
+        <span class="hidden md:flex items-center text-slate-500">
+          Support Partenaires : partenaires@comparecycle.com
+        </span>
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-semibold border border-slate-200">
+          FR • Français
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENU PRINCIPAL (LAYOUT 2 COLONNES) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- COLONNE GAUCHE : RECAPITULATIF & ETAPES -->
+      <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-16">
+        
+        <div class="portal-card">
+          <span class="text-[11px] font-bold tracking-wider uppercase text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md inline-block mb-3 border border-emerald-100">
+            Adhésion Réseau Reconditionneurs
+          </span>
+          <h1 id="sidebar-title" class="text-xl font-bold text-slate-900 leading-snug">
+            Devenez Partenaire Recycleur
+          </h1>
+          <p id="sidebar-desc" class="text-xs text-slate-500 mt-2 leading-relaxed">
+            Rejoignez le réseau CompaRecycle et développez de nouveaux volumes de reprise et de vente autour du reconditionnement certifié.
+          </p>
+        </div>
+
+        <!-- Stepper vertical avec Étapes 01 à 05 -->
+        <nav aria-label="Progression du dossier" class="portal-card space-y-4">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Parcours d'intégration</h2>
+
+          <div class="space-y-3">
+            <div id="step-indicator-1" class="flex items-start space-x-3 p-3 rounded-xl bg-brand-50 border border-brand-200">
+              <div id="step-badge-1" class="w-7 h-7 rounded-lg bg-brand-700 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+                01
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold text-brand-900">01 – Candidature</p>
+                  <span id="step-status-1" class="text-[10px] font-semibold text-brand-700 bg-brand-100/80 px-2 py-0.5 rounded">En cours</span>
+                </div>
+                <p class="text-[11px] text-brand-700 mt-0.5">Présentation de la société et contact principal.</p>
+              </div>
+            </div>
+
+            <div id="step-indicator-2" class="flex items-start space-x-3 p-3 rounded-xl bg-slate-50 border border-slate-200 opacity-60">
+              <div id="step-badge-2" class="w-7 h-7 rounded-lg bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">
+                02
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold text-slate-700">02 – Informations détaillées</p>
+                  <span id="step-status-2" class="text-[10px] font-semibold text-slate-500 bg-slate-200 px-2 py-0.5 rounded">À venir</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5">Contacts opérationnels, facturation et logistique.</p>
+              </div>
+            </div>
+
+            <div id="step-indicator-3" class="flex items-start space-x-3 p-3 rounded-xl bg-slate-50 border border-slate-200 opacity-60">
+              <div id="step-badge-3" class="w-7 h-7 rounded-lg bg-slate-200 text-slate-500 flex items-center justify-center font-bold text-xs shrink-0">
+                03
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold text-slate-700">03 – Contrat Partenaire</p>
+                  <span class="text-[10px] font-semibold text-slate-400">Étape finale</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-0.5">Signature électronique de l'accord-cadre.</p>
+              </div>
+            </div>
+
+            <div id="step-indicator-4" class="flex items-start space-x-3 p-3 rounded-xl bg-slate-50 border border-slate-200 opacity-60">
+              <div id="step-badge-4" class="w-7 h-7 rounded-lg bg-slate-200 text-slate-500 flex items-center justify-center font-bold text-xs shrink-0">
+                04
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold text-slate-700">04 – Implantations géographiques</p>
+                  <span class="text-[10px] font-semibold text-slate-400">Sites & ateliers</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-0.5">Sites en France et à l'international.</p>
+              </div>
+            </div>
+
+            <div id="step-indicator-5" class="flex items-start space-x-3 p-3 rounded-xl bg-slate-50 border border-slate-200 opacity-60">
+              <div id="step-badge-5" class="w-7 h-7 rounded-lg bg-slate-200 text-slate-500 flex items-center justify-center font-bold text-xs shrink-0">
+                05
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold text-slate-700">05 – Capacités et perspectives</p>
+                  <span class="text-[10px] font-semibold text-slate-400">Volumes & flux</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-0.5">Volumes mensuels, répartition atelier et projets.</p>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <div class="p-4 rounded-xl bg-slate-100 border border-slate-200 text-xs text-slate-600 space-y-2">
+          <div class="font-bold text-slate-800">Besoin d'aide ?</div>
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            Vos informations sont conservées en toute confidentialité par CompaRecycle pour l'évaluation de votre dossier de partenariat.
+          </p>
+        </div>
+
+      </aside>
+
+      <!-- COLONNE DROITE : FORMULAIRES -->
+      <main class="lg:col-span-8 space-y-8">
+
+        <!-- VUE 1 : CANDIDATURE PARTENAIRE (Pages 01-1 à 01-3) -->
+        <section id="view-part1" class="space-y-6">
+          
+          <div class="bg-gradient-to-r from-brand-800 to-brand-900 rounded-2xl p-6 text-white shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+            <div>
+              <span class="text-xs uppercase tracking-wider font-bold text-brand-200">Partie 1 • Candidature</span>
+              <h2 class="text-2xl font-extrabold mt-1">Présentez votre entreprise</h2>
+              <p class="text-xs text-brand-100 mt-1">Complétez ces éléments pour que notre équipe étudie votre éligibilité.</p>
+            </div>
+            <div class="shrink-0">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-white border border-white/20">
+                Étape 1 sur 3
+              </span>
+            </div>
+          </div>
+
+          <form id="form-part1" class="space-y-6" onsubmit="event.preventDefault(); goToView('pending');">
+
+            <!-- 01 – INFORMATIONS SUR LA SOCIÉTÉ -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">01 – Informations sur la société</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Identification juridique de votre structure</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                  <label class="portal-label" for="p1_company_name">Nom de la société (raison sociale) <span class="text-red-500">*</span></label>
+                  <input type="text" id="p1_company_name" class="portal-input" placeholder="Ex. : RecondiTech SAS">
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="portal-label" for="p1_hq_address">Adresse du siège social <span class="text-red-500">*</span></label>
+                  <input type="text" id="p1_hq_address" class="portal-input" placeholder="Numéro, rue, voie...">
+                </div>
+
+                <div>
+                  <label class="portal-label" for="p1_siret">Numéro SIRET <span class="text-red-500">*</span></label>
+                  <input type="text" id="p1_siret" class="portal-input" placeholder="14 chiffres">
+                </div>
+
+                <div>
+                  <label class="portal-label" for="p1_vat">TVA intracommunautaire <span class="text-red-500">*</span></label>
+                  <input type="text" id="p1_vat" class="portal-input" placeholder="FR00000000000">
+                </div>
+              </div>
+            </div>
+
+            <!-- 02 – CONTACT PRINCIPAL -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">02 – Contact principal</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Interlocuteur de référence pour la création du compte</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="portal-label" for="p1_firstname">Prénom <span class="text-red-500">*</span></label>
+                  <input type="text" id="p1_firstname" class="portal-input" placeholder="Jean">
+                </div>
+                <div>
+                  <label class="portal-label" for="p1_lastname">Nom <span class="text-red-500">*</span></label>
+                  <input type="text" id="p1_lastname" class="portal-input" placeholder="Dupont">
+                </div>
+
+                <div>
+                  <label class="portal-label" for="p1_role">Fonction dans l'entreprise</label>
+                  <input type="text" id="p1_role" class="portal-input" placeholder="Directeur Général, Resp. Achats...">
+                </div>
+
+                <div>
+                  <label class="portal-label" for="p1_phone">Téléphone direct <span class="text-red-500">*</span></label>
+                  <input type="text" id="p1_phone" class="portal-input" placeholder="+33 6 12 34 56 78">
+                </div>
+
+                <div>
+                  <label class="portal-label" for="p1_email">Adresse e-mail professionnelle <span class="text-red-500">*</span></label>
+                  <input type="email" id="p1_email" class="portal-input" placeholder="j.dupont@entreprise.com">
+                </div>
+
+                <div>
+                  <label class="portal-label" for="p1_creation_date">Date de création de la société</label>
+                  <input type="date" id="p1_creation_date" class="portal-input">
+                </div>
+              </div>
+            </div>
+
+            <!-- 03 – INFORMATIONS GÉNÉRALES ET BESOINS -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">03 – Informations générales et besoins</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Typologie des produits et flux recherchés</p>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <label class="portal-label" for="p1_source">Comment avez-vous connu CompaRecycle ?</label>
+                  <select id="p1_source" class="portal-select">
+                    <option value="">Sélectionnez une réponse...</option>
+                    <option value="recherche">Recherche internet / Moteur de recherche</option>
+                    <option value="bouche">Bouche à oreille / Réseau professionnel</option>
+                    <option value="presse">Presse ou média spécialisé</option>
+                    <option value="salon">Salon professionnel</option>
+                    <option value="autre">Autre recommandation</option>
+                  </select>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                  <div class="font-bold text-xs text-slate-700">Définition de vos besoins de sourcing / reprise</div>
+
+                  <div>
+                    <label class="portal-label" for="p1_categories">Types / Catégories de produits recherchés</label>
+                    <textarea id="p1_categories" rows="2" class="portal-textarea" placeholder="Ex. : Smartphones, ordinateurs portables, tablettes, équipements informatiques..."></textarea>
+                  </div>
+
+                  <div>
+                    <label class="portal-label" for="p1_grades">Grades recherchés</label>
+                    <textarea id="p1_grades" rows="2" class="portal-textarea" placeholder="Ex. : Grade A+, Grade A, Grade B, pièces détachées..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 04 – IMPLANTATIONS GÉOGRAPHIQUES -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">04 – Implantations géographiques</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Ateliers, entrepôts et centres de traitement</p>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <label class="portal-label" for="p1_sites_fr">Sites en France – villes et localisations</label>
+                  <textarea id="p1_sites_fr" rows="2" class="portal-textarea" placeholder="Indiquez les villes, adresses et nombre de sites..."></textarea>
+                </div>
+                <div>
+                  <label class="portal-label" for="p1_sites_int">Sites à l'étranger – pays et localisations</label>
+                  <textarea id="p1_sites_int" rows="2" class="portal-textarea" placeholder="Indiquez les pays et les différentes implantations..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- 05 – CAPACITÉS ET PERSPECTIVES -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">05 – Capacités et perspectives</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Informations relatives à votre activité de reconditionnement</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="portal-label" for="p1_vol_current">Volumes mensuels réalisés (année en cours)</label>
+                  <input type="text" id="p1_vol_current" class="portal-input" placeholder="Ex. : 500 unités / mois">
+                </div>
+                <div>
+                  <label class="portal-label" for="p1_vol_target">Objectif de volumes mensuels (année à venir)</label>
+                  <input type="text" id="p1_vol_target" class="portal-input" placeholder="Ex. : 800 unités / mois">
+                </div>
+                <div>
+                  <label class="portal-label" for="p1_ratio_internal">Part réalisée dans vos ateliers (%)</label>
+                  <input type="text" id="p1_ratio_internal" class="portal-input" placeholder="Ex. : 70 %">
+                </div>
+                <div>
+                  <label class="portal-label" for="p1_ratio_external">Part réalisée par des tiers (%)</label>
+                  <input type="text" id="p1_ratio_external" class="portal-input" placeholder="Ex. : 30 %">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="portal-label" for="p1_projects">Vos futurs développements, projets ou ambitions</label>
+                  <textarea id="p1_projects" rows="3" class="portal-textarea" placeholder="Présentez vos projets, investissements, ambitions et perspectives..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ENVOI CANDIDATURE -->
+            <div class="portal-card bg-slate-100/70 border-slate-200">
+              <div class="flex items-start space-x-3 mb-4">
+                <input type="checkbox" id="p1_rgpd_check" class="mt-1 w-4 h-4 rounded text-brand-700 focus:ring-brand-600 border-slate-300">
+                <label for="p1_rgpd_check" class="text-xs text-slate-600 leading-relaxed cursor-pointer">
+                  J'accepte que mes données soient utilisées pour le traitement de ma candidature, conformément à la politique de confidentialité de CompaRecycle.
+                </label>
+              </div>
+
+              <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-brand-700 hover:bg-brand-800 text-white font-bold text-sm shadow-md transition flex items-center justify-center space-x-2">
+                <span>Envoyer ma candidature</span>
+                <span>→</span>
+              </button>
+              <p class="text-center text-[11px] text-slate-400 mt-2">
+                Démonstrateur : Aucun champ n'est bloquant. Le clic passe directement à l'étape suivante.
+              </p>
+            </div>
+
+          </form>
+        </section>
+
+        <!-- VUE TRANSITION : EN ATTENTE DE VALIDATION MANUELLE -->
+        <section id="view-pending" class="hidden space-y-6">
+          <div class="portal-card text-center py-12 px-6">
+            <div class="w-16 h-16 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+              ⏳
+            </div>
+            <h2 class="text-xl font-bold text-slate-900">Candidature enregistrée avec succès</h2>
+            <p class="text-xs text-slate-500 max-w-md mx-auto mt-2 leading-relaxed">
+              Votre dossier de candidature (Partie 1) a bien été transmis. Dans le workflow réel, nos équipes analysent vos informations sous 24h avant de débloquer l'accès au formulaire détaillé.
+            </p>
+
+            <div class="my-8 p-6 max-w-lg mx-auto bg-slate-50 border-2 border-dashed border-amber-300 rounded-2xl text-left">
+              <div class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">
+                Espace Démonstration • Validation Manuelle
+              </div>
+              <p class="text-xs text-slate-600 mb-4">
+                Cliquez sur le bouton ci-dessous pour simuler l'approbation manuelle par l'administrateur CompaRecycle et ouvrir la <strong>Partie 2 (pages 02-1 à 02-6)</strong>.
+              </p>
+              <button onclick="goToView('part2')" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition shadow-sm">
+                ✓ Simuler la validation manuelle CompaRecycle
+              </button>
+            </div>
+
+            <button onclick="goToView('part1')" class="text-xs text-slate-500 hover:text-slate-800 underline">
+              ← Revenir modifier la candidature
+            </button>
+          </div>
+        </section>
+
+        <!-- VUE 2 : INFORMATIONS COMPLÉMENTAIRES (Pages 02-1 à 02-6) -->
+        <section id="view-part2" class="hidden space-y-6">
+
+          <div class="bg-gradient-to-r from-slate-900 to-brand-900 rounded-2xl p-6 text-white shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+            <div>
+              <span class="text-xs uppercase tracking-wider font-bold text-emerald-400">Partie 2 • Dossier Complet</span>
+              <h2 class="text-2xl font-extrabold mt-1">Informations complémentaires du partenaire</h2>
+              <p class="text-xs text-slate-300 mt-1">Merci de compléter les informations suivantes afin de finaliser la création de votre dossier.</p>
+            </div>
+            <div class="shrink-0">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                Étape 2 sur 3
+              </span>
+            </div>
+          </div>
+
+          <form id="form-part2" class="space-y-6" onsubmit="event.preventDefault(); goToView('success');">
+
+            <!-- 01 – GENERAL COMPANY INFORMATION -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">01 – General Company Information</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Informations générales sur votre société</p>
+              </div>
+
+              <div class="space-y-5">
+                <div>
+                  <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Identification de l'entreprise</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="portal-label" for="p2_company_legal">Dénomination sociale (raison sociale) <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_company_legal" class="portal-input" placeholder="Nom juridique de la société">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_company_brand">Nom commercial / Brand <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_company_brand" class="portal-input" placeholder="Nom utilisé commercialement">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_company_type">Type de société <span class="text-red-500">*</span></label>
+                      <select id="p2_company_type" class="portal-select">
+                        <option value="">Sélectionner le type de société...</option>
+                        <option value="sas">SAS / SASU</option>
+                        <option value="sarl">SARL / EURL</option>
+                        <option value="sa">SA</option>
+                        <option value="autre">Autre statut européen</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_website">Site Internet (URL)</label>
+                      <input type="url" id="p2_website" class="portal-input" placeholder="https://www.votre-site.com">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100">
+                  <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Adresse du siège social</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-3">
+                      <label class="portal-label" for="p2_hq_street">Adresse et numéro <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_hq_street" class="portal-input" placeholder="Adresse complète">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_hq_zip">Code postal <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_hq_zip" class="portal-input" placeholder="Code postal">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_hq_city">Ville <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_hq_city" class="portal-input" placeholder="Ville">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_hq_country">Pays <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_hq_country" class="portal-input" placeholder="Pays">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100">
+                  <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Identification administrative</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="portal-label" for="p2_siret_admin">Numéro SIRET <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_siret_admin" class="portal-input" placeholder="14 chiffres">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_vat_admin">Numéro de TVA intracommunautaire <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_vat_admin" class="portal-input" placeholder="FR...">
+                    </div>
+                    <div class="md:col-span-2">
+                      <label class="portal-label" for="p2_dpo_name">Contact RGPD / DPO <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_dpo_name" class="portal-input" placeholder="Nom, prénom et e-mail du référent RGPD">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-2 border-t border-slate-100">
+                  <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Logo de votre entreprise</h4>
+                  <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-brand-600 transition bg-slate-50/50 cursor-pointer">
+                    <p class="text-xs font-bold text-slate-800">Glissez-déposez ou cliquez pour télécharger votre logo</p>
+                    <p class="text-[11px] text-slate-400 mt-1">Formats recommandés : PNG transparent, SVG ou JPG (max. 5 Mo)</p>
+                    <span class="inline-block mt-3 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700">
+                      Logo obligatoire pour le catalogue partenaire
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 02 – FINANCIAL CONTACT -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">02 – Financial Contact</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Coordonnées comptabilité et facturation</p>
+              </div>
+
+              <div class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="portal-label" for="p2_fin_firstname">Prénom du contact financier <span class="text-red-500">*</span></label>
+                    <input type="text" id="p2_fin_firstname" class="portal-input" placeholder="Prénom">
+                  </div>
+                  <div>
+                    <label class="portal-label" for="p2_fin_lastname">Nom du contact financier <span class="text-red-500">*</span></label>
+                    <input type="text" id="p2_fin_lastname" class="portal-input" placeholder="Nom">
+                  </div>
+                  <div>
+                    <label class="portal-label" for="p2_fin_email">Adresse e-mail facturation <span class="text-red-500">*</span></label>
+                    <input type="email" id="p2_fin_email" class="portal-input" placeholder="finance@entreprise.com">
+                  </div>
+                  <div>
+                    <label class="portal-label" for="p2_fin_phone">Téléphone direct <span class="text-red-500">*</span></label>
+                    <input type="text" id="p2_fin_phone" class="portal-input" placeholder="+33...">
+                  </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100">
+                  <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Adresse de facturation</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-3">
+                      <label class="portal-label" for="p2_bill_street">Adresse de facturation <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_bill_street" class="portal-input" placeholder="Adresse complète">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_bill_zip">Code postal <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_bill_zip" class="portal-input" placeholder="Code postal">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_bill_city">Ville <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_bill_city" class="portal-input" placeholder="Ville">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_bill_country">Pays <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_bill_country" class="portal-input" placeholder="Pays">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 03 – COMMERCIAL CONTACT -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">03 – Commercial Contact</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Responsable des négociations et des cotations</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="portal-label" for="p2_comm_firstname">Prénom <span class="text-red-500">*</span></label>
+                  <input type="text" id="p2_comm_firstname" class="portal-input" placeholder="Prénom">
+                </div>
+                <div>
+                  <label class="portal-label" for="p2_comm_lastname">Nom <span class="text-red-500">*</span></label>
+                  <input type="text" id="p2_comm_lastname" class="portal-input" placeholder="Nom">
+                </div>
+                <div>
+                  <label class="portal-label" for="p2_comm_role">Fonction / Position <span class="text-red-500">*</span></label>
+                  <input type="text" id="p2_comm_role" class="portal-input" placeholder="Directeur Commercial, KAM...">
+                </div>
+                <div>
+                  <label class="portal-label" for="p2_comm_phone">Téléphone direct <span class="text-red-500">*</span></label>
+                  <input type="text" id="p2_comm_phone" class="portal-input" placeholder="+33...">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="portal-label" for="p2_comm_email">Adresse e-mail <span class="text-red-500">*</span></label>
+                  <input type="email" id="p2_comm_email" class="portal-input" placeholder="commercial@entreprise.com">
+                </div>
+              </div>
+
+              <div class="mt-5 pt-4 border-t border-slate-100">
+                <div class="flex items-center justify-between mb-2">
+                  <label class="portal-label mb-0" for="p2_comm_broadcast_first">
+                    Liste de diffusion des e-mails automatiques (offres, cotations)
+                  </label>
+                  <button type="button" onclick="addEmailField('comm-broadcast-container')" class="text-xs font-bold text-brand-700 hover:text-brand-900 bg-brand-50 hover:bg-brand-100 px-3 py-1 rounded-md border border-brand-200 transition">
+                    + Ajouter une adresse
+                  </button>
+                </div>
+                <p class="text-[11px] text-slate-400 mb-2">Adresses e-mail des collaborateurs devant recevoir les notifications automatiques.</p>
+                <div id="comm-broadcast-container" class="space-y-2">
+                  <input type="email" id="p2_comm_broadcast_first" class="portal-input" placeholder="adresse@entreprise.com">
+                </div>
+              </div>
+            </div>
+
+            <!-- 04 – TECHNICAL CONTACT -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">04 – Technical Contact</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Responsable technique, SAV et grading</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="portal-label" for="p2_tech_firstname">Prénom</label>
+                  <input type="text" id="p2_tech_firstname" class="portal-input" placeholder="Prénom">
+                </div>
+                <div>
+                  <label class="portal-label" for="p2_tech_lastname">Nom</label>
+                  <input type="text" id="p2_tech_lastname" class="portal-input" placeholder="Nom">
+                </div>
+                <div>
+                  <label class="portal-label" for="p2_tech_email">Adresse e-mail technique</label>
+                  <input type="email" id="p2_tech_email" class="portal-input" placeholder="technique@entreprise.com">
+                </div>
+                <div>
+                  <label class="portal-label" for="p2_tech_phone">Téléphone direct</label>
+                  <input type="text" id="p2_tech_phone" class="portal-input" placeholder="+33...">
+                </div>
+              </div>
+            </div>
+
+            <!-- 05 – LOGISTIC CONTACT & SHIPPING -->
+            <div class="portal-card">
+              <div class="border-b border-slate-100 pb-3 mb-5">
+                <h3 class="text-base font-bold text-slate-900">05 – Logistic Contact & Shipping</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Expéditions, réceptions d'entrepôt et transporteurs</p>
+              </div>
+
+              <div class="space-y-5">
+                <div>
+                  <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Contact logistique principal</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label class="portal-label" for="p2_log_firstname">Prénom <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_log_firstname" class="portal-input" placeholder="Prénom">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_log_lastname">Nom <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_log_lastname" class="portal-input" placeholder="Nom">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_log_phone">Téléphone direct <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_log_phone" class="portal-input" placeholder="+33...">
+                    </div>
+                    <div class="md:col-span-3">
+                      <label class="portal-label" for="p2_log_email">Adresse e-mail logistique <span class="text-red-500">*</span></label>
+                      <input type="email" id="p2_log_email" class="portal-input" placeholder="logistique@entreprise.com">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100">
+                  <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Adresse d'expédition / Réception des palettes</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-3">
+                      <label class="portal-label" for="p2_ship_company">Nom du site ou entrepôt <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_ship_company" class="portal-input" placeholder="Nom du site">
+                    </div>
+                    <div class="md:col-span-2">
+                      <label class="portal-label" for="p2_ship_addr1">Adresse ligne 1 <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_ship_addr1" class="portal-input" placeholder="Adresse principale">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_ship_addr2">Adresse ligne 2</label>
+                      <input type="text" id="p2_ship_addr2" class="portal-input" placeholder="Bâtiment, quai...">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_ship_zip">Code postal <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_ship_zip" class="portal-input" placeholder="Code postal">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_ship_city">Ville <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_ship_city" class="portal-input" placeholder="Ville">
+                    </div>
+                    <div>
+                      <label class="portal-label" for="p2_ship_country">Pays <span class="text-red-500">*</span></label>
+                      <input type="text" id="p2_ship_country" class="portal-input" placeholder="Pays">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100">
+                  <div class="flex items-center justify-between mb-2">
+                    <label class="portal-label mb-0" for="p2_log_broadcast_first">
+                      Liste de diffusion des informations logistiques (BL, tracking)
+                    </label>
+                    <button type="button" onclick="addEmailField('log-broadcast-container')" class="text-xs font-bold text-brand-700 hover:text-brand-900 bg-brand-50 hover:bg-brand-100 px-3 py-1 rounded-md border border-brand-200 transition">
+                      + Ajouter une adresse
+                    </button>
+                  </div>
+                  <div id="log-broadcast-container" class="space-y-2">
+                    <input type="email" id="p2_log_broadcast_first" class="portal-input" placeholder="logistique@entreprise.com">
+                  </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100">
+                  <label class="portal-label" for="p2_transporter">Transporteur habituel</label>
+                  <input type="text" id="p2_transporter" class="portal-input" placeholder="Ex. : DHL, Geodis, DPD, Schenker...">
+                </div>
+              </div>
+            </div>
+
+            <!-- FINALISATION DU DOSSIER -->
+            <div class="portal-card bg-slate-100/70 border-slate-200">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-900">Finalisation du dossier</span>
+                <span class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                  Étape 2 sur 3
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+                Une fois vos informations renseignées, votre dossier sera transmis à CompaRecycle pour vérification avant la signature du contrat de partenariat.
+              </p>
+
+              <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-brand-700 hover:bg-brand-800 text-white font-bold text-sm shadow-md transition flex items-center justify-center space-x-2">
+                <span>Enregistrer et soumettre mon dossier</span>
+                <span>✓</span>
+              </button>
+              <p class="text-center text-[11px] text-slate-400 mt-2">
+                Démonstrateur : Aucun champ n'est bloquant. Le clic passe directement à l'étape finale.
+              </p>
+            </div>
+
+          </form>
+        </section>
+
+        <!-- VUE FINALE : DOSSIER TRANSMIS -->
+        <section id="view-success" class="hidden space-y-6">
+          <div class="portal-card text-center py-12 px-6">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+              ✓
+            </div>
+            <h2 class="text-xl font-bold text-slate-900">Dossier Partenaire entièrement soumis !</h2>
+            <p class="text-xs text-slate-500 max-w-md mx-auto mt-2 leading-relaxed">
+              Toutes les données des parties 1 et 2 ont été centralisées. L'étape suivante consistera en l'envoi du contrat de partenariat électronique (Étape 03) par l'équipe juridique CompaRecycle.
+            </p>
+
+            <div class="pt-6">
+              <button onclick="goToView('part1')" class="px-6 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold transition">
+                ↻ Recommencer la démonstration depuis le début
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT DU DÉMONSTRATEUR -->
+  <script>
+    function goToView(viewId) {
+      ['view-part1', 'view-pending', 'view-part2', 'view-success'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+
+      const target = document.getElementById('view-' + viewId);
+      if (target) target.classList.remove('hidden');
+
+      const step1 = document.getElementById('step-indicator-1');
+      const step2 = document.getElementById('step-indicator-2');
+      const badge1 = document.getElementById('step-badge-1');
+      const badge2 = document.getElementById('step-badge-2');
+      const status1 = document.getElementById('step-status-1');
+      const status2 = document.getElementById('step-status-2');
+      const sidebarTitle = document.getElementById('sidebar-title');
+
+      if (viewId === 'part1') {
+        updateBarTabs('tab-p1');
+        sidebarTitle.innerText = "Devenez Partenaire Recycleur";
+        step1.className = "flex items-start space-x-3 p-3 rounded-xl bg-brand-50 border border-brand-200";
+        step2.className = "flex items-start space-x-3 p-3 rounded-xl bg-slate-50 border border-slate-200 opacity-60";
+        badge1.className = "w-7 h-7 rounded-lg bg-brand-700 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm";
+        badge1.innerText = "01";
+        badge2.className = "w-7 h-7 rounded-lg bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0";
+        status1.innerText = "En cours";
+        status1.className = "text-[10px] font-semibold text-brand-700 bg-brand-100/80 px-2 py-0.5 rounded";
+        status2.innerText = "À venir";
+        status2.className = "text-[10px] font-semibold text-slate-500 bg-slate-200 px-2 py-0.5 rounded";
+      } else if (viewId === 'pending') {
+        updateBarTabs('tab-p-mid');
+        sidebarTitle.innerText = "Validation de candidature";
+        step1.className = "flex items-start space-x-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200";
+        badge1.className = "w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0";
+        badge1.innerText = "✓";
+        status1.innerText = "Soumise";
+        status1.className = "text-[10px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded";
+      } else if (viewId === 'part2') {
+        updateBarTabs('tab-p2');
+        sidebarTitle.innerText = "Dossier Informations Partenaire";
+        step1.className = "flex items-start space-x-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200";
+        badge1.className = "w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0";
+        badge1.innerText = "✓";
+        status1.innerText = "Validée";
+        status1.className = "text-[10px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded";
+
+        step2.className = "flex items-start space-x-3 p-3 rounded-xl bg-brand-50 border border-brand-200";
+        badge2.className = "w-7 h-7 rounded-lg bg-brand-700 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm";
+        status2.innerText = "En cours";
+        status2.className = "text-[10px] font-semibold text-brand-700 bg-brand-100/80 px-2 py-0.5 rounded";
+      } else if (viewId === 'success') {
+        step2.className = "flex items-start space-x-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200";
+        badge2.className = "w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0";
+        badge2.innerText = "✓";
+        status2.innerText = "Terminé";
+        status2.className = "text-[10px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded";
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateBarTabs(activeId) {
+      ['tab-p1', 'tab-p-mid', 'tab-p2'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          if (id === activeId) {
+            btn.className = "px-3 py-1 rounded-md bg-brand-700 text-white font-medium hover:bg-brand-600 transition";
+          } else {
+            btn.className = "px-3 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 transition";
+          }
+        }
+      });
+    }
+
+    function addEmailField(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const row = document.createElement('div');
+      row.className = "flex items-center space-x-2";
+      row.innerHTML = `
+        <input type="email" class="portal-input" placeholder="autre-collaborateur@entreprise.com">
+        <button type="button" onclick="this.parentElement.remove()" class="px-3 py-2 rounded-lg border border-red-200 text-red-500 text-xs font-bold hover:bg-red-50 transition" title="Supprimer">
+          ✕
+        </button>
+      `;
+      container.appendChild(row);
+    }
+  </script>
+
+</body>
+</html>
