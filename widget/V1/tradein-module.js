@@ -1,5 +1,5 @@
 /**
- * TradeInModule - Module de reprise autonome (Version Démo & Workflow Versement Immédiat)
+ * TradeInModule - Module de reprise autonome (Version Démo & Workflow Versement Immédiat / Différé + Résumé Panier)
  */
 (function (window) {
     'use strict';
@@ -29,7 +29,7 @@
         loadedLang: null,
         cartAmount: 0,
         showCartSummary: true,
-        currentStep: 1, // 1: Appareil, 2: État, 3: Estimation, 4: Swikly & Client, 5: ID Check, 6: Youtrust Signature, 7: Viva Wallet & Fin du parcours
+        currentStep: 1, // 1: Appareil, 2: État, 3: Estimation, 4: Swikly & Client, 5: ID Check, 6: Youtrust Signature, 7: Payout Choice & Viva / IBAN
         selectedProductTypeId: null,
         selectedProductTypeName: null,
         selectedManufacturerId: null,
@@ -44,6 +44,7 @@
         grade: null,
         price: null,
         swiklyDone: false,
+        swiklyFailed: false,
         customerInfo: {
             firstname: '',
             lastname: '',
@@ -56,6 +57,13 @@
         },
         idCheckDone: false,
         signatureDone: false,
+        payoutMethod: null, // 'viva' ou 'iban'
+        vivaFailed: false,
+        ibanInfo: {
+            holder: '',
+            iban: '',
+            bic: ''
+        },
         vivaPayoutDone: false
     };
 
@@ -79,7 +87,7 @@
         return currentI18n;
     }
 
-function resetState() {
+    function resetState() {
         // 1. Réinitialisation des étapes et sélections produit
         appState.currentStep = 1;
         appState.selectedProductTypeId = null;
@@ -96,11 +104,15 @@ function resetState() {
         appState.price = null;
         appState.imei = null;
 
-        // 2. Réinitialisation des étapes de validation (Swikly, ID, Youtrust, Viva)
+        // 2. Réinitialisation des étapes de validation (Swikly, ID, Youtrust, Viva/IBAN)
         appState.swiklyDone = false;
+        appState.swiklyFailed = false;
         appState.idCheckDone = false;
         appState.signatureDone = false;
+        appState.payoutMethod = null;
+        appState.vivaFailed = false;
         appState.vivaPayoutDone = false;
+        appState.ibanInfo = { holder: '', iban: '', bic: '' };
 
         // 3. Réinitialisation des données client
         appState.customerInfo = { 
@@ -152,6 +164,16 @@ function resetState() {
         const swiklyCard = document.getElementById('swikly-status-card');
         if (swiklyCard) swiklyCard.className = "border-2 border-dashed border-blue-300 bg-blue-50/50 p-4 rounded-xl space-y-3";
 
+        const btnTriggerSwikly = document.getElementById('btn-trigger-swikly');
+        if (btnTriggerSwikly) btnTriggerSwikly.classList.remove('hidden');
+
+        const swiklyFailMsg = document.getElementById('swikly-failed-message');
+        if (swiklyFailMsg) swiklyFailMsg.classList.add('hidden');
+
+        // Réinitialisation du bloc résumé panier
+        const cartSummaryBlock = document.getElementById('step4-cart-summary-block');
+        if (cartSummaryBlock) cartSummaryBlock.classList.add('hidden');
+
         // 6. Réinitialisation de l'Étape 5 (Vérification d'identité)
         const rectoZone = document.getElementById('id-recto-zone');
         if (rectoZone) rectoZone.className = "border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-xl p-4 text-center cursor-pointer bg-gray-50 transition space-y-2";
@@ -182,9 +204,34 @@ function resetState() {
         const ytSuccessUI = document.getElementById('youtrust-success-ui');
         if (ytSuccessUI) ytSuccessUI.classList.add('hidden');
 
-        // 8. Réinitialisation de l'Étape 7 (Viva Wallet)
+        // 8. Réinitialisation de l'Étape 7 (Versement)
         const vivaWaitingUI = document.getElementById('viva-waiting-ui');
         if (vivaWaitingUI) vivaWaitingUI.classList.remove('hidden');
+        const deferredUI = document.getElementById('payout-deferred-ui');
+        if (deferredUI) deferredUI.classList.add('hidden');
+        const ibanForm = document.getElementById('iban-form-container');
+        if (ibanForm) ibanForm.classList.add('hidden');
+        
+        ['iban-holder', 'iban-number', 'iban-bic'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+        const ibanErr = document.getElementById('iban-form-error');
+        if (ibanErr) ibanErr.classList.add('hidden');
+
+        // Réinitialisation des styles des boutons CB / IBAN
+        const btnChoiceCb = document.getElementById('btn-choice-cb');
+        if (btnChoiceCb) {
+            btnChoiceCb.disabled = false;
+            btnChoiceCb.className = "py-3 px-4 border border-gray-200 bg-white hover:border-blue-400 text-gray-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2";
+            btnChoiceCb.innerHTML = `<i class="fa-solid fa-credit-card text-blue-600"></i> <span>Sur Carte Bancaire (Viva)</span>`;
+        }
+
+        const btnChoiceIban = document.getElementById('btn-choice-iban');
+        if (btnChoiceIban) {
+            btnChoiceIban.className = "py-3 px-4 border border-gray-200 bg-white hover:border-blue-400 text-gray-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2";
+        }
+
         const vivaSuccessUI = document.getElementById('viva-success-ui');
         if (vivaSuccessUI) vivaSuccessUI.classList.add('hidden');
 
@@ -474,6 +521,26 @@ function resetState() {
                             <div class="text-lg font-black" id="step4-payout-amount-display">Montant de la reprise : -- €</div>
                         </div>
 
+                        <!-- BLOC RÉSUMÉ DU PANIER SITE COMMERÇANT -->
+                        <div id="step4-cart-summary-block" class="hidden bg-blue-50/70 p-3.5 rounded-xl border border-blue-200 text-xs space-y-2">
+                            <div class="font-bold text-blue-900 flex items-center justify-between">
+                                <span id="txt-step4-cart-summary-title">Impact sur votre panier actuel</span>
+                                <i class="fa-solid fa-cart-shopping text-blue-500"></i>
+                            </div>
+                            <div class="flex justify-between items-center text-gray-600">
+                                <span id="txt-step4-initial-cart">Montant initial du panier :</span>
+                                <span id="summary-initial-cart" class="line-through">-- €</span>
+                            </div>
+                            <div class="flex justify-between items-center text-green-700 font-medium">
+                                <span id="txt-step4-tradein-deduction">Déduction de votre reprise :</span>
+                                <span id="summary-tradein-discount">- -- €</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-blue-200/80 font-bold text-sm text-gray-900">
+                                <span id="txt-step4-final-cart">Reste à payer après reprise :</span>
+                                <span id="summary-final-cart" class="text-green-600 text-base font-black">-- €</span>
+                            </div>
+                        </div>
+
                         <!-- BLOC SWIKLY -->
                         <div id="swikly-status-card" class="border-2 border-dashed border-blue-300 bg-blue-50/50 p-4 rounded-xl space-y-3">
                             <div class="flex items-center justify-between">
@@ -498,6 +565,17 @@ function resetState() {
                                 <i class="fa-solid fa-lock text-xs"></i>
                                 <span>Déposer l'empreinte bancaire via Swikly</span>
                             </button>
+
+                            <!-- MESSAGE EN CAS D'ÉCHEC / REFUS SWIKLY -->
+                            <div id="swikly-failed-message" class="hidden bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 space-y-1.5">
+                                <div class="font-bold text-amber-950 flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                                    <span>Le versement immédiat n’a pas pu être mis en place pour cette transaction.</span>
+                                </div>
+                                <p class="text-[11px] text-amber-800 leading-relaxed">
+                                    Pas d’inquiétude : votre paiement sera effectué après réception et validation de votre produit. Nous vous demanderons de choisir votre mode de paiement et de renseigner les informations nécessaires un peu plus tard dans le parcours.
+                                </p>
+                            </div>
                         </div>
 
                         <!-- FORMULAIRE INFORMATIONS CLIENT -->
@@ -630,8 +708,10 @@ function resetState() {
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 7 : VERSEMENT IMMÉDIAT VIVA WALLET & FIN DU PARCOURS -->
+                    <!-- ÉTAPE 7 : VERSEMENT IMMÉDIAT (VIVA) OU VERSEMENT DIFFÉRÉ (CHOIX CB / IBAN) -->
                     <div id="step-7" class="step-content hidden space-y-5 text-center py-4">
+                        
+                        <!-- VUE CAS NOMINAL : VIVA AUTOMATIQUE (SWIKLY VALIDÉE) -->
                         <div id="viva-waiting-ui" class="space-y-4">
                             <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl animate-pulse">
                                 <i class="fa-solid fa-credit-card"></i>
@@ -645,6 +725,52 @@ function resetState() {
                             </button>
                         </div>
 
+                        <!-- VUE CAS DIFFÉRÉ : SWIKLY EN ÉCHEC -->
+                        <div id="payout-deferred-ui" class="hidden space-y-4 text-left">
+                            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
+                                <div class="font-bold text-xs text-blue-950 flex items-center space-x-2">
+                                    <i class="fa-solid fa-circle-info text-blue-600 text-sm"></i>
+                                    <span>Virement après homologation du produit</span>
+                                </div>
+                                <p class="text-xs text-blue-800 leading-relaxed">
+                                    Le paiement sera effectué après réception et vérification de votre produit par nos techniciens. Veuillez sélectionner votre mode de virement préféré :
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3 pt-1">
+                                <button id="btn-choice-cb" type="button" class="py-3 px-4 border border-gray-200 bg-white hover:border-blue-400 text-gray-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-credit-card text-blue-600"></i>
+                                    <span>Sur Carte Bancaire (Viva)</span>
+                                </button>
+                                <button id="btn-choice-iban" type="button" class="py-3 px-4 border border-gray-200 bg-white hover:border-blue-400 text-gray-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-building-columns text-blue-600"></i>
+                                    <span>Par Virement IBAN</span>
+                                </button>
+                            </div>
+
+                            <!-- FORMULAIRE SAISIE IBAN (DÉPLIANT) -->
+                            <div id="iban-form-container" class="hidden space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-200 pt-3">
+                                <div class="font-bold text-xs text-gray-900 border-b border-gray-200 pb-2 flex items-center justify-between">
+                                    <span>Coordonnées bancaires pour le virement</span>
+                                    <span class="text-[10px] text-gray-400 font-normal">Sécurisé</span>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-medium text-gray-700 mb-0.5">Titulaire du compte *</label>
+                                    <input type="text" id="iban-holder" class="w-full border border-gray-300 rounded-lg p-2 text-xs outline-none focus:ring-2 focus:ring-blue-500" placeholder="Jean Dupont">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-medium text-gray-700 mb-0.5">Numéro IBAN *</label>
+                                    <input type="text" id="iban-number" class="w-full border border-gray-300 rounded-lg p-2 text-xs font-mono outline-none focus:ring-2 focus:ring-blue-500 uppercase" placeholder="FR76 3000 6000 0112 3456 7890 189">
+                                </div>
+
+                                <p id="iban-form-error" class="hidden text-[11px] text-red-600 font-medium">Veuillez renseigner un titulaire et un IBAN valide.</p>
+
+                                <button id="btn-submit-iban" type="button" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow transition">
+                                    Valider mes coordonnées IBAN
+                                </button>
+                            </div>
+                        </div>
+
                         <!-- ÉCRAN FINAL : CLÔTURE DU PARCOURS -->
                         <div id="viva-success-ui" class="hidden space-y-5">
                             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner animate-bounce">
@@ -652,7 +778,7 @@ function resetState() {
                             </div>
                             <div class="space-y-1">
                                 <h3 class="text-2xl font-black text-gray-900">Reprise terminée ! 🎉</h3>
-                                <p class="text-xs text-gray-600 leading-relaxed">
+                                <p class="text-xs text-gray-600 leading-relaxed" id="final-payout-description">
                                     Le versement de <strong id="viva-confirmed-amount" class="text-emerald-600 font-bold">-- €</strong> se fera sur votre compte bancaire <br><strong>entre 24 heures et 3 jours</strong>.
                                 </p>
                             </div>
@@ -663,17 +789,17 @@ function resetState() {
                                     <strong class="text-gray-900 font-mono" id="final-dossier-id">TR-2026-8942</strong>
                                 </div>
                                 <div class="flex justify-between items-center text-gray-600 border-b border-gray-200 pb-2">
-                                    <span>Montant versé :</span>
+                                    <span>Montant de la reprise :</span>
                                     <strong class="text-green-600 font-bold" id="final-payout-val">-- €</strong>
                                 </div>
                                 <div class="flex justify-between items-center text-gray-600">
-                                    <span>Statut du versement Viva :</span>
-                                    <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Effectué (Immédiat)</span>
+                                    <span>Mode de virement choisi :</span>
+                                    <span id="final-payout-method-badge" class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Carte Bancaire (Immédiat)</span>
                                 </div>
                             </div>
 
                             <div class="pt-2">
-                                <a id="btn-tracking-link" href="#" target="_blank" class="inline-flex items-center justify-center space-x-2 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow transition text-xs">
+                                <a id="btn-tracking-link" href="/widget/suivi.html" target="_blank" class="inline-flex items-center justify-center space-x-2 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow transition text-xs">
                                     <span>Accéder à ma page de suivi de dossier</span>
                                     <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                                 </a>
@@ -744,9 +870,10 @@ function resetState() {
                         <div>Prestataire : Swikly Securitized</div>
                         <div>Montant de caution : 0.00 € (Autorisation seule)</div>
                     </div>
-                    <div class="pt-2 flex space-x-2">
-                        <button type="button" onclick="window.TradeInModule.closeModalWidgets()" class="w-1/3 py-2 border border-gray-300 text-gray-700 rounded-lg text-xs">Annuler</button>
-                        <button type="button" onclick="window.TradeInModule.confirmSwikly()" class="w-2/3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs shadow">Valider Swikly</button>
+                    <div class="pt-2 grid grid-cols-3 gap-2">
+                        <button type="button" onclick="window.TradeInModule.closeModalWidgets()" class="py-2 border border-gray-300 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-50">Annuler</button>
+                        <button type="button" onclick="window.TradeInModule.failSwikly()" class="py-2 border border-red-300 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-bold">Refuser</button>
+                        <button type="button" onclick="window.TradeInModule.confirmSwikly()" class="py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs shadow">Valider Swikly</button>
                     </div>
                 </div>
             </div>
@@ -774,7 +901,7 @@ function resetState() {
                 </div>
             </div>
 
-            <!-- POPIN SIMULATEUR VIVA WALLET -->
+            <!-- POPIN SIMULATEUR VIVA WALLET (AVEC BOUTON REFUSÉE) -->
             <div id="viva-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                 <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 text-gray-800">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-3">
@@ -790,9 +917,10 @@ function resetState() {
                         <div>Virement à recevoir : <span id="viva-popin-amount">-- €</span></div>
                         <div>Destinataire : <span id="viva-popin-cust-name">--</span></div>
                     </div>
-                    <div class="pt-2 flex space-x-2">
-                        <button type="button" onclick="window.TradeInModule.closeModalWidgets()" class="w-1/3 py-2 border border-gray-300 text-gray-700 rounded-lg text-xs">Annuler</button>
-                        <button type="button" onclick="window.TradeInModule.confirmVivaPayout()" class="w-2/3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs shadow">Valider la carte</button>
+                    <div class="pt-2 grid grid-cols-3 gap-2">
+                        <button type="button" onclick="window.TradeInModule.closeModalWidgets()" class="py-2 border border-gray-300 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-50">Annuler</button>
+                        <button type="button" onclick="window.TradeInModule.failVivaPayout()" class="py-2 border border-red-300 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-bold">Refusée</button>
+                        <button type="button" onclick="window.TradeInModule.confirmVivaPayout()" class="py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs shadow">Valider la carte</button>
                     </div>
                 </div>
             </div>
@@ -836,6 +964,57 @@ function resetState() {
         if (vivaModal) vivaModal.classList.add('hidden');
     }
 
+    function updateStep4CartSummary() {
+        const cartBlock = document.getElementById('step4-cart-summary-block');
+        if (!cartBlock) return;
+
+        if (appState.showCartSummary && appState.cartAmount > 0 && appState.price !== null) {
+            const finalCart = Math.max(0, appState.cartAmount - appState.price);
+            const initCartElem = document.getElementById('summary-initial-cart');
+            const discountElem = document.getElementById('summary-tradein-discount');
+            const finalCartElem = document.getElementById('summary-final-cart');
+
+            if (initCartElem) initCartElem.textContent = `${appState.cartAmount} €`;
+            if (discountElem) discountElem.textContent = `- ${appState.price} €`;
+            if (finalCartElem) finalCartElem.textContent = `${finalCart} €`;
+
+            cartBlock.classList.remove('hidden');
+        } else {
+            cartBlock.classList.add('hidden');
+        }
+    }
+
+    function selectPayoutOption(method) {
+        const btnCb = document.getElementById('btn-choice-cb');
+        const btnIban = document.getElementById('btn-choice-iban');
+        const ibanForm = document.getElementById('iban-form-container');
+
+        appState.payoutMethod = method;
+
+        if (method === 'cb') {
+            if (btnCb && !btnCb.disabled) {
+                btnCb.className = "py-3 px-4 border-2 border-blue-600 bg-blue-50/50 text-blue-900 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-sm";
+            }
+            if (btnIban) {
+                btnIban.className = "py-3 px-4 border border-gray-200 bg-white hover:border-blue-400 text-gray-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2";
+            }
+            if (ibanForm) ibanForm.classList.add('hidden');
+
+            openVivaModal();
+        } else if (method === 'iban') {
+            if (btnIban) {
+                btnIban.className = "py-3 px-4 border-2 border-blue-600 bg-blue-50/50 text-blue-900 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-sm";
+            }
+            if (btnCb && !btnCb.disabled) {
+                btnCb.className = "py-3 px-4 border border-gray-200 bg-white hover:border-blue-400 text-gray-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2";
+            }
+            if (ibanForm) {
+                ibanForm.classList.remove('hidden');
+                document.getElementById('iban-holder').value = `${appState.customerInfo.firstname} ${appState.customerInfo.lastname}`;
+            }
+        }
+    }
+
     function attachEvents() {
         document.getElementById('tradein-close-btn').onclick = () => TradeInModule.close();
         document.getElementById('tradein-modal-overlay').onclick = (e) => {
@@ -851,6 +1030,7 @@ function resetState() {
             appState.imei = "353000000000000";
 
             document.getElementById('step4-payout-amount-display').textContent = "Montant de la reprise : 450 €";
+            updateStep4CartSummary();
             goToStep(4);
         };
 
@@ -897,7 +1077,7 @@ function resetState() {
         document.getElementById('btn-continue-step4').onclick = () => {
             const swiklyErr = document.getElementById('swikly-error');
 
-            if (!appState.swiklyDone) {
+            if (!appState.swiklyDone && !appState.swiklyFailed) {
                 swiklyErr.classList.remove('hidden');
                 document.getElementById('swikly-status-card').classList.add('border-red-400', 'bg-red-50/40');
                 return;
@@ -975,11 +1155,28 @@ function resetState() {
             goToStep(7);
         };
 
-        // ÉTAPE 7 : VIVA WALLET
-        document.getElementById('btn-reopen-viva').onclick = () => {
-            document.getElementById('viva-popin-amount').textContent = `${appState.price || 0} €`;
-            document.getElementById('viva-popin-cust-name').textContent = `${appState.customerInfo.firstname} ${appState.customerInfo.lastname}`;
-            document.getElementById('viva-modal').classList.remove('hidden');
+        // ÉTAPE 7 : BOUTONS CHOIX PAIEMENT (CAS DIFFÉRÉ)
+        document.getElementById('btn-reopen-viva').onclick = () => openVivaModal();
+        document.getElementById('btn-choice-cb').onclick = () => selectPayoutOption('cb');
+        document.getElementById('btn-choice-iban').onclick = () => selectPayoutOption('iban');
+
+        // VALIDATION FORMULAIRE IBAN
+        document.getElementById('btn-submit-iban').onclick = () => {
+            const holder = document.getElementById('iban-holder').value.trim();
+            const iban = document.getElementById('iban-number').value.trim();
+            const bic = document.getElementById('iban-bic').value.trim();
+            const err = document.getElementById('iban-form-error');
+
+            if (!holder || !iban || iban.length < 14) {
+                if (err) err.classList.remove('hidden');
+                return;
+            }
+            if (err) err.classList.add('hidden');
+
+            appState.ibanInfo = { holder: holder, iban: iban, bic: bic };
+            appState.payoutMethod = 'iban';
+
+            showFinalSuccessUI('iban');
         };
 
         document.addEventListener('click', (e) => {
@@ -991,8 +1188,15 @@ function resetState() {
         });
     }
 
+    function openVivaModal() {
+        document.getElementById('viva-popin-amount').textContent = `${appState.price || 0} €`;
+        document.getElementById('viva-popin-cust-name').textContent = `${appState.customerInfo.firstname} ${appState.customerInfo.lastname}`;
+        document.getElementById('viva-modal').classList.remove('hidden');
+    }
+
     function confirmSwikly() {
         appState.swiklyDone = true;
+        appState.swiklyFailed = false;
         closeModalWidgets();
         
         const badge = document.getElementById('swikly-badge');
@@ -1005,7 +1209,37 @@ function resetState() {
         if (swiklyErr) swiklyErr.classList.add('hidden');
         
         const statusCard = document.getElementById('swikly-status-card');
-        if (statusCard) statusCard.classList.remove('border-red-400', 'bg-red-50/40');
+        if (statusCard) statusCard.className = "border-2 border-dashed border-blue-300 bg-blue-50/50 p-4 rounded-xl space-y-3";
+
+        const btnTriggerSwikly = document.getElementById('btn-trigger-swikly');
+        if (btnTriggerSwikly) btnTriggerSwikly.classList.remove('hidden');
+
+        const swiklyFailMsg = document.getElementById('swikly-failed-message');
+        if (swiklyFailMsg) swiklyFailMsg.classList.add('hidden');
+    }
+
+    function failSwikly() {
+        appState.swiklyDone = false;
+        appState.swiklyFailed = true;
+        closeModalWidgets();
+
+        const badge = document.getElementById('swikly-badge');
+        if (badge) {
+            badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-800";
+            badge.textContent = "En échec";
+        }
+
+        const swiklyErr = document.getElementById('swikly-error');
+        if (swiklyErr) swiklyErr.classList.add('hidden');
+
+        const statusCard = document.getElementById('swikly-status-card');
+        if (statusCard) statusCard.className = "border-2 border-amber-300 bg-amber-50/30 p-4 rounded-xl space-y-3";
+
+        const btnTriggerSwikly = document.getElementById('btn-trigger-swikly');
+        if (btnTriggerSwikly) btnTriggerSwikly.classList.add('hidden');
+
+        const swiklyFailMsg = document.getElementById('swikly-failed-message');
+        if (swiklyFailMsg) swiklyFailMsg.classList.remove('hidden');
     }
 
     function confirmYoutrustSignature() {
@@ -1024,15 +1258,57 @@ function resetState() {
 
     function confirmVivaPayout() {
         appState.vivaPayoutDone = true;
+        appState.payoutMethod = 'viva';
+        closeModalWidgets();
+        showFinalSuccessUI('viva');
+    }
+
+    function failVivaPayout() {
+        appState.vivaFailed = true;
+        appState.vivaPayoutDone = false;
         closeModalWidgets();
 
+        // Rendre inutilisable le bouton CB dans le choix différé et basculer sur l'IBAN
+        const btnChoiceCb = document.getElementById('btn-choice-cb');
+        if (btnChoiceCb) {
+            btnChoiceCb.disabled = true;
+            btnChoiceCb.className = "py-3 px-4 border border-gray-200 bg-gray-100 text-gray-400 rounded-xl text-xs font-bold cursor-not-allowed flex items-center justify-center space-x-2";
+            btnChoiceCb.innerHTML = `<i class="fa-solid fa-ban"></i> <span>Carte Bancaire (Refusée)</span>`;
+        }
+
+        selectPayoutOption('iban');
+    }
+
+    function showFinalSuccessUI(method) {
         const randomDossier = "TR-2026-" + Math.floor(1000 + Math.random() * 9000);
         document.getElementById('final-dossier-id').textContent = randomDossier;
         document.getElementById('final-payout-val').textContent = `${appState.price || 0} €`;
         document.getElementById('viva-confirmed-amount').textContent = `${appState.price || 0} €`;
-        document.getElementById('btn-tracking-link').href = `https://mon-site.com/suivi-reprise?dossier=${randomDossier}`;
+        document.getElementById('btn-tracking-link').href = `suivi.html?id=95&dossier=${randomDossier}`;
+
+        const badge = document.getElementById('final-payout-method-badge');
+        const desc = document.getElementById('final-payout-description');
+
+        if (method === 'viva') {
+            if (badge) {
+                badge.className = "bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full";
+                badge.textContent = appState.swiklyDone ? "Carte Bancaire (Immédiat)" : "Carte Bancaire (Différé)";
+            }
+            if (desc) {
+                desc.innerHTML = `Le versement de <strong class="text-emerald-600 font-bold">${appState.price || 0} €</strong> se fera sur votre carte bancaire <br><strong>${appState.swiklyDone ? 'entre 24 heures et 3 jours' : 'après réception et homologation de votre appareil'}</strong>.`;
+            }
+        } else {
+            if (badge) {
+                badge.className = "bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full";
+                badge.textContent = "Virement IBAN (Différé)";
+            }
+            if (desc) {
+                desc.innerHTML = `Le virement de <strong class="text-blue-600 font-bold">${appState.price || 0} €</strong> sera exécuté sur votre compte IBAN <br><strong>après réception et homologation de votre appareil</strong>.`;
+            }
+        }
 
         document.getElementById('viva-waiting-ui').classList.add('hidden');
+        document.getElementById('payout-deferred-ui').classList.add('hidden');
         document.getElementById('viva-success-ui').classList.remove('hidden');
 
         finishProcess();
@@ -1429,9 +1705,11 @@ function resetState() {
                 appState.price = price;
                 priceElem.textContent = `${price} €`;
                 document.getElementById('step4-payout-amount-display').textContent = `Montant de la reprise : ${price} €`;
+                updateStep4CartSummary();
             } else {
                 appState.price = 0;
                 priceElem.textContent = "0 €";
+                updateStep4CartSummary();
             }
         } catch (e) { 
             priceElem.textContent = "Erreur"; 
@@ -1472,11 +1750,24 @@ function resetState() {
             }, 300);
         }
 
-        if (step === 7 && !appState.vivaPayoutDone) {
-            setTimeout(() => {
-                const btnViva = document.getElementById('btn-reopen-viva');
-                if (btnViva) btnViva.click();
-            }, 300);
+        // ÉTAPE 7 : DÉCLENCHEMENT CONDITIONNEL DU DÉROULEMENT
+        if (step === 7) {
+            const vivaWaitingUI = document.getElementById('viva-waiting-ui');
+            const deferredUI = document.getElementById('payout-deferred-ui');
+
+            if (appState.swiklyDone && !appState.swiklyFailed) {
+                // CAS NOMINAL SWIKLY VALIDÉE -> Popin Viva automatique
+                if (vivaWaitingUI) vivaWaitingUI.classList.remove('hidden');
+                if (deferredUI) deferredUI.classList.add('hidden');
+                
+                if (!appState.vivaPayoutDone) {
+                    setTimeout(() => openVivaModal(), 300);
+                }
+            } else {
+                // CAS SWIKLY EN ÉCHEC -> Pas de popin auto, affichage du choix différé CB / IBAN sans sélection par défaut
+                if (vivaWaitingUI) vivaWaitingUI.classList.add('hidden');
+                if (deferredUI) deferredUI.classList.remove('hidden');
+            }
         }
 
         appState.currentStep = step;
@@ -1538,17 +1829,25 @@ function resetState() {
 
     function finishProcess() {
         const tradeInValue = appState.price || 0;
+        const initialCart = appState.cartAmount;
+        const finalCart = Math.max(0, initialCart - tradeInValue);
 
         const event = new CustomEvent('tradein:completed', {
             detail: {
                 productName: appState.selectedProductName || appState.selectedModelName,
                 tradeInDiscount: tradeInValue,
+                initialCartAmount: initialCart,
+                finalCartAmount: finalCart,
                 imei: appState.imei,
                 customerInfo: appState.customerInfo,
                 swiklyDone: appState.swiklyDone,
+                swiklyFailed: appState.swiklyFailed,
                 idCheckDone: appState.idCheckDone,
                 signatureDone: appState.signatureDone,
+                payoutMethod: appState.payoutMethod,
                 vivaPayoutDone: appState.vivaPayoutDone,
+                vivaFailed: appState.vivaFailed,
+                ibanInfo: appState.ibanInfo,
                 lang: appState.lang
             }
         });
@@ -1652,8 +1951,10 @@ function resetState() {
         },
         closeModalWidgets: closeModalWidgets,
         confirmSwikly: confirmSwikly,
+        failSwikly: failSwikly,
         confirmYoutrustSignature: confirmYoutrustSignature,
         confirmVivaPayout: confirmVivaPayout,
+        failVivaPayout: failVivaPayout,
         _selectAnswer: _selectAnswer
     };
 
