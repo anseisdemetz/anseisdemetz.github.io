@@ -291,7 +291,7 @@
 
                     <!-- ÉTAPE 1 : SÉLECTION PRODUIT -->
                     <div id="step-1" class="step-content space-y-5">
-                        <div class="flex justify-between items-center bg-blue-50/50 p-2.5 rounded-lg border border-blue-100">
+                        <div class="hidden flex justify-between items-center bg-blue-50/50 p-2.5 rounded-lg border border-blue-100">
                             <div class="flex items-center space-x-2 text-[11px] text-blue-900">
                                 <i class="fa-solid fa-bolt text-blue-600"></i>
                                 <span>Mode recette / Test rapide :</span>
