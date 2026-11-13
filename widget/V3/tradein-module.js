@@ -1,5 +1,6 @@
 /**
- * TradeInModule - Module de reprise autonome (Version Raccourcie : Sélection -> État -> IMEI -> Coordonnées -> Écran de Fin)
+ * TradeInModule - Module de reprise autonome
+ * Parcours : Sélection (Option 1 : Fil d'Ariane dynamique) -> État -> Estimation & IMEI -> Coordonnées -> Écran de Fin
  */
 (function (window) {
     'use strict';
@@ -57,7 +58,14 @@
         }
     };
 
-    let productCache = [];
+    let catalogCache = {
+        categories: [],
+        manufacturers: {}, // key: productTypeId
+        models: {},        // key: `${productTypeId}_${manufacturerId}`
+        products: {},      // key: `${productTypeId}_${manufacturerId}_${modelId}`
+        searchPool: []
+    };
+
     let searchTimeout = null;
     let isInitialized = false;
     let initPromise = null;
@@ -104,10 +112,10 @@
         appState.imei = null;
         appState.trackingCode = null;
 
-        appState.customerInfo = { 
-            firstname: '', lastname: '', email: '', 
-            phone: '', address: '', zipcode: '', 
-            city: '', country: 'France' 
+        appState.customerInfo = {
+            firstname: '', lastname: '', email: '',
+            phone: '', address: '', zipcode: '',
+            city: '', country: 'France'
         };
 
         const searchInput = document.getElementById('tradein-search-input');
@@ -137,17 +145,6 @@
         const cartSummaryBlock = document.getElementById('step4-cart-summary-block');
         if (cartSummaryBlock) cartSummaryBlock.classList.add('hidden');
 
-        const mBlock = document.getElementById('manufacturers-block');
-        const mdBlock = document.getElementById('models-block');
-        const pBlock = document.getElementById('products-block');
-        if (mBlock) mBlock.classList.add('hidden');
-        if (mdBlock) mdBlock.classList.add('hidden');
-        if (pBlock) pBlock.classList.add('hidden');
-
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative";
-        });
-
         const surveyContainer = document.getElementById('survey-questions-container');
         if (surveyContainer) surveyContainer.innerHTML = '';
 
@@ -160,6 +157,7 @@
         const imeiElemStep4 = document.getElementById('step4-product-imei');
         if (imeiElemStep4) imeiElemStep4.textContent = 'IMEI : --';
 
+        renderStep1DynamicView();
         goToStep(1);
     }
 
@@ -169,7 +167,7 @@
         if (initPromise) return initPromise;
 
         initPromise = new Promise((resolve) => {
-            let tailwindLoaded = !!document.getElementById('tradein-tailwind-cdn');
+            const tailwindLoaded = !!document.getElementById('tradein-tailwind-cdn');
 
             if (!document.getElementById('tradein-fontawesome-cdn')) {
                 const faLink = document.createElement('link');
@@ -287,11 +285,11 @@
                 </div>
 
                 <!-- CONTENU SCROLLABLE CENTRAL -->
-                <div class="p-6 overflow-y-auto flex-1">
+                <div class="p-6 overflow-y-auto flex-1 flex flex-col">
 
-                    <!-- ÉTAPE 1 : SÉLECTION PRODUIT -->
-                    <div id="step-1" class="step-content space-y-5">
-                        <div class="hidden flex justify-between items-center bg-blue-50/50 p-2.5 rounded-lg border border-blue-100">
+                    <!-- ÉTAPE 1 : SÉLECTION PRODUIT (OPTION 1 : FIL D'ARIANE DYNAMIQUE) -->
+                    <div id="step-1" class="step-content flex-1 flex flex-col">
+                        <div class="flex justify-between items-center bg-blue-50/50 p-2.5 rounded-lg border border-blue-100 mb-4 flex-shrink-0 hidden">
                             <div class="flex items-center space-x-2 text-[11px] text-blue-900">
                                 <i class="fa-solid fa-bolt text-blue-600"></i>
                                 <span>Mode recette / Test rapide :</span>
@@ -302,35 +300,26 @@
                             </button>
                         </div>
 
-                        <div class="relative">
-                            <input type="text" id="tradein-search-input" placeholder="Rechercher un modèle..." 
-                                   class="w-full pl-4 pr-10 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 text-sm outline-none">
-                            <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-400"></i>
-                            <div id="search-results-dropdown" class="hidden absolute left-0 right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-xl z-20 max-h-60 overflow-y-auto divide-y divide-gray-100"></div>
+                        <!-- BARRE DE RECHERCHE PRÉDICTIVE -->
+                        <div class="relative mb-5 flex-shrink-0">
+                            <input type="text" id="tradein-search-input" placeholder="Rechercher un modèle (ex: iPhone 14 Pro, Galaxy S23)..." 
+                                   class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 text-xs outline-none transition">
+                            <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-400 text-xs"></i>
+                            <div id="search-results-dropdown" class="hidden absolute left-0 right-0 top-11 bg-white border border-gray-200 rounded-xl shadow-xl z-20 max-h-60 overflow-y-auto divide-y divide-gray-100"></div>
                         </div>
 
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Sélectionnez une catégorie :</label>
-                            <div id="categories-container" class="grid grid-cols-3 gap-2">
-                                <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
-                                <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
-                                <div class="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
+                        <!-- FIL D'ARIANE DYNAMIQUE -->
+                        <div id="step1-breadcrumb" class="flex items-center flex-wrap gap-1.5 text-xs mb-4 pb-2.5 border-b border-gray-100 flex-shrink-0">
+                            <span class="font-bold text-blue-600">Catégories</span>
+                        </div>
+
+                        <!-- ZONE D'AFFICHAGE UNIQUE ÉVOLUTIVE -->
+                        <div id="step1-dynamic-zone" class="flex-1 overflow-y-auto pr-0.5">
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <div class="animate-pulse h-20 bg-gray-100 rounded-xl"></div>
+                                <div class="animate-pulse h-20 bg-gray-100 rounded-xl"></div>
+                                <div class="animate-pulse h-20 bg-gray-100 rounded-xl"></div>
                             </div>
-                        </div>
-
-                        <div id="manufacturers-block" class="hidden">
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Marque :</label>
-                            <div id="manufacturers-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
-                        </div>
-
-                        <div id="models-block" class="hidden">
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Modèle :</label>
-                            <div id="models-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
-                        </div>
-
-                        <div id="products-block" class="hidden">
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Produit :</label>
-                            <div id="products-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
                         </div>
                     </div>
 
@@ -719,9 +708,7 @@
                 country: document.getElementById('cust-country').value
             };
 
-            // Génération du tracking_code unique
             appState.trackingCode = "TR-2026-" + Math.floor(1000 + Math.random() * 9000);
-
             showWidgetSuccessUI();
         };
 
@@ -744,26 +731,132 @@
         finishWidgetProcess();
     }
 
+    // =========================================================================
+    // ÉTAPE 1 : NAVIGATION FIL D'ARIANE DYNAMIQUE (OPTION 1)
+    // =========================================================================
+    function updateStep1Breadcrumb() {
+        const bc = document.getElementById('step1-breadcrumb');
+        if (!bc) return;
+
+        const parts = [];
+
+        // Niveau 0 : Catégories
+        parts.push(`
+            <button type="button" onclick="window.TradeInModule._navigateStep1(0)" 
+                    class="${!appState.selectedProductTypeId ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-blue-600 transition'}">
+                Catégories
+            </button>
+        `);
+
+        // Niveau 1 : Catégorie sélectionnée -> Marques
+        if (appState.selectedProductTypeId) {
+            parts.push(`<i class="fa-solid fa-chevron-right text-[9px] text-gray-300"></i>`);
+            parts.push(`
+                <button type="button" onclick="window.TradeInModule._navigateStep1(1)" 
+                        class="${!appState.selectedManufacturerId ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-blue-600 transition'}">
+                    ${appState.selectedProductTypeName}
+                </button>
+            `);
+        }
+
+        // Niveau 2 : Marque sélectionnée -> Modèles
+        if (appState.selectedManufacturerId) {
+            parts.push(`<i class="fa-solid fa-chevron-right text-[9px] text-gray-300"></i>`);
+            parts.push(`
+                <button type="button" onclick="window.TradeInModule._navigateStep1(2)" 
+                        class="${!appState.selectedModelId ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-blue-600 transition'}">
+                    ${appState.selectedManufacturerName}
+                </button>
+            `);
+        }
+
+        // Niveau 3 : Modèle sélectionné -> Produits
+        if (appState.selectedModelId) {
+            parts.push(`<i class="fa-solid fa-chevron-right text-[9px] text-gray-300"></i>`);
+            parts.push(`<span class="font-bold text-blue-600">${appState.selectedModelName}</span>`);
+        }
+
+        bc.innerHTML = parts.join('');
+    }
+
+    function _navigateStep1(level) {
+        appState.selectedProductId = null;
+        appState.selectedProductName = null;
+
+        if (level === 0) {
+            appState.selectedProductTypeId = null;
+            appState.selectedProductTypeName = null;
+            appState.selectedManufacturerId = null;
+            appState.selectedManufacturerName = null;
+            appState.selectedModelId = null;
+            appState.selectedModelName = null;
+        } else if (level === 1) {
+            appState.selectedManufacturerId = null;
+            appState.selectedManufacturerName = null;
+            appState.selectedModelId = null;
+            appState.selectedModelName = null;
+        } else if (level === 2) {
+            appState.selectedModelId = null;
+            appState.selectedModelName = null;
+        }
+
+        renderStep1DynamicView();
+    }
+
+    function renderStep1DynamicView() {
+        updateStep1Breadcrumb();
+
+        if (!appState.selectedProductTypeId) {
+            if (catalogCache.categories.length) {
+                renderCategoriesGrid(catalogCache.categories);
+            } else {
+                fetchProductTypes();
+            }
+        } else if (!appState.selectedManufacturerId) {
+            fetchManufacturers(appState.selectedProductTypeId);
+        } else if (!appState.selectedModelId) {
+            fetchModels(appState.selectedProductTypeId, appState.selectedManufacturerId);
+        } else {
+            fetchProducts(appState.selectedProductTypeId, appState.selectedManufacturerId, appState.selectedModelId);
+        }
+    }
+
+    function showStep1SkeletonList(count = 5) {
+        const zone = document.getElementById('step1-dynamic-zone');
+        if (!zone) return;
+        zone.innerHTML = `<div class="space-y-2">` + Array(count).fill(`<div class="animate-pulse h-11 bg-gray-100 rounded-xl"></div>`).join('') + `</div>`;
+    }
+
+    // 1. CATÉGORIES
     async function fetchProductTypes() {
+        const zone = document.getElementById('step1-dynamic-zone');
+        if (zone) {
+            zone.innerHTML = `<div class="grid grid-cols-3 gap-2.5">` + Array(6).fill(`<div class="animate-pulse h-20 bg-gray-100 rounded-xl"></div>`).join('') + `</div>`;
+        }
+
         try {
-            const response = await fetch(CONFIG.CODES_API_URL + "/Catalog/productTypes", {
+            const response = await fetch(`${CONFIG.CODES_API_URL}/Catalog/productTypes`, {
                 headers: { "Content-Type": "application/json", "X-AUTH-CR": CONFIG.CODES_API_TOKEN }
             });
             if (!response.ok) throw new Error("Erreur API ProductTypes");
             const data = await response.json();
             if (data?.results?.length) {
-                const filtered = data.results.filter(cat => !EXCLUDED_PRODUCT_TYPE_IDS.includes(Number(cat.idproduct_type)));
-                renderCategories(filtered);
+                catalogCache.categories = data.results.filter(cat => !EXCLUDED_PRODUCT_TYPE_IDS.includes(Number(cat.idproduct_type)));
+                renderCategoriesGrid(catalogCache.categories);
             }
-        } catch (error) { console.warn("Mode secours catégories", error); }
+        } catch (error) {
+            console.warn("[TradeIn] Mode secours catégories", error);
+            if (zone) zone.innerHTML = `<p class="text-xs text-red-500 text-center py-6">Impossible de charger les catégories.</p>`;
+        }
     }
 
-    function renderCategories(categories) {
-        const container = document.getElementById('categories-container');
-        if (!container) return;
-        container.innerHTML = '';
+    function renderCategoriesGrid(categories) {
+        const zone = document.getElementById('step1-dynamic-zone');
+        if (!zone) return;
 
         const lang = appState.lang;
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-3 gap-2.5';
 
         categories.forEach((cat) => {
             const name = cat.type?.[lang] || cat.type?.fr || 'Appareil';
@@ -772,126 +865,141 @@
 
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative';
-            btn.onclick = () => selectCategory(btn, catId, name);
+            btn.className = 'border border-gray-200 hover:border-blue-500 hover:bg-blue-50/30 rounded-xl p-3.5 flex flex-col items-center justify-center transition group';
+            btn.onclick = () => {
+                appState.selectedProductTypeId = catId;
+                appState.selectedProductTypeName = name;
+                appState.selectedCategoryIcon = iconClass;
+                document.getElementById('selected-category-title').textContent = name;
+                renderStep1DynamicView();
+            };
             btn.innerHTML = `
-                <i class="fa-solid ${iconClass} text-lg text-gray-500 mb-1"></i>
-                <span class="text-xs font-medium text-gray-700">${name}</span>
+                <i class="fa-solid ${iconClass} text-xl text-gray-500 group-hover:text-blue-600 mb-1.5 transition"></i>
+                <span class="text-xs font-semibold text-gray-700 group-hover:text-gray-900 text-center">${name}</span>
             `;
-            container.appendChild(btn);
+            grid.appendChild(btn);
         });
+
+        zone.innerHTML = '';
+        zone.appendChild(grid);
     }
 
-    function selectCategory(element, id, name) {
-        appState.selectedProductTypeId = id;
-        appState.selectedProductTypeName = name;
-        appState.selectedCategoryIcon = getCategoryIcon(name);
-        appState.selectedManufacturerId = appState.selectedModelId = appState.selectedProductId = null;
-        
-        document.getElementById('models-block').classList.add('hidden');
-        document.getElementById('products-block').classList.add('hidden');
-
-        document.querySelectorAll('.category-btn').forEach(btn => btn.className = "category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative");
-        element.className = "category-btn border-2 border-blue-600 bg-blue-50/30 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative";
-        
-        document.getElementById('selected-category-title').textContent = name;
-        fetchManufacturers(id);
-    }
-
+    // 2. MARQUES
     async function fetchManufacturers(idproductType) {
-        const block = document.getElementById('manufacturers-block');
-        const container = document.getElementById('manufacturers-container');
-        block.classList.remove('hidden');
-        container.innerHTML = `<div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>`;
+        if (catalogCache.manufacturers[idproductType]) {
+            renderManufacturersList(catalogCache.manufacturers[idproductType]);
+            return;
+        }
+
+        showStep1SkeletonList(5);
 
         try {
             const res = await fetch(`${CONFIG.CODES_API_URL}/Catalog/manufacturers?idproduct_type=${encodeURIComponent(idproductType)}`, {
                 headers: { "Content-Type": "application/json", "X-AUTH-CR": CONFIG.CODES_API_TOKEN }
             });
             const data = await res.json();
-            if (data?.results?.length) renderManufacturers(data.results);
-        } catch (e) { console.warn("Erreur marques", e); }
+            if (data?.results?.length) {
+                catalogCache.manufacturers[idproductType] = data.results;
+                renderManufacturersList(data.results);
+            } else {
+                const zone = document.getElementById('step1-dynamic-zone');
+                if (zone) zone.innerHTML = `<p class="text-xs text-gray-400 text-center py-6">Aucune marque disponible.</p>`;
+            }
+        } catch (e) {
+            console.warn("[TradeIn] Erreur marques", e);
+        }
     }
 
-    function renderManufacturers(manufacturers) {
-        const container = document.getElementById('manufacturers-container');
-        container.innerHTML = '';
+    function renderManufacturersList(manufacturers) {
+        const zone = document.getElementById('step1-dynamic-zone');
+        if (!zone) return;
+
+        const list = document.createElement('div');
+        list.className = 'space-y-2';
+
         manufacturers.forEach((man) => {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'manufacturer-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 hover:border-blue-500 text-left text-sm transition';
-            btn.onclick = () => selectManufacturer(btn, man.idmanufacturer, man.manufacturer);
+            btn.className = 'w-full flex items-center justify-between p-3 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50/20 text-left transition group';
+            btn.onclick = () => {
+                appState.selectedManufacturerId = man.idmanufacturer;
+                appState.selectedManufacturerName = man.manufacturer;
+                renderStep1DynamicView();
+            };
             btn.innerHTML = `
-                <div class="flex items-center space-x-2">
-                    <span class="font-medium text-xs text-gray-800">${man.manufacturer}</span>
-                </div>
-                <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                <span class="font-semibold text-xs text-gray-800 group-hover:text-blue-700">${man.manufacturer}</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-blue-600"></i>
             `;
-            container.appendChild(btn);
+            list.appendChild(btn);
         });
+
+        zone.innerHTML = '';
+        zone.appendChild(list);
     }
 
-    function selectManufacturer(element, id, name) {
-        appState.selectedManufacturerId = id;
-        appState.selectedManufacturerName = name;
-        appState.selectedModelId = appState.selectedProductId = null;
-        document.getElementById('products-block').classList.add('hidden');
-
-        document.querySelectorAll('.manufacturer-item').forEach(btn => btn.className = "manufacturer-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 text-left text-sm transition");
-        element.className = "manufacturer-item w-full flex items-center justify-between p-2.5 rounded-lg border-2 border-blue-600 bg-blue-50/30 text-left text-sm transition";
-
-        fetchModels(appState.selectedProductTypeId, id);
-    }
-
+    // 3. MODÈLES
     async function fetchModels(idproductType, idmanufacturer) {
-        const block = document.getElementById('models-block');
-        const container = document.getElementById('models-container');
-        block.classList.remove('hidden');
-        container.innerHTML = `<div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>`;
+        const cacheKey = `${idproductType}_${idmanufacturer}`;
+        if (catalogCache.models[cacheKey]) {
+            renderModelsList(catalogCache.models[cacheKey]);
+            return;
+        }
+
+        showStep1SkeletonList(6);
 
         try {
             const res = await fetch(`${CONFIG.CODES_API_URL}/Catalog/models?idproduct_type=${encodeURIComponent(idproductType)}&idmanufacturer=${encodeURIComponent(idmanufacturer)}`, {
                 headers: { "Content-Type": "application/json", "X-AUTH-CR": CONFIG.CODES_API_TOKEN }
             });
             const data = await res.json();
-            if (data?.results?.length) renderModels(data.results);
-        } catch (e) { console.warn("Erreur modèles", e); }
+            if (data?.results?.length) {
+                catalogCache.models[cacheKey] = data.results;
+                renderModelsList(data.results);
+            } else {
+                const zone = document.getElementById('step1-dynamic-zone');
+                if (zone) zone.innerHTML = `<p class="text-xs text-gray-400 text-center py-6">Aucun modèle disponible.</p>`;
+            }
+        } catch (e) {
+            console.warn("[TradeIn] Erreur modèles", e);
+        }
     }
 
-    function renderModels(models) {
-        const container = document.getElementById('models-container');
-        container.innerHTML = '';
+    function renderModelsList(models) {
+        const zone = document.getElementById('step1-dynamic-zone');
+        if (!zone) return;
+
+        const list = document.createElement('div');
+        list.className = 'space-y-2';
+
         models.forEach((m) => {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'model-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 hover:border-blue-500 text-left text-sm transition';
-            btn.onclick = () => selectModel(btn, m);
+            btn.className = 'w-full flex items-center justify-between p-3 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50/20 text-left transition group';
+            btn.onclick = () => {
+                appState.selectedModelId = m.idproduct_model;
+                appState.selectedModelName = m.model;
+                renderStep1DynamicView();
+            };
             btn.innerHTML = `
-                <div class="flex items-center space-x-2">
-                    <span class="font-medium text-xs text-gray-800">${m.model}</span>
-                </div>
-                <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                <span class="font-semibold text-xs text-gray-800 group-hover:text-blue-700">${m.model}</span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-blue-600"></i>
             `;
-            container.appendChild(btn);
+            list.appendChild(btn);
         });
+
+        zone.innerHTML = '';
+        zone.appendChild(list);
     }
 
-    function selectModel(element, modelObj) {
-        appState.selectedModelId = modelObj.idproduct_model;
-        appState.selectedModelName = modelObj.model;
-        appState.selectedProductId = null;
-
-        document.querySelectorAll('.model-item').forEach(btn => btn.className = "model-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 text-left text-sm transition");
-        element.className = "model-item w-full flex items-center justify-between p-2.5 rounded-lg border-2 border-blue-600 bg-blue-50/30 text-left text-sm transition";
-
-        fetchProducts(appState.selectedProductTypeId, appState.selectedManufacturerId, modelObj.idproduct_model);
-    }
-
+    // 4. PRODUITS (CAPACITÉS / VERSIONS)
     async function fetchProducts(idproductType, idmanufacturer, idproductModel) {
-        const block = document.getElementById('products-block');
-        const container = document.getElementById('products-container');
-        block.classList.remove('hidden');
-        container.innerHTML = `<div class="animate-pulse h-10 bg-gray-100 rounded-lg mb-1"></div>`;
+        const cacheKey = `${idproductType}_${idmanufacturer}_${idproductModel}`;
+        if (catalogCache.products[cacheKey]) {
+            renderProductsList(catalogCache.products[cacheKey]);
+            return;
+        }
+
+        showStep1SkeletonList(4);
 
         try {
             const res = await fetch(`${CONFIG.CODES_API_URL}/Catalog/products?idproduct_type=${encodeURIComponent(idproductType)}&idmanufacturer=${encodeURIComponent(idmanufacturer)}&idproduct_model=${encodeURIComponent(idproductModel)}`, {
@@ -899,58 +1007,60 @@
             });
             const data = await res.json();
             if (data?.results?.length) {
-                data.results.forEach(p => { if (!productCache.some(i => i.idproduct === p.idproduct)) productCache.push(p); });
-                renderProducts(data.results);
+                catalogCache.products[cacheKey] = data.results;
+                data.results.forEach(p => {
+                    if (!catalogCache.searchPool.some(i => i.idproduct === p.idproduct)) catalogCache.searchPool.push(p);
+                });
+                renderProductsList(data.results);
             } else {
-                block.classList.add('hidden');
                 appState.selectedProductId = appState.selectedModelId;
-                
                 const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
                 appState.selectedProductName = `${mName}${appState.selectedModelName}`;
-                
                 updatePreviewTitles();
                 goToStep(2);
             }
         } catch (e) {
-            block.classList.add('hidden');
             appState.selectedProductId = appState.selectedModelId;
-            
             const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
             appState.selectedProductName = `${mName}${appState.selectedModelName}`;
-            
             updatePreviewTitles();
             goToStep(2);
         }
     }
 
-    function renderProducts(products) {
-        const container = document.getElementById('products-container');
-        container.innerHTML = '';
+    function renderProductsList(products) {
+        const zone = document.getElementById('step1-dynamic-zone');
+        if (!zone) return;
+
         const catIcon = appState.selectedCategoryIcon || getCategoryIcon(appState.selectedProductTypeName);
+        const list = document.createElement('div');
+        list.className = 'space-y-2';
 
         products.forEach((p) => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'product-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 hover:border-blue-500 text-left text-sm transition';
-            btn.onclick = () => selectProduct(btn, p);
-            
             const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
             const fullName = p.product.toLowerCase().startsWith(mName.toLowerCase().trim()) ? p.product : `${mName}${p.product}`;
 
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'w-full flex items-center justify-between p-3 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50/20 text-left transition group';
+            btn.onclick = () => selectProduct(p);
             btn.innerHTML = `
                 <div class="flex items-center space-x-2.5">
-                    <i class="fa-solid ${catIcon} text-gray-500 text-sm w-5 text-center"></i>
-                    <span class="font-medium text-xs text-gray-800">${fullName}</span>
+                    <i class="fa-solid ${catIcon} text-gray-400 group-hover:text-blue-600 text-sm w-5 text-center"></i>
+                    <span class="font-semibold text-xs text-gray-800">${fullName}</span>
                 </div>
-                <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-blue-600"></i>
             `;
-            container.appendChild(btn);
+            list.appendChild(btn);
         });
+
+        zone.innerHTML = '';
+        zone.appendChild(list);
     }
 
-    function selectProduct(element, productObj) {
+    function selectProduct(productObj) {
         appState.selectedProductId = productObj.idproduct;
-        
+
         const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
         const rawName = productObj.product || '';
         appState.selectedProductName = rawName.toLowerCase().startsWith(mName.toLowerCase().trim()) ? rawName : `${mName}${rawName}`;
@@ -959,6 +1069,7 @@
         if (!appState.selectedProductTypeName && productObj.product_type) {
             appState.selectedProductTypeName = productObj.product_type;
             appState.selectedCategoryIcon = getCategoryIcon(productObj.product_type);
+            document.getElementById('selected-category-title').textContent = productObj.product_type;
         } else if (!appState.selectedCategoryIcon) {
             appState.selectedCategoryIcon = getCategoryIcon(rawName);
         }
@@ -984,7 +1095,7 @@
 
             const keywords = cleanQuery.toLowerCase().split(/\s+/).filter(Boolean);
 
-            let matches = productCache.filter(p => {
+            let matches = catalogCache.searchPool.filter(p => {
                 if (!p.product) return false;
                 const prodName = p.product.toLowerCase();
                 return keywords.every(kw => prodName.includes(kw));
@@ -992,8 +1103,8 @@
 
             if (matches.length === 0) {
                 try {
-                    let url = `${CONFIG.CODES_API_URL}/Catalog/products?query=${encodeURIComponent(cleanQuery)}`;
-                    let response = await fetch(url, {
+                    const url = `${CONFIG.CODES_API_URL}/Catalog/products?query=${encodeURIComponent(cleanQuery)}`;
+                    const response = await fetch(url, {
                         headers: { "Content-Type": "application/json", "X-AUTH-CR": CONFIG.CODES_API_TOKEN }
                     });
 
@@ -1003,7 +1114,7 @@
                     }
 
                     matches.forEach(p => {
-                        if (!productCache.some(item => item.idproduct === p.idproduct)) productCache.push(p);
+                        if (!catalogCache.searchPool.some(item => item.idproduct === p.idproduct)) catalogCache.searchPool.push(p);
                     });
                 } catch (e) {
                     console.warn("Erreur recherche API :", e);
@@ -1023,14 +1134,14 @@
 
                 item.innerHTML = `
                     <div class="flex items-center space-x-2">
-                        <i class="fa-solid ${catIcon} text-gray-400"></i>
+                        <i class="fa-solid ${catIcon} text-gray-400 text-xs"></i>
                         <span class="text-xs font-semibold text-gray-800">${p.product}</span>
                     </div>
-                    <span class="text-[10px] text-blue-600 font-medium">Choisir</span>
+                    <span class="text-[10px] text-blue-600 font-bold">Choisir</span>
                 `;
 
                 item.onclick = () => {
-                    selectProduct(null, p);
+                    selectProduct(p);
                     document.getElementById('tradein-search-input').value = p.product;
                     dropdown.classList.add('hidden');
                 };
@@ -1040,6 +1151,9 @@
         }, 300);
     }
 
+    // =========================================================================
+    // ÉTAPE 2 & 3 : DIAGNOSTIC & ESTIMATION
+    // =========================================================================
     async function fetchSurvey(idproduct) {
         const container = document.getElementById('survey-questions-container');
         container.innerHTML = `<div class="animate-pulse space-y-4"><div class="h-4 bg-gray-200 rounded w-2/3"></div><div class="h-10 bg-gray-100 rounded-lg"></div></div>`;
@@ -1199,7 +1313,6 @@
         const footer = document.getElementById('modal-footer-controls');
         document.querySelectorAll('.footer-btn-group').forEach(group => group.classList.add('hidden'));
 
-        // Cacher le footer fixe sur l'Étape 1 et l'Étape 5 (Clôture)
         if (step === 1 || step === 5) {
             footer.classList.add('hidden');
         } else {
@@ -1208,7 +1321,6 @@
             if (activeGroup) activeGroup.classList.remove('hidden');
         }
 
-        // Stepper Visual Update (1 à 4)
         for (let i = 1; i <= 4; i++) {
             const circle = document.getElementById(`circle-step-${i}`);
             const text = document.getElementById(`text-step-${i}`);
@@ -1348,7 +1460,8 @@
                 resetState();
             }, 300);
         },
-        _selectAnswer: _selectAnswer
+        _selectAnswer: _selectAnswer,
+        _navigateStep1: _navigateStep1
     };
 
 })(window);
