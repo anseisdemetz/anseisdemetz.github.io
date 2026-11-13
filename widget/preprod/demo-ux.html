@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparatif UX - Sélection Appareil (4 Approches)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+    .widget-box {
+      width: 100%;
+      max-width: 440px;
+      height: 540px;
+      background: #ffffff;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    /* Masquer scrollbar horizontale tout en gardant le scroll */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="p-6 md:p-10 text-gray-800">
+
+  <div class="max-w-6xl mx-auto">
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl font-bold text-gray-900">Banc d'essai UX : Sélection hiérarchique (Étape 1)</h1>
+      <p class="text-sm text-gray-500 mt-1">Testez les 4 interactions directement dans chaque mini-widget ci-dessous.</p>
+    </div>
+
+    <!-- GRILLE DES 4 WIDGETS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 justify-items-center">
+
+      <!-- =====================================================================
+           APPROCHE 1 : LE FIL D'ARIANE DYNAMIQUE (STEP-BY-STEP)
+      ====================================================================== -->
+      <div class="widget-box">
+        <div class="px-5 py-3.5 border-b border-gray-100 bg-gray-50/70 flex justify-between items-center">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Option 1</span>
+            <h2 class="text-sm font-bold text-gray-900 mt-0.5">Fil d'Ariane dynamique</h2>
+          </div>
+          <button onclick="resetW1()" class="text-xs text-gray-400 hover:text-gray-700"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        </div>
+
+        <div class="p-5 flex-1 flex flex-col overflow-y-auto">
+          <!-- Barre de recherche -->
+          <div class="relative mb-4">
+            <input type="text" placeholder="Rechercher un modèle..." oninput="searchQuick(this, 'w1-result')"
+                   class="w-full pl-3.5 pr-9 py-2 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+            <i class="fa-solid fa-magnifying-glass absolute right-3 top-2.5 text-gray-400 text-xs"></i>
+          </div>
+
+          <!-- Fil d'Ariane -->
+          <div id="w1-breadcrumb" class="flex items-center flex-wrap gap-1.5 text-xs mb-3 pb-2 border-b border-gray-100 min-h-[28px]">
+            <span class="font-semibold text-blue-600">Catégories</span>
+          </div>
+
+          <!-- Zone d'affichage unique évolutive -->
+          <div id="w1-content" class="flex-1"></div>
+
+          <!-- Feedback sélection -->
+          <div id="w1-result" class="hidden mt-3 p-3 bg-green-50 border border-green-200 rounded-xl flex items-center justify-between text-xs text-green-900"></div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           APPROCHE 2 : PILLS CATÉGORIE + LISTES DÉROULANTES EN CASCADE
+      ====================================================================== -->
+      <div class="widget-box">
+        <div class="px-5 py-3.5 border-b border-gray-100 bg-gray-50/70 flex justify-between items-center">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Option 2</span>
+            <h2 class="text-sm font-bold text-gray-900 mt-0.5">Selects en cascade</h2>
+          </div>
+          <button onclick="resetW2()" class="text-xs text-gray-400 hover:text-gray-700"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        </div>
+
+        <div class="p-5 flex-1 flex flex-col justify-between overflow-y-auto">
+          <div class="space-y-4">
+            <!-- Catégories en grille compacte -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-2">1. Catégorie :</label>
+              <div id="w2-cats" class="grid grid-cols-3 gap-2"></div>
+            </div>
+
+            <!-- Select Marque -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">2. Marque :</label>
+              <select id="w2-brand" onchange="onW2BrandChange()" disabled
+                      class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white disabled:bg-gray-100 disabled:text-gray-400 outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">Sélectionnez d'abord une catégorie</option>
+              </select>
+            </div>
+
+            <!-- Select Modèle -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">3. Modèle :</label>
+              <select id="w2-model" onchange="onW2ModelChange()" disabled
+                      class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white disabled:bg-gray-100 disabled:text-gray-400 outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">Sélectionnez d'abord une marque</option>
+              </select>
+            </div>
+
+            <!-- Select Produit -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">4. Produit / Capacité :</label>
+              <select id="w2-product" onchange="onW2ProductChange()" disabled
+                      class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white disabled:bg-gray-100 disabled:text-gray-400 outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">Sélectionnez d'abord un modèle</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="w2-result" class="hidden mt-3 p-3 bg-green-50 border border-green-200 rounded-xl flex items-center justify-between text-xs text-green-900"></div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           APPROCHE 3 : PILLS HORIZONTALES + ACCORDÉON MODÈLE / CAPACITÉ
+      ====================================================================== -->
+      <div class="widget-box">
+        <div class="px-5 py-3.5 border-b border-gray-100 bg-gray-50/70 flex justify-between items-center">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Option 3</span>
+            <h2 class="text-sm font-bold text-gray-900 mt-0.5">Pills + Pills de capacité</h2>
+          </div>
+          <button onclick="resetW3()" class="text-xs text-gray-400 hover:text-gray-700"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        </div>
+
+        <div class="p-5 flex-1 flex flex-col overflow-y-auto space-y-4">
+          <!-- Onglets Catégories -->
+          <div id="w3-cats" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+
+          <!-- Pills Marques -->
+          <div id="w3-brands-wrap" class="hidden">
+            <label class="block text-[11px] font-semibold text-gray-500 mb-1.5">Marque :</label>
+            <div id="w3-brands" class="flex gap-1.5 flex-wrap"></div>
+          </div>
+
+          <!-- Liste Modèles avec dépliage des capacités en Pills -->
+          <div id="w3-models-wrap" class="hidden flex-1 overflow-y-auto space-y-2 pr-1">
+            <label class="block text-[11px] font-semibold text-gray-500">Choisissez le modèle puis la capacité :</label>
+            <div id="w3-models" class="space-y-2"></div>
+          </div>
+
+          <div id="w3-result" class="hidden p-3 bg-green-50 border border-green-200 rounded-xl flex items-center justify-between text-xs text-green-900"></div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           APPROCHE 4 : SEARCH-FIRST & SUGGESTIONS POPULAIRES
+      ====================================================================== -->
+      <div class="widget-box">
+        <div class="px-5 py-3.5 border-b border-gray-100 bg-gray-50/70 flex justify-between items-center">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Option 4</span>
+            <h2 class="text-sm font-bold text-gray-900 mt-0.5">Search-First + Accès rapide</h2>
+          </div>
+          <button onclick="resetW4()" class="text-xs text-gray-400 hover:text-gray-700"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        </div>
+
+        <div class="p-5 flex-1 flex flex-col overflow-y-auto">
+          <!-- Bloc central Recherche -->
+          <div class="bg-blue-50/60 border border-blue-100 rounded-xl p-4 mb-4">
+            <label class="block text-xs font-bold text-blue-950 mb-2">Quel appareil souhaitez-vous revendre ?</label>
+            <div class="relative">
+              <input type="text" id="w4-search" placeholder="Ex: iPhone 14 Pro, Galaxy S23..." oninput="onW4Search(this.value)"
+                     class="w-full pl-3.5 pr-9 py-2.5 rounded-lg border border-blue-200 bg-white text-xs focus:ring-2 focus:ring-blue-500 outline-none shadow-sm">
+              <i class="fa-solid fa-magnifying-glass absolute right-3 top-3 text-blue-500 text-xs"></i>
+              <div id="w4-dropdown" class="hidden absolute left-0 right-0 top-11 bg-white border border-gray-200 rounded-lg shadow-lg z-20 divide-y divide-gray-100"></div>
+            </div>
+
+            <!-- Recherches fréquentes -->
+            <div class="mt-3">
+              <span class="text-[10px] text-gray-500 block mb-1.5">Recherches fréquentes :</span>
+              <div class="flex flex-wrap gap-1.5">
+                <button onclick="selectFinal('w4-result', 'Apple iPhone 14 Pro 256Go')" class="text-[11px] bg-white border border-gray-200 hover:border-blue-500 px-2.5 py-1 rounded-full text-gray-700 transition">iPhone 14 Pro 256Go</button>
+                <button onclick="selectFinal('w4-result', 'Samsung Galaxy S23 128Go')" class="text-[11px] bg-white border border-gray-200 hover:border-blue-500 px-2.5 py-1 rounded-full text-gray-700 transition">Galaxy S23 128Go</button>
+                <button onclick="selectFinal('w4-result', 'iPad Air 5 64Go')" class="text-[11px] bg-white border border-gray-200 hover:border-blue-500 px-2.5 py-1 rounded-full text-gray-700 transition">iPad Air 5</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accordéon catalogue classique en secours -->
+          <div class="border border-gray-200 rounded-xl overflow-hidden">
+            <button type="button" onclick="toggleW4Catalog()" class="w-full px-3.5 py-2.5 bg-gray-50 hover:bg-gray-100 flex items-center justify-between text-xs font-semibold text-gray-700 transition">
+              <span><i class="fa-solid fa-folder-tree text-gray-400 mr-1.5"></i> Parcourir par catégorie</span>
+              <i id="w4-chevron" class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform"></i>
+            </button>
+            <div id="w4-catalog-body" class="hidden p-3 bg-white border-t border-gray-100">
+              <div id="w4-breadcrumb" class="flex items-center gap-1 text-[11px] mb-2 text-blue-600 font-medium"></div>
+              <div id="w4-catalog-list" class="space-y-1.5"></div>
+            </div>
+          </div>
+
+          <div id="w4-result" class="hidden mt-auto pt-3">
+            <div class="p-3 bg-green-50 border border-green-200 rounded-xl flex items-center justify-between text-xs text-green-900"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // JEU DE DONNÉES SIMULÉ
+    // =========================================================================
+    const CATALOG = [
+      {
+        id: 'smartphone', name: 'Smartphone', icon: 'fa-mobile-screen-button',
+        brands: [
+          {
+            name: 'Apple',
+            models: [
+              { name: 'iPhone 14 Pro', products: ['128 Go', '256 Go', '512 Go', '1 To'] },
+              { name: 'iPhone 13', products: ['128 Go', '256 Go', '512 Go'] }
+            ]
+          },
+          {
+            name: 'Samsung',
+            models: [
+              { name: 'Galaxy S23', products: ['128 Go', '256 Go'] },
+              { name: 'Galaxy S22 Ultra', products: ['256 Go', '512 Go'] }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'tablette', name: 'Tablette', icon: 'fa-tablet-screen-button',
+        brands: [
+          {
+            name: 'Apple',
+            models: [
+              { name: 'iPad Air 5', products: ['64 Go Wi-Fi', '256 Go Wi-Fi'] },
+              { name: 'iPad Pro 11"', products: ['128 Go', '256 Go'] }
+            ]
+          },
+          {
+            name: 'Samsung',
+            models: [
+              { name: 'Galaxy Tab S8', products: ['128 Go', '256 Go'] }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'ordinateur', name: 'Ordinateur', icon: 'fa-laptop',
+        brands: [
+          {
+            name: 'Apple',
+            models: [
+              { name: 'MacBook Air M2', products: ['8Go / 256Go', '16Go / 512Go'] }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const FLAT_PRODUCTS = [
+      "Apple iPhone 14 Pro 128 Go", "Apple iPhone 14 Pro 256 Go", "Apple iPhone 14 Pro 1 To",
+      "Apple iPhone 13 128 Go", "Samsung Galaxy S23 128 Go", "Samsung Galaxy S22 Ultra 256 Go",
+      "Apple iPad Air 5 64 Go Wi-Fi", "Apple MacBook Air M2 256Go"
+    ];
+
+    function selectFinal(containerId, label) {
+      const box = document.getElementById(containerId);
+      const target = box.querySelector('div') || box;
+      box.classList.remove('hidden');
+      target.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-circle-check text-green-600 text-sm"></i>
+          <span>Sélectionné : <strong>${label}</strong></span>
+        </div>
+        <button class="bg-blue-600 text-white font-semibold px-2.5 py-1 rounded-lg text-[11px] hover:bg-blue-700">Continuer &rarr;</button>
+      `;
+    }
+
+    // =========================================================================
+    // LOGIQUE WIDGET 1 : FIL D'ARIANE DYNAMIQUE
+    // =========================================================================
+    let w1State = { cat: null, brand: null, model: null };
+
+    function renderW1() {
+      const bc = document.getElementById('w1-breadcrumb');
+      const content = document.getElementById('w1-content');
+      document.getElementById('w1-result').classList.add('hidden');
+
+      // Construction Fil d'Ariane
+      let crumbs = [`<button onclick="w1Go(0)" class="${!w1State.cat ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-blue-600'}">Catégories</button>`];
+      if (w1State.cat) {
+        crumbs.push(`<i class="fa-solid fa-chevron-right text-[9px] text-gray-300"></i>`);
+        crumbs.push(`<button onclick="w1Go(1)" class="${!w1State.brand ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-blue-600'}">${w1State.cat.name}</button>`);
+      }
+      if (w1State.brand) {
+        crumbs.push(`<i class="fa-solid fa-chevron-right text-[9px] text-gray-300"></i>`);
+        crumbs.push(`<button onclick="w1Go(2)" class="${!w1State.model ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-blue-600'}">${w1State.brand.name}</button>`);
+      }
+      if (w1State.model) {
+        crumbs.push(`<i class="fa-solid fa-chevron-right text-[9px] text-gray-300"></i>`);
+        crumbs.push(`<span class="font-bold text-blue-600">${w1State.model.name}</span>`);
+      }
+      bc.innerHTML = crumbs.join('');
+
+      // Rendu du niveau actif
+      if (!w1State.cat) {
+        content.innerHTML = `<div class="grid grid-cols-3 gap-2.5">` + CATALOG.map((c, idx) => `
+          <button onclick="w1SelectCat(${idx})" class="border border-gray-200 hover:border-blue-500 hover:bg-blue-50/30 rounded-xl p-4 flex flex-col items-center justify-center transition">
+            <i class="fa-solid ${c.icon} text-xl text-blue-600 mb-2"></i>
+            <span class="text-xs font-semibold text-gray-800">${c.name}</span>
+          </button>
+        `).join('') + `</div>`;
+      } else if (!w1State.brand) {
+        content.innerHTML = `<div class="space-y-2">` + w1State.cat.brands.map((b, idx) => `
+          <button onclick="w1SelectBrand(${idx})" class="w-full p-3 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50/20 flex justify-between items-center text-xs font-semibold transition">
+            <span>${b.name}</span>
+            <i class="fa-solid fa-chevron-right text-gray-400 text-[10px]"></i>
+          </button>
+        `).join('') + `</div>`;
+      } else if (!w1State.model) {
+        content.innerHTML = `<div class="space-y-2">` + w1State.brand.models.map((m, idx) => `
+          <button onclick="w1SelectModel(${idx})" class="w-full p-3 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50/20 flex justify-between items-center text-xs font-semibold transition">
+            <span>${m.name}</span>
+            <i class="fa-solid fa-chevron-right text-gray-400 text-[10px]"></i>
+          </button>
+        `).join('') + `</div>`;
+      } else {
+        content.innerHTML = `<div class="grid grid-cols-2 gap-2">` + w1State.model.products.map(p => `
+          <button onclick="selectFinal('w1-result', '${w1State.brand.name} ${w1State.model.name} ${p}')" class="p-3 rounded-xl border border-gray-200 hover:border-blue-600 hover:bg-blue-50 text-xs font-semibold text-center transition">
+            <i class="fa-solid ${w1State.cat.icon} text-gray-400 mr-1.5"></i>${p}
+          </button>
+        `).join('') + `</div>`;
+      }
+    }
+
+    function w1Go(level) {
+      if (level === 0) w1State = { cat: null, brand: null, model: null };
+      if (level === 1) w1State = { cat: w1State.cat, brand: null, model: null };
+      if (level === 2) w1State = { cat: w1State.cat, brand: w1State.brand, model: null };
+      renderW1();
+    }
+    function w1SelectCat(i) { w1State.cat = CATALOG[i]; renderW1(); }
+    function w1SelectBrand(i) { w1State.brand = w1State.cat.brands[i]; renderW1(); }
+    function w1SelectModel(i) { w1State.model = w1State.brand.models[i]; renderW1(); }
+    function resetW1() { w1Go(0); }
+
+    // =========================================================================
+    // LOGIQUE WIDGET 2 : SELECTS EN CASCADE
+    // =========================================================================
+    let w2Cat = null;
+
+    function initW2() {
+      const container = document.getElementById('w2-cats');
+      container.innerHTML = CATALOG.map((c, i) => `
+        <button onclick="selectW2Cat(${i}, this)" class="w2-cat-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition">
+          <i class="fa-solid ${c.icon} text-base text-gray-500 mb-1"></i>
+          <span class="text-[11px] font-medium">${c.name}</span>
+        </button>
+      `).join('');
+    }
+
+    function selectW2Cat(idx, btn) {
+      w2Cat = CATALOG[idx];
+      document.querySelectorAll('.w2-cat-btn').forEach(b => b.className = "w2-cat-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition");
+      btn.className = "w2-cat-btn border-2 border-blue-600 bg-blue-50/40 text-blue-700 rounded-lg p-2.5 flex flex-col items-center justify-center transition";
+
+      const brandSel = document.getElementById('w2-brand');
+      brandSel.disabled = false;
+      brandSel.innerHTML = `<option value="">-- Choisir une marque --</option>` + w2Cat.brands.map((b, i) => `<option value="${i}">${b.name}</option>`).join('');
+
+      document.getElementById('w2-model').disabled = true;
+      document.getElementById('w2-model').innerHTML = `<option value="">Sélectionnez d'abord une marque</option>`;
+      document.getElementById('w2-product').disabled = true;
+      document.getElementById('w2-product').innerHTML = `<option value="">Sélectionnez d'abord un modèle</option>`;
+      document.getElementById('w2-result').classList.add('hidden');
+    }
+
+    function onW2BrandChange() {
+      const bIdx = document.getElementById('w2-brand').value;
+      const modelSel = document.getElementById('w2-model');
+      if (bIdx === "") { modelSel.disabled = true; return; }
+      const brand = w2Cat.brands[bIdx];
+      modelSel.disabled = false;
+      modelSel.innerHTML = `<option value="">-- Choisir un modèle --</option>` + brand.models.map((m, i) => `<option value="${i}">${m.name}</option>`).join('');
+      document.getElementById('w2-product').disabled = true;
+    }
+
+    function onW2ModelChange() {
+      const bIdx = document.getElementById('w2-brand').value;
+      const mIdx = document.getElementById('w2-model').value;
+      const prodSel = document.getElementById('w2-product');
+      if (mIdx === "") { prodSel.disabled = true; return; }
+      const model = w2Cat.brands[bIdx].models[mIdx];
+      prodSel.disabled = false;
+      prodSel.innerHTML = `<option value="">-- Choisir la capacité --</option>` + model.products.map(p => `<option value="${p}">${p}</option>`).join('');
+    }
+
+    function onW2ProductChange() {
+      const bIdx = document.getElementById('w2-brand').value;
+      const mIdx = document.getElementById('w2-model').value;
+      const pVal = document.getElementById('w2-product').value;
+      if (!pVal) return;
+      const full = `${w2Cat.brands[bIdx].name} ${w2Cat.brands[bIdx].models[mIdx].name} ${pVal}`;
+      selectFinal('w2-result', full);
+    }
+
+    function resetW2() {
+      initW2();
+      document.getElementById('w2-brand').disabled = true;
+      document.getElementById('w2-brand').innerHTML = `<option value="">Sélectionnez d'abord une catégorie</option>`;
+      document.getElementById('w2-model').disabled = true;
+      document.getElementById('w2-product').disabled = true;
+      document.getElementById('w2-result').classList.add('hidden');
+    }
+
+    // =========================================================================
+    // LOGIQUE WIDGET 3 : PILLS + ACCORDÉON CAPACITÉS
+    // =========================================================================
+    let w3Cat = null, w3Brand = null;
+
+    function initW3() {
+      const container = document.getElementById('w3-cats');
+      container.innerHTML = CATALOG.map((c, i) => `
+        <button onclick="selectW3Cat(${i}, this)" class="w3-cat-pill flex items-center space-x-1.5 px-3.5 py-2 rounded-full border border-gray-200 text-xs font-semibold whitespace-nowrap hover:bg-gray-50 transition">
+          <i class="fa-solid ${c.icon}"></i>
+          <span>${c.name}</span>
+        </button>
+      `).join('');
+    }
+
+    function selectW3Cat(idx, btn) {
+      w3Cat = CATALOG[idx];
+      document.querySelectorAll('.w3-cat-pill').forEach(b => b.className = "w3-cat-pill flex items-center space-x-1.5 px-3.5 py-2 rounded-full border border-gray-200 text-xs font-semibold whitespace-nowrap hover:bg-gray-50 transition");
+      btn.className = "w3-cat-pill flex items-center space-x-1.5 px-3.5 py-2 rounded-full bg-blue-600 text-white text-xs font-semibold whitespace-nowrap shadow-sm transition";
+
+      document.getElementById('w3-brands-wrap').classList.remove('hidden');
+      document.getElementById('w3-models-wrap').classList.add('hidden');
+      document.getElementById('w3-result').classList.add('hidden');
+
+      document.getElementById('w3-brands').innerHTML = w3Cat.brands.map((b, i) => `
+        <button onclick="selectW3Brand(${i}, this)" class="w3-brand-pill px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium hover:border-blue-500 transition">${b.name}</button>
+      `).join('');
+    }
+
+    function selectW3Brand(idx, btn) {
+      w3Brand = w3Cat.brands[idx];
+      document.querySelectorAll('.w3-brand-pill').forEach(b => b.className = "w3-brand-pill px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium hover:border-blue-500 transition");
+      btn.className = "w3-brand-pill px-3 py-1.5 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-700 text-xs font-bold transition";
+
+      document.getElementById('w3-models-wrap').classList.remove('hidden');
+      document.getElementById('w3-models').innerHTML = w3Brand.models.map((m, mIdx) => `
+        <div class="border border-gray-200 rounded-xl p-3 bg-gray-50/40">
+          <div class="text-xs font-bold text-gray-800 mb-2">${m.name}</div>
+          <div class="flex flex-wrap gap-1.5">
+            ${m.products.map(p => `
+              <button onclick="selectFinal('w3-result', '${w3Brand.name} ${m.name} ${p}')" class="px-2.5 py-1 bg-white border border-gray-300 hover:border-blue-600 hover:bg-blue-600 hover:text-white rounded-md text-[11px] font-medium transition">
+                ${p}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function resetW3() {
+      initW3();
+      document.getElementById('w3-brands-wrap').classList.add('hidden');
+      document.getElementById('w3-models-wrap').classList.add('hidden');
+      document.getElementById('w3-result').classList.add('hidden');
+    }
+
+    // =========================================================================
+    // LOGIQUE WIDGET 4 : SEARCH-FIRST + ACCORDÉON
+    // =========================================================================
+    function onW4Search(val) {
+      const dd = document.getElementById('w4-dropdown');
+      if (val.trim().length < 2) { dd.classList.add('hidden'); return; }
+      const matches = FLAT_PRODUCTS.filter(p => p.toLowerCase().includes(val.toLowerCase()));
+      dd.classList.remove('hidden');
+      if (!matches.length) {
+        dd.innerHTML = `<div class="p-2.5 text-xs text-gray-400">Aucun produit trouvé</div>`;
+        return;
+      }
+      dd.innerHTML = matches.map(m => `
+        <div onclick="selectW4FromSearch('${m}')" class="p-2.5 text-xs hover:bg-blue-50 cursor-pointer flex justify-between items-center">
+          <span class="font-medium text-gray-800">${m}</span>
+          <span class="text-[10px] text-blue-600 font-semibold">Choisir</span>
+        </div>
+      `).join('');
+    }
+
+    function selectW4FromSearch(label) {
+      document.getElementById('w4-search').value = label;
+      document.getElementById('w4-dropdown').classList.add('hidden');
+      selectFinal('w4-result', label);
+    }
+
+    function toggleW4Catalog() {
+      const body = document.getElementById('w4-catalog-body');
+      const chev = document.getElementById('w4-chevron');
+      const isHidden = body.classList.contains('hidden');
+      body.classList.toggle('hidden');
+      chev.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+      if (isHidden) renderW4Catalog();
+    }
+
+    function renderW4Catalog(catIdx = null, brandIdx = null) {
+      const bc = document.getElementById('w4-breadcrumb');
+      const list = document.getElementById('w4-catalog-list');
+
+      if (catIdx === null) {
+        bc.innerHTML = `<span>Toutes les catégories</span>`;
+        list.innerHTML = CATALOG.map((c, i) => `
+          <button onclick="renderW4Catalog(${i}, null)" class="w-full p-2 rounded-lg hover:bg-gray-50 flex justify-between items-center text-xs border border-gray-100">
+            <span><i class="fa-solid ${c.icon} text-gray-400 mr-2"></i>${c.name}</span>
+            <i class="fa-solid fa-chevron-right text-[9px] text-gray-400"></i>
+          </button>
+        `).join('');
+      } else if (brandIdx === null) {
+        const cat = CATALOG[catIdx];
+        bc.innerHTML = `<button onclick="renderW4Catalog()" class="underline">Catégories</button> / <span>${cat.name}</span>`;
+        list.innerHTML = cat.brands.map((b, i) => `
+          <button onclick="renderW4Catalog(${catIdx}, ${i})" class="w-full p-2 rounded-lg hover:bg-gray-50 flex justify-between items-center text-xs border border-gray-100">
+            <span>${b.name}</span>
+            <i class="fa-solid fa-chevron-right text-[9px] text-gray-400"></i>
+          </button>
+        `).join('');
+      } else {
+        const cat = CATALOG[catIdx];
+        const brand = cat.brands[brandIdx];
+        bc.innerHTML = `<button onclick="renderW4Catalog()" class="underline">Catégories</button> / <button onclick="renderW4Catalog(${catIdx}, null)" class="underline">${cat.name}</button> / <span>${brand.name}</span>`;
+        list.innerHTML = brand.models.flatMap(m => m.products.map(p => `
+          <button onclick="selectFinal('w4-result', '${brand.name} ${m.name} ${p}')" class="w-full p-2 rounded-lg hover:bg-blue-50 flex justify-between items-center text-xs border border-gray-100">
+            <span>${m.name} <strong>${p}</strong></span>
+            <span class="text-[10px] text-blue-600">Choisir</span>
+          </button>
+        `)).join('');
+      }
+    }
+
+    function resetW4() {
+      document.getElementById('w4-search').value = '';
+      document.getElementById('w4-dropdown').classList.add('hidden');
+      document.getElementById('w4-catalog-body').classList.add('hidden');
+      document.getElementById('w4-chevron').style.transform = 'rotate(0deg)';
+      document.getElementById('w4-result').classList.add('hidden');
+    }
+
+    // Initialisation globale
+    renderW1();
+    initW2();
+    initW3();
+  </script>
+</body>
+</html>
