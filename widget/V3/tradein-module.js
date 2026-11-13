@@ -1367,7 +1367,7 @@
     }
 
     function autoInitFromScriptTag() {
-        const currentScript = document.currentScript || document.querySelector('script[src*="tradein-module.js"]');
+        const currentScript = document.currentScript || document.querySelector('script[src*="tradein-module"]');
         if (currentScript) {
             const displayType = currentScript.getAttribute('data-displayType') || currentScript.getAttribute('data-displaytype') || 'popin';
             const lang = currentScript.getAttribute('data-lang') || 'fr';
