@@ -32,6 +32,7 @@
         currentStep: 1, // 1: Appareil, 2: État, 3: Estimation & IMEI, 4: Coordonnées, 5: Succès / Clôture
         selectedProductTypeId: null,
         selectedProductTypeName: null,
+        selectedCategoryIcon: 'fa-mobile-screen-button',
         selectedManufacturerId: null,
         selectedManufacturerName: null,
         selectedModelId: null,
@@ -61,6 +62,15 @@
     let isInitialized = false;
     let initPromise = null;
 
+    function getCategoryIcon(categoryName) {
+        if (!categoryName) return 'fa-mobile-screen-button';
+        const lower = categoryName.toLowerCase();
+        for (let key in categoryIcons) {
+            if (lower.includes(key)) return categoryIcons[key];
+        }
+        return 'fa-mobile-screen-button';
+    }
+
     async function loadI18n(lang) {
         const targetLang = ['fr', 'en'].includes(lang) ? lang : 'fr';
         if (currentI18n && appState.loadedLang === targetLang) return currentI18n;
@@ -80,6 +90,7 @@
         appState.currentStep = 1;
         appState.selectedProductTypeId = null;
         appState.selectedProductTypeName = null;
+        appState.selectedCategoryIcon = 'fa-mobile-screen-button';
         appState.selectedManufacturerId = null;
         appState.selectedManufacturerName = null;
         appState.selectedModelId = null;
@@ -318,24 +329,21 @@
                         </div>
 
                         <div id="products-block" class="hidden">
-                            <label class="block text-xs font-semibold text-gray-600 mb-2">Capacité / Spécification :</label>
+                            <label class="block text-xs font-semibold text-gray-600 mb-2">Produit :</label>
                             <div id="products-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
                         </div>
                     </div>
 
                     <!-- ÉTAPE 2 : QUESTIONNAIRE ÉTAT -->
                     <div id="step-2" class="step-content hidden space-y-5">
-                        <div class="bg-gray-50 rounded-xl flex justify-between items-center border border-gray-200 overflow-hidden min-h-[80px]">
-                            <div class="flex items-center space-x-3.5 h-full self-stretch">
-                                <div id="selected-product-img-container" class="w-20 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
-                                    <i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>
+                        <div class="bg-gray-50 rounded-xl flex justify-between items-center border border-gray-200 overflow-hidden">
+                            <div class="flex items-center space-x-3 self-stretch">
+                                <div id="selected-product-img-container" class="w-12 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
+                                    <i class="fa-solid fa-mobile-screen-button text-blue-600 text-lg"></i>
                                 </div>
-                                <div class="py-2.5 pr-2">
-                                    <div class="flex items-center space-x-2">
-                                        <span class="font-semibold text-sm text-gray-800" id="selected-product-title"></span>
-                                        <span class="bg-gray-200 text-gray-700 text-[10px] font-mono px-1.5 py-0.5 rounded" id="selected-product-id-tag">ID: -</span>
-                                    </div>
-                                    <div class="text-xs text-gray-500 mt-0.5" id="selected-category-title"></div>
+                                <div class="py-2 pr-2">
+                                    <div class="font-semibold text-sm text-gray-800" id="selected-product-title"></div>
+                                    <div class="text-xs text-gray-500" id="selected-category-title"></div>
                                 </div>
                             </div>
                             <button id="btn-back-to-step1" type="button" class="text-xs text-blue-600 underline font-medium hover:text-blue-700 pr-3 flex-shrink-0">Modifier</button>
@@ -348,18 +356,18 @@
                     <div id="step-3" class="step-content hidden space-y-5">
                         <h3 class="text-base font-bold text-gray-800">Votre estimation de reprise</h3>
                         
-                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-stretch justify-between overflow-hidden min-h-[100px]">
-                            <div class="flex items-center space-x-4 h-full self-stretch flex-1">
-                                <div id="est-product-img-container" class="w-24 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
-                                    <i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>
+                        <div class="border border-gray-200 rounded-xl bg-gray-50 flex items-stretch justify-between overflow-hidden">
+                            <div class="flex items-center space-x-3 self-stretch flex-1">
+                                <div id="est-product-img-container" class="w-14 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
+                                    <i class="fa-solid fa-mobile-screen-button text-blue-600 text-xl"></i>
                                 </div>
-                                <div class="text-xs space-y-1 py-3 pr-2">
+                                <div class="text-xs space-y-0.5 py-2.5 pr-2">
                                     <div class="font-bold text-sm text-gray-900" id="est-product-name"></div>
                                     <div class="text-gray-500 text-xs">Diagnostic complété</div>
                                 </div>
                             </div>
 
-                            <div class="text-right flex-shrink-0 pr-4 pl-2 py-3 flex flex-col justify-center">
+                            <div class="text-right flex-shrink-0 pr-4 pl-2 py-2.5 flex flex-col justify-center">
                                 <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider mb-0.5">Valeur de reprise</div>
                                 <div id="est-trade-price" class="text-2xl font-black text-green-600 leading-none">-- €</div>
                             </div>
@@ -403,7 +411,7 @@
                                 <div id="step4-product-img-container" class="hidden w-24 self-stretch bg-white border-r border-gray-200 flex items-center justify-center p-2 flex-shrink-0">
                                     <i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>
                                 </div>
-                                <div class="text-xs space-y-1 py-3 pr-2">
+                                <div class="text-xs space-y-1 py-3 pl-4 pr-2">
                                     <div class="font-bold text-sm text-gray-900" id="step4-product-name">--</div>
                                     <div class="text-gray-500 text-xs font-mono" id="step4-product-imei">IMEI : --</div>
                                     <div class="text-gray-500 text-xs">Diagnostic complété</div>
@@ -496,10 +504,11 @@
                             <i class="fa-solid fa-check"></i>
                         </div>
                         <div class="space-y-1">
-                            <h3 class="text-2xl font-black text-gray-900">Votre demande de reprise pour <span id="final-product-name" class="text-blue-600">--</span> à <span id="final-payout-val" class="text-blue-600">-- €</span> a été créée avec succès.</h3>
-                            <p class="text-xs text-gray-600 leading-relaxed hidden">
-                                Votre demande de reprise pour <strong id="final-product-name" class="text-gray-900 font-bold">--</strong> à <strong id="final-payout-val" class="text-blue-600 font-bold">-- €</strong> a été créée avec succès.
-                            </p>
+                            <h3 class="text-2xl font-black text-gray-900 leading-snug">
+                                <span class="block">Votre demande de reprise pour</span>
+                                <span class="block"><span id="final-product-name" class="text-blue-600">--</span> à <span id="final-payout-val" class="text-blue-600">-- €</span></span>
+                                <span class="block">a été créée avec succès.</span>
+                            </h3>
                         </div>
                         
                         <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 text-left text-xs space-y-2">
@@ -634,6 +643,7 @@
             appState.selectedProductId = 9999;
             appState.selectedProductName = "Apple iPhone 14 Pro 1To";
             appState.selectedProductTypeName = "Smartphone";
+            appState.selectedCategoryIcon = 'fa-mobile-screen-button';
             appState.price = 450;
             appState.imei = "353000000000000";
 
@@ -758,17 +768,13 @@
         categories.forEach((cat) => {
             const name = cat.type?.[lang] || cat.type?.fr || 'Appareil';
             const catId = cat.idproduct_type;
-            let iconClass = 'fa-mobile-screen-button';
-            for (let key in categoryIcons) {
-                if (name.toLowerCase().includes(key)) { iconClass = categoryIcons[key]; break; }
-            }
+            const iconClass = getCategoryIcon(name);
 
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'category-btn border border-gray-200 rounded-lg p-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition relative';
             btn.onclick = () => selectCategory(btn, catId, name);
             btn.innerHTML = `
-                <span class="absolute top-1 right-1 text-[9px] font-mono bg-gray-100 text-gray-500 px-1 rounded">ID:${catId}</span>
                 <i class="fa-solid ${iconClass} text-lg text-gray-500 mb-1"></i>
                 <span class="text-xs font-medium text-gray-700">${name}</span>
             `;
@@ -779,6 +785,7 @@
     function selectCategory(element, id, name) {
         appState.selectedProductTypeId = id;
         appState.selectedProductTypeName = name;
+        appState.selectedCategoryIcon = getCategoryIcon(name);
         appState.selectedManufacturerId = appState.selectedModelId = appState.selectedProductId = null;
         
         document.getElementById('models-block').classList.add('hidden');
@@ -817,7 +824,6 @@
             btn.innerHTML = `
                 <div class="flex items-center space-x-2">
                     <span class="font-medium text-xs text-gray-800">${man.manufacturer}</span>
-                    <span class="bg-gray-100 text-gray-500 text-[10px] font-mono px-1.5 py-0.5 rounded">ID: ${man.idmanufacturer}</span>
                 </div>
                 <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
             `;
@@ -863,7 +869,6 @@
             btn.innerHTML = `
                 <div class="flex items-center space-x-2">
                     <span class="font-medium text-xs text-gray-800">${m.model}</span>
-                    <span class="bg-gray-100 text-gray-500 text-[10px] font-mono px-1.5 py-0.5 rounded">ID: ${m.idproduct_model}</span>
                 </div>
                 <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
             `;
@@ -921,21 +926,21 @@
     function renderProducts(products) {
         const container = document.getElementById('products-container');
         container.innerHTML = '';
+        const catIcon = appState.selectedCategoryIcon || getCategoryIcon(appState.selectedProductTypeName);
+
         products.forEach((p) => {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'product-item w-full flex items-center justify-between p-2.5 rounded-lg border border-gray-200 hover:border-blue-500 text-left text-sm transition';
             btn.onclick = () => selectProduct(btn, p);
-            const imgHtml = p.image ? `<img src="${p.image}" class="h-full max-h-8 w-8 object-contain mr-2.5">` : '';
             
             const mName = appState.selectedManufacturerName ? `${appState.selectedManufacturerName} ` : '';
             const fullName = p.product.toLowerCase().startsWith(mName.toLowerCase().trim()) ? p.product : `${mName}${p.product}`;
 
             btn.innerHTML = `
-                <div class="flex items-center h-8">
-                    ${imgHtml}
-                    <span class="font-medium text-xs text-gray-800 mr-2">${fullName}</span>
-                    <span class="bg-gray-100 text-gray-500 text-[10px] font-mono px-1.5 py-0.5 rounded">ID: ${p.idproduct}</span>
+                <div class="flex items-center space-x-2.5">
+                    <i class="fa-solid ${catIcon} text-gray-500 text-sm w-5 text-center"></i>
+                    <span class="font-medium text-xs text-gray-800">${fullName}</span>
                 </div>
                 <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
             `;
@@ -950,6 +955,13 @@
         const rawName = productObj.product || '';
         appState.selectedProductName = rawName.toLowerCase().startsWith(mName.toLowerCase().trim()) ? rawName : `${mName}${rawName}`;
         appState.selectedProductImage = productObj.image || null;
+
+        if (!appState.selectedProductTypeName && productObj.product_type) {
+            appState.selectedProductTypeName = productObj.product_type;
+            appState.selectedCategoryIcon = getCategoryIcon(productObj.product_type);
+        } else if (!appState.selectedCategoryIcon) {
+            appState.selectedCategoryIcon = getCategoryIcon(rawName);
+        }
 
         updatePreviewTitles();
         goToStep(2);
@@ -1007,13 +1019,12 @@
             matches.slice(0, 10).forEach(p => {
                 const item = document.createElement('div');
                 item.className = 'p-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between transition border-b border-gray-50 last:border-0';
-                const imgHtml = p.image ? `<img src="${p.image}" class="h-6 w-6 object-contain mr-2">` : `<i class="fa-solid fa-mobile-screen text-gray-400 mr-2"></i>`;
+                const catIcon = getCategoryIcon(p.product_type || p.product);
 
                 item.innerHTML = `
-                    <div class="flex items-center">
-                        ${imgHtml}
-                        <span class="text-xs font-semibold text-gray-800 mr-2">${p.product}</span>
-                        <span class="bg-gray-100 text-gray-500 text-[10px] font-mono px-1.5 py-0.5 rounded">ID: ${p.idproduct}</span>
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid ${catIcon} text-gray-400"></i>
+                        <span class="text-xs font-semibold text-gray-800">${p.product}</span>
                     </div>
                     <span class="text-[10px] text-blue-600 font-medium">Choisir</span>
                 `;
@@ -1145,21 +1156,19 @@
 
     function updatePreviewTitles() {
         const name = appState.selectedProductName || appState.selectedModelName;
-        const id = appState.selectedProductId || appState.selectedModelId;
-        const img = appState.selectedProductImage;
+        const catIcon = appState.selectedCategoryIcon || getCategoryIcon(appState.selectedProductTypeName || name);
 
         document.getElementById('selected-product-title').textContent = name || "Appareil";
-        document.getElementById('selected-product-id-tag').textContent = id ? `ID: ${id}` : "ID: -";
         
         const imgContainerStep2 = document.getElementById('selected-product-img-container');
         if (imgContainerStep2) {
-            imgContainerStep2.innerHTML = img ? `<img src="${img}" class="h-full w-full object-contain">` : `<i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>`;
+            imgContainerStep2.innerHTML = `<i class="fa-solid ${catIcon} text-blue-600 text-lg"></i>`;
         }
 
         document.getElementById('est-product-name').textContent = name || "Appareil";
         const imgContainerStep3 = document.getElementById('est-product-img-container');
         if (imgContainerStep3) {
-            imgContainerStep3.innerHTML = img ? `<img src="${img}" class="max-h-20 h-full w-full object-contain">` : `<i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>`;
+            imgContainerStep3.innerHTML = `<i class="fa-solid ${catIcon} text-blue-600 text-xl"></i>`;
         }
 
         const step4ProductName = document.getElementById('step4-product-name');
@@ -1172,7 +1181,7 @@
 
         const imgContainerStep4 = document.getElementById('step4-product-img-container');
         if (imgContainerStep4) {
-            imgContainerStep4.innerHTML = img ? `<img src="${img}" class="max-h-20 h-full w-full object-contain">` : `<i class="fa-solid fa-mobile-screen text-gray-400 text-2xl"></i>`;
+            imgContainerStep4.innerHTML = `<i class="fa-solid ${catIcon} text-blue-600 text-xl"></i>`;
         }
     }
 
