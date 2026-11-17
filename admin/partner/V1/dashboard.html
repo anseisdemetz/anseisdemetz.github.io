@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CompaRecycle - Tableaux de bord</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome pour les icônes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Highcharts CDN -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+  <!-- Feuille de style personnalisée -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="h-full flex overflow-hidden text-slate-800">
+
+  <!-- ================================================================= -->
+  <!-- 1. SIDEBAR NAVIGATION GAUCHE (Spec A01 & A02)                     -->
+  <!-- ================================================================= -->
+  <aside class="w-64 bg-[#2b3541] flex-shrink-0 flex flex-col text-slate-300 select-none z-20">
+    <!-- Logo CompaRecycle -->
+    <div class="h-16 flex items-center px-5 bg-[#242c37] border-b border-slate-700">
+      <div class="flex items-center space-x-2">
+        <div class="w-7 h-7 rounded-full bg-cyan-500 border-2 border-emerald-400 flex items-center justify-center font-bold text-white text-xs">
+          CR
+        </div>
+        <span class="text-xl font-bold tracking-tight text-white">Compa<span class="text-cyan-400 font-semibold">Recycle</span></span>
+      </div>
+    </div>
+
+    <!-- Navigation Items -->
+    <nav class="flex-1 overflow-y-auto py-4 px-2 space-y-1 text-sm font-medium">
+      
+      <!-- Rubrique A01 : Statistiques -->
+      <div>
+        <button id="toggle-stats-btn" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-white transition-colors">
+          <div class="flex items-center space-x-3">
+            <i class="fa-solid fa-chart-simple text-slate-400 text-base w-5"></i>
+            <span class="font-semibold text-slate-100">Statistiques</span>
+          </div>
+          <i id="chevron-stats" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i>
+        </button>
+
+        <!-- Sous-menu (A01) : 3 Tableaux de bord -->
+        <div id="sub-stats" class="mt-1 pl-7 pr-2 space-y-1">
+          <!-- Tableau de bord financier -->
+          <a href="#" id="link-tb-financier" class="flex items-center justify-between px-3 py-2 rounded-md bg-cyan-600/20 text-cyan-400 font-medium border-l-2 border-cyan-400">
+            <span>Tableau de bord financier</span>
+          </a>
+          <!-- Tableau de bord argus -->
+          <a href="#" id="link-tb-argus" class="flex items-center justify-between px-3 py-2 rounded-md hover:bg-slate-700/40 text-slate-400 hover:text-slate-200 transition-colors">
+            <span>Tableau de bord argus</span>
+          </a>
+          <!-- Tableau de bord volume -->
+          <a href="#" id="link-tb-volume" class="flex items-center justify-between px-3 py-2 rounded-md hover:bg-slate-700/40 text-slate-400 hover:text-slate-200 transition-colors">
+            <span>Tableau de bord volume</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Liens existants de la sidebar -->
+      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+        <i class="fa-solid fa-rectangle-list text-slate-400 text-base w-5"></i>
+        <span>Transactions Grading</span>
+      </a>
+
+      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+        <i class="fa-solid fa-store text-slate-400 text-base w-5"></i>
+        <span>Points de vente</span>
+      </a>
+
+      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+        <i class="fa-solid fa-gear text-slate-400 text-base w-5"></i>
+        <span>Contributions</span>
+      </a>
+
+      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+        <i class="fa-solid fa-table-list text-slate-400 text-base w-5"></i>
+        <span>Sessions</span>
+      </a>
+
+      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+        <i class="fa-solid fa-gift text-slate-400 text-base w-5"></i>
+        <span>Cartes cadeaux</span>
+      </a>
+
+      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+        <i class="fa-solid fa-building-columns text-slate-400 text-base w-5"></i>
+        <span>Empreintes bancaires</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- ================================================================= -->
+  <!-- 2. CONTENU PRINCIPAL                                              -->
+  <!-- ================================================================= -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    
+    <!-- Topbar Header -->
+    <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0 shadow-sm">
+      <div class="flex items-center space-x-3">
+        <span class="text-slate-800 font-semibold text-lg hidden">Bienvenue</span>
+        <span class="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 hidden">
+          <i class="fa-solid fa-repeat text-[10px]"></i> Carrefour <span class="font-normal text-blue-600">seconde vie</span>
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-5">
+        <div class="flex items-center space-x-2 text-base">
+          <button title="Français" class="hover:scale-110 transition-transform">🇫🇷</button>
+          <button title="English" class="hover:scale-110 transition-transform opacity-60 hover:opacity-100">🇬🇧</button>
+          <button title="Nederlands" class="hover:scale-110 transition-transform opacity-60 hover:opacity-100">🇳🇱</button>
+        </div>
+        <div class="h-6 w-px bg-slate-200"></div>
+        <div class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 cursor-pointer">
+          <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center">
+            <i class="fa-regular fa-user text-sm"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 p-6 lg:p-8 space-y-6 max-w-7xl">
+      
+      <!-- En-tête dynamique Titre & Sous-titre (Spec A02) -->
+      <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 id="page-title" class="text-2xl font-bold text-slate-900">Tableau de bord financier</h1>
+          <p id="page-subtitle" class="text-sm text-slate-500 mt-0.5">Vue d'ensemble de l'activité trade-in et des jalons financiers</p>
+        </div>
+        <div class="text-xs bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-md text-slate-600 self-start md:self-auto font-medium">
+          Date d'export : <span class="font-bold text-slate-800">17/11/2026</span>
+        </div>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- VUE 1 : TABLEAU DE BORD FINANCIER (A03 à A08, A14, A15)       -->
+      <!-- ============================================================= -->
+      <div id="view-financier" class="space-y-6">
+
+        <!-- SPEC A14 : Filtre de sélection de la période pour l'admin financier -->
+        <div class="bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+          <form id="filter-form-fin" class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-regular fa-calendar-days text-slate-400"></i> Période financière :
+              </span>
+              
+              <div class="flex items-center gap-2">
+                <label for="fin-date-start" class="text-xs text-slate-500">Du</label>
+                <input type="date" id="fin-date-start" value="2026-10-18" 
+                  class="text-xs border border-slate-300 rounded px-2.5 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
+              </div>
+
+              <div class="flex items-center gap-2">
+                <label for="fin-date-end" class="text-xs text-slate-500">Au</label>
+                <input type="date" id="fin-date-end" value="2026-11-17" 
+                  class="text-xs border border-slate-300 rounded px-2.5 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
+              </div>
+
+              <!-- Raccourcis de sélection -->
+              <div class="flex items-center space-x-1 pl-2 border-l border-slate-200">
+                <button type="button" class="btn-range-fin px-2.5 py-1.5 text-xs font-semibold rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" data-range="7">7j</button>
+                <button type="button" class="btn-range-fin px-2.5 py-1.5 text-xs font-semibold rounded border border-cyan-300 bg-cyan-50 text-cyan-700 transition-colors" data-range="30">30j</button>
+                <button type="button" class="btn-range-fin px-2.5 py-1.5 text-xs font-semibold rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" data-range="month">Mois en cours</button>
+                <button type="button" class="btn-range-fin px-2.5 py-1.5 text-xs font-semibold rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" data-range="year">Année</button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span id="fin-period-display" class="text-xs text-slate-400 font-medium">18/10/2026 - 17/11/2026 (31 jours)</span>
+              <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold px-4 py-1.5 rounded transition shadow-sm flex items-center gap-1.5">
+                <i class="fa-solid fa-sliders text-xs"></i> Actualiser
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SPEC A15 : 4 Indicateurs percutants en en-tête de page -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <!-- Indicateur 1 : Encours total -->
+          <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Encours total</span>
+                <span class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-calculator"></i>
+                </span>
+              </div>
+              <div class="flex items-baseline space-x-1">
+                <span id="kpi-encours-total" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">27 552 €</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">Somme : Actuel + Théorique</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="inline-flex items-center gap-1 font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">
+                <i class="fa-solid fa-arrow-trend-down text-[10px]"></i> -5.7 %
+              </span>
+              <span class="text-slate-400">vs période préc.</span>
+            </div>
+          </div>
+
+          <!-- Indicateur 2 : Valeur actuelle -->
+          <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Valeur actuelle</span>
+                <span class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-file-invoice-dollar"></i>
+                </span>
+              </div>
+              <div class="flex items-baseline space-x-1">
+                <span id="kpi-valeur-actuelle" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">11 406 €</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">Facturée auprès du partenaire</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <i class="fa-solid fa-arrow-trend-up text-[10px]"></i> +34.2 %
+              </span>
+              <span class="text-slate-400">vs période préc.</span>
+            </div>
+          </div>
+
+          <!-- Indicateur 3 : Reste avant déconnexion -->
+          <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Reste avant déconnexion</span>
+                <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </span>
+              </div>
+              <div class="flex items-baseline space-x-1">
+                <span id="kpi-reste-deconnexion" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">188 594 €</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">Marge sur plafond alloué</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="inline-flex items-center gap-1 font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">
+                <i class="fa-solid fa-arrow-trend-down text-[10px]"></i> -6.1 %
+              </span>
+              <span class="text-slate-400">vs période préc.</span>
+            </div>
+          </div>
+
+          <!-- Indicateur 4 : Transactions -->
+          <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Transactions</span>
+                <span class="w-8 h-8 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                </span>
+              </div>
+              <div class="flex items-baseline space-x-1">
+                <span id="kpi-transactions" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">22</span>
+                <span class="text-xs font-semibold text-slate-500">dossiers</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">Volume total sur la période</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <i class="fa-solid fa-arrow-trend-up text-[10px]"></i> +15.8 %
+              </span>
+              <span class="text-slate-400">vs période préc.</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SECTION 1 : Résumé Financier (A03) & Donut Alloué (A04) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- A03 : Tableau Résumé financier -->
+          <div class="lg:col-span-7 bg-white rounded-lg border border-slate-200 shadow-sm flex flex-col">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h2 class="font-bold text-slate-800 text-base">Résumé financier</h2>
+              <span class="text-xs bg-blue-50 text-blue-600 font-semibold px-2 py-0.5 rounded">Alloué vs Réalisé</span>
+            </div>
+            
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-600 uppercase text-xs border-b border-slate-200">
+                      <th class="py-3 px-4 font-semibold">Statut</th>
+                      <th class="py-3 px-4 font-semibold text-right">€</th>
+                      <th class="py-3 px-4 font-semibold text-right">%</th>
+                      <th class="py-3 px-4 font-semibold text-right">Volume</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr class="hover:bg-slate-50/70 font-semibold bg-slate-50/40">
+                      <td class="py-3 px-4 text-slate-900">Alloué</td>
+                      <td class="py-3 px-4 text-right text-slate-900">40 000 €</td>
+                      <td class="py-3 px-4 text-right text-slate-900">100 %</td>
+                      <td class="py-3 px-4 text-right text-slate-500">—</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/70">
+                      <td class="py-3 px-4 font-medium text-slate-700 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Actuel
+                      </td>
+                      <td class="py-3 px-4 text-right font-semibold text-blue-600">1 934 €</td>
+                      <td class="py-3 px-4 text-right text-blue-600 font-medium">4.84 %</td>
+                      <td class="py-3 px-4 text-right font-medium text-slate-700">4</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/70">
+                      <td class="py-3 px-4 font-medium text-slate-700 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Théorique
+                      </td>
+                      <td class="py-3 px-4 text-right font-semibold text-emerald-600">38 381 €</td>
+                      <td class="py-3 px-4 text-right text-emerald-600 font-medium">95.95 %</td>
+                      <td class="py-3 px-4 text-right font-medium text-slate-700">81</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/70">
+                      <td class="py-3 px-4 font-medium text-slate-700 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Reste avant déconnexion
+                      </td>
+                      <td class="py-3 px-4 text-right font-semibold text-rose-600">38 066 €</td>
+                      <td class="py-3 px-4 text-right text-rose-600 font-medium">95.17 %</td>
+                      <td class="py-3 px-4 text-right text-slate-500">—</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
+                <span>Calcul : (valeur / valeur_totale) * 100</span>
+                <span>Plafond : 40 000 €</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- A04 : Graphique Alloué Donut -->
+          <div class="lg:col-span-5 bg-white rounded-lg border border-slate-200 shadow-sm p-4 flex flex-col">
+            <div class="border-b border-slate-100 pb-3 mb-2 flex items-center justify-between">
+              <h2 class="font-bold text-slate-800 text-base">Répartition de l'Encours</h2>
+              <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-medium">Alloué : 40 000 €</span>
+            </div>
+
+            <div class="flex-1 flex flex-col md:flex-row items-center justify-between gap-4">
+              <!-- Donut Highcharts -->
+              <div id="container-donut" class="w-full md:w-3/5 h-60"></div>
+              
+              <!-- Légende latérale -->
+              <div class="w-full md:w-2/5 flex flex-col justify-center space-y-3 pl-2 border-l border-slate-100 text-xs">
+                <div>
+                  <div class="flex items-center space-x-1.5 font-medium text-slate-700">
+                    <span class="w-3 h-3 rounded-full bg-[#0284c7]"></span>
+                    <span>Actuel</span>
+                  </div>
+                  <div class="pl-4 font-bold text-slate-800 text-sm">4.84 %</div>
+                </div>
+                <div>
+                  <div class="flex items-center space-x-1.5 font-medium text-slate-700">
+                    <span class="w-3 h-3 rounded-full bg-[#22c55e]"></span>
+                    <span>Théorique</span>
+                  </div>
+                  <div class="pl-4 font-bold text-slate-800 text-sm">95.95 %</div>
+                </div>
+                <div>
+                  <div class="flex items-center space-x-1.5 font-medium text-slate-700">
+                    <span class="w-3 h-3 rounded-full bg-[#ef4444]"></span>
+                    <span>Reste avant décon.</span>
+                  </div>
+                  <div class="pl-4 font-bold text-slate-800 text-sm">95.17 %</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SECTION 2 : Encours actuels (A05) & Supprimé tableau encours réel (A06) -->
+        <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <div>
+              <h2 class="font-bold text-slate-800 text-base">Encours actuels</h2>
+              <p class="text-xs text-slate-400">Ventilation des montants par état d'avancement</p>
+            </div>
+            <span class="text-xs bg-slate-100 text-slate-700 font-semibold px-2 py-1 rounded">Total : 1 934 €</span>
+          </div>
+          <div id="container-encours-actuels" class="w-full h-64"></div>
+        </div>
+
+        <!-- SECTION 3 : Montants théoriques par statut (A07) & Détail par statut (A08) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- A07 : Graphique Montants théoriques par statut -->
+          <div class="lg:col-span-7 bg-white rounded-lg border border-slate-200 shadow-sm p-5">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-2">
+              <div>
+                <h2 class="font-bold text-slate-800 text-base">Montants théoriques par statut</h2>
+                <p class="text-xs text-slate-400">Répartition par volume et montants financiers</p>
+              </div>
+              <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2 py-1 rounded">Total : 38 381 €</span>
+            </div>
+            <div id="container-theorique-statut" class="w-full h-80"></div>
+          </div>
+
+          <!-- A08 : Tableau Détail par statut (théorique) -->
+          <div class="lg:col-span-5 bg-white rounded-lg border border-slate-200 shadow-sm flex flex-col">
+            <div class="p-4 border-b border-slate-100">
+              <h2 class="font-bold text-slate-800 text-base">Détail par statut (théorique)</h2>
+              <p class="text-xs text-slate-400">Analyse détaillée par étape de flux</p>
+            </div>
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-600 uppercase text-xs border-b border-slate-200">
+                      <th class="py-3 px-3 font-semibold">Statut</th>
+                      <th class="py-3 px-3 font-semibold text-right">€</th>
+                      <th class="py-3 px-3 font-semibold text-right">Volume</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr class="hover:bg-slate-50/70">
+                      <td class="py-3 px-3 font-medium text-slate-700 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-blue-400"></span> Traitement
+                      </td>
+                      <td class="py-3 px-3 text-right font-semibold text-slate-800">14 180 €</td>
+                      <td class="py-3 px-3 text-right text-slate-600 font-medium">30</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/70">
+                      <td class="py-3 px-3 font-medium text-slate-700 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-amber-400"></span> En transit
+                      </td>
+                      <td class="py-3 px-3 text-right font-semibold text-slate-800">14 624 €</td>
+                      <td class="py-3 px-3 text-right text-slate-600 font-medium">31</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/70">
+                      <td class="py-3 px-3 font-medium text-slate-700 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Sous inspection
+                      </td>
+                      <td class="py-3 px-3 text-right font-semibold text-slate-800">9 577 €</td>
+                      <td class="py-3 px-3 text-right text-slate-600 font-medium">20</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr class="bg-slate-50 font-bold border-t border-slate-200 text-slate-900">
+                      <td class="py-3 px-3">Total théorique</td>
+                      <td class="py-3 px-3 text-right text-emerald-600">38 381 €</td>
+                      <td class="py-3 px-3 text-right">81</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400">
+                Période de rétention moyenne estimée : 4.8 jours
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- VUE 2 : TABLEAU DE BORD SUR LES VOLUMES (Spec A09 à A13)       -->
+      <!-- ============================================================= -->
+      <div id="view-volume" class="space-y-6 hidden">
+
+        <!-- SPEC A13 : Sélection de la période par l'administrateur financier -->
+        <div class="bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+          <form id="filter-form-vol" class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-regular fa-calendar-days text-slate-400"></i> Période d'analyse :
+              </span>
+              
+              <div class="flex items-center gap-2">
+                <label for="vol-date-start" class="text-xs text-slate-500">Du</label>
+                <input type="date" id="vol-date-start" value="2026-10-18" 
+                  class="text-xs border border-slate-300 rounded px-2.5 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
+              </div>
+
+              <div class="flex items-center gap-2">
+                <label for="vol-date-end" class="text-xs text-slate-500">Au</label>
+                <input type="date" id="vol-date-end" value="2026-11-17" 
+                  class="text-xs border border-slate-300 rounded px-2.5 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
+              </div>
+
+              <!-- Raccourcis de sélection -->
+              <div class="flex items-center space-x-1 pl-2 border-l border-slate-200">
+                <button type="button" class="btn-range-vol px-2.5 py-1.5 text-xs font-semibold rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" data-range="7">7j</button>
+                <button type="button" class="btn-range-vol px-2.5 py-1.5 text-xs font-semibold rounded border border-cyan-300 bg-cyan-50 text-cyan-700 transition-colors" data-range="30">30j</button>
+                <button type="button" class="btn-range-vol px-2.5 py-1.5 text-xs font-semibold rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" data-range="month">Mois en cours</button>
+                <button type="button" class="btn-range-vol px-2.5 py-1.5 text-xs font-semibold rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" data-range="year">Année</button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span id="vol-period-display" class="text-xs text-slate-400 font-medium">18/10/2026 - 17/11/2026 (31 jours)</span>
+              <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold px-4 py-1.5 rounded transition shadow-sm flex items-center gap-1.5">
+                <i class="fa-solid fa-filter text-xs"></i> Filtrer
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 4 ENCARTS STATISTIQUES (Spec A09, A10, A11, A12) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <!-- A09 : Volume repris -->
+          <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Volume repris</span>
+                <span class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-boxes-stacked"></i>
+                </span>
+              </div>
+              <div class="flex items-baseline space-x-2">
+                <span id="kpi-volume" class="text-3xl font-extrabold text-slate-900 tracking-tight">13</span>
+                <span class="text-sm font-semibold text-slate-500">appareils</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <i class="fa-solid fa-arrow-trend-up text-[10px]"></i> +18 %
+              </span>
+              <span class="text-slate-400">vs période préc.</span>
+            </div>
+          </div>
+
+          <!-- A10 : Valeur totale des volumes repris -->
+          <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Valeur totale reprises</span>
+                <span class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-coins"></i>
+                </span>
+              </div>
+              <div class="flex items-baseline space-x-1">
+                <span id="kpi-valeur-totale" class="text-3xl font-extrabold text-slate-900 tracking-tight">6 528 €</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <i class="fa-solid fa-arrow-trend-up text-[10px]"></i> +27 %
+              </span>
+              <span class="text-slate-400">vs période préc.</span>
+            </div>
+          </div>
+
+          <!-- A11 : Valeur moyenne -->
+          <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Valeur moyenne</span>
+                <span class="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-tag"></i>
+                </span>
+              </div>
+              <div class="flex items-baseline space-x-1">
+                <span id="kpi-valeur-moyenne" class="text-3xl font-extrabold text-slate-900 tracking-tight">502 €</span>
+                <span class="text-xs text-slate-400 font-semibold">/ appareil</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <i class="fa-solid fa-arrow-trend-up text-[10px]"></i> +11 %
+              </span>
+              <span class="text-slate-400">vs période préc.</span>
+            </div>
+          </div>
+
+          <!-- A12 : Délai moyen de traitement des reprises -->
+          <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Délai moyen traitement</span>
+                <span class="w-8 h-8 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center text-sm">
+                  <i class="fa-regular fa-clock"></i>
+                </span>
+              </div>
+              <div class="flex items-baseline space-x-2">
+                <span id="kpi-delai" class="text-3xl font-extrabold text-slate-900 tracking-tight">4.2</span>
+                <span class="text-sm font-semibold text-slate-500">jours</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <!-- Vert car réduction du délai = gain opérationnel -->
+              <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full" title="Une réduction du délai traduit une amélioration du service">
+                <i class="fa-solid fa-arrow-trend-down text-[10px]"></i> -32 %
+              </span>
+              <span class="text-slate-400">vs période préc.</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- GRAPHIQUES DE LA VUE VOLUME -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Évolution quotidienne des flux de reprise -->
+          <div class="lg:col-span-8 bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-2">
+              <div>
+                <h2 class="font-bold text-slate-800 text-base">Évolution quotidienne des flux de reprises</h2>
+                <p class="text-xs text-slate-400">Volumes traités et validés sur la période sélectionnée</p>
+              </div>
+              <span class="text-xs bg-slate-100 text-slate-700 font-semibold px-2 py-1 rounded">Activité trade-in</span>
+            </div>
+            <div id="container-volume-daily" class="w-full h-80"></div>
+          </div>
+
+          <!-- Répartition par tranche de délais de traitement -->
+          <div class="lg:col-span-4 bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                <h2 class="font-bold text-slate-800 text-base">Délais de traitement</h2>
+                <span class="text-xs text-slate-400">Moy. 4.2j</span>
+              </div>
+              <p class="text-xs text-slate-500 mb-4">Répartition des appareils réceptionnés selon le temps d'expertise finalisée.</p>
+              <div id="container-volume-delay" class="w-full h-64"></div>
+            </div>
+            
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <span>Objectif SLA : < 5 jours</span>
+              <span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> Conforme (92%)</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+<!-- ============================================================= -->
+      <!-- VUE 2 : TABLEAU DE BORD ARGUS (A02, A16, A17, A18, A19)       -->
+      <!-- ============================================================= -->
+<!-- ============================================================= -->
+      <!-- VUE 2 : TABLEAU DE BORD ARGUS (A02, A16, A17, A18, A19)       -->
+      <!-- ============================================================= -->
+      <div id="view-argus" class="space-y-6 hidden">
+
+        <!-- SPEC A19 : Sélection de la période par l'administrateur financier -->
+        <div class="bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+          <form id="filter-form-argus" class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-regular fa-calendar-days text-slate-400"></i> Période Argus :
+              </span>
+              
+              <div class="flex items-center gap-2">
+                <label for="argus-date-start" class="text-xs text-slate-500">Du</label>
+                <input type="date" id="argus-date-start" value="2026-10-18" 
+                  class="text-xs border border-slate-300 rounded px-2.5 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
+              </div>
+
+              <div class="flex items-center gap-2">
+                <label for="argus-date-end" class="text-xs text-slate-500">Au</label>
+                <input type="date" id="argus-date-end" value="2026-11-17" 
+                  class="text-xs border border-slate-300 rounded px-2.5 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
+              </div>
+
+              <!-- Raccourcis de sélection -->
+              <div class="flex items-center space-x-1 pl-2 border-l border-slate-200">
+                <button type="button" class="btn-range-argus px-2.5 py-1.5 text-xs font-semibold rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" data-range="7">7j</button>
+                <button type="button" class="btn-range-argus px-2.5 py-1.5 text-xs font-semibold rounded border border-cyan-300 bg-cyan-50 text-cyan-700 transition-colors" data-range="30">30j</button>
+                <button type="button" class="btn-range-argus px-2.5 py-1.5 text-xs font-semibold rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" data-range="month">Mois en cours</button>
+                <button type="button" class="btn-range-argus px-2.5 py-1.5 text-xs font-semibold rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors" data-range="year">Année</button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span id="argus-period-display" class="text-xs text-slate-400 font-medium">18/10/2026 - 17/11/2026 (31 jours)</span>
+              <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold px-4 py-1.5 rounded transition shadow-sm flex items-center gap-1.5">
+                <i class="fa-solid fa-sliders text-xs"></i> Actualiser
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SPEC A18 : 2 Indicateurs clairs et percutants en en-tête de page -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Indicateur 1 : Catalogue vs Valorisés par le partenaire -->
+          <div id="kpi-argus-catalogue" class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Couverture catalogue partenaire</span>
+                <span class="w-8 h-8 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-mobile-screen-button"></i>
+                </span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 items-center">
+                <!-- Produits catalogue -->
+                <div>
+                  <span class="text-[11px] font-medium text-slate-400 block">Produits catalogue</span>
+                  <div class="flex items-baseline gap-2 mt-0.5">
+                    <span class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">8 200</span>
+                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                      <i class="fa-solid fa-arrow-trend-up text-[9px]"></i> +2.4 %
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Produits valorisés -->
+                <div class="pl-4 border-l border-slate-100">
+                  <span class="text-[11px] font-medium text-slate-400 block">Produits valorisés</span>
+                  <div class="flex items-baseline gap-2 mt-0.5">
+                    <span class="text-2xl lg:text-3xl font-extrabold text-sky-600 tracking-tight">2 300</span>
+                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                      <i class="fa-solid fa-arrow-trend-up text-[9px]"></i> +1.5 %
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="text-slate-500 font-medium">Taux de valorisation global : <strong class="text-slate-800">28.05 %</strong></span>
+              <span class="text-slate-400">vs période préc.</span>
+            </div>
+          </div>
+
+          <!-- Indicateur 2 : Catégories couvertes / Catégories totales partenaire -->
+          <div id="kpi-argus-categories" class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Catégories couvertes</span>
+                <span class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-layer-group"></i>
+                </span>
+              </div>
+
+              <div class="flex items-baseline space-x-2 mt-1">
+                <span class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">6</span>
+                <span class="text-lg font-bold text-slate-400">/ 6</span>
+                <span class="text-xs font-semibold text-slate-500 pl-1">catégories valorisées</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Totalité des catégories associées au partenaire</p>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <i class="fa-solid fa-check text-[10px]"></i> 100 %
+              </span>
+              <span class="text-slate-400">Couverture complète</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- En-tête de section (identique à la capture) -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+          <h2 id="argus-section-date" class="text-sm font-bold text-sky-600 uppercase tracking-wide">
+            Dashboard Catalogue — Argus au 17/11/2026
+          </h2>
+        </div>
+
+        <!-- Grille des 4 graphiques de la capture -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          <!-- 1. Haut Gauche : Nb de catégories couvertes par grade 1/4 -->
+          <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex flex-col">
+            <div id="chart-argus-couverture" style="height: 380px;"></div>
+          </div>
+
+          <!-- 2. Haut Droite : Nb de produits valorisés/catalogue -->
+          <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div class="flex flex-wrap items-center justify-end gap-3 mb-2">
+              <div class="flex items-center space-x-1.5 text-xs">
+                <label for="select-argus-cat" class="text-slate-500 font-semibold">Catégorie :</label>
+                <select id="select-argus-cat" class="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1 text-slate-700 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                  <option value="Mobile" selected>Mobile</option>
+                  <option value="Tablette">Tablette</option>
+                  <option value="Casque">Casque</option>
+                  <option value="Ordinateur">Ordinateur</option>
+                </select>
+              </div>
+              <div class="flex items-center space-x-1.5 text-xs">
+                <label for="select-argus-brand" class="text-slate-500 font-semibold">Marque :</label>
+                <select id="select-argus-brand" class="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1 text-slate-700 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                  <option value="all">Toutes</option>
+                  <option value="Apple">Apple</option>
+                  <option value="Samsung">Samsung</option>
+                  <option value="Xiaomi">Xiaomi</option>
+                  <option value="Oppo">Oppo</option>
+                </select>
+              </div>
+            </div>
+            <div id="chart-argus-pie" style="height: 340px;"></div>
+          </div>
+
+          <!-- 3. Bas Gauche : Nb de produits en 1ère position par grade -->
+          <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex flex-col">
+            <div id="chart-argus-pos1" style="height: 380px;"></div>
+          </div>
+
+          <!-- 4. Bas Droite : Nb de produits en 2ème position par grade -->
+          <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex flex-col">
+            <div id="chart-argus-pos2" style="height: 380px;"></div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Script applicatif -->
+  <script src="app.js"></script>
+</body>
+</html>
