@@ -69,3 +69,9 @@ body {
 @media(max-width:640px) { .argus-a21-heading { align-items:flex-start; flex-direction:column; padding:15px; } .argus-a21-tables { padding:0 10px 12px; gap:10px; } }
 
 .argus-a21-table .a21-pending { background:#f8fafc; color:#cbd5e1; font-weight:500; }
+/* Saisis : heatmap vert/jaune basée sur la part de chaque grade. */
+.argus-a21-table td.a21-heat-min { background:#fff6cc; color:#685719; }
+.argus-a21-table td.a21-heat-low { background:#f2f7cf; color:#4b5d22; }
+.argus-a21-table td.a21-heat-balanced { background:#e1f1d2; color:#365b2a; }
+.argus-a21-table td.a21-heat-mid { background:#c7e8bd; color:#285b35; }
+.argus-a21-table td.a21-heat-high { background:#a7d9aa; color:#1f5130; }

@@ -698,17 +698,48 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // A21 : tableaux mensuels 2026 (les séries de grades ne sont pas fournies).
+  // A21 : répartitions par grade pour 2026 (janvier–novembre), d'après la capture fournie.
   function initArgusA21() {
     const grades = ["A", "A-", "B", "C", "C-", "D", "D-"];
-    const months = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aoû", "Sep", "Oct", "Nov"];
+    const periods = [
+      {label: "2026", values: [22, 15, 15, 17, 13, 8, 10]},
+      {label: "P01 · Jan", values: [20, 11, 12, 20, 18, 10, 9]},
+      {label: "P02 · Fév", values: [19, 12, 16, 19, 17, 8, 9]},
+      {label: "P03 · Mar", values: [22, 15, 17, 19, 12, 8, 7]},
+      {label: "P04 · Avr", values: [25, 13, 14, 16, 14, 8, 10]},
+      {label: "P05 · Mai", values: [22, 13, 15, 15, 12, 8, 14]},
+      {label: "P06 · Juin", values: [22, 13, 15, 16, 13, 9, 13]},
+      {label: "P07 · Juil", values: [25, 13, 14, 17, 13, 8, 11]},
+      {label: "P08 · Aoû", values: [24, 19, 14, 15, 10, 7, 9]},
+      {label: "P09 · Sep", values: [22, 13, 16, 16, 13, 8, 10]},
+      {label: "P10 · Oct", values: [18, 23, 15, 17, 13, 8, 7]},
+      {label: "P11 · Nov", values: [26, 14, 16, 18, 11, 9, 6]}
+    ];
+    const facturePeriods = [
+      {label: "2026", values: [10, 14, 9, 24, 13, 13, 17]},
+      {label: "Jan", values: [6, 8, 10, 22, 17, 14, 24]},
+      {label: "Fév", values: [10, 8, 9, 25, 15, 15, 18]},
+      {label: "Mar", values: [8, 10, 11, 25, 15, 13, 18]},
+      {label: "Avr", values: [15, 12, 9, 24, 10, 14, 15]},
+      {label: "Mai", values: [13, 14, 8, 22, 10, 15, 19]},
+      {label: "Juin", values: [10, 13, 8, 24, 10, 15, 19]},
+      {label: "Juil", values: [12, 11, 8, 24, 12, 13, 19]},
+      {label: "Aoû", values: [13, 16, 9, 23, 11, 13, 15]},
+      {label: "Sep", values: [11, 19, 10, 23, 10, 13, 14]},
+      {label: "Oct", values: [6, 24, 10, 25, 12, 12, 11]},
+      {label: "Nov", values: [9, 16, 10, 28, 11, 13, 14]}
+    ];
     function renderTable(side) {
-      const table = document.getElementById(side === "saisi" ? "table-a21-saisi" : "table-a21-facture");
+      const isSaisi = side === "saisi";
+      const table = document.getElementById(isSaisi ? "table-a21-saisi" : "table-a21-facture");
       if (!table) return;
-      const periods = [{label: "2026", year: true}, ...months.map(label => ({label, year: false}))];
-      const rows = periods.map(period => {
-        const cells = grades.map(() => '<td class="a21-pending">—</td>').join("");
-        return `<tr><th scope="row" class="${period.year ? "year-row" : ""}">${period.label}</th>${cells}<td class="a21-total">—</td></tr>`;
+      const sourcePeriods = isSaisi ? periods : facturePeriods;
+      const rows = sourcePeriods.map((period, index) => {
+        const cells = period.values.map(value => {
+          const heat = value >= 23 ? "a21-heat-high" : value >= 19 ? "a21-heat-mid" : value >= 15 ? "a21-heat-balanced" : value >= 11 ? "a21-heat-low" : "a21-heat-min";
+          return `<td class="${heat}">${value}%</td>`;
+        }).join("");
+        return `<tr><th scope="row" class="${index === 0 ? "year-row" : ""}">${period.label}</th>${cells}<td class="a21-total">100%</td></tr>`;
       }).join("");
       const headers = grades.map(grade => `<th scope="col">${grade}</th>`).join("");
       table.innerHTML = `<thead><tr><th scope="col">Période</th>${headers}<th scope="col">Total général</th></tr></thead><tbody>${rows}</tbody>`;
