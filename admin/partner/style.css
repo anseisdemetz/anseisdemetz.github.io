@@ -75,3 +75,56 @@ body {
 .argus-a21-table td.a21-heat-balanced { background:#e1f1d2; color:#365b2a; }
 .argus-a21-table td.a21-heat-mid { background:#c7e8bd; color:#285b35; }
 .argus-a21-table td.a21-heat-high { background:#a7d9aa; color:#1f5130; }
+
+/* Hauteurs des graphiques Argus (extraites des styles inline). */
+.chart-argus-tall { height: 380px; }
+.chart-argus-pie { height: 340px; }
+
+/* A21 : conversion par grade, densité éditoriale adaptée aux petits écrans. */
+.argus-a21-controls { display:flex; flex-wrap:wrap; gap:5px; padding:12px 16px 10px; }
+.argus-a21-button { border:1px solid #dbe4ea; border-radius:7px; background:#fff; color:#64748b; padding:7px 11px; font:inherit; font-size:11px; font-weight:700; cursor:pointer; transition:background .15s,color .15s,border-color .15s; }
+.argus-a21-button:hover,.argus-a21-button.is-active { color:#075985; border-color:#7dd3fc; background:#f0f9ff; }
+.argus-a21-button:focus-visible { outline:2px solid #0284c7; outline-offset:2px; }
+.argus-a21-summary { display:grid; grid-template-columns:1fr 1fr auto; align-items:center; gap:8px; margin:0 16px 10px; padding:10px 12px; border:1px solid #d9e8eb; border-radius:8px; background:linear-gradient(100deg,#f0f9fa,#f8fafc 62%,#fff); }
+.a21-summary-item span,.a21-summary-note { display:block; color:#64748b; font-size:9px; }
+.a21-summary-item strong { display:block; margin-top:3px; color:#334155; font-size:12px; }
+.a21-summary-item strong b { margin-left:4px; color:#0e7490; font-size:14px; }
+.a21-summary-note { text-align:right; }
+.argus-a21-conversion-scroll { max-height:none; overflow:hidden; padding:0 14px; }
+.argus-a21-conversion-table { width:100%; min-width:0; table-layout:fixed; border-spacing:2px; padding:0; }
+.argus-a21-conversion-table th,.argus-a21-conversion-table td { padding:6px 2px; }
+.argus-a21-conversion-table thead th { font-size:10px; }
+.argus-a21-conversion-table thead th:first-child,.argus-a21-conversion-table tbody th { min-width:0; width:9%; }
+.argus-a21-conversion-table thead th:last-child { width:12%; }
+.argus-a21-conversion-table .a21-conv-cell { position:relative; overflow:hidden; border:1px solid rgba(148,163,184,.16); }
+.a21-conv-cell strong { display:block; color:#243746; font-size:11px; font-weight:850; line-height:1.2; }
+.a21-conv-cell span { display:block; margin-top:2px; color:#526477; font-size:8px; font-weight:550; line-height:1.15; }
+.a21-conv-positive { background:#cbe9df; }
+.a21-conv-negative { background:#f8d8cf; }
+.a21-conv-neutral { background:#f1f5f7; }
+.a21-conv-total { background:#e8eef2; }
+.a21-low-volume { opacity:.58; background-image:repeating-linear-gradient(135deg,transparent 0,transparent 5px,rgba(71,85,105,.22) 5px,rgba(71,85,105,.22) 6px); }
+.a21-year-row th,.a21-year-row td { box-shadow:inset 0 1px #a7c8cb,inset 0 -1px #a7c8cb; }
+.a21-year-row th.year-row { background:#e5f3f0; color:#115e59; }
+.argus-a21-legend { display:flex; align-items:center; justify-content:center; gap:9px; padding:10px 14px 5px; color:#64748b; font-size:9px; }
+.argus-a21-gradient { width:105px; height:9px; border:1px solid #e2e8f0; border-radius:8px; background:linear-gradient(90deg,#efb5a7,#f1f5f7 50%,#9bd3c2); }
+.argus-a21-legend-center { color:#94a3b8; }
+.argus-a21-definition,.argus-a21-caveat { margin:4px 16px 0; color:#64748b; font-size:9px; line-height:1.55; }
+.argus-a21-caveat { margin-top:3px; padding-bottom:13px; color:#9a6a34; }
+#table-a21-conversion [title] { cursor:help; }
+@media(max-width:640px) {
+ .argus-a21-controls { padding:10px 10px 8px; }
+ .argus-a21-button { flex:1 1 auto; padding:7px 5px; font-size:10px; }
+ .argus-a21-summary { grid-template-columns:1fr 1fr; margin:0 10px 9px; padding:8px; }
+ .a21-summary-note { grid-column:1/-1; text-align:left; }
+ .argus-a21-conversion-scroll { padding:0 6px; }
+ .argus-a21-conversion-table { border-spacing:1px; }
+ .argus-a21-conversion-table th,.argus-a21-conversion-table td { padding:5px 1px; }
+ .argus-a21-conversion-table thead th { font-size:8px; }
+ .argus-a21-conversion-table thead th:first-child,.argus-a21-conversion-table tbody th { width:8%; }
+ .argus-a21-conversion-table thead th:last-child { width:12%; }
+ .a21-conv-cell strong { font-size:9px; }
+ .a21-conv-cell span { font-size:7px; }
+ .argus-a21-legend { flex-wrap:wrap; gap:5px; font-size:8px; }
+ .argus-a21-definition,.argus-a21-caveat { margin-left:10px; margin-right:10px; }
+}

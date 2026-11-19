@@ -50,7 +50,7 @@
         <!-- Sous-menu (A01) : 3 Tableaux de bord -->
         <div id="sub-stats" class="mt-1 pl-7 pr-2 space-y-1">
           <!-- Tableau de bord financier -->
-          <a href="#" id="link-tb-financier" class="flex items-center justify-between px-3 py-2 rounded-md bg-cyan-600/20 text-cyan-400 font-medium border-l-2 border-cyan-400">
+          <a href="#" id="link-tb-financier" aria-current="page" class="flex items-center justify-between px-3 py-2 rounded-md bg-cyan-600/20 text-cyan-400 font-medium border-l-2 border-cyan-400">
             <span>Tableau de bord financier</span>
           </a>
           <!-- Tableau de bord argus -->
@@ -65,32 +65,32 @@
       </div>
 
       <!-- Liens existants de la sidebar -->
-      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+      <a href="#" aria-disabled="true" title="Lien non disponible" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
         <i class="fa-solid fa-rectangle-list text-slate-400 text-base w-5"></i>
         <span>Transactions Grading</span>
       </a>
 
-      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+      <a href="#" aria-disabled="true" title="Lien non disponible" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
         <i class="fa-solid fa-store text-slate-400 text-base w-5"></i>
         <span>Points de vente</span>
       </a>
 
-      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+      <a href="#" aria-disabled="true" title="Lien non disponible" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
         <i class="fa-solid fa-gear text-slate-400 text-base w-5"></i>
         <span>Contributions</span>
       </a>
 
-      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+      <a href="#" aria-disabled="true" title="Lien non disponible" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
         <i class="fa-solid fa-table-list text-slate-400 text-base w-5"></i>
         <span>Sessions</span>
       </a>
 
-      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+      <a href="#" aria-disabled="true" title="Lien non disponible" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
         <i class="fa-solid fa-gift text-slate-400 text-base w-5"></i>
         <span>Cartes cadeaux</span>
       </a>
 
-      <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
+      <a href="#" aria-disabled="true" title="Lien non disponible" class="flex items-center space-x-3 px-3 py-2.5 rounded-md hover:bg-slate-700/60 text-slate-300 hover:text-white transition-colors">
         <i class="fa-solid fa-building-columns text-slate-400 text-base w-5"></i>
         <span>Empreintes bancaires</span>
       </a>
@@ -134,9 +134,6 @@
           <h1 id="page-title" class="text-2xl font-bold text-slate-900">Tableau de bord financier</h1>
           <p id="page-subtitle" class="text-sm text-slate-500 mt-0.5">Vue d'ensemble de l'activité trade-in et des jalons financiers</p>
         </div>
-        <div class="text-xs bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-md text-slate-600 self-start md:self-auto font-medium">
-          Date d'export : <span class="font-bold text-slate-800">17/11/2026</span>
-        </div>
       </div>
 
       <!-- ============================================================= -->
@@ -148,9 +145,6 @@
         <div class="bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
           <form id="filter-form-fin" class="flex flex-wrap items-center justify-between gap-4">
             <div class="flex flex-wrap items-center gap-3">
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-regular fa-calendar-days text-slate-400"></i> Période financière :
-              </span>
               
               <div class="flex items-center gap-2">
                 <label for="fin-date-start" class="text-xs text-slate-500">Du</label>
@@ -195,7 +189,7 @@
                 </span>
               </div>
               <div class="flex items-baseline space-x-1">
-                <span id="kpi-encours-total" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">27 552 €</span>
+                <span id="kpi-encours-total" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">40 315 €</span>
               </div>
               <p class="text-[11px] text-slate-400 mt-0.5">Somme : Actuel + Théorique</p>
             </div>
@@ -217,7 +211,7 @@
                 </span>
               </div>
               <div class="flex items-baseline space-x-1">
-                <span id="kpi-valeur-actuelle" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">11 406 €</span>
+                <span id="kpi-valeur-actuelle" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">1 934 €</span>
               </div>
               <p class="text-[11px] text-slate-400 mt-0.5">Facturée auprès du partenaire</p>
             </div>
@@ -239,7 +233,7 @@
                 </span>
               </div>
               <div class="flex items-baseline space-x-1">
-                <span id="kpi-reste-deconnexion" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">188 594 €</span>
+                <span id="kpi-reste-deconnexion" class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">0 €</span>
               </div>
               <p class="text-[11px] text-slate-400 mt-0.5">Marge sur plafond alloué</p>
             </div>
@@ -308,24 +302,24 @@
                       <td class="py-3 px-4 font-medium text-slate-700 flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Actuel
                       </td>
-                      <td class="py-3 px-4 text-right font-semibold text-blue-600">1 934 €</td>
-                      <td class="py-3 px-4 text-right text-blue-600 font-medium">4.84 %</td>
+                      <td data-fin-value="current" class="py-3 px-4 text-right font-semibold text-blue-600">1 934 €</td>
+                      <td data-fin-percent="current" class="py-3 px-4 text-right text-blue-600 font-medium">4.80 %</td>
                       <td class="py-3 px-4 text-right font-medium text-slate-700">4</td>
                     </tr>
                     <tr class="hover:bg-slate-50/70">
                       <td class="py-3 px-4 font-medium text-slate-700 flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Théorique
                       </td>
-                      <td class="py-3 px-4 text-right font-semibold text-emerald-600">38 381 €</td>
-                      <td class="py-3 px-4 text-right text-emerald-600 font-medium">95.95 %</td>
+                      <td data-fin-value="theoretical" class="py-3 px-4 text-right font-semibold text-emerald-600">38 381 €</td>
+                      <td data-fin-percent="theoretical" class="py-3 px-4 text-right text-emerald-600 font-medium">95.20 %</td>
                       <td class="py-3 px-4 text-right font-medium text-slate-700">81</td>
                     </tr>
                     <tr class="hover:bg-slate-50/70">
                       <td class="py-3 px-4 font-medium text-slate-700 flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Reste avant déconnexion
                       </td>
-                      <td class="py-3 px-4 text-right font-semibold text-rose-600">38 066 €</td>
-                      <td class="py-3 px-4 text-right text-rose-600 font-medium">95.17 %</td>
+                      <td data-fin-value="remaining" class="py-3 px-4 text-right font-semibold text-rose-600">0 €</td>
+                      <td data-fin-percent="remaining" class="py-3 px-4 text-right text-rose-600 font-medium">0.00 %</td>
                       <td class="py-3 px-4 text-right text-slate-500">—</td>
                     </tr>
                   </tbody>
@@ -342,7 +336,7 @@
           <div class="lg:col-span-5 bg-white rounded-lg border border-slate-200 shadow-sm p-4 flex flex-col">
             <div class="border-b border-slate-100 pb-3 mb-2 flex items-center justify-between">
               <h2 class="font-bold text-slate-800 text-base">Répartition de l'Encours</h2>
-              <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-medium">Alloué : 40 000 €</span>
+              <span id="allocation-label" class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-medium">Plafond : 40 000 €</span>
             </div>
 
             <div class="flex-1 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -356,21 +350,21 @@
                     <span class="w-3 h-3 rounded-full bg-[#0284c7]"></span>
                     <span>Actuel</span>
                   </div>
-                  <div class="pl-4 font-bold text-slate-800 text-sm">4.84 %</div>
+                  <div class="pl-4 font-bold text-slate-800 text-sm">4.80 %</div>
                 </div>
                 <div>
                   <div class="flex items-center space-x-1.5 font-medium text-slate-700">
                     <span class="w-3 h-3 rounded-full bg-[#22c55e]"></span>
                     <span>Théorique</span>
                   </div>
-                  <div class="pl-4 font-bold text-slate-800 text-sm">95.95 %</div>
+                  <div class="pl-4 font-bold text-slate-800 text-sm">95.20 %</div>
                 </div>
                 <div>
                   <div class="flex items-center space-x-1.5 font-medium text-slate-700">
                     <span class="w-3 h-3 rounded-full bg-[#ef4444]"></span>
                     <span>Reste avant décon.</span>
                   </div>
-                  <div class="pl-4 font-bold text-slate-800 text-sm">95.17 %</div>
+                  <div class="pl-4 font-bold text-slate-800 text-sm">0.00 %</div>
                 </div>
               </div>
             </div>
@@ -400,7 +394,7 @@
                 <h2 class="font-bold text-slate-800 text-base">Montants théoriques par statut</h2>
                 <p class="text-xs text-slate-400">Répartition par volume et montants financiers</p>
               </div>
-              <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2 py-1 rounded">Total : 38 381 €</span>
+              <span id="theoretical-total-label" class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2 py-1 rounded">Total : 38 381 €</span>
             </div>
             <div id="container-theorique-statut" class="w-full h-80"></div>
           </div>
@@ -426,28 +420,28 @@
                       <td class="py-3 px-3 font-medium text-slate-700 flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-blue-400"></span> Traitement
                       </td>
-                      <td class="py-3 px-3 text-right font-semibold text-slate-800">14 180 €</td>
+                      <td data-fin-status-index="0" class="py-3 px-3 text-right font-semibold text-slate-800">14 180 €</td>
                       <td class="py-3 px-3 text-right text-slate-600 font-medium">30</td>
                     </tr>
                     <tr class="hover:bg-slate-50/70">
                       <td class="py-3 px-3 font-medium text-slate-700 flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-amber-400"></span> En transit
                       </td>
-                      <td class="py-3 px-3 text-right font-semibold text-slate-800">14 624 €</td>
+                      <td data-fin-status-index="1" class="py-3 px-3 text-right font-semibold text-slate-800">14 624 €</td>
                       <td class="py-3 px-3 text-right text-slate-600 font-medium">31</td>
                     </tr>
                     <tr class="hover:bg-slate-50/70">
                       <td class="py-3 px-3 font-medium text-slate-700 flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Sous inspection
                       </td>
-                      <td class="py-3 px-3 text-right font-semibold text-slate-800">9 577 €</td>
+                      <td data-fin-status-index="2" class="py-3 px-3 text-right font-semibold text-slate-800">9 577 €</td>
                       <td class="py-3 px-3 text-right text-slate-600 font-medium">20</td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr class="bg-slate-50 font-bold border-t border-slate-200 text-slate-900">
                       <td class="py-3 px-3">Total théorique</td>
-                      <td class="py-3 px-3 text-right text-emerald-600">38 381 €</td>
+                      <td data-fin-total class="py-3 px-3 text-right text-emerald-600">38 381 €</td>
                       <td class="py-3 px-3 text-right">81</td>
                     </tr>
                   </tfoot>
@@ -642,9 +636,6 @@
 <!-- ============================================================= -->
       <!-- VUE 2 : TABLEAU DE BORD ARGUS (A02, A16, A17, A18, A19)       -->
       <!-- ============================================================= -->
-<!-- ============================================================= -->
-      <!-- VUE 2 : TABLEAU DE BORD ARGUS (A02, A16, A17, A18, A19)       -->
-      <!-- ============================================================= -->
       <div id="view-argus" class="space-y-6 hidden">
 
         <!-- SPEC A19 : Sélection de la période par l'administrateur financier -->
@@ -769,7 +760,7 @@
 
           <!-- 1. Haut Gauche : Nb de catégories couvertes par grade 1/4 -->
           <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex flex-col">
-            <div id="chart-argus-couverture" style="height: 380px;"></div>
+            <div id="chart-argus-couverture" class="chart-argus-tall"></div>
           </div>
 
           <!-- 2. Haut Droite : Nb de produits valorisés/catalogue -->
@@ -795,29 +786,27 @@
                 </select>
               </div>
             </div>
-            <div id="chart-argus-pie" style="height: 340px;"></div>
+            <div id="chart-argus-pie" class="chart-argus-pie"></div>
           </div>
 
           <!-- 3. Bas Gauche : Nb de produits en 1ère position par grade -->
           <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex flex-col">
-            <div id="chart-argus-pos1" style="height: 380px;"></div>
+            <div id="chart-argus-pos1" class="chart-argus-tall"></div>
           </div>
 
           <!-- 4. Bas Droite : Nb de produits en 2ème position par grade -->
           <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex flex-col">
-            <div id="chart-argus-pos2" style="height: 380px;"></div>
+            <div id="chart-argus-pos2" class="chart-argus-tall"></div>
           </div>
 
         </div>
-      </div>
 
       <!-- A20 : KPI mensuel ajouté sous la grille de graphiques Argus existante -->
         <section id="argus-a20" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden" aria-labelledby="argus-a20-title">
           <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <div class="text-[10px] font-bold uppercase tracking-[0.14em] text-sky-700">A20 · Analyse mensuelle</div>
               <h3 id="argus-a20-title" class="mt-1 font-bold text-slate-800 text-base">Volumes saisis / repris et prix moyen par mois</h3>
-              <p class="text-xs text-slate-400 mt-1">Comparaison mensuelle des volumes et du prix moyen par unité · P01–P11 2026</p>
+              <p class="text-xs text-slate-400 mt-1">Comparaison mensuelle des volumes et du prix moyen par unité · année 2026</p>
             </div>
             <div class="argus-a20-switch" role="group" aria-label="Mode d’affichage A20">
               <button type="button" class="argus-a20-button is-active" aria-pressed="true" data-a20-view="chart"><i class="fa-solid fa-chart-column" aria-hidden="true"></i> Graphique</button>
@@ -855,9 +844,23 @@
               <p>Volumes, valeurs et part de chaque grade · 2026 (janvier–novembre)</p>
             </div>
           </div>
-          <div class="argus-a21-tables">
-            <div class="argus-a21-table-card"><div class="argus-a21-table-title"><span class="argus-a21-mark mark-saisi"></span><h4>SAISIS : % de grade</h4><span class="argus-a21-unit">PART</span></div><div class="argus-a21-scroll"><table class="argus-a21-table" id="table-a21-saisi" aria-label="Répartition mensuelle des grades saisis en 2026"></table></div></div>
-            <div class="argus-a21-table-card"><div class="argus-a21-table-title"><span class="argus-a21-mark mark-facture"></span><h4>FACTURES : % de grade</h4><span class="argus-a21-unit">PART</span></div><div class="argus-a21-scroll"><table class="argus-a21-table" id="table-a21-facture" aria-label="Répartition mensuelle des grades facturés en 2026"></table></div></div>
+          <div class="argus-a21-controls" role="group" aria-label="Indicateur affiché">
+            <button type="button" class="argus-a21-button is-active" data-a21-view="conversion" aria-pressed="true">Taux de conversion</button>
+            <button type="button" class="argus-a21-button" data-a21-view="saisi" aria-pressed="false">Part saisie</button>
+            <button type="button" class="argus-a21-button" data-a21-view="facture" aria-pressed="false">Part facturée</button>
+          </div>
+          <div id="a21-conversion-panel">
+            <div class="argus-a21-summary" id="a21-summary" aria-live="polite"></div>
+            <div class="argus-a21-scroll argus-a21-conversion-scroll"><table class="argus-a21-table argus-a21-conversion-table" id="table-a21-conversion" aria-label="Taux de conversion estimé par mois et grade"><caption class="sr-only">Taux de reprises facturées rapportées aux reprises saisies, par grade et par mois en 2026.</caption></table></div>
+            <div class="argus-a21-legend"><span class="argus-a21-gradient" aria-hidden="true"></span><span>Conversion inférieure à la moyenne annuelle du grade</span><span class="argus-a21-legend-center">Moyenne</span><span>Supérieure</span></div>
+            <p class="argus-a21-definition"><strong>Taux = reprises facturées ÷ reprises saisies.</strong> Hachures : moins de 30 saisies estimées dans la cellule. Les volumes par grade sont reconstruits à partir des parts publiées et des volumes mensuels globaux ; les facturées sont redistribuées sous contrainte de ne pas dépasser les saisies.</p>
+            <p class="argus-a21-caveat">Estimation : les données sources ne fournissent que des parts par grade, pas les volumes croisés. La redistribution contrainte conserve le total annuel (720 reprises) mais peut s’écarter des volumes facturés par mois affichés dans A20, car certains mois indiquent plus de reprises que de saisies.</p>
+          </div>
+          <div id="a21-share-panel" class="hidden">
+            <div class="argus-a21-tables">
+              <div class="argus-a21-table-card"><div class="argus-a21-table-title"><span class="argus-a21-mark mark-saisi"></span><h4>SAISIS : % de grade</h4><span class="argus-a21-unit">PART</span></div><div class="argus-a21-scroll"><table class="argus-a21-table" id="table-a21-saisi" aria-label="Répartition mensuelle des grades saisis en 2026"></table></div></div>
+              <div class="argus-a21-table-card"><div class="argus-a21-table-title"><span class="argus-a21-mark mark-facture"></span><h4>FACTURES : % de grade</h4><span class="argus-a21-unit">PART</span></div><div class="argus-a21-scroll"><table class="argus-a21-table" id="table-a21-facture" aria-label="Répartition mensuelle des grades facturés en 2026"></table></div></div>
+            </div>
           </div>
         </section>
 
@@ -868,6 +871,7 @@
 
   <!-- Script applicatif -->
   <script src="app.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>

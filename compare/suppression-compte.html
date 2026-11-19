@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Suppression de compte - CompaRecycle</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+  body {
+    background: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  /* ===== Boutons déclencheurs ===== */
+  .btn-delete {
+    background: #F6021E;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(246, 2, 30, 0.3);
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+
+  .btn-delete:hover {
+    background: #d40119;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(246, 2, 30, 0.4);
+  }
+
+  .btn-blocked {
+    background: #123241;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(18, 50, 65, 0.3);
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+
+  .btn-blocked:hover {
+    background: #0c222d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(18, 50, 65, 0.4);
+  }
+
+  /* ===== Overlay ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(16, 42, 54, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  /* ===== Modale ===== */
+  .modal {
+    background: #ffffff;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 520px;
+    padding: 32px 36px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    animation: pop .25s ease;
+  }
+
+  @keyframes pop {
+    from { transform: scale(.95); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+
+  .modal-icon.warning { background: #FDECEA; }
+  .modal-icon.info    { background: #EAF3F6; }
+
+  .modal h2 {
+    color: #123241;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .modal p {
+    color: #3d4d56;
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .modal p strong { color: #123241; }
+
+  .modal-buttons {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .modal-buttons.single .btn { flex: 1; }
+
+  .btn {
+    flex: 1;
+    padding: 14px 0;
+    border: none;
+    border-radius: 999px;
+    font-size: 15px;
+    font weight: 600;
+    cursor: pointer;
+    transition: opacity .2s, transform .1s;
+  }
+
+  .btn:hover { opacity: .85; }
+  .btn:active { transform: scale(.98); }
+
+  .btn-cancel  { background: #9aa3a8; color: #ffffff; }
+  .btn-confirm { background: #F6021E; color: #ffffff; }
+  .btn-primary { background: #123241; color: #ffffff; }
+</style>
+</head>
+<body>
+
+  <!-- ===== Boutons déclencheurs ===== -->
+  <button class="btn-blocked" id="openBlockedModal">Demande impossible</button>
+  <button class="btn-delete" id="openModal">Supprimer mon compte</button>
+
+  <!-- ===== Modale : transaction en cours ===== -->
+  <div class="modal-overlay" id="blockedModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="blockedTitle">
+      <h2 id="blockedTitle">Une transaction est en cours de traitement</h2>
+
+      <p>
+        La suppression de votre compte n'est pas permise actuellement en raison de
+        transactions en cours de traitement.
+      </p>
+      <p>
+        Nous vous invitons à recommencer votre demande ultérieurement.
+      </p>
+
+      <div class="modal-buttons single">
+        <button class="btn btn-primary" id="blockedOkBtn">J'ai compris</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Modale : confirmation de suppression ===== -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+      <h2 id="deleteTitle">Attention</h2>
+
+      <p>
+        La suppression de votre compte est <strong>irréversible</strong>. Toutes vos
+        données personnelles, vos paramètres et votre historique seront définitivement
+        effacés de nos systèmes.
+      </p>
+      <p>
+        En cliquant sur <strong>"Je confirme"</strong>, votre compte sera supprimé dans 30 jours.
+      </p>
+      <p>
+        Un email de confirmation vous a été envoyé.
+      </p>
+
+      <div class="modal-buttons">
+        <button class="btn btn-cancel" id="cancelBtn">Annuler</button>
+        <button class="btn btn-confirm" id="confirmBtn">Je confirme</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const blockedModal = document.getElementById('blockedModal');
+  const deleteModal  = document.getElementById('deleteModal');
+
+  function openModal(m)  { m.classList.add('active'); }
+  function closeModal(m) { m.classList.remove('active'); }
+
+  // Ouvrir : demande impossible (transaction en cours)
+  document.getElementById('openBlockedModal').addEventListener('click', () => openModal(blockedModal));
+
+  // Ouvrir : suppression de compte
+  document.getElementById('openModal').addEventListener('click', () => openModal(deleteModal));
+
+  // "J'ai compris" → fermer
+  document.getElementById('blockedOkBtn').addEventListener('click', () => closeModal(blockedModal));
+
+  // Annuler → fermer
+  document.getElementById('cancelBtn').addEventListener('click', () => closeModal(deleteModal));
+
+  // Je confirme → suppression
+  document.getElementById('confirmBtn').addEventListener('click', () => {
+    alert('Votre compte sera supprimé dans 30 jours. Un email de confirmation vous a été envoyé.');
+    closeModal(deleteModal);
+  });
+
+  // Fermer au clic sur l'overlay
+  [blockedModal, deleteModal].forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) closeModal(m); });
+  });
+
+  // Fermer avec la touche Échap
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeModal(blockedModal);
+      closeModal(deleteModal);
+    }
+  });
+</script>
+</body>
+</html>

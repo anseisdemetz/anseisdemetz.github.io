@@ -31,6 +31,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const viewVolume = document.getElementById("view-volume");
 
   const activeLinkClass = "flex items-center justify-between px-3 py-2 rounded-md bg-cyan-600/20 text-cyan-400 font-medium border-l-2 border-cyan-400";
+
+  function localDateValue(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  function getValidatedRange(startInput, endInput) {
+    if (!startInput?.value || !endInput?.value) return null;
+    if (startInput.value > endInput.value) endInput.value = startInput.value;
+    const start = new Date(`${startInput.value}T00:00:00`);
+    const end = new Date(`${endInput.value}T00:00:00`);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
+    return { start, end };
+  }
   const inactiveLinkClass = "flex items-center justify-between px-3 py-2 rounded-md hover:bg-slate-700/40 text-slate-400 hover:text-slate-200 transition-colors";
 
   let chartsInitialized = {
@@ -41,7 +57,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function switchView(target) {
     [linkFinancier, linkArgus, linkVolume].forEach(link => {
-      if (link) link.className = inactiveLinkClass;
+      if (link) {
+        link.className = inactiveLinkClass;
+        link.removeAttribute("aria-current");
+      }
     });
 
     // Masquage initial de toutes les vues
@@ -50,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (viewArgus) viewArgus.classList.add("hidden");
 
     if (target === 'financier') {
-      if (linkFinancier) linkFinancier.className = activeLinkClass;
+      if (linkFinancier) { linkFinancier.className = activeLinkClass; linkFinancier.setAttribute("aria-current", "page"); }
       if (pageTitle) pageTitle.innerText = "Tableau de bord financier";
       if (pageSubtitle) pageSubtitle.innerText = "Vue d'ensemble de l'activité trade-in et des jalons financiers";
       if (viewFinancier) viewFinancier.classList.remove("hidden");
@@ -60,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 50);
 
     } else if (target === 'volume') {
-      if (linkVolume) linkVolume.className = activeLinkClass;
+      if (linkVolume) { linkVolume.className = activeLinkClass; linkVolume.setAttribute("aria-current", "page"); }
       if (pageTitle) pageTitle.innerText = "Tableau de bord sur les volumes";
       if (pageSubtitle) pageSubtitle.innerText = "Analyse des quantités saisies, reprises et des délais de traitement";
       if (viewVolume) viewVolume.classList.remove("hidden");
@@ -75,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
     } else if (target === 'argus') {
-      if (linkArgus) linkArgus.className = activeLinkClass;
+      if (linkArgus) { linkArgus.className = activeLinkClass; linkArgus.setAttribute("aria-current", "page"); }
       if (pageTitle) pageTitle.innerText = "Tableau de bord argus";
       if (pageSubtitle) pageSubtitle.innerText = "Analyse des produits et des grades";
       if (viewArgus) viewArgus.classList.remove("hidden");
@@ -83,7 +102,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!chartsInitialized.argus) {
         initArgusCharts();
         initArgusMonthlyChart();
+        initArgusA21();
         chartsInitialized.argus = true;
+        setTimeout(() => Highcharts.charts.forEach(c => c && c.reflow()), 60);
       } else {
         setTimeout(() => {
           Highcharts.charts.forEach(c => c && c.reflow());
@@ -95,6 +116,9 @@ document.addEventListener("DOMContentLoaded", function () {
   if (linkFinancier) linkFinancier.addEventListener("click", (e) => { e.preventDefault(); switchView('financier'); });
   if (linkVolume) linkVolume.addEventListener("click", (e) => { e.preventDefault(); switchView('volume'); });
   if (linkArgus) linkArgus.addEventListener("click", (e) => { e.preventDefault(); switchView('argus'); });
+  document.querySelectorAll('a[href="#"][aria-disabled="true"]').forEach(link => {
+    link.addEventListener("click", event => event.preventDefault());
+  });
 
 
   // -------------------------------------------------------------
@@ -114,8 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {
       this.className = "btn-range-fin px-2.5 py-1.5 text-xs font-semibold rounded border border-cyan-300 bg-cyan-50 text-cyan-700";
 
       const range = this.getAttribute("data-range");
-      const end = new Date("2026-11-17");
-      let start = new Date("2026-11-17");
+      const end = new Date();
+      let start = new Date();
 
       if (range === "7") {
         start.setDate(end.getDate() - 7);
@@ -127,18 +151,19 @@ document.addEventListener("DOMContentLoaded", function () {
         start.setFullYear(end.getFullYear(), 0, 1);
       }
 
-      if (finDateStart) finDateStart.value = start.toISOString().split('T')[0];
-      if (finDateEnd) finDateEnd.value = end.toISOString().split('T')[0];
+      if (finDateStart) finDateStart.value = localDateValue(start);
+      if (finDateEnd) finDateEnd.value = localDateValue(end);
       applyFinancialPeriodFilter();
     });
   });
 
   function applyFinancialPeriodFilter() {
     if (!finDateStart || !finDateEnd || !finPeriodDisplay) return;
-    const d1 = new Date(finDateStart.value);
-    const d2 = new Date(finDateEnd.value);
-    const diffTime = Math.abs(d2 - d1);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    const range = getValidatedRange(finDateStart, finDateEnd);
+    if (!range) return;
+    const d1 = range.start;
+    const d2 = range.end;
+    const diffDays = Math.floor((d2 - d1) / 86400000) + 1;
     const formatFr = d => d.toLocaleDateString('fr-FR');
     finPeriodDisplay.innerText = `${formatFr(d1)} - ${formatFr(d2)} (${diffDays} jours)`;
 
@@ -176,8 +201,8 @@ document.addEventListener("DOMContentLoaded", function () {
       this.className = "btn-range-vol px-2.5 py-1.5 text-xs font-semibold rounded border border-cyan-300 bg-cyan-50 text-cyan-700";
 
       const range = this.getAttribute("data-range");
-      const end = new Date("2026-11-17");
-      let start = new Date("2026-11-17");
+      const end = new Date();
+      let start = new Date();
 
       if (range === "7") {
         start.setDate(end.getDate() - 7);
@@ -189,18 +214,19 @@ document.addEventListener("DOMContentLoaded", function () {
         start.setFullYear(end.getFullYear(), 0, 1);
       }
 
-      if (volDateStart) volDateStart.value = start.toISOString().split('T')[0];
-      if (volDateEnd) volDateEnd.value = end.toISOString().split('T')[0];
+      if (volDateStart) volDateStart.value = localDateValue(start);
+      if (volDateEnd) volDateEnd.value = localDateValue(end);
       applyVolumePeriodFilter();
     });
   });
 
   function applyVolumePeriodFilter() {
     if (!volDateStart || !volDateEnd || !volPeriodDisplay) return;
-    const d1 = new Date(volDateStart.value);
-    const d2 = new Date(volDateEnd.value);
-    const diffTime = Math.abs(d2 - d1);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    const range = getValidatedRange(volDateStart, volDateEnd);
+    if (!range) return;
+    const d1 = range.start;
+    const d2 = range.end;
+    const diffDays = Math.floor((d2 - d1) / 86400000) + 1;
     const formatFr = d => d.toLocaleDateString('fr-FR');
     volPeriodDisplay.innerText = `${formatFr(d1)} - ${formatFr(d2)} (${diffDays} jours)`;
 
@@ -239,8 +265,8 @@ document.addEventListener("DOMContentLoaded", function () {
       this.className = "btn-range-argus px-2.5 py-1.5 text-xs font-semibold rounded border border-cyan-300 bg-cyan-50 text-cyan-700";
 
       const range = this.getAttribute("data-range");
-      const end = new Date("2026-11-17");
-      let start = new Date("2026-11-17");
+      const end = new Date();
+      let start = new Date();
 
       if (range === "7") {
         start.setDate(end.getDate() - 7);
@@ -252,18 +278,19 @@ document.addEventListener("DOMContentLoaded", function () {
         start.setFullYear(end.getFullYear(), 0, 1);
       }
 
-      if (argusDateStart) argusDateStart.value = start.toISOString().split('T')[0];
-      if (argusDateEnd) argusDateEnd.value = end.toISOString().split('T')[0];
+      if (argusDateStart) argusDateStart.value = localDateValue(start);
+      if (argusDateEnd) argusDateEnd.value = localDateValue(end);
       applyArgusPeriodFilter();
     });
   });
 
   function applyArgusPeriodFilter() {
     if (!argusDateStart || !argusDateEnd || !argusPeriodDisplay) return;
-    const d1 = new Date(argusDateStart.value);
-    const d2 = new Date(argusDateEnd.value);
-    const diffTime = Math.abs(d2 - d1);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    const range = getValidatedRange(argusDateStart, argusDateEnd);
+    if (!range) return;
+    const d1 = range.start;
+    const d2 = range.end;
+    const diffDays = Math.floor((d2 - d1) / 86400000) + 1;
     const formatFr = d => d.toLocaleDateString('fr-FR');
     argusPeriodDisplay.innerText = `${formatFr(d1)} - ${formatFr(d2)} (${diffDays} jours)`;
 
@@ -288,10 +315,54 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 
+  // Initialiser les filtres sur les 30 derniers jours jusqu’à aujourd’hui.
+  [[finDateStart, finDateEnd], [volDateStart, volDateEnd], [argusDateStart, argusDateEnd]].forEach(([startInput, endInput]) => {
+    if (!startInput || !endInput) return;
+    const today = new Date();
+    const start = new Date(today);
+    start.setDate(start.getDate() - 30);
+    startInput.value = localDateValue(start);
+    endInput.value = localDateValue(today);
+  });
+  applyFinancialPeriodFilter();
+  applyVolumePeriodFilter();
+  applyArgusPeriodFilter();
+
   // -------------------------------------------------------------
   // INITIALISATION DES GRAPHIQUES : VUE FINANCIÈRE (A04, A05, A07)
   // -------------------------------------------------------------
   
+  // Source financière unique : le total théorique est la somme des trois statuts.
+  // Le plafond de 40 000 € est dépassé de 315 € (encours = 40 315 €), donc le reste disponible vaut zéro.
+  const financialData = {
+    allocation: 40000,
+    current: 1934,
+    statuses: [
+      { name: "Traitement", y: 14180, color: "#38bdf8" },
+      { name: "En transit", y: 14624, color: "#0284c7" },
+      { name: "Sous inspection", y: 9577, color: "#0369a1" }
+    ]
+  };
+  financialData.theoretical = financialData.statuses.reduce((sum, item) => sum + item.y, 0);
+  financialData.total = financialData.current + financialData.theoretical;
+  financialData.remaining = Math.max(0, financialData.allocation - financialData.total);
+  const euro = value => `${Highcharts.numberFormat(value, 0, ",", " ")} €`;
+  const pctOfTotal = value => `${(value / financialData.total * 100).toFixed(2)} %`;
+  document.getElementById("kpi-encours-total").textContent = euro(financialData.total);
+  document.getElementById("kpi-valeur-actuelle").textContent = euro(financialData.current);
+  document.getElementById("kpi-reste-deconnexion").textContent = euro(financialData.remaining);
+  document.querySelectorAll("[data-fin-value]").forEach(el => el.textContent = euro(financialData[el.dataset.finValue]));
+  document.querySelectorAll("[data-fin-percent]").forEach(el => el.textContent = pctOfTotal(financialData[el.dataset.finPercent]));
+  document.querySelectorAll("[data-fin-status-index]").forEach(el => {
+    const status = financialData.statuses[Number(el.dataset.finStatusIndex)];
+    if (status) el.textContent = euro(status.y);
+  });
+  document.querySelectorAll("[data-fin-total]").forEach(el => el.textContent = euro(financialData.theoretical));
+  document.getElementById("theoretical-total-label").textContent = `Total : ${euro(financialData.theoretical)}`;
+  const donutLegendPercent = { current: financialData.current / financialData.total * 100, theoretical: financialData.theoretical / financialData.total * 100, remaining: financialData.remaining / financialData.total * 100 };
+  const legendPercentElements = document.querySelectorAll('#view-financier [class~="lg:col-span-5"] .pl-4.font-bold');
+  [donutLegendPercent.current, donutLegendPercent.theoretical, donutLegendPercent.remaining].forEach((value, index) => { if (legendPercentElements[index]) legendPercentElements[index].textContent = `${value.toFixed(2)} %`; });
+
   // 1. Donut Alloué (A04)
   if (document.getElementById('container-donut')) {
     Highcharts.chart('container-donut', {
@@ -301,7 +372,7 @@ document.addEventListener("DOMContentLoaded", function () {
         spacing: [10, 10, 10, 10]
       },
       title: {
-        text: '<span class="text-xs text-slate-400 font-normal">Alloué</span><br><b class="text-base text-slate-800">40 000 €</b><br><span class="text-xs text-slate-500 font-semibold">100%</span>',
+        text: `<span class="text-xs text-slate-400 font-normal">Encours total</span><br><b class="text-base text-slate-800">${euro(financialData.total)}</b><br><span class="text-xs text-slate-500 font-semibold">100%</span>`,
         align: 'center',
         verticalAlign: 'middle',
         y: 5,
@@ -344,9 +415,9 @@ document.addEventListener("DOMContentLoaded", function () {
       series: [{
         name: 'Encours',
         data: [
-          { name: 'Actuel', y: 1934, color: '#0284c7' },
-          { name: 'Théorique', y: 38381, color: '#22c55e' },
-          { name: 'Reste avant déconnexion', y: 38066, color: '#ef4444' }
+          { name: 'Actuel', y: financialData.current, color: '#0284c7' },
+          { name: 'Théorique', y: financialData.theoretical, color: '#22c55e' },
+          { name: 'Reste avant déconnexion', y: financialData.remaining, color: '#ef4444' }
         ]
       }]
     });
@@ -389,7 +460,7 @@ document.addEventListener("DOMContentLoaded", function () {
         borderRadius: 8,
         style: { color: '#ffffff' },
         formatter: function () {
-          const totalEncours = 1934;
+          const totalEncours = financialData.current;
           const proportion = totalEncours > 0 ? ((this.y / totalEncours) * 100).toFixed(1) : 0;
           return `
             <div class="p-1">
@@ -418,7 +489,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       series: [{
         name: 'Valeur',
-        data: [1934, 0, 0, 1934]
+        data: [financialData.current, 0, 0, financialData.current]
       }]
     });
   }
@@ -459,7 +530,7 @@ document.addEventListener("DOMContentLoaded", function () {
         borderRadius: 8,
         style: { color: '#ffffff' },
         formatter: function () {
-          const total = 38381;
+          const total = financialData.theoretical;
           const pct = ((this.y / total) * 100).toFixed(1);
           return `
             <div class="p-1">
@@ -487,11 +558,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       series: [{
         name: 'Montant théorique (€)',
-        data: [
-          { y: 3120, color: '#38bdf8' },
-          { y: 15400, color: '#0284c7' },
-          { y: 19861, color: '#0369a1' }
-        ]
+        data: financialData.statuses
       }]
     });
   }
@@ -698,57 +765,111 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // A21 : répartitions par grade pour 2026 (janvier–novembre), d'après la capture fournie.
+  // A21 : parts par grade fournies ; volumes par grade estimés depuis les totaux mensuels A20.
   function initArgusA21() {
     const grades = ["A", "A-", "B", "C", "C-", "D", "D-"];
-    const periods = [
-      {label: "2026", values: [22, 15, 15, 17, 13, 8, 10]},
-      {label: "P01 · Jan", values: [20, 11, 12, 20, 18, 10, 9]},
-      {label: "P02 · Fév", values: [19, 12, 16, 19, 17, 8, 9]},
-      {label: "P03 · Mar", values: [22, 15, 17, 19, 12, 8, 7]},
-      {label: "P04 · Avr", values: [25, 13, 14, 16, 14, 8, 10]},
-      {label: "P05 · Mai", values: [22, 13, 15, 15, 12, 8, 14]},
-      {label: "P06 · Juin", values: [22, 13, 15, 16, 13, 9, 13]},
-      {label: "P07 · Juil", values: [25, 13, 14, 17, 13, 8, 11]},
-      {label: "P08 · Aoû", values: [24, 19, 14, 15, 10, 7, 9]},
-      {label: "P09 · Sep", values: [22, 13, 16, 16, 13, 8, 10]},
-      {label: "P10 · Oct", values: [18, 23, 15, 17, 13, 8, 7]},
-      {label: "P11 · Nov", values: [26, 14, 16, 18, 11, 9, 6]}
+    const months = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aoû", "Sep", "Oct", "Nov"];
+    const enteredTotal = [242, 69, 168, 52, 20, 26, 17, 15, 33, 255, 49];
+    const billedTotal = [161, 84, 83, 89, 21, 14, 17, 6, 11, 108, 126];
+    const enteredShares = [
+      [20,11,12,20,18,10,9],[19,12,16,19,17,8,9],[22,15,17,19,12,8,7],
+      [25,13,14,16,14,8,10],[22,13,15,15,12,8,14],[22,13,15,16,13,9,13],
+      [25,13,14,17,13,8,11],[24,19,14,15,10,7,9],[22,13,16,16,13,8,10],
+      [18,23,15,17,13,8,7],[26,14,16,18,11,9,6]
     ];
-    const facturePeriods = [
-      {label: "2026", values: [10, 14, 9, 24, 13, 13, 17]},
-      {label: "Jan", values: [6, 8, 10, 22, 17, 14, 24]},
-      {label: "Fév", values: [10, 8, 9, 25, 15, 15, 18]},
-      {label: "Mar", values: [8, 10, 11, 25, 15, 13, 18]},
-      {label: "Avr", values: [15, 12, 9, 24, 10, 14, 15]},
-      {label: "Mai", values: [13, 14, 8, 22, 10, 15, 19]},
-      {label: "Juin", values: [10, 13, 8, 24, 10, 15, 19]},
-      {label: "Juil", values: [12, 11, 8, 24, 12, 13, 19]},
-      {label: "Aoû", values: [13, 16, 9, 23, 11, 13, 15]},
-      {label: "Sep", values: [11, 19, 10, 23, 10, 13, 14]},
-      {label: "Oct", values: [6, 24, 10, 25, 12, 12, 11]},
-      {label: "Nov", values: [9, 16, 10, 28, 11, 13, 14]}
+    const billedShares = [
+      [6,8,10,22,17,14,24],[10,8,9,25,15,15,18],[8,10,11,25,15,13,18],
+      [15,12,9,24,10,14,15],[13,14,8,22,10,15,19],[10,13,8,24,10,15,19],
+      [12,11,8,24,12,13,19],[13,16,9,23,11,13,15],[11,19,10,23,10,13,14],
+      [6,24,10,25,12,12,11],[9,16,10,28,11,13,14]
     ];
-    function renderTable(side) {
-      const isSaisi = side === "saisi";
-      const table = document.getElementById(isSaisi ? "table-a21-saisi" : "table-a21-facture");
-      if (!table) return;
-      const sourcePeriods = isSaisi ? periods : facturePeriods;
-      const rows = sourcePeriods.map((period, index) => {
-        const cells = period.values.map(value => {
-          const heat = value >= 23 ? "a21-heat-high" : value >= 19 ? "a21-heat-mid" : value >= 15 ? "a21-heat-balanced" : value >= 11 ? "a21-heat-low" : "a21-heat-min";
-          return `<td class="${heat}">${value}%</td>`;
-        }).join("");
-        return `<tr><th scope="row" class="${index === 0 ? "year-row" : ""}">${period.label}</th>${cells}<td class="a21-total">100%</td></tr>`;
-      }).join("");
-      const headers = grades.map(grade => `<th scope="col">${grade}</th>`).join("");
-      table.innerHTML = `<thead><tr><th scope="col">Période</th>${headers}<th scope="col">Total général</th></tr></thead><tbody>${rows}</tbody>`;
+    const largestRemainder = (total, shares) => {
+      const raw = shares.map(v => total * v / shares.reduce((a,b) => a+b, 0));
+      const result = raw.map(Math.floor);
+      let left = total - result.reduce((a,b) => a+b, 0);
+      raw.map((v,i) => ({i, frac:v-result[i]})).sort((a,b) => b.frac-a.frac || a.i-b.i).slice(0,left).forEach(x => result[x.i]++);
+      return result;
+    };
+    const entered = enteredShares.map((shares,m) => largestRemainder(enteredTotal[m], shares));
+    // Apportionner les reprises facturées en respectant les plafonds de saisie par cellule.
+    // Pondération = volumes mensuels facturés A20 × parts facturées par grade ; redistribution
+    // proportionnelle des excédents nécessaires pour éviter un taux estimé >100 %.
+    const caps = entered.flat();
+    const weights = billedShares.flatMap((shares,m) => shares.map(share => billedTotal[m] * share / 100));
+    const target = billedTotal.reduce((a,b) => a+b, 0);
+    let lo = 0, hi = target + 1;
+    for (let k=0;k<60;k++) {
+      const mid = (lo+hi)/2;
+      if (caps.reduce((sum,cap,i) => sum + Math.min(cap, mid*weights[i]), 0) < target) lo=mid; else hi=mid;
     }
-    renderTable("saisi");
-    renderTable("facture");
+    const rawInvoices = caps.map((cap,i) => Math.min(cap, hi*weights[i]));
+    const invoices = rawInvoices.map(Math.floor);
+    let remainder = target - invoices.reduce((a,b) => a+b,0);
+    rawInvoices.map((v,i) => ({i,frac:v-invoices[i]})).filter(x => invoices[x.i] < caps[x.i])
+      .sort((a,b) => b.frac-a.frac || weights[b.i]-weights[a.i] || a.i-b.i)
+      .slice(0,remainder).forEach(x => invoices[x.i]++);
+    const billed = Array.from({length: months.length}, (_,m) => invoices.slice(m*7,m*7+7));
+    const annualIn = grades.map((_,g) => entered.reduce((sum,row)=>sum+row[g],0));
+    const annualOut = grades.map((_,g) => billed.reduce((sum,row)=>sum+row[g],0));
+    const annualRates = grades.map((_,g) => annualIn[g] ? annualOut[g]/annualIn[g]*100 : 0);
+    const annualInTotal = annualIn.reduce((a,b)=>a+b,0), annualOutTotal = annualOut.reduce((a,b)=>a+b,0);
+    const fmt = n => new Intl.NumberFormat("fr-FR").format(n);
+    const rate = (out, input) => input ? out/input*100 : null;
+    const allCells = [];
+    const rows = [{label:"2026", input:annualIn, output:annualOut, annual:true}];
+    months.forEach((label,m) => rows.push({label, input:entered[m], output:billed[m], monthIndex:m}));
+    let best=null, worst=null;
+    rows.slice(1).forEach(row => grades.forEach((grade,g) => {
+      const r=rate(row.output[g],row.input[g]);
+      if (r===null) return;
+      const item={month:row.label,grade,rate:r,input:row.input[g],output:row.output[g]};
+      if (!best || r>best.rate) best=item;
+      if (!worst || r<worst.rate) worst=item;
+    }));
+    const summary = document.getElementById("a21-summary");
+    if (summary) summary.innerHTML = `<div class="a21-summary-item"><span>Meilleure conversion mensuelle</span><strong>${best.grade} · ${best.month} <b>${best.rate.toFixed(1)}%</b></strong></div><div class="a21-summary-item"><span>Conversion la plus faible</span><strong>${worst.grade} · ${worst.month} <b>${worst.rate.toFixed(1)}%</b></strong></div><div class="a21-summary-note">Sur les cellules mensuelles disponibles · volumes estimés</div>`;
+    const table = document.getElementById("table-a21-conversion");
+    if (table) {
+      const headers=grades.map(g=>`<th scope="col">${g}</th>`).join("");
+      const body=rows.map(row=>{
+        let rowIn=0,rowOut=0;
+        const cells=grades.map((grade,g)=>{
+          const input=row.input[g], output=row.output[g], r=rate(output,input), benchmark=annualRates[g];
+          rowIn+=input; rowOut+=output;
+          const diff=r===null?0:r-benchmark;
+          const cls=Math.abs(diff)<2?"a21-conv-neutral":diff>0?"a21-conv-positive":"a21-conv-negative";
+          const sparse=input<30?" a21-low-volume":"";
+          const prev=row.monthIndex>0?rate(billed[row.monthIndex-1][g],entered[row.monthIndex-1][g]):null;
+          const tooltip=`${grade} · ${row.label} 2026 — Saisis estimés : ${fmt(input)} ; facturés estimés : ${fmt(output)} ; taux : ${r===null?"n.d.":r.toFixed(1)+"%"} ; écart à la moyenne annuelle du grade : ${r===null?"n.d.":(diff>=0?"+":"")+diff.toFixed(1)+" points"} ; écart au mois précédent : ${prev===null?"n.d.":(r-prev>=0?"+":"")+(r-prev).toFixed(1)+" points"}.`;
+          allCells.push({rate:r,diff});
+          return `<td class="a21-conv-cell ${cls}${sparse}" title="${tooltip}" aria-label="${tooltip}"><strong>${r===null?"—":r.toFixed(1)+"%"}</strong><span>${fmt(output)} / ${fmt(input)}</span></td>`;
+        }).join("");
+        const totalRate=rate(rowOut,rowIn), totalDiff=totalRate-(annualOutTotal/annualInTotal*100);
+        const previousTotal=row.monthIndex>0?rate(billed[row.monthIndex-1].reduce((a,b)=>a+b,0),entered[row.monthIndex-1].reduce((a,b)=>a+b,0)):null;
+        const totalTip=`${row.label} 2026 · Total — Saisis estimés : ${fmt(rowIn)} ; facturés estimés : ${fmt(rowOut)} ; taux : ${totalRate.toFixed(1)}% ; écart à la moyenne annuelle globale : ${(totalDiff>=0?"+":"")+totalDiff.toFixed(1)} points ; écart au mois précédent : ${previousTotal===null?"n.d.":(totalRate-previousTotal>=0?"+":"")+(totalRate-previousTotal).toFixed(1)+" points"}.`;
+        return `<tr class="${row.annual?"a21-year-row":""}"><th scope="row" class="${row.annual?"year-row":""}">${row.label}</th>${cells}<td class="a21-conv-cell a21-conv-total" title="${totalTip}" aria-label="${totalTip}"><strong>${totalRate.toFixed(1)}%</strong><span>${fmt(rowOut)} / ${fmt(rowIn)}</span></td></tr>`;
+      }).join("");
+      table.innerHTML=`<thead><tr><th scope="col">Période</th>${headers}<th scope="col">Total</th></tr></thead><tbody>${body}</tbody>`;
+    }
+    function renderShareTable(side) {
+      const table=document.getElementById(side==="saisi"?"table-a21-saisi":"table-a21-facture");
+      if(!table)return;
+      const source=side==="saisi"?enteredShares:billedShares;
+      const annual=side==="saisi"?[22,15,15,17,13,8,10]:[10,14,9,24,13,13,17];
+      const periods=[{label:"2026",values:annual},...source.map((values,m)=>({label:`P${String(m+1).padStart(2,"0")} · ${months[m]}`,values}))];
+      const content=periods.map((period,index)=>`<tr><th scope="row" class="${index===0?"year-row":""}">${period.label}</th>${period.values.map(value=>`<td class="${value>=23?"a21-heat-high":value>=19?"a21-heat-mid":value>=15?"a21-heat-balanced":value>=11?"a21-heat-low":"a21-heat-min"}">${value}%</td>`).join("")}<td class="a21-total">${period.values.reduce((a,b)=>a+b,0)}%</td></tr>`).join("");
+      table.innerHTML=`<thead><tr><th scope="col">Période</th>${grades.map(g=>`<th scope="col">${g}</th>`).join("")}<th scope="col">Total général</th></tr></thead><tbody>${content}</tbody>`;
+    }
+    renderShareTable("saisi"); renderShareTable("facture");
+    document.querySelectorAll("[data-a21-view]").forEach(button=>button.addEventListener("click",function(){
+      const conversion=this.dataset.a21View==="conversion";
+      document.getElementById("a21-conversion-panel").classList.toggle("hidden",!conversion);
+      document.getElementById("a21-share-panel").classList.toggle("hidden",conversion);
+      document.querySelectorAll("[data-a21-view]").forEach(toggle=>{
+        const active=toggle===this; toggle.classList.toggle("is-active",active); toggle.setAttribute("aria-pressed",String(active));
+      });
+    }));
   }
-  initArgusA21();
-
   // Bascule locale A20; n’interfère pas avec les graphiques historiques.
   document.querySelectorAll("[data-a20-view]").forEach(button => {
     button.addEventListener("click", function () {
