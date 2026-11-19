@@ -99,11 +99,11 @@
                 </div>
                 <div class="viva-field">
                   <label for="identity-city">City*</label>
-                  <input type="text" id="identity-city" placeholder="Paris" required>
+                  <input type="text" id="identity-city" placeholder="London" required>
                 </div>
                 <div class="viva-field identity-wide">
                   <label for="identity-country">Country*</label>
-                  <input type="text" id="identity-country" value="France" required>
+                  <input type="text" id="identity-country" value="United Kingdom" required>
                 </div>
               </div>
             </div>
@@ -132,11 +132,11 @@
                 </div>
                 <div class="viva-field">
                   <label for="identity-doctown">Issuing city*</label>
-                  <input type="text" id="identity-doctown" placeholder="Paris" required>
+                  <input type="text" id="identity-doctown" placeholder="London" required>
                 </div>
                 <div class="viva-field identity-wide">
                   <label for="identity-doccountry">Issuing country*</label>
-                  <input type="text" id="identity-doccountry" value="France" required>
+                  <input type="text" id="identity-doccountry" value="United Kingdom" required>
                 </div>
               </div>
             </div>
@@ -463,21 +463,64 @@
 
   <!-- EDIT PERSONAL DETAILS MODAL -->
   <div id="userModal" class="modal-overlay">
-    <div class="modal-card modal-card-form">
+    <div class="modal-card modal-card-form modal-card-wide">
       <div class="modal-form-header">
-        <h3 class="modal-title">Edit my personal details</h3>
+        <h3 class="modal-title">Edit my details</h3>
         <button type="button" class="viva-close" onclick="closeUserModal()">&times;</button>
       </div>
       <form onsubmit="handleUserFormSubmit(event)">
-        <div class="identity-grid">
-          <div class="viva-field"><label>First name*</label><input type="text" id="edit-firstname" required></div>
-          <div class="viva-field"><label>Last name*</label><input type="text" id="edit-lastname" required></div>
-          <div class="viva-field"><label>Email*</label><input type="email" id="edit-email" value="john.doe@example.com" required></div>
-          <div class="viva-field"><label>Phone*</label><input type="tel" id="edit-phone" value="+44 7700 900077" required></div>
-          <div class="viva-field identity-wide"><label>Street address*</label><input type="text" id="edit-address" required></div>
-          <div class="viva-field"><label>Postal code*</label><input type="text" id="edit-zip" required></div>
-          <div class="viva-field"><label>City*</label><input type="text" id="edit-city" required></div>
-          <div class="viva-field identity-wide"><label>Country*</label><input type="text" id="edit-country" required></div>
+        <div class="modal-split-columns">
+          <!-- LEFT COLUMN: PERSONAL DETAILS -->
+          <div class="form-section-card modal-col-card">
+            <div class="form-section-title">
+              <i class="fa-solid fa-user"></i>
+              <span>Personal details</span>
+            </div>
+            <div class="identity-grid">
+              <div class="viva-field"><label for="edit-firstname">First name*</label><input type="text" id="edit-firstname" required></div>
+              <div class="viva-field"><label for="edit-lastname">Last name*</label><input type="text" id="edit-lastname" required></div>
+              <div class="viva-field"><label for="edit-email">Email*</label><input type="email" id="edit-email" value="john.doe@example.com" required></div>
+              <div class="viva-field"><label for="edit-phone">Phone*</label><input type="tel" id="edit-phone" value="+44 7700 900077" required></div>
+              <div class="viva-field identity-wide"><label for="edit-address">Street address*</label><input type="text" id="edit-address" required></div>
+              <div class="viva-field"><label for="edit-zip">Postal code*</label><input type="text" id="edit-zip" required></div>
+              <div class="viva-field"><label for="edit-city">City*</label><input type="text" id="edit-city" required></div>
+              <div class="viva-field identity-wide"><label for="edit-country">Country*</label><input type="text" id="edit-country" required></div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: IDENTITY DOCUMENT -->
+          <div class="form-section-card modal-col-card">
+            <div class="form-section-title">
+              <i class="fa-solid fa-passport"></i>
+              <span>Identity document</span>
+            </div>
+            <div class="identity-grid">
+              <div class="viva-field identity-wide">
+                <label for="edit-doctype">Document type*</label>
+                <select id="edit-doctype" class="styled-select" required>
+                  <option value="" disabled selected>Select a document</option>
+                  <option value="National ID Card">National ID Card</option>
+                  <option value="Passport">Passport</option>
+                </select>
+              </div>
+              <div class="viva-field identity-wide">
+                <label for="edit-docnum">Document number*</label>
+                <input type="text" id="edit-docnum" placeholder="e.g. 123456789012" required>
+              </div>
+              <div class="viva-field">
+                <label for="edit-docdate">Issue date*</label>
+                <input type="date" id="edit-docdate" required>
+              </div>
+              <div class="viva-field">
+                <label for="edit-doctown">Issuing city*</label>
+                <input type="text" id="edit-doctown" placeholder="London" required>
+              </div>
+              <div class="viva-field identity-wide">
+                <label for="edit-doccountry">Issuing country*</label>
+                <input type="text" id="edit-doccountry" value="United Kingdom" required>
+              </div>
+            </div>
+          </div>
         </div>
         
         <div class="modal-form-actions">

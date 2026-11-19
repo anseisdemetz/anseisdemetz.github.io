@@ -111,6 +111,11 @@ function handleIdentitySubmit(event) {
   document.getElementById('edit-city').value = values.city;
   document.getElementById('edit-zip').value = values.zip;
   document.getElementById('edit-country').value = values.country;
+  document.getElementById('edit-doctype').value = values.doctype;
+  document.getElementById('edit-docnum').value = values.docnum;
+  document.getElementById('edit-docdate').value = values.docdate;
+  document.getElementById('edit-doctown').value = values.doctown;
+  document.getElementById('edit-doccountry').value = values.doccountry;
 
   document.getElementById('user-display-name').textContent = `${values.firstname} ${values.lastname}`;
   document.getElementById('user-display-address').textContent = values.address;
@@ -166,7 +171,7 @@ function openDemoModal(stepType) {
   desc.style.display = '';
 
   if (stepType === 'swikly') {
-    title.textContent = 'Bank Card Deposit';
+    title.textContent = 'Bank Card Deposit (Swikly)';
     desc.textContent = 'Simulate customer approval or decline of the bank card security deposit.';
     image.src = 'img/swikly.png';
     image.alt = 'Swikly visual — bank card deposit';
@@ -364,6 +369,7 @@ function closeUserModal() {
 
 function handleUserFormSubmit(event) {
   event.preventDefault();
+  if (!event.currentTarget.reportValidity()) return;
   
   const firstname = document.getElementById('edit-firstname').value.trim();
   const lastname = document.getElementById('edit-lastname').value.trim();
@@ -374,6 +380,12 @@ function handleUserFormSubmit(event) {
   const city = document.getElementById('edit-city').value.trim();
   const country = document.getElementById('edit-country').value.trim();
 
+  const doctype = document.getElementById('edit-doctype').value;
+  const docnum = document.getElementById('edit-docnum').value.trim();
+  const docdate = document.getElementById('edit-docdate').value;
+  const doctown = document.getElementById('edit-doctown').value.trim();
+  const doccountry = document.getElementById('edit-doccountry').value.trim();
+
   document.getElementById('user-display-name').textContent = `${firstname} ${lastname}`;
   document.getElementById('user-display-email').textContent = email;
   document.getElementById('user-display-phone').textContent = phone;
@@ -381,8 +393,30 @@ function handleUserFormSubmit(event) {
   document.getElementById('user-display-city').textContent = `${zip} ${city}`;
   document.getElementById('user-display-country').textContent = country;
 
+  if (doctype && docnum) {
+    document.getElementById('user-display-doctype').textContent = doctype;
+    document.getElementById('user-display-docnum').textContent = docnum;
+    document.getElementById('user-display-docdate').textContent = docdate ? docdate.split('-').reverse().join('/') : '—';
+    document.getElementById('user-display-doctown').textContent = doctown || '—';
+    document.getElementById('user-display-doccountry').textContent = doccountry || '—';
+    document.getElementById('user-id-doc-block').style.display = 'block';
+  }
+
+  // Sync with Step 1 form if still displayed
+  document.getElementById('identity-firstname').value = firstname;
+  document.getElementById('identity-lastname').value = lastname;
+  document.getElementById('identity-address').value = address;
+  document.getElementById('identity-zip').value = zip;
+  document.getElementById('identity-city').value = city;
+  document.getElementById('identity-country').value = country;
+  if (doctype) document.getElementById('identity-doctype').value = doctype;
+  document.getElementById('identity-docnum').value = docnum;
+  document.getElementById('identity-docdate').value = docdate;
+  document.getElementById('identity-doctown').value = doctown;
+  document.getElementById('identity-doccountry').value = doccountry;
+
   closeUserModal();
-  showToast('Your personal information has been updated.');
+  showToast('Your personal details and identity document have been updated.');
 }
 
 function showToast(message) {

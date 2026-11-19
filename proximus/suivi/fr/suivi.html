@@ -62,7 +62,7 @@
       <div id="completionFlowCard" class="completion-flow-card">
         <div class="flow-stepper-header">
           <span id="pill-flow-1" class="flow-step-pill active"><span class="pill-num">1</span> Identité</span>
-          <span id="pill-flow-2" class="flow-step-pill"><span class="pill-num">2</span> Caution bancaire</span>
+          <span id="pill-flow-2" class="flow-step-pill"><span class="pill-num">2</span> Empreinte bancaire</span>
           <span id="pill-flow-3" class="flow-step-pill"><span class="pill-num">3</span> Signature</span>
           <span id="pill-flow-4" class="flow-step-pill"><span class="pill-num">4</span> Versement</span>
         </div>
@@ -152,13 +152,13 @@
         <div id="flow-step-2" style="display:none;">
           <div id="box-step-2" class="flow-step-box step-blue">
             <div class="step-box-header">
-              <h4 id="title-step-2"><i class="fa-solid fa-shield-halved"></i> Caution bancaire</h4>
+              <h4 id="title-step-2"><i class="fa-solid fa-shield-halved"></i> Empreinte bancaire</h4>
               <span id="swikly-status-badge" class="badge-pending">En attente</span>
             </div>
             <p id="swikly-desc-text">Obligatoire pour sécuriser et déclencher votre versement immédiat.</p>
           </div>
           <button id="btn-step-2" type="button" class="btn btn-step-blue btn-full" onclick="openDemoModal('swikly')">
-            <span>Déposer la caution bancaire</span>
+            <span>Déposer l'empreinte bancaire</span>
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
@@ -463,21 +463,64 @@
 
   <!-- POPIN EDIT COORDONNÉES PERSONNELLES -->
   <div id="userModal" class="modal-overlay">
-    <div class="modal-card modal-card-form">
+    <div class="modal-card modal-card-form modal-card-wide">
       <div class="modal-form-header">
         <h3 class="modal-title">Modifier mes informations</h3>
         <button type="button" class="viva-close" onclick="closeUserModal()">&times;</button>
       </div>
       <form onsubmit="handleUserFormSubmit(event)">
-        <div class="identity-grid">
-          <div class="viva-field"><label>Prénom*</label><input type="text" id="edit-firstname" required></div>
-          <div class="viva-field"><label>Nom*</label><input type="text" id="edit-lastname" required></div>
-          <div class="viva-field"><label>Email*</label><input type="email" id="edit-email" value="jean.dupont@example.com" required></div>
-          <div class="viva-field"><label>Téléphone*</label><input type="tel" id="edit-phone" value="06 12 34 56 78" required></div>
-          <div class="viva-field identity-wide"><label>Adresse postale*</label><input type="text" id="edit-address" required></div>
-          <div class="viva-field"><label>Code postal*</label><input type="text" id="edit-zip" required></div>
-          <div class="viva-field"><label>Ville*</label><input type="text" id="edit-city" required></div>
-          <div class="viva-field identity-wide"><label>Pays*</label><input type="text" id="edit-country" required></div>
+        <div class="modal-split-columns">
+          <!-- COLONNE GAUCHE : INFORMATIONS PERSONNELLES -->
+          <div class="form-section-card modal-col-card">
+            <div class="form-section-title">
+              <i class="fa-solid fa-user"></i>
+              <span>Informations personnelles</span>
+            </div>
+            <div class="identity-grid">
+              <div class="viva-field"><label for="edit-firstname">Prénom*</label><input type="text" id="edit-firstname" required></div>
+              <div class="viva-field"><label for="edit-lastname">Nom*</label><input type="text" id="edit-lastname" required></div>
+              <div class="viva-field"><label for="edit-email">Email*</label><input type="email" id="edit-email" value="jean.dupont@example.com" required></div>
+              <div class="viva-field"><label for="edit-phone">Téléphone*</label><input type="tel" id="edit-phone" value="06 12 34 56 78" required></div>
+              <div class="viva-field identity-wide"><label for="edit-address">Adresse postale*</label><input type="text" id="edit-address" required></div>
+              <div class="viva-field"><label for="edit-zip">Code postal*</label><input type="text" id="edit-zip" required></div>
+              <div class="viva-field"><label for="edit-city">Ville*</label><input type="text" id="edit-city" required></div>
+              <div class="viva-field identity-wide"><label for="edit-country">Pays*</label><input type="text" id="edit-country" required></div>
+            </div>
+          </div>
+
+          <!-- COLONNE DROITE : PIÈCE D'IDENTITÉ -->
+          <div class="form-section-card modal-col-card">
+            <div class="form-section-title">
+              <i class="fa-solid fa-passport"></i>
+              <span>Pièce d'identité</span>
+            </div>
+            <div class="identity-grid">
+              <div class="viva-field identity-wide">
+                <label for="edit-doctype">Type de document*</label>
+                <select id="edit-doctype" class="styled-select" required>
+                  <option value="" disabled selected>Sélectionner un document</option>
+                  <option value="Carte Nationale d'Identité">Carte Nationale d'Identité</option>
+                  <option value="Passeport">Passeport</option>
+                </select>
+              </div>
+              <div class="viva-field identity-wide">
+                <label for="edit-docnum">Numéro du document*</label>
+                <input type="text" id="edit-docnum" placeholder="Ex : 123456789012" required>
+              </div>
+              <div class="viva-field">
+                <label for="edit-docdate">Date d'émission*</label>
+                <input type="date" id="edit-docdate" required>
+              </div>
+              <div class="viva-field">
+                <label for="edit-doctown">Ville d'émission*</label>
+                <input type="text" id="edit-doctown" placeholder="Paris" required>
+              </div>
+              <div class="viva-field identity-wide">
+                <label for="edit-doccountry">Pays d'émission*</label>
+                <input type="text" id="edit-doccountry" value="France" required>
+              </div>
+            </div>
+          </div>
         </div>
         
         <div class="modal-form-actions">
