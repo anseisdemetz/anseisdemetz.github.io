@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SVG Flow Studio — Éditeur WYSIWYG</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- BARRE SUPÉRIEURE -->
+  <header class="topbar">
+    <div class="brand">SVG Flow Studio</div>
+    <div class="topbar-actions">
+      <label class="grid-toggle">
+        <input type="checkbox" id="snap-grid" checked> Magnétisme grille (10px)
+      </label>
+      <button id="btn-clear-scene" class="btn btn-danger">Tout effacer</button>
+      <button id="btn-toggle-console" class="btn btn-primary">Console Code HTML/SVG</button>
+    </div>
+  </header>
+
+  <!-- ESPACE DE TRAVAIL PRINCIPAL (3 PANELS) -->
+  <main class="workspace">
+    
+    <!-- PANEL GAUCHE : PALETTE D'OUTILS -->
+    <aside class="panel panel-left">
+      <div class="panel-header">Calques & Objets</div>
+      <div id="layers-list" class="layers-list"></div>
+      <div class="panel-header">Outils & Formes</div>
+      <div class="tool-list">
+        <button class="tool-btn active" data-tool="select">
+          <span class="icon">↖</span> Sélection / Déplacer
+        </button>
+        <button class="tool-btn" data-tool="rect">
+          <span class="icon">▭</span> Rectangle / Carré
+        </button>
+        <button class="tool-btn" data-tool="ellipse">
+          <span class="icon">⬭</span> Ellipse / Cercle
+        </button>
+        <button class="tool-btn" data-tool="diamond">
+          <span class="icon">◇</span> Losange (Décision)
+        </button>
+        <button class="tool-btn" data-tool="line">
+          <span class="icon">⟋</span> Trait par points
+        </button>
+      </div>
+
+      <div class="panel-header">Dimensions Scène</div>
+      <div class="scene-settings">
+        <div class="prop-row">
+          <label>Largeur (px)</label>
+          <input type="number" id="scene-width" value="900" step="10">
+        </div>
+        <div class="prop-row">
+          <label>Hauteur (px)</label>
+          <input type="number" id="scene-height" value="1200" step="10">
+        </div>
+      </div>
+
+      <div class="help-box">
+        <strong>Astuces :</strong><br>
+        • Maintenir <b>Shift</b> pour un carré ou cercle parfait.<br>
+        • Pour un <b>Trait</b> : cliquez pour poser les points, puis cliquez sur <b>Valider</b>.<br>
+        • Déplacer un point invalide le tracé jusqu'à nouvelle validation.
+      </div>
+    </aside>
+
+    <!-- SCÈNE CENTRALE -->
+    <section class="stage-wrapper">
+      <div class="stage-container" id="stage-container">
+        <svg id="editor-svg" width="900" height="1200" viewBox="0 0 900 1200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+            </pattern>
+            <marker id="arrow-default" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
+            </marker>
+          </defs>
+          <rect id="grid-bg" width="100%" height="100%" fill="url(#grid-pattern)" />
+          <g id="layer-shapes"></g>
+          <g id="layer-lines"></g>
+          <g id="layer-overlay"></g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- PANEL DROIT : INSPECTEUR D'OBJETS (STYLE DELPHI) -->
+    <aside class="panel panel-right">
+      <div class="panel-header">Inspecteur d'objet</div>
+      <div id="inspector-empty" class="inspector-empty">
+        Sélectionnez ou dessinez une forme pour éditer ses propriétés.
+      </div>
+      <div id="inspector-content" class="inspector-content hidden">
+        <!-- Le contenu dynamique est injecté par app.js -->
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- CONSOLE INFÉRIEURE RÉTRACTABLE : CODE SOURCE -->
+  <section id="console-drawer" class="console-drawer hidden">
+    <div class="console-header">
+      <span>Code Source HTML / SVG Autonome</span>
+      <div class="console-actions">
+        <button id="btn-copy-code" class="btn btn-sm">Copier le code</button>
+        <button id="btn-download-html" class="btn btn-sm btn-primary">Télécharger .html</button>
+        <button id="btn-close-console" class="btn btn-sm">✕</button>
+      </div>
+    </div>
+    <textarea id="code-output" readonly spellcheck="false"></textarea>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

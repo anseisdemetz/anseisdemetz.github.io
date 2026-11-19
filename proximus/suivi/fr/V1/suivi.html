@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suivi de reprise - Comparecycle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <header class="affiliate-header">
+      <img src="https://preprod.comparecycle.com/_next/image?url=https%3A%2F%2Fpreprod-static.comparecycle.com%2Fimages%2F3%2Fba8f5633caaec3bcce74d2c9b3151035928e9a62.png&w=640&q=75" alt="Logo Partenaire" class="affiliate-logo" />
+
+      <div id="pageFooter">
+        <button type="button" class="btn-contact-discreet" onclick="openContactModal()">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>Nous contacter</span>
+        </button>
+      </div>
+    </header>
+    
+    <div id="affiliateBanner" class="affiliate-banner">
+      <span>Partenaire affilié actif : <strong id="affiliateName">Widget Partenaire</strong></span>
+      <span style="font-size: 0.75rem; text-transform: uppercase; background: #c7d2fe; padding: 2px 8px; border-radius: 4px;">Mode Widget Intégré</span>
+    </div>
+
+    <section id="inputScreen" class="search-card">
+      <h2>Suivre l'état de votre reprise</h2>
+      <p>Saisissez votre numéro de commande ou code de reprise pour consulter l'avancement de votre dossier.</p>
+      <form id="searchForm" onsubmit="handleSearch(event)">
+        <div class="search-input-group">
+          <input type="text" id="trackInput" placeholder="Code envoyé par email" required autocomplete="off">
+          <button type="submit" class="btn btn-green">Rechercher</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- CARTE DE SUIVI PRINCIPALE -->
+    <main id="trackingContent" class="tracking-card">
+      
+      <!-- BANDEAU DE FINALISATION -->
+      <div id="finalizeBanner" class="finalize-banner">
+        <div class="finalize-banner-info">
+          <h3><i class="fa-solid fa-triangle-exclamation mr-1.5 text-blue-600"></i> Finaliser votre reprise</h3>
+          <p>Pour déclencher votre versement, veuillez valider les 4 étapes suivante.</p>
+        </div>
+        <button class="btn btn-green" onclick="triggerSensitiveAction('Finalisation de la reprise')">
+          <span>Finaliser ma reprise</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- TUNNEL ÉTAPE PAR ÉTAPE DE FINALISATION -->
+      <div id="completionFlowCard" class="completion-flow-card">
+        <div class="flow-stepper-header">
+          <span id="pill-flow-1" class="flow-step-pill active">1. Empreinte bancaire</span>
+          <span id="pill-flow-2" class="flow-step-pill">2. Pièce d'identité</span>
+          <span id="pill-flow-3" class="flow-step-pill">3. Signature du bon de cession</span>
+          <span id="pill-flow-4" class="flow-step-pill">4. Versement</span>
+        </div>
+
+        <!-- ÉTAPE 1 : SWIKLY -->
+        <div id="flow-step-1">
+          <div id="box-step-1" class="flow-step-box step-blue">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <h4 id="title-step-1"><i class="fa-solid fa-shield-halved"></i> Empreinte bancaire</h4>
+              <span id="swikly-status-badge" class="badge-pending">En attente</span>
+            </div>
+            <p id="swikly-desc-text">Obligatoire pour valider la prise en charge de votre versement immédiat.</p>
+          </div>
+          <button id="btn-step-1" class="btn btn-step-blue" style="width:100%;" onclick="openDemoModal('swikly')">
+            Déposer l'empreinte bancaire
+          </button>
+        </div>
+
+        <!-- ÉTAPE 2 : ID CHECK -->
+        <div id="flow-step-2" style="display:none;">
+          <div id="box-step-2" class="flow-step-box step-blue">
+            <h4 id="title-step-2"><i class="fa-solid fa-id-card"></i> Vérification d'identité</h4>
+            <p id="desc-step-2">Deux photos recto-verso de votre pièce d'identité sont nécessaires.</p>
+          </div>
+          <button id="btn-step-2" class="btn btn-step-blue" style="width:100%;" onclick="openDemoModal('yousign_id')">
+            Lancer la vérification
+          </button>
+        </div>
+
+        <!-- ÉTAPE 3 : SIGNATURE -->
+        <div id="flow-step-3" style="display:none;">
+          <div id="box-step-3" class="flow-step-box step-blue">
+            <h4 id="title-step-3"><i class="fa-solid fa-file-signature"></i> Signature du bon de cession</h4>
+            <p id="desc-step-3">Veuillez parapher électroniquement votre contrat d'engagement.</p>
+          </div>
+          <button id="btn-step-3" class="btn btn-step-blue" style="width:100%;" onclick="openDemoModal('yousign_sign')">
+            Ouvrir la fenêtre de signature électronique
+          </button>
+        </div>
+
+        <!-- ÉTAPE 4 : VERSEMENT -->
+        <div id="flow-step-4" style="display:none;">
+          <div id="box-step-4" class="flow-step-box step-blue">
+            <h4 id="title-step-4"><i class="fa-solid fa-wallet"></i> Choix de la méthode de règlement</h4>
+            <p id="flow-payout-desc">Sélectionnez le mode de versement souhaité pour vos fonds.</p>
+          </div>
+
+          <div id="payout-choices-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <!-- Bouton CB dans l'étape 4 du tunnel -->
+            <button id="flow-btn-viva" class="btn btn-step-blue" style="padding:16px; font-size:0.85rem;" onclick="openDemoModal('payment_cb')">
+              <i class="fa-solid fa-credit-card"></i> Sur Carte Bancaire
+            </button>
+            <button id="flow-btn-iban" class="btn btn-outline-dark" style="padding:16px; font-size:0.85rem;" onclick="toggleIbanFormInFlow()">
+              <i class="fa-solid fa-building-columns text-green-600"></i> Par Virement IBAN
+            </button>
+          </div>
+
+          <div id="flow-iban-container" style="display:none; background:#f8fafc; border:1px solid #cbd5e1; padding:16px; border-radius:12px; margin-top:16px;">
+            <h5 style="font-size:0.85rem; font-weight:700; color:#18313e; margin-bottom:8px;">Coordonnées bancaires IBAN</h5>
+            <input type="text" id="flow-iban-holder" placeholder="Titulaire du compte" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.85rem; margin-bottom:8px;">
+            <input type="text" id="flow-iban-num" placeholder="Numéro IBAN (FR76...)" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.85rem; margin-bottom:12px;">
+            <button class="btn btn-green" style="width:100%;" onclick="completeFlowPayout('iban')">Valider mes coordonnées IBAN</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Infos produit -->
+      <div class="product-header">
+        <div class="product-image">
+          <img src="img/produit.jpg" alt="Apple iPhone 13 512 Go">
+        </div>
+        <div class="product-info">
+          <span class="badge badge-orange" id="statusBadge">En attente de finalisation</span>
+          <h1 class="product-title" id="productTitle">Apple iPhone 13 512 Go</h1>
+          <div class="product-price">Votre offre de reprise : <span id="offerPrice">485,00€</span></div>
+          <a class="link-track" onclick="triggerSensitiveAction('Suivi transporteur Colissimo')">Suivre mon colis</a>
+          
+          <div class="order-meta">
+            N° de commande : <strong>GRA0001766673</strong><br>
+            Code de suivi : <strong id="orderNumberDisplay">123456</strong><br>
+            Passée le 21/05/2025
+          </div>
+        </div>
+      </div>
+
+      <!-- Stepper horizontal -->
+      <div class="stepper-wrapper">
+        <div class="stepper">
+          <div class="step-item" id="mainStep1">
+            <div class="step-dot">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div class="step-label">Demande finalisée</div>
+          </div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-label">Produit envoyé</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-label">Produit reçu</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-label">Diagnostic en cours</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-label">Paiement effectué</div></div>
+        </div>
+      </div>
+
+      <div class="alert-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <span>N’oubliez pas d’expédier votre appareil dans un délai de 7 jours à compter de la validation de votre reprise sinon votre offre de reprise expirera.</span>
+      </div>
+
+      <div class="actions-group-wrapper">
+        <div class="actions-left">
+          <button class="btn btn-green" id="toggleDetailsBtn" onclick="toggleDetails()">
+            <span id="toggleText">Voir les détails</span>
+            <svg id="chevronIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+          </button>
+          
+          <button id="btn-edit-payment-method" class="btn btn-outline-dark" style="display:none;" onclick="triggerSensitiveAction('Modification du mode de paiement')">
+            Modifier mon mode de paiement
+          </button>
+        </div>
+
+        <div class="actions-right">
+          <button class="btn btn-outline-green" onclick="triggerSensitiveAction('Annulation de la reprise')">
+            Annuler ma reprise
+          </button>
+        </div>
+      </div>
+
+      <div id="detailsCollapsible">
+        <div class="details-section">
+          <h3>Diagnostic</h3>
+          <div class="info-grid">
+            <div class="info-row"><span>Écran</span><span>Comme neuf</span></div>
+            <div class="info-row"><span>Arrière du téléphone</span><span>Micro rayure</span></div>
+            <div class="info-row"><span>Châssis</span><span>Rayure(s)</span></div>
+            <div class="info-row"><span>Téléphone fonctionnel</span><span>Oui</span></div>
+          </div>
+
+          <div id="diagnostic-download-actions" class="diagnostic-actions" style="display:none;">
+            <button class="btn btn-outline-dark" onclick="window.print()">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Bon de cession
+            </button>
+            <button class="btn btn-outline-dark" onclick="window.print()">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Bon de transport
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOC DONNÉES PERSONNELLES DU CLIENT -->
+      <div class="user-details-card" style="background:#ffffff; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:20px; margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #f1f5f9; padding-bottom:10px;">
+          <h3 style="font-size:1rem; font-weight:700; color:var(--dark-navy); margin:0;">
+            <i class="fa-solid fa-user" style="color:var(--primary-green); margin-right:8px;"></i>Vos informations personnelles
+          </h3>
+          <button type="button" class="btn btn-outline-dark" style="padding:6px 14px; font-size:0.8rem;" onclick="triggerSensitiveAction('Modification des coordonnées personnelles')">
+            <i class="fa-solid fa-pen-to-square"></i> Modifier
+          </button>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-row"><span>Nom & Prénom</span><span id="user-display-name">Jean Dupont</span></div>
+          <div class="info-row"><span>Adresse email</span><span id="user-display-email">jean.dupont@example.com</span></div>
+          <div class="info-row"><span>Téléphone</span><span id="user-display-phone">06 12 34 56 78</span></div>
+          <div class="info-row"><span>Adresse postale</span><span id="user-display-address">12 Rue de la Paix</span></div>
+          <div class="info-row"><span>Code postal / Ville</span><span id="user-display-city">75002 Paris</span></div>
+          <div class="info-row"><span>Pays</span><span id="user-display-country">France</span></div>
+        </div>
+      </div>      
+
+    </main>
+
+    <!-- ÉCRAN DE MODIFICATION DU MODE DE PAIEMENT (Points 19, 20, 21) -->
+    <div id="paymentScreen" class="payment-screen">
+      <div class="payment-card">
+        <a class="back-link" onclick="closePaymentScreen()">&larr; Retour au suivi</a>
+        
+        <h2 class="payment-title">Ajouter un moyen de paiement</h2>
+        
+        <div class="payment-methods-grid">
+          <!-- Choix Carte Bancaire -->
+          <button type="button" id="payment-choice-cb" class="payment-choice-card" onclick="handleChoiceCB()">
+            <div class="payment-choice-icon">
+              <i class="fa-solid fa-credit-card"></i>
+            </div>
+            <div>
+              <h4>Carte Bancaire</h4>
+              <!-- <p>Ajouter une carte via VIVA</p> -->
+            </div>
+          </button>
+
+          <!-- Choix IBAN -->
+          <button type="button" id="payment-choice-iban" class="payment-choice-card" onclick="handleChoiceIBAN()">
+            <div class="payment-choice-icon">
+              <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div>
+              <h4>IBAN</h4>
+              <!-- <p>Virement bancaire</p> -->
+            </div>
+          </button>
+        </div>
+
+        <!-- FORMULAIRE IBAN (S'ouvre au clic sur IBAN ou automatique si échec/refus CB) -->
+        <div id="payment-iban-form" class="payment-iban-form" style="display:none;">
+          <h3 class="iban-form-title">Coordonnées bancaires</h3>
+          <p class="iban-form-desc">Ajoutez ici de nouvelles coordonnées bancaire pour la reprise de vos appareils électroniques.</p>
+
+          <form onsubmit="handleSaveIBAN(event)">
+            <div class="iban-grid-two">
+              <div class="viva-field">
+                <label>Libellé*</label>
+                <input type="text" id="iban-label" placeholder="Entrez le libellé de votre compte" required>
+              </div>
+              <div class="viva-field">
+                <label>Nom du bénéficiaire*</label>
+                <input type="text" id="iban-beneficiary" placeholder="Entrez votre nom" required>
+              </div>
+            </div>
+
+            <div class="viva-field" style="margin-top:12px;">
+              <label>IBAN*</label>
+              <input type="text" id="iban-number" placeholder="FRXX XXXX XXXX XXXX XXXX XXXX XXX" required>
+            </div>
+
+            <div class="iban-actions">
+              <button type="submit" class="btn btn-green" style="flex:1;">Enregistrer</button>
+              <button type="button" class="btn btn-outline-dark" style="flex:1;" onclick="cancelIbanForm()">Annuler</button>
+            </div>
+          </form>
+        </div>
+
+        <p class="payment-discreet-footer">Vos coordonnées sont utilisées uniquement pour le règlement de votre reprise.</p>
+      </div>
+    </div>    
+
+  </div>
+
+  <!-- POPIN CODE OTP (123456) -->
+  <div id="otpModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h3 class="modal-title">Action sécurisée</h3>
+      <p class="modal-desc">
+        Veuillez saisir le code de vérification à 6 chiffres envoyé à votre adresse email associée.
+        <br><small style="color:var(--primary-green); font-weight:700;">Code test démo : 123456</small>
+      </p>
+
+      <form onsubmit="handleOtpSubmit(event)">
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 0)" autofocus>
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 1)">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 2)">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 3)">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 4)">
+          <input type="text" maxlength="1" class="otp-input" oninput="moveNext(this, 5)">
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button type="submit" class="btn btn-green">Confirmer l'action</button>
+          <button type="button" class="btn btn-outline-dark" onclick="closeOtpModal()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- POPIN UNIQUE DE DÉMONSTRATION -->
+  <div id="genericDemoModal" class="modal-overlay">
+    <div class="modal-card">
+      <div id="demo-modal-icon" class="modal-icon" style="background:#eff6ff; color:#2563eb;">
+        <i class="fa-solid fa-shield-halved text-2xl"></i>
+      </div>
+      <h3 class="modal-title" id="demo-modal-title">Module de démonstration</h3>
+      <p class="modal-desc" id="demo-modal-desc">Veuillez choisir le résultat à simuler pour cette étape.</p>
+      
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="btn btn-outline-dark" style="border-color:#cbd5e1; color:#64748b;" onclick="closeDemoModal()">Annuler</button>
+        <button class="btn btn-outline-dark" style="border-color:#ef4444; color:#dc2626;" onclick="handleDemoResult('refuser')">Refuser</button>
+        <button class="btn btn-green" onclick="handleDemoResult('valider')">Valider</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPIN EDIT COORDONNÉES PERSONNELLES -->
+  <div id="userModal" class="modal-overlay">
+    <div class="modal-card" style="max-width:540px; text-align:left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 class="modal-title" style="margin:0;">Modifier mes informations</h3>
+        <button type="button" class="viva-close" onclick="closeUserModal()">&times;</button>
+      </div>
+      <form onsubmit="handleUserFormSubmit(event)" class="space-y-3">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="viva-field"><label>Prénom*</label><input type="text" id="edit-firstname" value="Jean" required></div>
+          <div class="viva-field"><label>Nom*</label><input type="text" id="edit-lastname" value="Dupont" required></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="viva-field"><label>Email*</label><input type="email" id="edit-email" value="jean.dupont@example.com" required></div>
+          <div class="viva-field"><label>Téléphone*</label><input type="tel" id="edit-phone" value="06 12 34 56 78" required></div>
+        </div>
+        <div class="viva-field"><label>Adresse postale*</label><input type="text" id="edit-address" value="12 Rue de la Paix" required></div>
+        <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px;">
+          <div class="viva-field"><label>Code postal*</label><input type="text" id="edit-zip" value="75002" required></div>
+          <div class="viva-field"><label>Ville*</label><input type="text" id="edit-city" value="Paris" required></div>
+        </div>
+        <div class="viva-field"><label>Pays*</label><input type="text" id="edit-country" value="France" required></div>
+        
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button type="submit" class="btn btn-green" style="flex:1;">Enregistrer</button>
+          <button type="button" class="btn btn-outline-dark" style="flex:1;" onclick="closeUserModal()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- POPIN VIVA WALLET -->
+  <div class="viva-overlay" id="vivaModal" onclick="handleVivaOverlayClick(event)">
+    <div class="viva-card">
+      <div class="viva-topline">
+        <div>
+          <div class="viva-brand">VIVA <span>WALLET</span></div>
+          <p class="viva-caption">Paiement sécurisé · Mode démonstration</p>
+        </div>
+        <button type="button" class="viva-close" onclick="closeVivaModal()">&times;</button>
+      </div>
+      <form id="cardForm" onsubmit="handleCardSubmit(event)">
+        <div class="viva-field">
+          <label>Nom sur la carte*</label>
+          <input id="cardholderName" placeholder="Nom du titulaire" required>
+        </div>
+        <div class="viva-field">
+          <label>Numéro de carte*</label>
+          <input id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="23" required>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="viva-field">
+            <label>Date d'expiration*</label>
+            <input id="cardExpiry" placeholder="MM/AA" required>
+          </div>
+          <div class="viva-field">
+            <label>Cryptogramme*</label>
+            <input id="cardCvv" placeholder="CVV" maxlength="4" required>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button type="submit" class="btn btn-green" style="flex:1;">Continuer</button>
+          <button type="button" class="btn btn-outline-dark" style="flex:1;" onclick="closeVivaModal()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2da557" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <span id="toastMessage">Action autorisée avec succès !</span>
+  </div>
+
+<!-- MODALE NOUS CONTACTER -->
+<div class="contact-modal-overlay" id="contactModalOverlay" onclick="handleContactOverlayClick(event)">
+  <div class="contact-modal-card">
+    <button type="button" class="contact-modal-close" onclick="closeContactModal()">&times;</button>
+    <h2 class="contact-modal-title">Nous contacter</h2>
+
+    <form onsubmit="handleContactSubmit(event)">
+      <!-- CHAMP SUJET -->
+      <div class="contact-field-group">
+        <label for="contact-subject">Sujet*</label>
+        <input type="text" id="contact-subject" class="contact-input" value="Service client" required>
+      </div>
+
+      <!-- CHAMP MESSAGE -->
+      <div class="contact-field-group">
+        <label for="contact-message">Message*</label>
+        <textarea id="contact-message" class="contact-textarea" placeholder="Message" required></textarea>
+      </div>
+
+      <!-- TOGGLE SWITCH CONSENTEMENT -->
+      <div class="contact-consent-box">
+        <label class="switch-toggle">
+          <input type="checkbox" id="contact-consent" required>
+          <span class="switch-slider"></span>
+        </label>
+        <span class="contact-consent-text">
+          J'accepte d'être recontacté par CompaRecycle afin de traiter ma demande
+        </span>
+      </div>
+
+      <!-- TEXTE DE CONFIDENTIALITÉ -->
+      <p class="contact-privacy-discreet">
+        Comparecycle, en tant que responsable de traitement, collecte et traite vos données à caractère personnel à des fins de communication avec vous/paiement de votre appareil repris/traitement de votre demande de reprise. Pour en savoir plus, consulter notre <a href="#">Politique des cookies</a>.
+      </p>
+
+      <!-- SIMULATION RECAPTCHA -->
+      <div class="recaptcha-wrapper">
+        <div class="recaptcha-box">
+          <label class="recaptcha-checkbox-label">
+            <input type="checkbox" required>
+            <span>Je ne suis pas un robot</span>
+          </label>
+          <div class="recaptcha-logo-block">
+            <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="reCAPTCHA">
+            <span>reCAPTCHA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOUTON VALIDER -->
+      <button type="submit" class="btn btn-green btn-contact-submit">Envoyer le message</button>
+    </form>
+  </div>
+</div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
