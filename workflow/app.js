@@ -8,7 +8,7 @@ const state = {
   tool: 'select', // 'select' | 'multi' | 'rect' | 'ellipse' | 'diamond' | 'line'
   elements: [],   // Liste des objets (formes et traits)
   selectedId: null,
-  selectedIds: [], // A09 : Liste des IDs sélectionnés en mode "Sélection partielle"
+  selectedIds: [], // Liste des IDs sélectionnés en mode "Sélection partielle"
   selectAllMode: false,
   includeLockedInGroup: true,
   snapToGrid: true,
@@ -42,6 +42,55 @@ const btnUndo = document.getElementById('btn-undo');
 const undoCountSpan = document.getElementById('undo-count');
 const btnSelectAll = document.getElementById('btn-select-all');
 const btnZoomReset = document.getElementById('btn-zoom-reset');
+
+/**
+ * A10 : Export PDF vectoriel calibré aux dimensions exactes de la scène
+ */
+function exportSceneToPdf() {
+  const previousZoom = state.zoom;
+
+  // Injecter dynamiquement la taille de page exacte en pixels pour l'impression PDF
+  let dynamicPrintStyle = document.getElementById('dynamic-print-page-style');
+  if (!dynamicPrintStyle) {
+    dynamicPrintStyle = document.createElement('style');
+    dynamicPrintStyle.id = 'dynamic-print-page-style';
+    document.head.appendChild(dynamicPrintStyle);
+  }
+  dynamicPrintStyle.textContent = `
+    @media print {
+      @page {
+        size: ${state.sceneWidth}px ${state.sceneHeight}px;
+        margin: 0;
+      }
+      #editor-svg {
+        width: ${state.sceneWidth}px !important;
+        height: ${state.sceneHeight}px !important;
+      }
+    }
+  `;
+
+  // Forcer temporairement le SVG à 100 % pour que la capture PDF soit au format réel
+  svg.setAttribute('width', state.sceneWidth);
+  svg.setAttribute('height', state.sceneHeight);
+
+  const restoreAfterPrint = () => {
+    state.zoom = previousZoom;
+    updateSvgViewport();
+    window.removeEventListener('afterprint', restoreAfterPrint);
+  };
+
+  window.addEventListener('afterprint', restoreAfterPrint);
+
+  // Déclencher la boîte d'export PDF native du navigateur
+  setTimeout(() => {
+    window.print();
+    // Sécurité au cas où afterprint ne se déclenche pas sur certains navigateurs
+    setTimeout(restoreAfterPrint, 500);
+  }, 50);
+}
+
+document.getElementById('btn-export-pdf').addEventListener('click', exportSceneToPdf);
+document.getElementById('btn-console-pdf').addEventListener('click', exportSceneToPdf);
 
 /**
  * Gestion du Zoom vectoriel natif
@@ -182,18 +231,16 @@ function updateUndoButton() {
 btnUndo.addEventListener('click', undoLastAction);
 
 /**
- * Sélection globale (A06/A07) et Sélection partielle (A09)
+ * Sélection globale et Sélection partielle
  */
 function isPartialSelectionActive() {
   return state.tool === 'multi';
 }
 
 function getActiveGroupElements() {
-  // En mode Sélection partielle (A09), on retourne uniquement les éléments explicitement cliqués
   if (isPartialSelectionActive()) {
     return state.elements.filter(el => state.selectedIds.includes(el.id));
   }
-  // En mode Tout sélectionner (A06/A07)
   return state.elements.filter(el => {
     if (el.type === 'line') return el.points && el.points.length > 0;
     return state.includeLockedInGroup ? true : !el.locked;
@@ -351,7 +398,6 @@ document.querySelectorAll('.tool-btn').forEach(btn => {
       return;
     }
 
-    // Si on quitte "multi", on vide la sélection partielle
     state.selectedIds = [];
 
     if (chosenTool === 'line') {
@@ -428,7 +474,7 @@ svg.addEventListener('mousedown', (evt) => {
   const pos = getMousePos(evt);
   const target = evt.target;
 
-  // A09 : En mode "Sélection partielle", on ne fait RIEN d'autre que sélectionner/désélectionner
+  // En mode "Sélection partielle", on ne fait RIEN d'autre que sélectionner/désélectionner
   if (state.tool === 'multi') {
     const clickedGroup = target.closest('[data-id]');
     if (clickedGroup) {
@@ -438,7 +484,7 @@ svg.addEventListener('mousedown', (evt) => {
     return;
   }
 
-  // 0. Si "Tout sélectionner" est actif et qu'on clique dans la zone englobante, on déplace tout le groupe
+  // Si "Tout sélectionner" est actif et qu'on clique dans la zone englobante, on déplace tout le groupe
   if (state.selectAllMode && state.tool === 'select') {
     const bbox = getGroupBoundingBox();
     if (
@@ -457,7 +503,7 @@ svg.addEventListener('mousedown', (evt) => {
     }
   }
 
-  // 1. Clic sur une poignée de point d'un trait
+  // Clic sur une poignée de point d'un trait
   if (target.dataset.pointIndex !== undefined) {
     const elId = target.dataset.elId;
     const ptIdx = parseInt(target.dataset.pointIndex, 10);
@@ -474,7 +520,7 @@ svg.addEventListener('mousedown', (evt) => {
     return;
   }
 
-  // 2. Mode Outil "Trait par points"
+  // Mode Outil "Trait par points"
   if (state.tool === 'line') {
     pushHistory();
     state.selectAllMode = false;
@@ -498,7 +544,7 @@ svg.addEventListener('mousedown', (evt) => {
     return;
   }
 
-  // 3. Mode Sélection / Déplacement d'une forme existante
+  // Mode Sélection / Déplacement d'une forme existante
   if (state.tool === 'select') {
     const shapeGroup = target.closest('[data-id]');
     if (shapeGroup) {
@@ -521,7 +567,7 @@ svg.addEventListener('mousedown', (evt) => {
     return;
   }
 
-  // 4. Mode Création d'une forme (rect, ellipse, diamond)
+  // Mode Création d'une forme (rect, ellipse, diamond)
   if (['rect', 'ellipse', 'diamond'].includes(state.tool)) {
     pushHistory();
     state.selectAllMode = false;
@@ -650,7 +696,6 @@ function renderScene() {
     }
   });
 
-  // Affichage du cadre englobant global en mode "Tout sélectionner" ou "Sélection partielle"
   if (state.selectAllMode || (partialMode && state.selectedIds.length > 0)) {
     const bbox = getGroupBoundingBox();
     if (bbox) {
@@ -674,7 +719,6 @@ function renderShapeElement(el, isSelected, partialMode = false) {
   g.setAttribute('data-id', el.id);
 
   if (partialMode) {
-    // En mode Sélection partielle, tous les objets sont cliquables pour être ajoutés/retirés
     g.style.pointerEvents = 'all';
     g.style.cursor = 'pointer';
   } else if (el.locked) {
@@ -777,7 +821,6 @@ function renderLineElement(el, isSelected, partialMode = false) {
     layerLines.appendChild(g);
   }
 
-  // En mode Sélection partielle, on n'affiche pas les poignées individuelles de déplacement de points
   if (!partialMode && (!el.validated || isSelected)) {
     el.points.forEach((pt, idx) => {
       const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -869,13 +912,11 @@ function renderLayersList() {
  * Inspecteur Delphi (Panel Droit)
  */
 function renderInspector() {
-  // A09 : Inspecteur de déplacement pur pour "Sélection partielle"
   if (isPartialSelectionActive()) {
     renderPartialGroupInspector();
     return;
   }
 
-  // A07 : Inspecteur de groupe quand "Tout sélectionner" est actif
   if (state.selectAllMode) {
     renderGroupInspector();
     return;

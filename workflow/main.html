@@ -26,6 +26,7 @@
       </label>
       <input type="file" id="file-import-html" accept=".html,.htm,.svg" class="hidden">
       <button id="btn-import-html" class="btn">Importer .html</button>
+      <button id="btn-export-pdf" class="btn" title="Exporter la page fabriquée au format PDF vectoriel">Exporter .pdf</button>
       <button id="btn-clear-scene" class="btn btn-danger">Tout effacer</button>
       <button id="btn-toggle-console" class="btn btn-primary">Console Code HTML/SVG</button>
     </div>
@@ -50,7 +51,6 @@
         <button class="tool-btn active" data-tool="select">
           <span class="icon">↖</span> Sélection / Déplacer
         </button>
-        <!-- A09 : Outil Sélection partielle -->
         <button class="tool-btn" data-tool="multi">
           <span class="icon">⊞</span> Sélection partielle
         </button>
@@ -85,9 +85,9 @@
 
       <div class="help-box">
         <strong>Astuces :</strong><br>
+        • <b>Exporter .pdf</b> : génère un PDF vectoriel aux dimensions exactes de la scène.<br>
         • <b>Sélection partielle</b> : cliquez sur les objets pour les ajouter/retirer du groupe, puis déplacez via <b>Left / Top</b>.<br>
-        • <b>Ctrl + Molette</b> pour zoomer/dézoomer.<br>
-        • <b>Ctrl+Z</b> ou <b>Annuler</b> pour revenir en arrière.
+        • <b>Ctrl + Molette</b> pour zoomer/dézoomer.
       </div>
     </aside>
 
@@ -129,6 +129,7 @@
       <div class="console-actions">
         <button id="btn-apply-console" class="btn btn-sm btn-primary">Reconstituer depuis le code</button>
         <button id="btn-copy-code" class="btn btn-sm">Copier le code</button>
+        <button id="btn-console-pdf" class="btn btn-sm">Exporter .pdf</button>
         <button id="btn-download-html" class="btn btn-sm btn-primary">Télécharger .html</button>
         <button id="btn-close-console" class="btn btn-sm">✕</button>
       </div>
