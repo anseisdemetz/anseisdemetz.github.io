@@ -36,20 +36,113 @@ const layerLines = document.getElementById('layer-lines');
 const layerOverlay = document.getElementById('layer-overlay');
 const inspectorEmpty = document.getElementById('inspector-empty');
 const inspectorContent = document.getElementById('inspector-content');
-const consoleDrawer = document.getElementById('console-drawer');
-const codeOutput = document.getElementById('code-output');
 const btnUndo = document.getElementById('btn-undo');
 const undoCountSpan = document.getElementById('undo-count');
 const btnSelectAll = document.getElementById('btn-select-all');
 const btnZoomReset = document.getElementById('btn-zoom-reset');
 
 /**
- * A10 : Export PDF vectoriel calibré aux dimensions exactes de la scène
+ * Export HTML/SVG autonome
+ */
+function generateStandaloneHtml() {
+  const shapesSvg = state.elements.filter(e => e.type !== 'line').map(el => {
+    const fillAttr = el.transparent ? 'none' : el.fill;
+    const lockedAttr = el.locked ? ' data-locked="true"' : '';
+    let shapeTag = '';
+
+    if (el.type === 'rect') {
+      shapeTag = `<rect x="${el.x}" y="${el.y}" width="${el.width}" height="${el.height}" rx="${el.rx}" fill="${fillAttr}" stroke="${el.stroke}" stroke-width="${el.strokeWidth}" />`;
+    } else if (el.type === 'ellipse') {
+      shapeTag = `<ellipse cx="${el.x + el.width / 2}" cy="${el.y + el.height / 2}" rx="${el.width / 2}" ry="${el.height / 2}" fill="${fillAttr}" stroke="${el.stroke}" stroke-width="${el.strokeWidth}" />`;
+    } else if (el.type === 'diamond') {
+      const cx = el.x + el.width / 2;
+      const cy = el.y + el.height / 2;
+      const pts = `${cx},${el.y} ${el.x + el.width},${cy} ${cx},${el.y + el.height} ${el.x},${cy}`;
+      shapeTag = `<polygon points="${pts}" fill="${fillAttr}" stroke="${el.stroke}" stroke-width="${el.strokeWidth}" />`;
+    }
+
+    let textTags = '';
+    if (el.text) {
+      const lines = el.text.split('\n');
+      const fontSize = parseFloat(el.fontSize) || 13;
+      const lineHeight = fontSize * 1.25;
+      const startY = el.y + el.height / 2 - ((lines.length - 1) * lineHeight) / 2 + fontSize * 0.35;
+      textTags = lines.map((line, idx) =>
+        `\n      <text x="${el.x + el.width / 2}" y="${Math.round(startY + idx * lineHeight)}" font-size="${fontSize}px" font-weight="bold" fill="${el.textColor}" text-anchor="middle">${escapeHtml(line)}</text>`
+      ).join('');
+    }
+
+    return `    <g id="${el.id}"${lockedAttr}>\n      ${shapeTag}${textTags}\n    </g>`;
+  }).join('\n\n');
+
+  const linesSvg = state.elements.filter(e => e.type === 'line' && e.validated && e.points.length >= 2).map(el => {
+    const d = el.points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+    const dashAttr = el.dashed ? ' stroke-dasharray="6 4"' : '';
+    const markerAttr = el.arrowEnd ? ' marker-end="url(#arrow)"' : '';
+    return `    <path id="${el.id}" d="${d}" fill="none" stroke="${el.stroke}" stroke-width="${el.strokeWidth}"${dashAttr}${markerAttr} />`;
+  }).join('\n');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flowchart Export</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f8fafc;
+      display: flex;
+      justify-content: center;
+    }
+    .diagram-container {
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    text {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="diagram-container">
+    <svg width="${state.sceneWidth}" height="${state.sceneHeight}" viewBox="0 0 ${state.sceneWidth} ${state.sceneHeight}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
+        </marker>
+      </defs>
+
+      <!-- SHAPES -->
+${shapesSvg}
+
+      <!-- CONNECTIONS -->
+${linesSvg}
+    </svg>
+  </div>
+</body>
+</html>`;
+}
+
+document.getElementById('btn-export-html').addEventListener('click', () => {
+  const htmlContent = generateStandaloneHtml();
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'diagramme-export.html';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+/**
+ * Export PDF vectoriel calibré aux dimensions exactes de la scène
  */
 function exportSceneToPdf() {
   const previousZoom = state.zoom;
 
-  // Injecter dynamiquement la taille de page exacte en pixels pour l'impression PDF
   let dynamicPrintStyle = document.getElementById('dynamic-print-page-style');
   if (!dynamicPrintStyle) {
     dynamicPrintStyle = document.createElement('style');
@@ -69,7 +162,6 @@ function exportSceneToPdf() {
     }
   `;
 
-  // Forcer temporairement le SVG à 100 % pour que la capture PDF soit au format réel
   svg.setAttribute('width', state.sceneWidth);
   svg.setAttribute('height', state.sceneHeight);
 
@@ -81,16 +173,13 @@ function exportSceneToPdf() {
 
   window.addEventListener('afterprint', restoreAfterPrint);
 
-  // Déclencher la boîte d'export PDF native du navigateur
   setTimeout(() => {
     window.print();
-    // Sécurité au cas où afterprint ne se déclenche pas sur certains navigateurs
     setTimeout(restoreAfterPrint, 500);
   }, 50);
 }
 
 document.getElementById('btn-export-pdf').addEventListener('click', exportSceneToPdf);
-document.getElementById('btn-console-pdf').addEventListener('click', exportSceneToPdf);
 
 /**
  * Gestion du Zoom vectoriel natif
@@ -437,7 +526,7 @@ function setTool(toolName, keepSelectAll = false) {
 }
 
 /**
- * Paramètres de la scène & actions globales
+ * Paramètres du bloc Scène & actions globales
  */
 document.getElementById('snap-grid').addEventListener('change', (e) => {
   state.snapToGrid = e.target.checked;
@@ -447,13 +536,11 @@ document.getElementById('snap-grid').addEventListener('change', (e) => {
 document.getElementById('scene-width').addEventListener('change', (e) => {
   pushHistory();
   applySceneDimensions(e.target.value, state.sceneHeight);
-  updateCodeConsole();
 });
 
 document.getElementById('scene-height').addEventListener('change', (e) => {
   pushHistory();
   applySceneDimensions(state.sceneWidth, e.target.value);
-  updateCodeConsole();
 });
 
 document.getElementById('btn-clear-scene').addEventListener('click', () => {
@@ -660,7 +747,6 @@ window.addEventListener('mouseup', () => {
     state.dragMode = null;
     state.dragTarget = null;
     saveToLocalStorage();
-    updateCodeConsole();
   }
 });
 
@@ -673,7 +759,6 @@ function renderAll() {
   renderScene();
   renderInspector();
   renderLayersList();
-  updateCodeConsole();
   saveToLocalStorage();
 }
 
@@ -989,7 +1074,6 @@ function renderPartialGroupInspector() {
     const dx = newX - currentBox.x;
     translateGroup(dx, 0);
     renderScene();
-    updateCodeConsole();
     saveToLocalStorage();
   });
 
@@ -1005,7 +1089,6 @@ function renderPartialGroupInspector() {
     const dy = newY - currentBox.y;
     translateGroup(0, dy);
     renderScene();
-    updateCodeConsole();
     saveToLocalStorage();
   });
 
@@ -1079,7 +1162,6 @@ function renderGroupInspector() {
     const dx = newX - currentBox.x;
     translateGroup(dx, 0);
     renderScene();
-    updateCodeConsole();
     saveToLocalStorage();
   });
 
@@ -1095,7 +1177,6 @@ function renderGroupInspector() {
     const dy = newY - currentBox.y;
     translateGroup(0, dy);
     renderScene();
-    updateCodeConsole();
     saveToLocalStorage();
   });
 
@@ -1183,7 +1264,6 @@ function renderShapeInspector(el) {
       el[prop] = val;
       renderScene();
       renderLayersList();
-      updateCodeConsole();
       saveToLocalStorage();
     });
   });
@@ -1303,7 +1383,6 @@ function renderLineInspector(el) {
       const axis = e.target.dataset.axis;
       el.points[idx][axis] = parseInt(e.target.value, 10) || 0;
       renderScene();
-      updateCodeConsole();
       saveToLocalStorage();
     });
   });
@@ -1332,7 +1411,6 @@ function renderLineInspector(el) {
       else if (e.target.type === 'number') el[prop] = parseFloat(e.target.value) || 1;
       else el[prop] = e.target.value;
       renderScene();
-      updateCodeConsole();
       saveToLocalStorage();
     });
   });
@@ -1366,10 +1444,6 @@ fileImportInput.addEventListener('change', (e) => {
     importFromHtmlString(evt.target.result);
   };
   reader.readAsText(file, 'UTF-8');
-});
-
-document.getElementById('btn-apply-console').addEventListener('click', () => {
-  importFromHtmlString(codeOutput.value);
 });
 
 function resolveCssColor(val, cssVars, fallback) {
@@ -1477,7 +1551,7 @@ function importFromHtmlString(htmlStr) {
   const importedSvg = doc.querySelector('svg');
 
   if (!importedSvg) {
-    alert('Aucune balise <svg> valide trouvée dans le code ou fichier importé.');
+    alert('Aucune balise <svg> valide trouvée dans le fichier importé.');
     return;
   }
 
@@ -1575,116 +1649,6 @@ function importFromHtmlString(htmlStr) {
   state.selectedIds = [];
   state.selectAllMode = false;
   renderAll();
-}
-
-/**
- * Console de code source HTML/SVG propre
- */
-document.getElementById('btn-toggle-console').addEventListener('click', () => {
-  consoleDrawer.classList.toggle('hidden');
-  updateCodeConsole();
-});
-
-document.getElementById('btn-close-console').addEventListener('click', () => {
-  consoleDrawer.classList.add('hidden');
-});
-
-document.getElementById('btn-copy-code').addEventListener('click', () => {
-  codeOutput.select();
-  navigator.clipboard.writeText(codeOutput.value);
-  alert('Code HTML/SVG copié dans le presse-papiers !');
-});
-
-document.getElementById('btn-download-html').addEventListener('click', () => {
-  const blob = new Blob([codeOutput.value], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'diagramme-export.html';
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-function updateCodeConsole() {
-  const shapesSvg = state.elements.filter(e => e.type !== 'line').map(el => {
-    const fillAttr = el.transparent ? 'none' : el.fill;
-    const lockedAttr = el.locked ? ' data-locked="true"' : '';
-    let shapeTag = '';
-
-    if (el.type === 'rect') {
-      shapeTag = `<rect x="${el.x}" y="${el.y}" width="${el.width}" height="${el.height}" rx="${el.rx}" fill="${fillAttr}" stroke="${el.stroke}" stroke-width="${el.strokeWidth}" />`;
-    } else if (el.type === 'ellipse') {
-      shapeTag = `<ellipse cx="${el.x + el.width / 2}" cy="${el.y + el.height / 2}" rx="${el.width / 2}" ry="${el.height / 2}" fill="${fillAttr}" stroke="${el.stroke}" stroke-width="${el.strokeWidth}" />`;
-    } else if (el.type === 'diamond') {
-      const cx = el.x + el.width / 2;
-      const cy = el.y + el.height / 2;
-      const pts = `${cx},${el.y} ${el.x + el.width},${cy} ${cx},${el.y + el.height} ${el.x},${cy}`;
-      shapeTag = `<polygon points="${pts}" fill="${fillAttr}" stroke="${el.stroke}" stroke-width="${el.strokeWidth}" />`;
-    }
-
-    let textTags = '';
-    if (el.text) {
-      const lines = el.text.split('\n');
-      const fontSize = parseFloat(el.fontSize) || 13;
-      const lineHeight = fontSize * 1.25;
-      const startY = el.y + el.height / 2 - ((lines.length - 1) * lineHeight) / 2 + fontSize * 0.35;
-      textTags = lines.map((line, idx) =>
-        `\n      <text x="${el.x + el.width / 2}" y="${Math.round(startY + idx * lineHeight)}" font-size="${fontSize}px" font-weight="bold" fill="${el.textColor}" text-anchor="middle">${escapeHtml(line)}</text>`
-      ).join('');
-    }
-
-    return `    <g id="${el.id}"${lockedAttr}>\n      ${shapeTag}${textTags}\n    </g>`;
-  }).join('\n\n');
-
-  const linesSvg = state.elements.filter(e => e.type === 'line' && e.validated && e.points.length >= 2).map(el => {
-    const d = el.points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-    const dashAttr = el.dashed ? ' stroke-dasharray="6 4"' : '';
-    const markerAttr = el.arrowEnd ? ' marker-end="url(#arrow)"' : '';
-    return `    <path id="${el.id}" d="${d}" fill="none" stroke="${el.stroke}" stroke-width="${el.strokeWidth}"${dashAttr}${markerAttr} />`;
-  }).join('\n');
-
-  codeOutput.value = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Flowchart Export</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: #f8fafc;
-      display: flex;
-      justify-content: center;
-    }
-    .diagram-container {
-      background-color: #ffffff;
-      border: 1px solid #cbd5e1;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-    text {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-  </style>
-</head>
-<body>
-  <div class="diagram-container">
-    <svg width="${state.sceneWidth}" height="${state.sceneHeight}" viewBox="0 0 ${state.sceneWidth} ${state.sceneHeight}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
-        </marker>
-      </defs>
-
-      <!-- SHAPES -->
-${shapesSvg}
-
-      <!-- CONNECTIONS -->
-${linesSvg}
-    </svg>
-  </div>
-</body>
-</html>`;
 }
 
 // Initialisation : restauration depuis localStorage puis premier rendu

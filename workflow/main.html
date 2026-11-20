@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SVG Flow Studio — Éditeur WYSIWYG</title>
+  <title>Studio Flow — Éditeur SVG WYSIWYG</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- BARRE SUPÉRIEURE -->
   <header class="topbar">
-    <div class="brand">SVG Flow Studio</div>
+    <div class="brand">Studio Flow</div>
 
     <!-- CONTRÔLES DE ZOOM -->
     <div class="zoom-controls" title="Zoomer / Dézoomer (Ctrl + Molette)">
@@ -21,21 +21,18 @@
     </div>
 
     <div class="topbar-actions">
-      <label class="grid-toggle">
-        <input type="checkbox" id="snap-grid" checked> Magnétisme (10px)
-      </label>
       <input type="file" id="file-import-html" accept=".html,.htm,.svg" class="hidden">
       <button id="btn-import-html" class="btn">Importer .html</button>
+      <button id="btn-export-html" class="btn btn-primary" title="Télécharger le diagramme au format HTML/SVG autonome">Exporter .html</button>
       <button id="btn-export-pdf" class="btn" title="Exporter la page fabriquée au format PDF vectoriel">Exporter .pdf</button>
       <button id="btn-clear-scene" class="btn btn-danger">Tout effacer</button>
-      <button id="btn-toggle-console" class="btn btn-primary">Console Code HTML/SVG</button>
     </div>
   </header>
 
   <!-- ESPACE DE TRAVAIL PRINCIPAL (3 PANELS) -->
   <main class="workspace">
     
-    <!-- PANEL GAUCHE : HISTORIQUE, SÉLECTION GLOBALE, OUTILS & CALQUES -->
+    <!-- PANEL GAUCHE : HISTORIQUE, SÉLECTION GLOBALE, OUTILS, SCÈNE & CALQUES -->
     <aside class="panel panel-left">
       <div class="undo-bar">
         <button id="btn-undo" class="btn-top-panel" disabled title="Annuler la dernière action (Ctrl+Z)">
@@ -68,7 +65,7 @@
         </button>
       </div>
 
-      <div class="panel-header">Dimensions Scène</div>
+      <div class="panel-header">Scène</div>
       <div class="scene-settings">
         <div class="prop-row">
           <label>Largeur (px)</label>
@@ -78,6 +75,9 @@
           <label>Hauteur (px)</label>
           <input type="number" id="scene-height" value="1200" step="10">
         </div>
+        <label class="scene-snap-toggle">
+          <input type="checkbox" id="snap-grid" checked> Magnétisme (10px)
+        </label>
       </div>
 
       <div class="panel-header">Calques & Objets</div>
@@ -121,21 +121,6 @@
     </aside>
 
   </main>
-
-  <!-- CONSOLE INFÉRIEURE RÉTRACTABLE : CODE SOURCE -->
-  <section id="console-drawer" class="console-drawer hidden">
-    <div class="console-header">
-      <span>Code Source HTML / SVG Autonome</span>
-      <div class="console-actions">
-        <button id="btn-apply-console" class="btn btn-sm btn-primary">Reconstituer depuis le code</button>
-        <button id="btn-copy-code" class="btn btn-sm">Copier le code</button>
-        <button id="btn-console-pdf" class="btn btn-sm">Exporter .pdf</button>
-        <button id="btn-download-html" class="btn btn-sm btn-primary">Télécharger .html</button>
-        <button id="btn-close-console" class="btn btn-sm">✕</button>
-      </div>
-    </div>
-    <textarea id="code-output" spellcheck="false" placeholder="Collez ici un code HTML/SVG exporté ou récupérez le code généré..."></textarea>
-  </section>
 
   <script src="app.js"></script>
 </body>
