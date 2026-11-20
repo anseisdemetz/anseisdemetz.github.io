@@ -16,6 +16,8 @@ const state = {
   sceneWidth: 900,
   sceneHeight: 1200,
   zoom: 1,
+  leftCollapsed: false,
+  rightCollapsed: false,
   // Pile d'historique pour Annuler
   history: [],
   inputEditSnapshotTaken: false,
@@ -40,6 +42,37 @@ const btnUndo = document.getElementById('btn-undo');
 const undoCountSpan = document.getElementById('undo-count');
 const btnSelectAll = document.getElementById('btn-select-all');
 const btnZoomReset = document.getElementById('btn-zoom-reset');
+const panelLeft = document.getElementById('panel-left');
+const panelRight = document.getElementById('panel-right');
+
+/**
+ * Repliage / Dépliage des volets gauche et droit
+ */
+function applyPanelsCollapsedState(persist = true) {
+  panelLeft.classList.toggle('collapsed', state.leftCollapsed);
+  panelRight.classList.toggle('collapsed', state.rightCollapsed);
+  if (persist) saveToLocalStorage();
+}
+
+document.getElementById('btn-toggle-left').addEventListener('click', () => {
+  state.leftCollapsed = true;
+  applyPanelsCollapsedState(true);
+});
+
+document.getElementById('strip-left').addEventListener('click', () => {
+  state.leftCollapsed = false;
+  applyPanelsCollapsedState(true);
+});
+
+document.getElementById('btn-toggle-right').addEventListener('click', () => {
+  state.rightCollapsed = true;
+  applyPanelsCollapsedState(true);
+});
+
+document.getElementById('strip-right').addEventListener('click', () => {
+  state.rightCollapsed = false;
+  applyPanelsCollapsedState(true);
+});
 
 /**
  * Export HTML/SVG autonome
@@ -239,7 +272,9 @@ function saveToLocalStorage() {
       elements: state.elements,
       sceneWidth: state.sceneWidth,
       sceneHeight: state.sceneHeight,
-      snapToGrid: state.snapToGrid
+      snapToGrid: state.snapToGrid,
+      leftCollapsed: state.leftCollapsed,
+      rightCollapsed: state.rightCollapsed
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   } catch (err) {
@@ -259,6 +294,14 @@ function loadFromLocalStorage() {
       state.snapToGrid = data.snapToGrid;
       document.getElementById('snap-grid').checked = state.snapToGrid;
     }
+    if (typeof data.leftCollapsed === 'boolean') {
+      state.leftCollapsed = data.leftCollapsed;
+    }
+    if (typeof data.rightCollapsed === 'boolean') {
+      state.rightCollapsed = data.rightCollapsed;
+    }
+    applyPanelsCollapsedState(false);
+
     if (data.sceneWidth && data.sceneHeight) {
       applySceneDimensions(data.sceneWidth, data.sceneHeight, false);
     }

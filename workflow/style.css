@@ -145,8 +145,9 @@ body {
   border-right: 1px solid var(--border-panel);
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   flex-shrink: 0;
+  transition: width 0.16s ease;
+  overflow: hidden;
 }
 
 .panel-left {
@@ -157,6 +158,112 @@ body {
   width: 310px;
   border-right: none;
   border-left: 1px solid var(--border-panel);
+}
+
+/* VOLETS RÉDUITS (COLLAPSED) */
+.panel.collapsed {
+  width: 34px;
+}
+
+.panel.collapsed .panel-collapse-bar,
+.panel.collapsed .panel-body {
+  display: none;
+}
+
+.panel-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.panel-collapse-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #cbd5e1;
+  padding: 5px 8px;
+  border-bottom: 1px solid #94a3b8;
+  min-height: 30px;
+}
+
+.panel-collapse-bar-right {
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.panel-collapse-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1e293b;
+  letter-spacing: 0.4px;
+}
+
+.btn-collapse-panel {
+  background-color: #ffffff;
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  width: 22px;
+  height: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-collapse-panel:hover {
+  background-color: #eff6ff;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.collapsed-strip {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+  gap: 14px;
+  background-color: #e2e8f0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.collapsed-strip:hover {
+  background-color: #cbd5e1;
+}
+
+.panel.collapsed .collapsed-strip {
+  display: flex;
+}
+
+.collapsed-arrow {
+  width: 22px;
+  height: 22px;
+  background-color: #ffffff;
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collapsed-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #334155;
+  white-space: nowrap;
 }
 
 /* BARRE ANNULER + TOUT SÉLECTIONNER */
@@ -211,10 +318,6 @@ body {
   color: #334155;
   border-bottom: 1px solid var(--border-panel);
   border-top: 1px solid var(--border-panel);
-}
-
-.panel-right .panel-header:first-child {
-  border-top: none;
 }
 
 /* PALETTE OUTILS */

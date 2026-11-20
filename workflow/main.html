@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Studio Flow — Éditeur SVG WYSIWYG</title>
+  <title>SVG Flow Studio — Éditeur WYSIWYG</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- BARRE SUPÉRIEURE -->
   <header class="topbar">
-    <div class="brand">Studio Flow</div>
+    <div class="brand">SVG Flow Studio</div>
 
     <!-- CONTRÔLES DE ZOOM -->
     <div class="zoom-controls" title="Zoomer / Dézoomer (Ctrl + Molette)">
@@ -33,61 +33,72 @@
   <main class="workspace">
     
     <!-- PANEL GAUCHE : HISTORIQUE, SÉLECTION GLOBALE, OUTILS, SCÈNE & CALQUES -->
-    <aside class="panel panel-left">
-      <div class="undo-bar">
-        <button id="btn-undo" class="btn-top-panel" disabled title="Annuler la dernière action (Ctrl+Z)">
-          ↩ Annuler <span id="undo-count">(0)</span>
-        </button>
-        <button id="btn-select-all" class="btn-top-panel" title="Tout sélectionner sur la scène (Ctrl+A)">
-          ⬚ Tout sél.
-        </button>
+    <aside class="panel panel-left" id="panel-left">
+      <div class="panel-collapse-bar">
+        <span class="panel-collapse-title">Palette</span>
+        <button id="btn-toggle-left" class="btn-collapse-panel" title="Réduire le volet de gauche">◀</button>
+      </div>
+      <div class="collapsed-strip" id="strip-left" title="Agrandir le volet de gauche">
+        <span class="collapsed-arrow">▶</span>
+        <span class="collapsed-label">OUTILS & SCÈNE</span>
       </div>
 
-      <div class="panel-header">Outils & Formes</div>
-      <div class="tool-list">
-        <button class="tool-btn active" data-tool="select">
-          <span class="icon">↖</span> Sélection / Déplacer
-        </button>
-        <button class="tool-btn" data-tool="multi">
-          <span class="icon">⊞</span> Sélection partielle
-        </button>
-        <button class="tool-btn" data-tool="rect">
-          <span class="icon">▭</span> Rectangle / Carré
-        </button>
-        <button class="tool-btn" data-tool="ellipse">
-          <span class="icon">⬭</span> Ellipse / Cercle
-        </button>
-        <button class="tool-btn" data-tool="diamond">
-          <span class="icon">◇</span> Losange (Décision)
-        </button>
-        <button class="tool-btn" data-tool="line">
-          <span class="icon">⟋</span> Trait par points
-        </button>
-      </div>
-
-      <div class="panel-header">Scène</div>
-      <div class="scene-settings">
-        <div class="prop-row">
-          <label>Largeur (px)</label>
-          <input type="number" id="scene-width" value="900" step="10">
+      <div class="panel-body">
+        <div class="undo-bar">
+          <button id="btn-undo" class="btn-top-panel" disabled title="Annuler la dernière action (Ctrl+Z)">
+            ↩ Annuler <span id="undo-count">(0)</span>
+          </button>
+          <button id="btn-select-all" class="btn-top-panel" title="Tout sélectionner sur la scène (Ctrl+A)">
+            ⬚ Tout sél.
+          </button>
         </div>
-        <div class="prop-row">
-          <label>Hauteur (px)</label>
-          <input type="number" id="scene-height" value="1200" step="10">
+
+        <div class="panel-header">Outils & Formes</div>
+        <div class="tool-list">
+          <button class="tool-btn active" data-tool="select">
+            <span class="icon">↖</span> Sélection / Déplacer
+          </button>
+          <button class="tool-btn" data-tool="multi">
+            <span class="icon">⊞</span> Sélection partielle
+          </button>
+          <button class="tool-btn" data-tool="rect">
+            <span class="icon">▭</span> Rectangle / Carré
+          </button>
+          <button class="tool-btn" data-tool="ellipse">
+            <span class="icon">⬭</span> Ellipse / Cercle
+          </button>
+          <button class="tool-btn" data-tool="diamond">
+            <span class="icon">◇</span> Losange (Décision)
+          </button>
+          <button class="tool-btn" data-tool="line">
+            <span class="icon">⟋</span> Trait par points
+          </button>
         </div>
-        <label class="scene-snap-toggle">
-          <input type="checkbox" id="snap-grid" checked> Magnétisme (10px)
-        </label>
-      </div>
 
-      <div class="panel-header">Calques & Objets</div>
-      <div id="layers-list" class="layers-list"></div>
+        <div class="panel-header">Scène</div>
+        <div class="scene-settings">
+          <div class="prop-row">
+            <label>Largeur (px)</label>
+            <input type="number" id="scene-width" value="900" step="10">
+          </div>
+          <div class="prop-row">
+            <label>Hauteur (px)</label>
+            <input type="number" id="scene-height" value="1200" step="10">
+          </div>
+          <label class="scene-snap-toggle">
+            <input type="checkbox" id="snap-grid" checked> Magnétisme (10px)
+          </label>
+        </div>
 
-      <div class="help-box">
-        <strong>Astuces :</strong><br>
-        • <b>Exporter .pdf</b> : génère un PDF vectoriel aux dimensions exactes de la scène.<br>
-        • <b>Sélection partielle</b> : cliquez sur les objets pour les ajouter/retirer du groupe, puis déplacez via <b>Left / Top</b>.<br>
-        • <b>Ctrl + Molette</b> pour zoomer/dézoomer.
+        <div class="panel-header">Calques & Objets</div>
+        <div id="layers-list" class="layers-list"></div>
+
+        <div class="help-box">
+          <strong>Astuces :</strong><br>
+          • <b>Exporter .pdf</b> : génère un PDF vectoriel aux dimensions exactes de la scène.<br>
+          • <b>Sélection partielle</b> : cliquez sur les objets pour les ajouter/retirer du groupe, puis déplacez via <b>Left / Top</b>.<br>
+          • <b>Ctrl + Molette</b> pour zoomer/dézoomer.
+        </div>
       </div>
     </aside>
 
@@ -112,12 +123,22 @@
     </section>
 
     <!-- PANEL DROIT : INSPECTEUR D'OBJETS (STYLE DELPHI) -->
-    <aside class="panel panel-right">
-      <div class="panel-header">Inspecteur d'objet</div>
-      <div id="inspector-empty" class="inspector-empty">
-        Sélectionnez ou dessinez une forme pour éditer ses propriétés.
+    <aside class="panel panel-right" id="panel-right">
+      <div class="panel-collapse-bar panel-collapse-bar-right">
+        <button id="btn-toggle-right" class="btn-collapse-panel" title="Réduire le volet de droite">▶</button>
+        <span class="panel-collapse-title">Inspecteur d'objet</span>
       </div>
-      <div id="inspector-content" class="inspector-content hidden"></div>
+      <div class="collapsed-strip" id="strip-right" title="Agrandir le volet de droite">
+        <span class="collapsed-arrow">◀</span>
+        <span class="collapsed-label">INSPECTEUR</span>
+      </div>
+
+      <div class="panel-body">
+        <div id="inspector-empty" class="inspector-empty">
+          Sélectionnez ou dessinez une forme pour éditer ses propriétés.
+        </div>
+        <div id="inspector-content" class="inspector-content hidden"></div>
+      </div>
     </aside>
 
   </main>
