@@ -15,6 +15,8 @@
       <label class="grid-toggle">
         <input type="checkbox" id="snap-grid" checked> Magnétisme grille (10px)
       </label>
+      <input type="file" id="file-import-html" accept=".html,.htm,.svg" class="hidden">
+      <button id="btn-import-html" class="btn">Importer .html</button>
       <button id="btn-clear-scene" class="btn btn-danger">Tout effacer</button>
       <button id="btn-toggle-console" class="btn btn-primary">Console Code HTML/SVG</button>
     </div>
@@ -23,10 +25,15 @@
   <!-- ESPACE DE TRAVAIL PRINCIPAL (3 PANELS) -->
   <main class="workspace">
     
-    <!-- PANEL GAUCHE : PALETTE D'OUTILS -->
+    <!-- PANEL GAUCHE : HISTORIQUE, PALETTE D'OUTILS & CALQUES -->
     <aside class="panel panel-left">
-      <div class="panel-header">Calques & Objets</div>
-      <div id="layers-list" class="layers-list"></div>
+      <!-- A05 : Bouton Annuler au-dessus de "Outils & Formes" -->
+      <div class="undo-bar">
+        <button id="btn-undo" class="btn-undo" disabled title="Annuler la dernière action (Ctrl+Z)">
+          ↩ Annuler <span id="undo-count">(0)</span>
+        </button>
+      </div>
+
       <div class="panel-header">Outils & Formes</div>
       <div class="tool-list">
         <button class="tool-btn active" data-tool="select">
@@ -58,11 +65,14 @@
         </div>
       </div>
 
+      <div class="panel-header">Calques & Objets</div>
+      <div id="layers-list" class="layers-list"></div>
+
       <div class="help-box">
         <strong>Astuces :</strong><br>
-        • Maintenir <b>Shift</b> pour un carré ou cercle parfait.<br>
-        • Pour un <b>Trait</b> : cliquez pour poser les points, puis cliquez sur <b>Valider</b>.<br>
-        • Déplacer un point invalide le tracé jusqu'à nouvelle validation.
+        • Sauvegarde automatique locale active.<br>
+        • <b>Ctrl+Z</b> ou bouton <b>Annuler</b> pour revenir en arrière.<br>
+        • Maintenir <b>Shift</b> pour un carré ou cercle parfait.
       </div>
     </aside>
 
@@ -92,9 +102,7 @@
       <div id="inspector-empty" class="inspector-empty">
         Sélectionnez ou dessinez une forme pour éditer ses propriétés.
       </div>
-      <div id="inspector-content" class="inspector-content hidden">
-        <!-- Le contenu dynamique est injecté par app.js -->
-      </div>
+      <div id="inspector-content" class="inspector-content hidden"></div>
     </aside>
 
   </main>
@@ -104,12 +112,13 @@
     <div class="console-header">
       <span>Code Source HTML / SVG Autonome</span>
       <div class="console-actions">
+        <button id="btn-apply-console" class="btn btn-sm btn-primary">Reconstituer depuis le code</button>
         <button id="btn-copy-code" class="btn btn-sm">Copier le code</button>
         <button id="btn-download-html" class="btn btn-sm btn-primary">Télécharger .html</button>
         <button id="btn-close-console" class="btn btn-sm">✕</button>
       </div>
     </div>
-    <textarea id="code-output" readonly spellcheck="false"></textarea>
+    <textarea id="code-output" spellcheck="false" placeholder="Collez ici un code HTML/SVG exporté ou récupérez le code généré..."></textarea>
   </section>
 
   <script src="app.js"></script>

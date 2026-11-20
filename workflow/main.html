@@ -11,9 +11,18 @@
   <!-- BARRE SUPÉRIEURE -->
   <header class="topbar">
     <div class="brand">SVG Flow Studio</div>
+
+    <!-- CONTRÔLES DE ZOOM -->
+    <div class="zoom-controls" title="Zoomer / Dézoomer (Ctrl + Molette)">
+      <button id="btn-zoom-out" class="btn btn-sm" title="Dézoomer">−</button>
+      <button id="btn-zoom-reset" class="btn btn-sm zoom-readout" title="Réinitialiser à 100%">100%</button>
+      <button id="btn-zoom-in" class="btn btn-sm" title="Zoomer">+</button>
+      <button id="btn-zoom-fit" class="btn btn-sm" title="Ajuster tout le schéma à l'écran">Ajuster</button>
+    </div>
+
     <div class="topbar-actions">
       <label class="grid-toggle">
-        <input type="checkbox" id="snap-grid" checked> Magnétisme grille (10px)
+        <input type="checkbox" id="snap-grid" checked> Magnétisme (10px)
       </label>
       <input type="file" id="file-import-html" accept=".html,.htm,.svg" class="hidden">
       <button id="btn-import-html" class="btn">Importer .html</button>
@@ -25,12 +34,14 @@
   <!-- ESPACE DE TRAVAIL PRINCIPAL (3 PANELS) -->
   <main class="workspace">
     
-    <!-- PANEL GAUCHE : HISTORIQUE, PALETTE D'OUTILS & CALQUES -->
+    <!-- PANEL GAUCHE : HISTORIQUE, SÉLECTION GLOBALE, OUTILS & CALQUES -->
     <aside class="panel panel-left">
-      <!-- A05 : Bouton Annuler au-dessus de "Outils & Formes" -->
       <div class="undo-bar">
-        <button id="btn-undo" class="btn-undo" disabled title="Annuler la dernière action (Ctrl+Z)">
+        <button id="btn-undo" class="btn-top-panel" disabled title="Annuler la dernière action (Ctrl+Z)">
           ↩ Annuler <span id="undo-count">(0)</span>
+        </button>
+        <button id="btn-select-all" class="btn-top-panel" title="Tout sélectionner sur la scène (Ctrl+A)">
+          ⬚ Tout sél.
         </button>
       </div>
 
@@ -38,6 +49,10 @@
       <div class="tool-list">
         <button class="tool-btn active" data-tool="select">
           <span class="icon">↖</span> Sélection / Déplacer
+        </button>
+        <!-- A09 : Outil Sélection partielle -->
+        <button class="tool-btn" data-tool="multi">
+          <span class="icon">⊞</span> Sélection partielle
         </button>
         <button class="tool-btn" data-tool="rect">
           <span class="icon">▭</span> Rectangle / Carré
@@ -70,14 +85,14 @@
 
       <div class="help-box">
         <strong>Astuces :</strong><br>
-        • Sauvegarde automatique locale active.<br>
-        • <b>Ctrl+Z</b> ou bouton <b>Annuler</b> pour revenir en arrière.<br>
-        • Maintenir <b>Shift</b> pour un carré ou cercle parfait.
+        • <b>Sélection partielle</b> : cliquez sur les objets pour les ajouter/retirer du groupe, puis déplacez via <b>Left / Top</b>.<br>
+        • <b>Ctrl + Molette</b> pour zoomer/dézoomer.<br>
+        • <b>Ctrl+Z</b> ou <b>Annuler</b> pour revenir en arrière.
       </div>
     </aside>
 
     <!-- SCÈNE CENTRALE -->
-    <section class="stage-wrapper">
+    <section class="stage-wrapper" id="stage-wrapper">
       <div class="stage-container" id="stage-container">
         <svg id="editor-svg" width="900" height="1200" viewBox="0 0 900 1200" xmlns="http://www.w3.org/2000/svg">
           <defs>

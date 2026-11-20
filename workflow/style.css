@@ -36,12 +36,32 @@ body {
   justify-content: space-between;
   padding: 0 16px;
   border-bottom: 1px solid #334155;
+  gap: 12px;
 }
 
 .brand {
   font-weight: 700;
   font-size: 15px;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* CONTRÔLES DE ZOOM */
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #1e293b;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+}
+
+.zoom-readout {
+  min-width: 52px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  background-color: #0f172a;
 }
 
 .topbar-actions {
@@ -51,12 +71,13 @@ body {
 }
 
 .grid-toggle {
-  font-size: 13px;
+  font-size: 12.5px;
   color: #cbd5e1;
   display: flex;
   align-items: center;
   gap: 6px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 /* BOUTONS */
@@ -69,6 +90,7 @@ body {
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .btn:hover {
@@ -134,10 +156,11 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .panel-left {
-  width: 230px;
+  width: 235px;
 }
 
 .panel-right {
@@ -146,36 +169,45 @@ body {
   border-left: 1px solid var(--border-panel);
 }
 
-/* A05 : BARRE ANNULER AU-DESSUS DE OUTILS & FORMES */
+/* BARRE ANNULER + TOUT SÉLECTIONNER */
 .undo-bar {
   padding: 8px;
   background-color: #f1f5f9;
   border-bottom: 1px solid var(--border-panel);
+  display: flex;
+  gap: 6px;
 }
 
-.btn-undo {
-  width: 100%;
-  padding: 7px 10px;
+.btn-top-panel {
+  flex: 1;
+  padding: 7px 6px;
   background-color: #ffffff;
   border: 1px solid #94a3b8;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--text-dark);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
+  white-space: nowrap;
 }
 
-.btn-undo:hover:not(:disabled) {
+.btn-top-panel:hover:not(:disabled) {
   background-color: #eff6ff;
   border-color: var(--accent);
   color: var(--accent);
 }
 
-.btn-undo:disabled {
+.btn-top-panel.active {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.btn-top-panel:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
@@ -250,14 +282,15 @@ body {
   color: #713f12;
 }
 
-/* SCÈNE CENTRALE */
+/* SCÈNE CENTRALE : bord gauche toujours accessible après le menu de gauche */
 .stage-wrapper {
   flex: 1;
+  min-width: 0;
   background-color: #334155;
   overflow: auto;
   padding: 32px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
 }
 
@@ -265,15 +298,22 @@ body {
   background-color: #ffffff;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
   line-height: 0;
+  flex-shrink: 0;
+  margin: 0 auto;
 }
 
 #editor-svg {
   cursor: crosshair;
   user-select: none;
+  display: block;
 }
 
 #editor-svg.mode-select {
   cursor: default;
+}
+
+#editor-svg.mode-multi {
+  cursor: pointer;
 }
 
 /* INSPECTEUR STYLE DELPHI (GRILLE PROPRIÉTÉ / VALEUR) */
@@ -282,6 +322,7 @@ body {
   text-align: center;
   color: var(--text-muted);
   font-size: 13px;
+  line-height: 1.5;
 }
 
 .hidden {
@@ -404,6 +445,17 @@ body {
 
 .z-order-actions button {
   flex: 1;
+}
+
+.group-hint {
+  font-size: 11.5px;
+  color: #475569;
+  line-height: 1.45;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
 /* LISTE DES CALQUES / OBJETS */

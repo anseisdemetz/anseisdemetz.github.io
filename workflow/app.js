@@ -5,26 +5,32 @@ const MAX_HISTORY = 50;
  * État central de l'application
  */
 const state = {
-  tool: 'select', // 'select' | 'rect' | 'ellipse' | 'diamond' | 'line'
+  tool: 'select', // 'select' | 'multi' | 'rect' | 'ellipse' | 'diamond' | 'line'
   elements: [],   // Liste des objets (formes et traits)
   selectedId: null,
+  selectedIds: [], // A09 : Liste des IDs sélectionnés en mode "Sélection partielle"
+  selectAllMode: false,
+  includeLockedInGroup: true,
   snapToGrid: true,
   gridSize: 10,
   sceneWidth: 900,
   sceneHeight: 1200,
-  // Pile d'historique pour Annuler (A05)
+  zoom: 1,
+  // Pile d'historique pour Annuler
   history: [],
   inputEditSnapshotTaken: false,
   // État d'interaction souris
   isDrawing: false,
-  dragMode: null, // 'create' | 'move-shape' | 'move-point'
+  dragMode: null, // 'create' | 'move-shape' | 'move-point' | 'move-all'
   dragTarget: null,
   dragOffset: { x: 0, y: 0 },
+  lastDragPos: { x: 0, y: 0 },
   startPos: { x: 0, y: 0 }
 };
 
 // Références DOM
 const svg = document.getElementById('editor-svg');
+const stageWrapper = document.getElementById('stage-wrapper');
 const layerShapes = document.getElementById('layer-shapes');
 const layerLines = document.getElementById('layer-lines');
 const layerOverlay = document.getElementById('layer-overlay');
@@ -34,9 +40,60 @@ const consoleDrawer = document.getElementById('console-drawer');
 const codeOutput = document.getElementById('code-output');
 const btnUndo = document.getElementById('btn-undo');
 const undoCountSpan = document.getElementById('undo-count');
+const btnSelectAll = document.getElementById('btn-select-all');
+const btnZoomReset = document.getElementById('btn-zoom-reset');
 
 /**
- * A04 : Persistance LocalStorage
+ * Gestion du Zoom vectoriel natif
+ */
+function setZoom(newZoom) {
+  const clamped = Math.min(3, Math.max(0.2, Math.round(newZoom * 100) / 100));
+  state.zoom = clamped;
+  updateSvgViewport();
+  if (btnZoomReset) {
+    btnZoomReset.textContent = `${Math.round(state.zoom * 100)}%`;
+  }
+}
+
+function updateSvgViewport() {
+  const scaledW = Math.round(state.sceneWidth * state.zoom);
+  const scaledH = Math.round(state.sceneHeight * state.zoom);
+  svg.setAttribute('width', scaledW);
+  svg.setAttribute('height', scaledH);
+  svg.setAttribute('viewBox', `0 0 ${state.sceneWidth} ${state.sceneHeight}`);
+}
+
+document.getElementById('btn-zoom-in').addEventListener('click', () => {
+  setZoom(state.zoom + 0.15);
+});
+
+document.getElementById('btn-zoom-out').addEventListener('click', () => {
+  setZoom(state.zoom - 0.15);
+});
+
+btnZoomReset.addEventListener('click', () => {
+  setZoom(1);
+});
+
+document.getElementById('btn-zoom-fit').addEventListener('click', () => {
+  if (!stageWrapper) return;
+  const availW = stageWrapper.clientWidth - 64;
+  const availH = stageWrapper.clientHeight - 64;
+  const ratioW = availW / state.sceneWidth;
+  const ratioH = availH / state.sceneHeight;
+  setZoom(Math.min(1, ratioW, ratioH));
+});
+
+stageWrapper.addEventListener('wheel', (e) => {
+  if (e.ctrlKey || e.metaKey) {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 0.1 : -0.1;
+    setZoom(state.zoom + delta);
+  }
+}, { passive: false });
+
+/**
+ * Persistance LocalStorage
  */
 function saveToLocalStorage() {
   try {
@@ -73,7 +130,7 @@ function loadFromLocalStorage() {
 }
 
 /**
- * A05 : Historique & Annulation (Undo)
+ * Historique & Annulation (Undo)
  */
 function pushHistory() {
   const snapshot = JSON.stringify({
@@ -82,7 +139,6 @@ function pushHistory() {
     sceneHeight: state.sceneHeight
   });
 
-  // Éviter les doublons consécutifs identiques
   if (state.history.length > 0 && state.history[state.history.length - 1] === snapshot) {
     return;
   }
@@ -103,10 +159,13 @@ function undoLastAction() {
   state.elements = parsed.elements || [];
   applySceneDimensions(parsed.sceneWidth || 900, parsed.sceneHeight || 1200, false);
 
-  // Vérifier si l'élément sélectionné existe encore
+  if (state.elements.length === 0) {
+    state.selectAllMode = false;
+  }
   if (!state.elements.some(el => el.id === state.selectedId)) {
     state.selectedId = null;
   }
+  state.selectedIds = state.selectedIds.filter(id => state.elements.some(el => el.id === id));
 
   updateUndoButton();
   renderAll();
@@ -122,14 +181,116 @@ function updateUndoButton() {
 
 btnUndo.addEventListener('click', undoLastAction);
 
-// Raccourci clavier Ctrl+Z / Cmd+Z (hors champs de saisie texte)
-window.addEventListener('keydown', (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
-    const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
-    if (tag !== 'input' && tag !== 'textarea') {
-      e.preventDefault();
-      undoLastAction();
+/**
+ * Sélection globale (A06/A07) et Sélection partielle (A09)
+ */
+function isPartialSelectionActive() {
+  return state.tool === 'multi';
+}
+
+function getActiveGroupElements() {
+  // En mode Sélection partielle (A09), on retourne uniquement les éléments explicitement cliqués
+  if (isPartialSelectionActive()) {
+    return state.elements.filter(el => state.selectedIds.includes(el.id));
+  }
+  // En mode Tout sélectionner (A06/A07)
+  return state.elements.filter(el => {
+    if (el.type === 'line') return el.points && el.points.length > 0;
+    return state.includeLockedInGroup ? true : !el.locked;
+  });
+}
+
+function getGroupBoundingBox() {
+  const targets = getActiveGroupElements();
+  if (targets.length === 0) return null;
+
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+
+  targets.forEach(el => {
+    if (el.type === 'line') {
+      el.points.forEach(pt => {
+        if (pt.x < minX) minX = pt.x;
+        if (pt.y < minY) minY = pt.y;
+        if (pt.x > maxX) maxX = pt.x;
+        if (pt.y > maxY) maxY = pt.y;
+      });
+    } else {
+      if (el.x < minX) minX = el.x;
+      if (el.y < minY) minY = el.y;
+      if (el.x + el.width > maxX) maxX = el.x + el.width;
+      if (el.y + el.height > maxY) maxY = el.y + el.height;
     }
+  });
+
+  if (!isFinite(minX)) return null;
+  return {
+    x: Math.round(minX),
+    y: Math.round(minY),
+    width: Math.round(maxX - minX),
+    height: Math.round(maxY - minY),
+    count: targets.length
+  };
+}
+
+function translateGroup(dx, dy) {
+  if (dx === 0 && dy === 0) return;
+  const targets = getActiveGroupElements();
+  targets.forEach(el => {
+    if (el.type === 'line') {
+      el.points.forEach(pt => {
+        pt.x += dx;
+        pt.y += dy;
+      });
+    } else {
+      el.x += dx;
+      el.y += dy;
+    }
+  });
+}
+
+function togglePartialSelection(elId) {
+  const idx = state.selectedIds.indexOf(elId);
+  if (idx === -1) {
+    state.selectedIds.push(elId);
+  } else {
+    state.selectedIds.splice(idx, 1);
+  }
+}
+
+function activateSelectAll() {
+  if (state.elements.length === 0) return;
+  setTool('select', true);
+  state.selectedId = null;
+  state.selectedIds = [];
+  state.selectAllMode = true;
+  renderAll();
+}
+
+btnSelectAll.addEventListener('click', () => {
+  if (state.selectAllMode) {
+    state.selectAllMode = false;
+    renderAll();
+  } else {
+    activateSelectAll();
+  }
+});
+
+// Raccourcis clavier Ctrl+Z (Annuler) et Ctrl+A (Tout sélectionner)
+window.addEventListener('keydown', (e) => {
+  const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+  const isTyping = tag === 'input' || tag === 'textarea';
+
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey && !isTyping) {
+    e.preventDefault();
+    undoLastAction();
+  }
+
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a' && !isTyping) {
+    e.preventDefault();
+    activateSelectAll();
   }
 });
 
@@ -147,9 +308,11 @@ function snap(val) {
 
 function getMousePos(evt) {
   const rect = svg.getBoundingClientRect();
+  const logicalX = (evt.clientX - rect.left) / state.zoom;
+  const logicalY = (evt.clientY - rect.top) / state.zoom;
   return {
-    x: snap(evt.clientX - rect.left),
-    y: snap(evt.clientY - rect.top)
+    x: snap(logicalX),
+    y: snap(logicalY)
   };
 }
 
@@ -169,9 +332,7 @@ function applySceneDimensions(w, h, persist = true) {
   state.sceneHeight = Math.max(200, parseInt(h, 10) || 1200);
   document.getElementById('scene-width').value = state.sceneWidth;
   document.getElementById('scene-height').value = state.sceneHeight;
-  svg.setAttribute('width', state.sceneWidth);
-  svg.setAttribute('height', state.sceneHeight);
-  svg.setAttribute('viewBox', `0 0 ${state.sceneWidth} ${state.sceneHeight}`);
+  updateSvgViewport();
   if (persist) saveToLocalStorage();
 }
 
@@ -180,13 +341,20 @@ function applySceneDimensions(w, h, persist = true) {
  */
 document.querySelectorAll('.tool-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    state.tool = btn.dataset.tool;
+    const chosenTool = btn.dataset.tool;
+    setTool(chosenTool, false);
 
-    svg.classList.toggle('mode-select', state.tool === 'select');
+    if (chosenTool === 'multi') {
+      state.selectedId = null;
+      state.selectAllMode = false;
+      renderAll();
+      return;
+    }
 
-    if (state.tool === 'line') {
+    // Si on quitte "multi", on vide la sélection partielle
+    state.selectedIds = [];
+
+    if (chosenTool === 'line') {
       const current = getSelectedElement();
       if (!current || current.type !== 'line' || current.validated) {
         pushHistory();
@@ -203,14 +371,23 @@ document.querySelectorAll('.tool-btn').forEach(btn => {
         state.elements.push(newLine);
         state.selectedId = newLine.id;
         renderAll();
+        return;
       }
     }
+    renderAll();
   });
 });
 
-function setTool(toolName) {
+function setTool(toolName, keepSelectAll = false) {
   const btn = document.querySelector(`.tool-btn[data-tool="${toolName}"]`);
-  if (btn) btn.click();
+  if (!btn) return;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.tool = toolName;
+  if (!keepSelectAll) state.selectAllMode = false;
+
+  svg.classList.toggle('mode-select', state.tool === 'select');
+  svg.classList.toggle('mode-multi', state.tool === 'multi');
 }
 
 /**
@@ -238,6 +415,8 @@ document.getElementById('btn-clear-scene').addEventListener('click', () => {
     pushHistory();
     state.elements = [];
     state.selectedId = null;
+    state.selectedIds = [];
+    state.selectAllMode = false;
     renderAll();
   }
 });
@@ -249,6 +428,35 @@ svg.addEventListener('mousedown', (evt) => {
   const pos = getMousePos(evt);
   const target = evt.target;
 
+  // A09 : En mode "Sélection partielle", on ne fait RIEN d'autre que sélectionner/désélectionner
+  if (state.tool === 'multi') {
+    const clickedGroup = target.closest('[data-id]');
+    if (clickedGroup) {
+      togglePartialSelection(clickedGroup.dataset.id);
+      renderAll();
+    }
+    return;
+  }
+
+  // 0. Si "Tout sélectionner" est actif et qu'on clique dans la zone englobante, on déplace tout le groupe
+  if (state.selectAllMode && state.tool === 'select') {
+    const bbox = getGroupBoundingBox();
+    if (
+      bbox &&
+      pos.x >= bbox.x &&
+      pos.x <= bbox.x + bbox.width &&
+      pos.y >= bbox.y &&
+      pos.y <= bbox.y + bbox.height
+    ) {
+      pushHistory();
+      state.dragMode = 'move-all';
+      state.lastDragPos = pos;
+      return;
+    } else {
+      state.selectAllMode = false;
+    }
+  }
+
   // 1. Clic sur une poignée de point d'un trait
   if (target.dataset.pointIndex !== undefined) {
     const elId = target.dataset.elId;
@@ -256,6 +464,7 @@ svg.addEventListener('mousedown', (evt) => {
     const el = state.elements.find(item => item.id === elId);
     if (el) {
       pushHistory();
+      state.selectAllMode = false;
       state.selectedId = el.id;
       state.dragMode = 'move-point';
       state.dragTarget = { el, ptIdx };
@@ -268,6 +477,7 @@ svg.addEventListener('mousedown', (evt) => {
   // 2. Mode Outil "Trait par points"
   if (state.tool === 'line') {
     pushHistory();
+    state.selectAllMode = false;
     let lineEl = getSelectedElement();
     if (!lineEl || lineEl.type !== 'line' || lineEl.validated) {
       lineEl = {
@@ -294,6 +504,7 @@ svg.addEventListener('mousedown', (evt) => {
     if (shapeGroup) {
       const id = shapeGroup.dataset.id;
       state.selectedId = id;
+      state.selectAllMode = false;
       const el = getSelectedElement();
       if (el && el.type !== 'line' && !el.locked) {
         pushHistory();
@@ -304,6 +515,7 @@ svg.addEventListener('mousedown', (evt) => {
       renderAll();
     } else {
       state.selectedId = null;
+      state.selectAllMode = false;
       renderAll();
     }
     return;
@@ -312,6 +524,7 @@ svg.addEventListener('mousedown', (evt) => {
   // 4. Mode Création d'une forme (rect, ellipse, diamond)
   if (['rect', 'ellipse', 'diamond'].includes(state.tool)) {
     pushHistory();
+    state.selectAllMode = false;
     state.isDrawing = true;
     state.dragMode = 'create';
     state.startPos = pos;
@@ -378,12 +591,24 @@ window.addEventListener('mousemove', (evt) => {
     renderScene();
     renderInspector();
   }
+
+  if (state.dragMode === 'move-all') {
+    const dx = pos.x - state.lastDragPos.x;
+    const dy = pos.y - state.lastDragPos.y;
+    if (dx !== 0 || dy !== 0) {
+      translateGroup(dx, dy);
+      state.lastDragPos = pos;
+      renderScene();
+      renderInspector();
+    }
+  }
 });
 
 window.addEventListener('mouseup', () => {
   if (state.dragMode === 'create') {
     state.isDrawing = false;
     setTool('select');
+    renderAll();
   }
   if (state.dragMode) {
     state.dragMode = null;
@@ -397,6 +622,8 @@ window.addEventListener('mouseup', () => {
  * Rendu global de la scène, des calques, de l'inspecteur et sauvegarde auto
  */
 function renderAll() {
+  btnSelectAll.classList.toggle('active', state.selectAllMode);
+  btnSelectAll.disabled = state.elements.length === 0;
   renderScene();
   renderInspector();
   renderLayersList();
@@ -409,21 +636,48 @@ function renderScene() {
   layerLines.innerHTML = '';
   layerOverlay.innerHTML = '';
 
+  const partialMode = isPartialSelectionActive();
+
   state.elements.forEach(el => {
-    const isSelected = el.id === state.selectedId;
+    const isSelected = partialMode
+      ? state.selectedIds.includes(el.id)
+      : (!state.selectAllMode && el.id === state.selectedId);
+
     if (el.type === 'line') {
-      renderLineElement(el, isSelected);
+      renderLineElement(el, isSelected, partialMode);
     } else {
-      renderShapeElement(el, isSelected);
+      renderShapeElement(el, isSelected, partialMode);
     }
   });
+
+  // Affichage du cadre englobant global en mode "Tout sélectionner" ou "Sélection partielle"
+  if (state.selectAllMode || (partialMode && state.selectedIds.length > 0)) {
+    const bbox = getGroupBoundingBox();
+    if (bbox) {
+      const groupOutline = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      groupOutline.setAttribute('x', bbox.x - 6);
+      groupOutline.setAttribute('y', bbox.y - 6);
+      groupOutline.setAttribute('width', bbox.width + 12);
+      groupOutline.setAttribute('height', bbox.height + 12);
+      groupOutline.setAttribute('fill', 'rgba(37, 99, 235, 0.04)');
+      groupOutline.setAttribute('stroke', '#2563eb');
+      groupOutline.setAttribute('stroke-width', '2');
+      groupOutline.setAttribute('stroke-dasharray', '6 4');
+      groupOutline.style.pointerEvents = 'none';
+      layerOverlay.appendChild(groupOutline);
+    }
+  }
 }
 
-function renderShapeElement(el, isSelected) {
+function renderShapeElement(el, isSelected, partialMode = false) {
   const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   g.setAttribute('data-id', el.id);
 
-  if (el.locked) {
+  if (partialMode) {
+    // En mode Sélection partielle, tous les objets sont cliquables pour être ajoutés/retirés
+    g.style.pointerEvents = 'all';
+    g.style.cursor = 'pointer';
+  } else if (el.locked) {
     g.style.pointerEvents = 'none';
     g.style.cursor = 'default';
   } else {
@@ -455,7 +709,7 @@ function renderShapeElement(el, isSelected) {
   shapeNode.setAttribute('fill', el.transparent ? 'none' : el.fill);
   shapeNode.setAttribute('stroke', el.stroke);
   shapeNode.setAttribute('stroke-width', el.strokeWidth);
-  if (el.transparent && !el.locked) {
+  if ((el.transparent && !el.locked) || partialMode) {
     shapeNode.setAttribute('pointer-events', 'all');
   }
   g.appendChild(shapeNode);
@@ -488,8 +742,8 @@ function renderShapeElement(el, isSelected) {
     outline.setAttribute('y', el.y - 4);
     outline.setAttribute('width', el.width + 8);
     outline.setAttribute('height', el.height + 8);
-    outline.setAttribute('fill', 'none');
-    outline.setAttribute('stroke', el.locked ? '#f59e0b' : '#2563eb');
+    outline.setAttribute('fill', partialMode ? 'rgba(37, 99, 235, 0.08)' : 'none');
+    outline.setAttribute('stroke', (el.locked && !partialMode) ? '#f59e0b' : '#2563eb');
     outline.setAttribute('stroke-width', '1.5');
     outline.setAttribute('stroke-dasharray', '4 3');
     outline.style.pointerEvents = 'none';
@@ -497,7 +751,7 @@ function renderShapeElement(el, isSelected) {
   }
 }
 
-function renderLineElement(el, isSelected) {
+function renderLineElement(el, isSelected, partialMode = false) {
   if (el.validated && el.points.length >= 2) {
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('data-id', el.id);
@@ -507,8 +761,8 @@ function renderLineElement(el, isSelected) {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', d);
     path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', el.stroke);
-    path.setAttribute('stroke-width', el.strokeWidth);
+    path.setAttribute('stroke', (partialMode && isSelected) ? '#2563eb' : el.stroke);
+    path.setAttribute('stroke-width', (partialMode && isSelected) ? el.strokeWidth + 1.5 : el.strokeWidth);
     if (el.dashed) path.setAttribute('stroke-dasharray', '6 4');
     if (el.arrowEnd) path.setAttribute('marker-end', 'url(#arrow-default)');
 
@@ -523,7 +777,8 @@ function renderLineElement(el, isSelected) {
     layerLines.appendChild(g);
   }
 
-  if (!el.validated || isSelected) {
+  // En mode Sélection partielle, on n'affiche pas les poignées individuelles de déplacement de points
+  if (!partialMode && (!el.validated || isSelected)) {
     el.points.forEach((pt, idx) => {
       const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       circle.setAttribute('cx', pt.x);
@@ -562,12 +817,15 @@ function renderLayersList() {
     return;
   }
 
+  const partialMode = isPartialSelectionActive();
   const reversed = [...state.elements].reverse();
   layersList.innerHTML = reversed.map(el => {
     const label = el.type === 'line'
       ? `Trait (${el.points.length} pts)`
       : (el.text ? el.text.split('\n')[0] : el.type.toUpperCase());
-    const isActive = el.id === state.selectedId;
+    const isActive = partialMode
+      ? state.selectedIds.includes(el.id)
+      : (state.selectAllMode || el.id === state.selectedId);
 
     return `
       <div class="layer-item ${isActive ? 'active' : ''}" data-select-id="${el.id}">
@@ -584,6 +842,12 @@ function renderLayersList() {
   layersList.querySelectorAll('[data-select-id]').forEach(row => {
     row.addEventListener('click', (e) => {
       if (e.target.dataset.toggleLock) return;
+      if (isPartialSelectionActive()) {
+        togglePartialSelection(row.dataset.selectId);
+        renderAll();
+        return;
+      }
+      state.selectAllMode = false;
       state.selectedId = row.dataset.selectId;
       renderAll();
     });
@@ -605,8 +869,21 @@ function renderLayersList() {
  * Inspecteur Delphi (Panel Droit)
  */
 function renderInspector() {
+  // A09 : Inspecteur de déplacement pur pour "Sélection partielle"
+  if (isPartialSelectionActive()) {
+    renderPartialGroupInspector();
+    return;
+  }
+
+  // A07 : Inspecteur de groupe quand "Tout sélectionner" est actif
+  if (state.selectAllMode) {
+    renderGroupInspector();
+    return;
+  }
+
   const el = getSelectedElement();
   if (!el) {
+    inspectorEmpty.textContent = 'Sélectionnez ou dessinez une forme pour éditer ses propriétés.';
     inspectorEmpty.classList.remove('hidden');
     inspectorContent.classList.add('hidden');
     return;
@@ -621,6 +898,175 @@ function renderInspector() {
   } else {
     renderShapeInspector(el);
   }
+}
+
+function renderPartialGroupInspector() {
+  const bbox = getGroupBoundingBox();
+  if (!bbox) {
+    inspectorEmpty.innerHTML = '<b>Mode Sélection partielle</b><br><br>Cliquez sur un ou plusieurs objets de la scène pour constituer un groupe à déplacer.';
+    inspectorEmpty.classList.remove('hidden');
+    inspectorContent.classList.add('hidden');
+    return;
+  }
+
+  inspectorEmpty.classList.add('hidden');
+  inspectorContent.classList.remove('hidden');
+  state.inputEditSnapshotTaken = false;
+
+  inspectorContent.innerHTML = `
+    <table class="delphi-table">
+      <tr><td class="prop-name">Sélection partielle</td><td class="prop-val"><b>${bbox.count} objet(s)</b></td></tr>
+      <tr>
+        <td class="prop-name">Left (X)</td>
+        <td class="prop-val"><input type="number" id="partial-left" value="${bbox.x}"></td>
+      </tr>
+      <tr>
+        <td class="prop-name">Top (Y)</td>
+        <td class="prop-val"><input type="number" id="partial-top" value="${bbox.y}"></td>
+      </tr>
+    </table>
+    <div class="inspector-section">
+      <div class="group-hint">
+        Cliquez sur d'autres objets de la scène pour les ajouter ou retirer de ce groupe. Utilisez uniquement <b>Left (X)</b> et <b>Top (Y)</b> pour les déplacer ensemble.
+      </div>
+      <button id="btn-clear-partial" class="btn" style="width:100%;">Vider la sélection partielle</button>
+    </div>
+  `;
+
+  const inputLeft = document.getElementById('partial-left');
+  const inputTop = document.getElementById('partial-top');
+
+  inputLeft.addEventListener('focus', () => { state.inputEditSnapshotTaken = false; });
+  inputLeft.addEventListener('input', (e) => {
+    const currentBox = getGroupBoundingBox();
+    if (!currentBox) return;
+    if (!state.inputEditSnapshotTaken) {
+      pushHistory();
+      state.inputEditSnapshotTaken = true;
+    }
+    const newX = parseFloat(e.target.value) || 0;
+    const dx = newX - currentBox.x;
+    translateGroup(dx, 0);
+    renderScene();
+    updateCodeConsole();
+    saveToLocalStorage();
+  });
+
+  inputTop.addEventListener('focus', () => { state.inputEditSnapshotTaken = false; });
+  inputTop.addEventListener('input', (e) => {
+    const currentBox = getGroupBoundingBox();
+    if (!currentBox) return;
+    if (!state.inputEditSnapshotTaken) {
+      pushHistory();
+      state.inputEditSnapshotTaken = true;
+    }
+    const newY = parseFloat(e.target.value) || 0;
+    const dy = newY - currentBox.y;
+    translateGroup(0, dy);
+    renderScene();
+    updateCodeConsole();
+    saveToLocalStorage();
+  });
+
+  document.getElementById('btn-clear-partial').addEventListener('click', () => {
+    state.selectedIds = [];
+    renderAll();
+  });
+}
+
+function renderGroupInspector() {
+  const bbox = getGroupBoundingBox();
+  if (!bbox) {
+    inspectorEmpty.classList.remove('hidden');
+    inspectorContent.classList.add('hidden');
+    return;
+  }
+
+  inspectorEmpty.classList.add('hidden');
+  inspectorContent.classList.remove('hidden');
+  state.inputEditSnapshotTaken = false;
+
+  inspectorContent.innerHTML = `
+    <table class="delphi-table">
+      <tr><td class="prop-name">Sélection</td><td class="prop-val"><b>GROUPE (${bbox.count} objets)</b></td></tr>
+      <tr>
+        <td class="prop-name">Left (X)</td>
+        <td class="prop-val"><input type="number" id="group-left" value="${bbox.x}"></td>
+      </tr>
+      <tr>
+        <td class="prop-name">Top (Y)</td>
+        <td class="prop-val"><input type="number" id="group-top" value="${bbox.y}"></td>
+      </tr>
+      <tr>
+        <td class="prop-name">Width (L)</td>
+        <td class="prop-val"><span style="color:#64748b;">${bbox.width} px</span></td>
+      </tr>
+      <tr>
+        <td class="prop-name">Height (H)</td>
+        <td class="prop-val"><span style="color:#64748b;">${bbox.height} px</span></td>
+      </tr>
+      <tr>
+        <td class="prop-name">Verrouillés 🔒</td>
+        <td class="prop-val">
+          <label class="transparent-label">
+            <input type="checkbox" id="group-include-locked" ${state.includeLockedInGroup ? 'checked' : ''}>
+            Déplacer aussi les fonds verrouillés
+          </label>
+        </td>
+      </tr>
+    </table>
+    <div class="inspector-section">
+      <div class="group-hint">
+        Modifiez <b>Left (X)</b> ou <b>Top (Y)</b> ci-dessus (ou glissez le cadre bleu sur la scène) pour déplacer l'ensemble des objets tout en conservant l'agencement.
+      </div>
+      <button id="btn-deselect-all" class="btn" style="width:100%;">Quitter la sélection globale</button>
+    </div>
+  `;
+
+  const inputLeft = document.getElementById('group-left');
+  const inputTop = document.getElementById('group-top');
+
+  inputLeft.addEventListener('focus', () => { state.inputEditSnapshotTaken = false; });
+  inputLeft.addEventListener('input', (e) => {
+    const currentBox = getGroupBoundingBox();
+    if (!currentBox) return;
+    if (!state.inputEditSnapshotTaken) {
+      pushHistory();
+      state.inputEditSnapshotTaken = true;
+    }
+    const newX = parseFloat(e.target.value) || 0;
+    const dx = newX - currentBox.x;
+    translateGroup(dx, 0);
+    renderScene();
+    updateCodeConsole();
+    saveToLocalStorage();
+  });
+
+  inputTop.addEventListener('focus', () => { state.inputEditSnapshotTaken = false; });
+  inputTop.addEventListener('input', (e) => {
+    const currentBox = getGroupBoundingBox();
+    if (!currentBox) return;
+    if (!state.inputEditSnapshotTaken) {
+      pushHistory();
+      state.inputEditSnapshotTaken = true;
+    }
+    const newY = parseFloat(e.target.value) || 0;
+    const dy = newY - currentBox.y;
+    translateGroup(0, dy);
+    renderScene();
+    updateCodeConsole();
+    saveToLocalStorage();
+  });
+
+  document.getElementById('group-include-locked').addEventListener('change', (e) => {
+    state.includeLockedInGroup = e.target.checked;
+    renderAll();
+  });
+
+  document.getElementById('btn-deselect-all').addEventListener('click', () => {
+    state.selectAllMode = false;
+    renderAll();
+  });
 }
 
 function renderShapeInspector(el) {
@@ -861,7 +1307,7 @@ function deleteSelected() {
 }
 
 /**
- * A03 : Import et reconstitution depuis un fichier HTML / SVG exporté
+ * Import et reconstitution depuis un fichier HTML / SVG exporté
  */
 const fileImportInput = document.getElementById('file-import-html');
 
@@ -1085,6 +1531,8 @@ function importFromHtmlString(htmlStr) {
 
   state.elements = reconstructed;
   state.selectedId = null;
+  state.selectedIds = [];
+  state.selectAllMode = false;
   renderAll();
 }
 
