@@ -171,10 +171,10 @@ function openDemoModal(stepType) {
   desc.style.display = '';
 
   if (stepType === 'swikly') {
-    title.textContent = 'Bank Card Deposit (Swikly)';
+    title.textContent = 'Bank Card Deposit';
     desc.textContent = 'Simulate customer approval or decline of the bank card security deposit.';
     image.src = 'img/swikly.png';
-    image.alt = 'Swikly visual — bank card deposit';
+    image.alt = 'visual — bank card deposit';
     frame.style.display = 'flex';
     icon.style.display = 'none';
   } else if (stepType === 'yousign_sign') {
@@ -185,10 +185,10 @@ function openDemoModal(stepType) {
     frame.style.display = 'flex';
     icon.style.display = 'none';
   } else if (stepType === 'payment_cb') {
-    title.textContent = 'Bank Card Payout (Viva)';
+    title.textContent = 'Bank Card Payout';
     desc.textContent = 'Simulate card registration and 3-D Secure payment verification.';
     image.src = 'img/viva.png';
-    image.alt = 'Viva visual — add bank card';
+    image.alt = 'visual — add bank card';
     frame.style.display = 'flex';
     icon.style.display = 'none';
   }
@@ -284,7 +284,7 @@ function setupPayoutStep() {
   } else {
     grid.style.gridTemplateColumns = '1fr 1fr';
     document.getElementById('flow-btn-iban').style.display = 'flex';
-    desc.textContent = 'Since the instant deposit was not authorized, choose between a Bank Card credit (Viva) or an IBAN transfer.';
+    desc.textContent = 'Since the instant deposit was not authorized, choose between a Bank Card credit or an IBAN transfer.';
   }
 }
 
