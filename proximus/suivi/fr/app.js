@@ -171,24 +171,24 @@ function openDemoModal(stepType) {
   desc.style.display = '';
 
   if (stepType === 'swikly') {
-    title.textContent = 'Empreinte bancaire (Swikly)';
-    desc.textContent = 'Simulez le dépôt ou le refus de l’empreinte bancaire par le client.';
+    title.textContent = 'Caution';
+    desc.textContent = 'Simulez le dépôt ou le refus de la caution par le client.';
     image.src = 'img/swikly.png';
-    image.alt = 'Visuel Swikly — empreinte bancaire';
+    image.alt = 'Visuel Caution';
     frame.style.display = 'flex';
     icon.style.display = 'none';
   } else if (stepType === 'yousign_sign') {
     title.textContent = 'Signature du bon de cession';
     desc.textContent = 'Simulez la signature électronique du contrat par le client.';
     image.src = 'img/youtrust.png';
-    image.alt = 'Visuel YouTrust — signature du bon de cession';
+    image.alt = 'Visuel — signature du bon de cession';
     frame.style.display = 'flex';
     icon.style.display = 'none';
   } else if (stepType === 'payment_cb') {
-    title.textContent = 'Versement sur Carte Bancaire (Viva)';
+    title.textContent = 'Versement sur Carte Bancaire';
     desc.textContent = 'Simulez l’enregistrement et la vérification 3-D Secure de la carte.';
     image.src = 'img/viva.png';
-    image.alt = 'Visuel Viva — ajout de carte bancaire';
+    image.alt = 'Visuel — ajout de carte bancaire';
     frame.style.display = 'flex';
     icon.style.display = 'none';
   }
@@ -217,7 +217,7 @@ function handleDemoResult(action) {
       badge.style.border = '1px solid #86efac';
       badge.style.color = '#15803d';
       badge.textContent = 'Validée ✓';
-      desc.textContent = 'Empreinte bancaire autorisée avec succès.';
+      desc.textContent = 'Caution autorisée avec succès.';
       btn.className = 'btn btn-step-green btn-full';
       btn.innerHTML = '<span>Continuer</span> <i class="fa-solid fa-arrow-right"></i>';
       btn.onclick = () => showFlowStep(3);
@@ -227,7 +227,7 @@ function handleDemoResult(action) {
       badge.style.border = '1px solid #fca5a5';
       badge.style.color = '#dc2626';
       badge.textContent = 'Refusée';
-      desc.textContent = 'Empreinte non déposée. Le versement sera exécuté par virement différé.';
+      desc.textContent = 'Caution non déposée. Le versement sera exécuté par virement différé.';
       btn.className = 'btn btn-step-green btn-full';
       btn.innerHTML = '<span>Continuer en virement différé</span> <i class="fa-solid fa-arrow-right"></i>';
       btn.onclick = () => showFlowStep(3);
@@ -280,11 +280,11 @@ function setupPayoutStep() {
   if (flowState.swiklyStatus === 'validated') {
     grid.style.gridTemplateColumns = '1fr';
     document.getElementById('flow-btn-iban').style.display = 'none';
-    desc.textContent = 'Votre empreinte bancaire étant validée, votre versement sera crédité directement sur votre carte bancaire.';
+    desc.textContent = 'Votre caution étant validée, votre versement sera crédité directement sur votre carte bancaire.';
   } else {
     grid.style.gridTemplateColumns = '1fr 1fr';
     document.getElementById('flow-btn-iban').style.display = 'flex';
-    desc.textContent = "L'empreinte immédiate n'ayant pas été autorisée, choisissez entre un crédit sur Carte (Viva) ou un virement IBAN.";
+    desc.textContent = "La caution n'ayant pas été autorisée, choisissez entre un crédit sur Carte Bancaire ou un virement IBAN.";
   }
 }
 
