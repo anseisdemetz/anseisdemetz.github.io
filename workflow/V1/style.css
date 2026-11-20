@@ -1,0 +1,486 @@
+:root {
+  --bg-app: #1e293b;
+  --bg-panel: #f8fafc;
+  --border-panel: #cbd5e1;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --danger: #ef4444;
+  --row-alt: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-app);
+  color: var(--text-dark);
+  overflow: hidden;
+}
+
+/* TOPBAR */
+.topbar {
+  height: 48px;
+  background-color: #0f172a;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid #334155;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.grid-toggle {
+  font-size: 13px;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+/* BOUTONS */
+.btn {
+  padding: 6px 12px;
+  border: 1px solid #475569;
+  background-color: #334155;
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #475569;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+}
+
+.btn-success {
+  background-color: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+}
+
+.btn-success:hover {
+  background-color: #15803d;
+}
+
+.btn-danger {
+  background-color: transparent;
+  border-color: var(--danger);
+  color: #fca5a5;
+}
+
+.btn-danger:hover {
+  background-color: var(--danger);
+  color: #ffffff;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+/* WORKSPACE */
+.workspace {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.panel {
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-panel);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.panel-left {
+  width: 220px;
+}
+
+.panel-right {
+  width: 300px;
+  border-right: none;
+  border-left: 1px solid var(--border-panel);
+}
+
+.panel-header {
+  background-color: #e2e8f0;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #334155;
+  border-bottom: 1px solid var(--border-panel);
+  border-top: 1px solid var(--border-panel);
+}
+
+.panel-header:first-child {
+  border-top: none;
+}
+
+/* PALETTE OUTILS */
+.tool-list {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  background: #ffffff;
+  border: 1px solid var(--border-panel);
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  text-align: left;
+}
+
+.tool-btn:hover {
+  background-color: #f1f5f9;
+}
+
+.tool-btn.active {
+  background-color: #eff6ff;
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tool-btn .icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.scene-settings {
+  padding: 8px;
+}
+
+.help-box {
+  margin: 10px;
+  padding: 10px;
+  background-color: #fefce8;
+  border: 1px solid #fef08a;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #713f12;
+}
+
+/* SCÈNE CENTRALE */
+.stage-wrapper {
+  flex: 1;
+  background-color: #334155;
+  overflow: auto;
+  padding: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.stage-container {
+  background-color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  line-height: 0;
+}
+
+#editor-svg {
+  cursor: crosshair;
+  user-select: none;
+}
+
+#editor-svg.mode-select {
+  cursor: default;
+}
+
+/* INSPECTEUR STYLE DELPHI (GRILLE PROPRIÉTÉ / VALEUR) */
+.inspector-empty {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.delphi-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.delphi-table tr {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.delphi-table tr:nth-child(even) {
+  background-color: var(--row-alt);
+}
+
+.delphi-table td.prop-name {
+  width: 42%;
+  padding: 6px 8px;
+  font-weight: 500;
+  color: #334155;
+  border-right: 1px solid #cbd5e1;
+}
+
+.delphi-table td.prop-val {
+  padding: 3px 6px;
+}
+
+.delphi-table input[type="number"],
+.delphi-table input[type="text"],
+.delphi-table select,
+.delphi-table textarea {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 3px 4px;
+  color: #0f172a;
+}
+
+.delphi-table input:focus,
+.delphi-table textarea:focus,
+.delphi-table select:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: var(--accent);
+}
+
+.delphi-table input[type="color"] {
+  width: 100%;
+  height: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.prop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.prop-row input {
+  width: 80px;
+  padding: 4px;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+}
+
+.inspector-section {
+  padding: 10px;
+}
+
+/* POINTS DU TRAIT DANS L'INSPECTEUR */
+.point-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12px;
+}
+
+.point-row span {
+  width: 28px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.point-row input {
+  width: 65px;
+  padding: 3px 4px;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.point-row button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.status-draft {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.status-valid {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+/* CONSOLE CODE SOURCE */
+.console-drawer {
+  height: 260px;
+  background-color: #0f172a;
+  border-top: 2px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+}
+
+.console-header {
+  height: 36px;
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.console-actions {
+  display: flex;
+  gap: 8px;
+}
+
+#code-output {
+  flex: 1;
+  background-color: #0b1120;
+  color: #38bdf8;
+  font-family: "Fira Code", Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 12px;
+  border: none;
+  resize: none;
+  outline: none;
+}
+
+.btn-add-point {
+  width: calc(100% - 16px);
+  margin: 8px;
+  padding: 6px;
+  background-color: #eff6ff;
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-add-point:hover {
+  background-color: #dbeafe;
+}
+
+/* LISTE DES CALQUES / OBJETS */
+.layers-list {
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.layer-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.layer-item:hover {
+  background-color: #f1f5f9;
+}
+
+.layer-item.active {
+  border-color: var(--accent);
+  background-color: #eff6ff;
+  font-weight: 600;
+}
+
+.layer-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.layer-lock-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 2px;
+}
+
+.z-order-actions {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.z-order-actions button {
+  flex: 1;
+}

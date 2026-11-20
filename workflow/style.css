@@ -47,7 +47,7 @@ body {
 .topbar-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .grid-toggle {
@@ -108,6 +108,14 @@ body {
   color: #ffffff;
 }
 
+.panel .btn-danger {
+  color: var(--danger);
+}
+
+.panel .btn-danger:hover {
+  color: #ffffff;
+}
+
 .btn-sm {
   padding: 4px 8px;
   font-size: 11px;
@@ -129,13 +137,47 @@ body {
 }
 
 .panel-left {
-  width: 220px;
+  width: 230px;
 }
 
 .panel-right {
-  width: 300px;
+  width: 310px;
   border-right: none;
   border-left: 1px solid var(--border-panel);
+}
+
+/* A05 : BARRE ANNULER AU-DESSUS DE OUTILS & FORMES */
+.undo-bar {
+  padding: 8px;
+  background-color: #f1f5f9;
+  border-bottom: 1px solid var(--border-panel);
+}
+
+.btn-undo {
+  width: 100%;
+  padding: 7px 10px;
+  background-color: #ffffff;
+  border: 1px solid #94a3b8;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-undo:hover:not(:disabled) {
+  background-color: #eff6ff;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-undo:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .panel-header {
@@ -149,7 +191,7 @@ body {
   border-top: 1px solid var(--border-panel);
 }
 
-.panel-header:first-child {
+.panel-right .panel-header:first-child {
   border-top: none;
 }
 
@@ -294,11 +336,45 @@ body {
 }
 
 .delphi-table input[type="color"] {
-  width: 100%;
+  width: 44px;
   height: 24px;
-  border: none;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
   background: none;
   cursor: pointer;
+}
+
+.delphi-table input[type="color"]:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.fill-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.transparent-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #475569;
+  cursor: pointer;
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.unit-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  padding-right: 4px;
 }
 
 .prop-row {
@@ -318,6 +394,63 @@ body {
 
 .inspector-section {
   padding: 10px;
+}
+
+.z-order-actions {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.z-order-actions button {
+  flex: 1;
+}
+
+/* LISTE DES CALQUES / OBJETS */
+.layers-list {
+  max-height: 210px;
+  overflow-y: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.layer-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.layer-item:hover {
+  background-color: #f1f5f9;
+}
+
+.layer-item.active {
+  border-color: var(--accent);
+  background-color: #eff6ff;
+  font-weight: 600;
+}
+
+.layer-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.layer-lock-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 2px;
 }
 
 /* POINTS DU TRAIT DANS L'INSPECTEUR */
@@ -351,6 +484,23 @@ body {
   color: var(--danger);
   cursor: pointer;
   font-weight: bold;
+}
+
+.btn-add-point {
+  width: calc(100% - 16px);
+  margin: 8px;
+  padding: 6px;
+  background-color: #eff6ff;
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-add-point:hover {
+  background-color: #dbeafe;
 }
 
 .status-badge {
@@ -409,78 +559,4 @@ body {
   border: none;
   resize: none;
   outline: none;
-}
-
-.btn-add-point {
-  width: calc(100% - 16px);
-  margin: 8px;
-  padding: 6px;
-  background-color: #eff6ff;
-  border: 1px dashed var(--accent);
-  color: var(--accent);
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.btn-add-point:hover {
-  background-color: #dbeafe;
-}
-
-/* LISTE DES CALQUES / OBJETS */
-.layers-list {
-  max-height: 220px;
-  overflow-y: auto;
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.layer-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px 8px;
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.layer-item:hover {
-  background-color: #f1f5f9;
-}
-
-.layer-item.active {
-  border-color: var(--accent);
-  background-color: #eff6ff;
-  font-weight: 600;
-}
-
-.layer-name {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 140px;
-}
-
-.layer-lock-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 13px;
-  padding: 0 2px;
-}
-
-.z-order-actions {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-
-.z-order-actions button {
-  flex: 1;
 }
