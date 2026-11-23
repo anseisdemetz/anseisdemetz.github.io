@@ -51,8 +51,24 @@ function closeOtpModal() {
 
 function moveNext(input, index) {
   input.value = input.value.replace(/\D/g, '').slice(0, 1);
-  const inputs = document.querySelectorAll('.otp-input');
-  if (input.value && index < inputs.length - 1) inputs[index + 1].focus();
+
+  const inputs = [...document.querySelectorAll('.otp-input')];
+
+  if (!input.value) return;
+
+  if (index < inputs.length - 1) {
+    inputs[index + 1].focus();
+  } else if (inputs.every(field => field.value)) {
+    input.form.requestSubmit();
+  }
+}
+
+function continueToFlowStep(stepNumber, demoType = null) {
+  showFlowStep(stepNumber);
+
+  if (demoType) {
+    openDemoModal(demoType);
+  }
 }
 
 function handleOtpSubmit(event) {
@@ -144,14 +160,14 @@ function handleDemoResult(action) {
       desc.textContent = "Empreinte bancaire autorisée avec succès.";
       btn.className = 'btn btn-step-green';
       btn.textContent = "Continuer vers la pièce d'identité";
-      btn.onclick = () => showFlowStep(2);
+      btn.onclick = () => continueToFlowStep(2, 'yousign_id');
     } else {
       flowState.swiklyStatus = 'refused';
       badge.style.background = '#fee2e2'; badge.style.border = '1px solid #fca5a5'; badge.style.color = '#dc2626'; badge.textContent = 'Refusée';
-      desc.textContent = "Empreinte non déposée. Le versement sera exécuté par IBAN.";
+      desc.textContent = "Empreinte non déposée. Vous pouvez terminer la reprise, le versement se fera après réception et vérification de votre produit directement par IBAN.";
       btn.className = 'btn btn-step-green';
-      btn.textContent = "Continuer comme virement différé";
-      btn.onclick = () => showFlowStep(2);
+      btn.textContent = "Continuer vers le virement différé";
+      btn.onclick = () => continueToFlowStep(2, 'yousign_id');
     }
 
   } else if (step === 'yousign_id') {
@@ -164,7 +180,7 @@ function handleDemoResult(action) {
       box.className = 'flow-step-box step-green';
       btn.className = 'btn btn-step-green';
       btn.textContent = "Continuer vers la signature du contrat";
-      btn.onclick = () => showFlowStep(3);
+      btn.onclick = () => continueToFlowStep(3, 'yousign_sign');
     } else {
       alert("La vérification d'identité a été refusée.");
     }
@@ -181,7 +197,7 @@ function handleDemoResult(action) {
       btn.textContent = "Continuer vers le versement";
       btn.onclick = () => {
         setupPayoutStep();
-        showFlowStep(4);
+        continueToFlowStep(4, 'payment_cb');
       };
     } else {
       alert("La signature du contrat a été refusée.");
@@ -234,18 +250,33 @@ function toggleIbanFormInFlow() {
 
 function completeFlowPayout(method) {
   flowState.payoutMethod = method;
+  flowState.vivaStatus = method === 'viva';
   isFinalized = true;
 
   document.getElementById('completionFlowCard').classList.remove('active');
-  
+  document.getElementById('productTrackingDetails').classList.add('active');
+
   document.getElementById('statusBadge').className = 'badge badge-green';
   document.getElementById('statusBadge').textContent = 'Demande finalisée';
-  
+
+  const immediatePayment =
+    flowState.swiklyStatus === 'validated' &&
+    flowState.vivaStatus === true;
+
   const step1 = document.getElementById('mainStep1');
-  if (step1) {
-    step1.classList.add('completed');
-    step1.querySelector('.step-label').classList.add('active');
-  }
+  const paymentStepEarly = document.getElementById('paymentStepEarly');
+  const paymentStepEnd = document.getElementById('paymentStepEnd');
+
+  // « Demande finalisée » est toujours cochée.
+  step1.classList.add('completed');
+
+  // Paiement immédiat : afficher et cocher l’étape du début,
+  // masquer celle de la fin pour éviter le doublon.
+  paymentStepEarly.classList.toggle('hidden', !immediatePayment);
+  paymentStepEnd.classList.toggle('hidden', immediatePayment);
+
+  paymentStepEarly.classList.toggle('completed', immediatePayment);
+  paymentStepEnd.classList.remove('completed');
 
   document.getElementById('diagnostic-download-actions').style.display = 'flex';
   document.getElementById('btn-edit-payment-method').style.display = 'inline-flex';

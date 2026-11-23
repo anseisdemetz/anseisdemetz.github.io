@@ -288,6 +288,27 @@
   }
   .btn-save.enabled:hover { background: #1cae4f; }
 
+  .account-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .account-actions .btn-save { flex: 2; width: auto; margin-top: 0; }
+  .btn-delete-account {
+    flex: 1;
+    white-space: normal;
+    background: #FDECEA;
+    color: #B42318;
+    border: 1px solid #F6021E;
+    border-radius: 999px;
+    padding: 18px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .25s, color .25s;
+  }
+  .btn-delete-account:hover { background: #FDE2DF; color: #8F1D14; }
+
   /* ================= FOOTER ================= */
   footer {
     background: #0F2E3D;
@@ -423,6 +444,8 @@
     .tabs { gap: 20px; overflow-x: auto; justify-content: flex-start; }
     main { padding: 32px 20px 60px; }
     .footer-content { grid-template-columns: 1fr; }
+    .account-actions { flex-direction: column; }
+    .account-actions .btn-save, .btn-delete-account { width: 100%; }
   }
 </style>
 </head>
@@ -525,8 +548,11 @@
       </div>
     </section>
 
-    <!-- Enregistrer -->
-    <button type="submit" class="btn-save" id="saveBtn" disabled>Enregistrer</button>
+    <!-- Enregistrer et suppression du compte -->
+    <div class="account-actions">
+      <button type="submit" class="btn-save" id="saveBtn" disabled>Enregistrer</button>
+      <button type="button" class="btn-delete-account" id="deleteAccountBtn">Supprimer mon compte</button>
+    </div>
   </form>
 </main>
 
@@ -605,6 +631,13 @@
     saveBtn.blur();
   });
 
+  // ===== Suppression du compte =====
+  document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) return;
+    // TODO : aucun endpoint ni identifiant de compte n’est fourni dans cette page ;
+    // intégrer ici l’appel API réel de suppression du compte.
+  });
+
   // ===== Annulation de la suppression du compte =====
 document.getElementById('cancelDeletionBtn').addEventListener('click', () => {
   // TODO : appel API pour annuler la suppression
@@ -613,5 +646,6 @@ document.getElementById('cancelDeletionBtn').addEventListener('click', () => {
 });
 </script>
 
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
