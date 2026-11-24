@@ -3,6 +3,18 @@ let toastTimer = null;
 let isFinalized = false;
 let flowState = { swiklyStatus: 'pending', idCheckOk: false, signatureOk: false, payoutMethod: null };
 let currentDemoStep = null; // 'swikly' | 'yousign_id' | 'yousign_sign'
+let hasTrackingCode = false;
+let currentTrackingCode = '';
+
+function updateContactButton() {
+  const contactButton = document.querySelector('.btn-contact-discreet');
+  if (!contactButton) return;
+
+  contactButton.classList.toggle(
+    'hidden',
+    !(hasTrackingCode)
+  );
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
@@ -24,7 +36,12 @@ function handleSearch(event) {
 function displayTrackingView(code) {
   document.getElementById('inputScreen').style.display = 'none';
   document.getElementById('trackingContent').classList.add('active');
-  document.getElementById('orderNumberDisplay').textContent = code;
+
+  currentTrackingCode = code.trim();
+  hasTrackingCode = Boolean(currentTrackingCode);
+
+  updateContactButton();
+  loadTrackingConsent();
 }
 
 function toggleDetails() {
@@ -253,6 +270,8 @@ function completeFlowPayout(method) {
   flowState.vivaStatus = method === 'viva';
   isFinalized = true;
 
+  updateContactButton();
+
   document.getElementById('completionFlowCard').classList.remove('active');
   document.getElementById('productTrackingDetails').classList.add('active');
 
@@ -425,3 +444,49 @@ function handleSaveIBAN(event) {
   closePaymentScreen();
   showToast("Vos coordonnées IBAN ont été enregistrées avec succès.");
 }
+
+function getTrackingConsentStorageKey() {
+  return `tracking-pixel-consent:${currentTrackingCode}`;
+}
+
+function loadTrackingConsent() {
+  const toggle = document.getElementById('tracking-pixel-consent');
+  const status = document.getElementById('tracking-consent-status');
+
+  if (!toggle || !currentTrackingCode) return;
+
+  try {
+    const savedConsent = localStorage.getItem(getTrackingConsentStorageKey());
+    const consent = savedConsent ? JSON.parse(savedConsent) : null;
+
+    // Sans choix précédemment enregistré, le switch reste désactivé.
+    toggle.checked = consent?.accepted === true;
+    status.textContent = consent
+      ? `Votre choix est enregistré : ${consent.accepted ? 'consentement accepté' : 'suivi refusé'}.`
+      : '';
+  } catch {
+    toggle.checked = false;
+    status.textContent = '';
+  }
+}
+
+document.addEventListener('change', (event) => {
+  if (event.target.id !== 'tracking-pixel-consent' || !currentTrackingCode) return;
+
+  const consent = {
+    accepted: event.target.checked,
+    updatedAt: new Date().toISOString()
+  };
+
+  try {
+    localStorage.setItem(getTrackingConsentStorageKey(), JSON.stringify(consent));
+    document.getElementById('tracking-consent-status').textContent =
+      consent.accepted
+        ? 'Votre consentement est enregistré.'
+        : 'Votre refus du suivi est enregistré.';
+  } catch {
+    event.target.checked = false;
+    document.getElementById('tracking-consent-status').textContent =
+      'Impossible d’enregistrer votre choix. Veuillez réessayer.';
+  }
+});
