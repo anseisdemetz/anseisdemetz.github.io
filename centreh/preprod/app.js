@@ -369,17 +369,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     dispatchDatePreview.textContent = dispatchDate;
                 }
 
-                const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/dispatch?authentification_token=${encodeURIComponent(CONFIG.CHECK_API_TOKEN)}&date=${encodeURIComponent(dispatchDate)}`;
+                const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/dispatch?authentification_token=${encodeURIComponent(CONFIG.CHECK_API_TOKEN)}`;
                 const proxyUrl = buildProxyUrl(targetEndpoint);
 
                 consoleOutput.textContent = `// Envoi GET dispatch vers :\n// ${targetEndpoint}`;
 
                 const response = await fetch(proxyUrl, {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
-                    }
+                        "X-AUTH-CR": CONFIG.CHECK_API_TOKEN,
+                        "X-HTTP-Method-Override": "GET"
+                    },
+                    body: JSON.stringify({
+                        date: dispatchDate
+                    })
                 });
 
                 let responseData;
