@@ -395,16 +395,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 let responseData;
-                const contentType = response.headers.get("content-type");
-
-                if (contentType && contentType.includes("application/json")) {
-                    responseData = await response.json();
-                } else {
-                    responseData = await response.text();
+                const rawText = await response.text();
+                try {
+                    responseData = JSON.parse(rawText);
+                } catch (e) {
+                    responseData = rawText;
                 }
 
                 if (responseData && typeof responseData.contents === 'string') {
                     try { responseData = JSON.parse(responseData.contents); } catch (e) {}
+                } else if (responseData && responseData.contents && typeof responseData.contents === 'object') {
+                    responseData = responseData.contents;
                 }
 
                 const statusInfo = `// Statut HTTP Dispatch : ${response.status} ${response.statusText}\n`;
@@ -415,9 +416,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 consoleOutput.textContent = statusInfo + `// Réponse de l'API Dispatch :\n` + formattedBody;
 
                 // Affichage du bloc CRON si result_code === "OK"
-                if (responseData && responseData.result_code === "OK") {
-                    cronBlock?.classList.remove("hidden");
-                    cronBlock?.scrollIntoView({ behavior: "smooth" });
+                const resultCode = typeof responseData === 'object' 
+                    ? responseData?.result_code 
+                    : null;
+
+                if (resultCode === "OK" || (typeof responseData === 'string' && responseData.includes('"OK"'))) {
+                    if (cronBlock) {
+                        cronBlock.classList.remove("hidden");
+                        cronBlock.scrollIntoView({ behavior: "smooth" });
+                    } else {
+                        console.error("L'élément #cronBlock est introuvable dans index.html (vérifie le cache ou index.html).");
+                    }
                 }
 
             } catch (error) {
