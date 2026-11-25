@@ -2,19 +2,9 @@ let pendingAction = null;
 let toastTimer = null;
 let isFinalized = false;
 let flowState = { swiklyStatus: 'pending', idCheckOk: false, signatureOk: false, payoutMethod: null };
-let currentDemoStep = null; // 'swikly' | 'yousign_id' | 'yousign_sign'
-let hasTrackingCode = false;
+let currentDemoStep = null; // 'swikly' | 'yousign_sign'
 let currentTrackingCode = '';
-
-function updateContactButton() {
-  const contactButton = document.querySelector('.btn-contact-discreet');
-  if (!contactButton) return;
-
-  contactButton.classList.toggle(
-    'hidden',
-    !(hasTrackingCode)
-  );
-}
+let pendingConsentChoice = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
@@ -36,11 +26,8 @@ function handleSearch(event) {
 function displayTrackingView(code) {
   document.getElementById('inputScreen').style.display = 'none';
   document.getElementById('trackingContent').classList.add('active');
-
+  document.getElementById('orderNumberDisplay').textContent = code;
   currentTrackingCode = code.trim();
-  hasTrackingCode = Boolean(currentTrackingCode);
-
-  updateContactButton();
   loadTrackingConsent();
 }
 
@@ -99,6 +86,9 @@ function handleOtpSubmit(event) {
       startFinalizationFlow();
     } else if (action === 'Modification du mode de paiement') {
       openPaymentScreen(); // CORRECTION: Ouvre l'écran de choix et non la modal Viva directement
+    } else if (action === 'Modification du consentement au pixel tracking') {
+      saveTrackingConsent(pendingConsentChoice);
+      pendingConsentChoice = null;
     } else if (action === 'Modification des coordonnées personnelles') {
       openUserModal();
     } else {
@@ -111,6 +101,41 @@ function handleOtpSubmit(event) {
   }
 }
 
+function saveTrackingConsent(accepted) {
+  const toggle = document.getElementById('tracking-pixel-consent');
+  const status = document.getElementById('tracking-consent-status');
+
+  toggle.checked = accepted;
+
+  // Enregistrement local uniquement si un code de suivi est disponible.
+  // Sans code, le choix est appliqué pour cette session, sans message bloquant.
+  if (currentTrackingCode) {
+    try {
+      localStorage.setItem(getTrackingConsentStorageKey(), JSON.stringify({
+        accepted,
+        updatedAt: new Date().toISOString()
+      }));
+    } catch {
+      // La maquette applique le choix même si le stockage local est indisponible.
+    }
+  }
+
+  if (status) status.textContent = '';
+}
+
+document.addEventListener('change', (event) => {
+  if (event.target.id !== 'tracking-pixel-consent') return;
+
+  const toggle = event.target;
+  const requestedChoice = toggle.checked;
+
+  // Le switch revient à son état précédent pendant la vérification.
+  toggle.checked = !requestedChoice;
+  pendingConsentChoice = requestedChoice;
+
+  triggerSensitiveAction('Modification du consentement au pixel tracking');
+});
+
 function startFinalizationFlow() {
   document.getElementById('finalizeBanner').style.display = 'none';
   document.getElementById('completionFlowCard').classList.add('active');
@@ -118,6 +143,7 @@ function startFinalizationFlow() {
 }
 
 function showFlowStep(stepNumber) {
+  if (stepNumber === 2) loadIdentityDetails();
   for (let i = 1; i <= 4; i++) {
     document.getElementById(`flow-step-${i}`).style.display = (i === stepNumber) ? 'block' : 'none';
     const pill = document.getElementById(`pill-flow-${i}`);
@@ -140,9 +166,6 @@ function openDemoModal(stepType) {
   if (stepType === 'swikly') {
     title.textContent = 'Module Empreinte Bancaire';
     desc.textContent = "Dépôt d'empreinte de garantie bancaire en cours d'autorisation.";
-  } else if (stepType === 'yousign_id') {
-    title.textContent = 'Vérification ID';
-    desc.textContent = "Simulation de l'analyse et validation des pièces d'identité.";
   } else if (stepType === 'yousign_sign') {
     title.textContent = 'Signature Bon de cession';
     desc.textContent = "Module de signature électronique sécurisée pour le contrat.";
@@ -177,29 +200,14 @@ function handleDemoResult(action) {
       desc.textContent = "Empreinte bancaire autorisée avec succès.";
       btn.className = 'btn btn-step-green';
       btn.textContent = "Continuer vers la pièce d'identité";
-      btn.onclick = () => continueToFlowStep(2, 'yousign_id');
+      btn.onclick = () => continueToFlowStep(2);
     } else {
       flowState.swiklyStatus = 'refused';
       badge.style.background = '#fee2e2'; badge.style.border = '1px solid #fca5a5'; badge.style.color = '#dc2626'; badge.textContent = 'Refusée';
       desc.textContent = "Empreinte non déposée. Vous pouvez terminer la reprise, le versement se fera après réception et vérification de votre produit directement par IBAN.";
       btn.className = 'btn btn-step-green';
       btn.textContent = "Continuer vers le virement différé";
-      btn.onclick = () => continueToFlowStep(2, 'yousign_id');
-    }
-
-  } else if (step === 'yousign_id') {
-    if (action === 'valider') {
-      flowState.idCheckOk = true;
-      const box = document.getElementById('box-step-2');
-      const btn = document.getElementById('btn-step-2');
-      document.getElementById('desc-step-2').textContent = "Pièces d'identité vérifiées et validées.";
-      
-      box.className = 'flow-step-box step-green';
-      btn.className = 'btn btn-step-green';
-      btn.textContent = "Continuer vers la signature du contrat";
-      btn.onclick = () => continueToFlowStep(3, 'yousign_sign');
-    } else {
-      alert("La vérification d'identité a été refusée.");
+      btn.onclick = () => continueToFlowStep(2);
     }
 
   } else if (step === 'yousign_sign') {
@@ -246,6 +254,78 @@ function handleDemoResult(action) {
   }
 }
 
+
+const IDENTITY_DETAILS_STORAGE_KEY = 'comparecycle.identityDocumentDetails';
+
+function getIdentityDetailsStorageKey(trackingCode = currentTrackingCode) {
+  const code = String(trackingCode || '').trim();
+  return code ? `${IDENTITY_DETAILS_STORAGE_KEY}:${encodeURIComponent(code)}` : null;
+}
+
+function normalizeIssueDateForInput(value) {
+  const date = String(value || '').trim();
+  const frenchDate = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(date);
+  if (!frenchDate) return date;
+  return `${frenchDate[3]}-${frenchDate[2]}-${frenchDate[1]}`;
+}
+
+function loadIdentityDetails() {
+  const storageKey = getIdentityDetailsStorageKey();
+  if (!storageKey) return;
+  try {
+    const saved = window.localStorage.getItem(storageKey);
+    if (!saved) return;
+    const details = JSON.parse(saved);
+    document.getElementById('identityDocumentType').value = details.documentType || '';
+    document.getElementById('identityDocumentNumber').value = details.documentNumber || '';
+    document.getElementById('identityIssueDate').value = normalizeIssueDateForInput(details.issueDate);
+    // Read older saved records without changing or displaying them elsewhere.
+    const issuingPlace = details.issuingPlace || [details.issuingCity, details.issuingCountry].filter(Boolean).join(', ');
+    document.getElementById('identityIssuingPlace').value = issuingPlace || '';
+  } catch (error) {
+    // Ignore unreadable local data; the form remains available for fresh entry.
+  }
+}
+
+function handleIdentityDetailsSubmit(event) {
+  event.preventDefault();
+
+  const form = document.getElementById('identityDocumentForm');
+  if (!form.reportValidity()) return;
+
+  const details = {
+    documentType: document.getElementById('identityDocumentType').value,
+    documentNumber: document.getElementById('identityDocumentNumber').value.trim(),
+    issueDate: document.getElementById('identityIssueDate').value,
+    issuingPlace: document.getElementById('identityIssuingPlace').value.trim()
+  };
+
+  const storageKey = getIdentityDetailsStorageKey();
+
+  // Enregistre les informations si un code de suivi est disponible.
+  // Sans code, la maquette poursuit quand même le parcours.
+  if (storageKey) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(details));
+    } catch (error) {
+      console.warn('Enregistrement local impossible :', error);
+    }
+  }
+
+  flowState.idCheckOk = true;
+
+  const box = document.getElementById('box-step-2');
+  box.className = 'flow-step-box step-green';
+
+  const button = document.getElementById('btn-step-2');
+  button.className = 'btn btn-step-green identity-submit-button';
+  button.textContent = 'Continuer vers la signature du contrat';
+  button.type = 'button';
+  button.onclick = () => continueToFlowStep(3, 'yousign_sign');
+
+  showFlowStep(3);
+}
+
 function setupPayoutStep() {
   const grid = document.getElementById('payout-choices-grid');
   const desc = document.getElementById('flow-payout-desc');
@@ -269,8 +349,6 @@ function completeFlowPayout(method) {
   flowState.payoutMethod = method;
   flowState.vivaStatus = method === 'viva';
   isFinalized = true;
-
-  updateContactButton();
 
   document.getElementById('completionFlowCard').classList.remove('active');
   document.getElementById('productTrackingDetails').classList.add('active');
@@ -446,47 +524,59 @@ function handleSaveIBAN(event) {
 }
 
 function getTrackingConsentStorageKey() {
-  return `tracking-pixel-consent:${currentTrackingCode}`;
+  return `tracking-pixel-consent:${encodeURIComponent(currentTrackingCode)}`;
 }
 
 function loadTrackingConsent() {
   const toggle = document.getElementById('tracking-pixel-consent');
   const status = document.getElementById('tracking-consent-status');
+  if (!toggle || !status) return;
 
-  if (!toggle || !currentTrackingCode) return;
+  // Explicitly default to off unless an affirmative choice was previously stored.
+  toggle.checked = false;
+  status.textContent = '';
+  if (!currentTrackingCode) return;
 
   try {
-    const savedConsent = localStorage.getItem(getTrackingConsentStorageKey());
-    const consent = savedConsent ? JSON.parse(savedConsent) : null;
-
-    // Sans choix précédemment enregistré, le switch reste désactivé.
-    toggle.checked = consent?.accepted === true;
-    status.textContent = consent
-      ? `Votre choix est enregistré : ${consent.accepted ? 'consentement accepté' : 'suivi refusé'}.`
-      : '';
+    const saved = localStorage.getItem(getTrackingConsentStorageKey());
+    const choice = saved ? JSON.parse(saved) : null;
+    if (choice && typeof choice.accepted === 'boolean') {
+      toggle.checked = choice.accepted;
+      status.textContent = choice.accepted
+        ? 'Votre consentement est enregistré sur cet appareil.'
+        : 'Votre refus du suivi est enregistré sur cet appareil.';
+    }
   } catch {
+    // Storage may be unavailable (for example, in private browsing). Keep the switch off.
     toggle.checked = false;
-    status.textContent = '';
+    status.textContent = 'Votre choix ne peut pas être relu sur cet appareil.';
   }
 }
 
 document.addEventListener('change', (event) => {
-  if (event.target.id !== 'tracking-pixel-consent' || !currentTrackingCode) return;
+  if (event.target.id !== 'tracking-pixel-consent') return;
 
-  const consent = {
-    accepted: event.target.checked,
-    updatedAt: new Date().toISOString()
-  };
+  const toggle = event.target;
+  const status = document.getElementById('tracking-consent-status');
+  if (!status) return;
+  if (!currentTrackingCode) {
+    toggle.checked = false;
+    status.textContent = 'Saisissez un code de suivi pour enregistrer votre choix.';
+    return;
+  }
 
+  const accepted = toggle.checked;
   try {
-    localStorage.setItem(getTrackingConsentStorageKey(), JSON.stringify(consent));
-    document.getElementById('tracking-consent-status').textContent =
-      consent.accepted
-        ? 'Votre consentement est enregistré.'
-        : 'Votre refus du suivi est enregistré.';
+    localStorage.setItem(getTrackingConsentStorageKey(), JSON.stringify({
+      accepted,
+      updatedAt: new Date().toISOString()
+    }));
+    status.textContent = accepted
+      ? 'Votre consentement est enregistré sur cet appareil.'
+      : 'Votre refus du suivi est enregistré sur cet appareil.';
   } catch {
-    event.target.checked = false;
-    document.getElementById('tracking-consent-status').textContent =
-      'Impossible d’enregistrer votre choix. Veuillez réessayer.';
+    // Do not retain an apparent opt-in when its choice could not be persisted.
+    toggle.checked = false;
+    status.textContent = 'Impossible d’enregistrer votre choix sur cet appareil. Le suivi reste désactivé.';
   }
 });

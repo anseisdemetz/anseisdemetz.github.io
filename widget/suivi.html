@@ -19,7 +19,7 @@
       <img src="https://preprod.comparecycle.com/_next/image?url=https%3A%2F%2Fpreprod-static.comparecycle.com%2Fimages%2F3%2Fba8f5633caaec3bcce74d2c9b3151035928e9a62.png&w=640&q=75" alt="Logo Partenaire" class="affiliate-logo" />
 
       <div id="pageFooter">
-        <button type="button" class="btn-contact-discreet hidden" onclick="openContactModal()">
+        <button type="button" class="btn-contact-discreet" onclick="openContactModal()">
           <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
           </svg>
@@ -101,15 +101,37 @@
           </button>
         </div>
 
-        <!-- ÉTAPE 2 : ID CHECK -->
+        <!-- ÉTAPE 2 : DÉTAILS DU DOCUMENT D'IDENTITÉ -->
         <div id="flow-step-2" style="display:none;">
           <div id="box-step-2" class="flow-step-box step-blue">
-            <h4 id="title-step-2"><i class="fa-solid fa-id-card"></i> Vérification d'identité</h4>
-            <p id="desc-step-2">Deux photos recto-verso de votre pièce d'identité sont nécessaires.</p>
+            <h4 id="title-step-2"><i class="fa-solid fa-id-card"></i> Informations de votre pièce d'identité</h4>
           </div>
-          <button id="btn-step-2" class="btn btn-step-blue" style="width:100%;" onclick="openDemoModal('yousign_id')">
-            Lancer la vérification
-          </button>
+          <form id="identityDocumentForm" class="identity-document-form" onsubmit="handleIdentityDetailsSubmit(event)">
+            <div class="identity-form-grid">
+              <div class="identity-field identity-field-full">
+                <label for="identityDocumentType">Type de document <span aria-hidden="true">*</span></label>
+                <select id="identityDocumentType" name="documentType" required>
+                  <option value="">Sélectionnez un document</option>
+                  <option value="Carte d'identité">Carte d'identité</option>
+                  <option value="Passeport">Passeport</option>
+                  <option value="Nouveau permis de conduire">Nouveau permis de conduire</option>
+                </select>
+              </div>
+              <div class="identity-field identity-field-full">
+                <label for="identityDocumentNumber">Numéro du document <span aria-hidden="true">*</span></label>
+                <input id="identityDocumentNumber" name="documentNumber" type="text" autocomplete="off" required>
+              </div>
+              <div class="identity-field identity-field-full">
+                <label for="identityIssueDate">Date de délivrance <span aria-hidden="true">*</span></label>
+                <input id="identityIssueDate" name="issueDate" type="date" required>
+              </div>
+              <div class="identity-field identity-field-full">
+                <label for="identityIssuingPlace">Ville ou pays de délivrance <span aria-hidden="true">*</span></label>
+                <input id="identityIssuingPlace" name="issuingPlace" type="text" autocomplete="off" required>
+              </div>
+            </div>
+            <button id="btn-step-2" class="btn btn-step-blue identity-submit-button" type="submit">Valider</button>
+          </form>
         </div>
 
         <!-- ÉTAPE 3 : SIGNATURE -->
@@ -223,15 +245,15 @@
           </div>
         </div>
 
-        <div class="tracking-consent-box">
+        <section class="tracking-consent-box" aria-labelledby="tracking-consent-title">
           <div class="tracking-consent-copy">
-            <h3>Consentement au pixel tracking</h3>
+            <h3 id="tracking-consent-title">Suivi d’ouverture des emails</h3>
             <label for="tracking-pixel-consent">
-              J'accepte le suivi d'ouverture des emails de suivi des reprises à des fins statistiques (Pixel tracking).
+              J’accepte le suivi d’ouverture des emails de suivi de ma reprise à des fins statistiques.
             </label>
           </div>
 
-          <label class="switch-toggle" aria-label="Consentement au pixel tracking">
+          <label class="switch-toggle" aria-label="Autoriser le pixel de suivi des emails">
             <input
               type="checkbox"
               id="tracking-pixel-consent"
@@ -239,7 +261,7 @@
             >
             <span class="switch-slider"></span>
           </label>
-        </div>
+        </section>
         <p id="tracking-consent-status" class="tracking-consent-status" role="status" aria-live="polite"></p>
 
         <div id="detailsCollapsible">
@@ -303,11 +325,11 @@
         <!-- FORMULAIRE IBAN (S'ouvre au clic sur IBAN ou automatique si échec/refus CB) -->
         <div id="payment-iban-form" class="payment-iban-form" style="display:none;">
           <h3 class="iban-form-title">Coordonnées bancaires</h3>
-          <p class="iban-form-desc">Les virements SEPA font désormais l'objet d'une vérification du bénéficiaire. Assurez-vous que le nom du titulaire et l'IBAN indiqués correspondent exactement à ceux enregistrés auprès de votre banque, afin d'éviter tout blocage de paiement.</p>
+          <p class="iban-form-desc">Ajoutez ici de nouvelles coordonnées bancaire pour la reprise de vos appareils électroniques.</p>
 
           <form onsubmit="handleSaveIBAN(event)">
             <div class="iban-grid-two">
-              <div class="viva-field hidden">
+              <div class="viva-field">
                 <label>Libellé*</label>
                 <input type="text" id="iban-label" placeholder="Entrez le libellé de votre compte" required>
               </div>
@@ -479,5 +501,6 @@
 
   <script src="app.js"></script>
 
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
