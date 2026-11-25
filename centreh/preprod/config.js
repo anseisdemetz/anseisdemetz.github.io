@@ -11,6 +11,9 @@ const CONFIG = {
     CHECK_API_DOMAIN: "https://preprod-moby-api.comparecycle.com",
     CHECK_API_TOKEN: "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY",
 
+    // URL du CRON de paiement différé
+    CRON_DEFERRED_PAYMENT_URL: "https://preprod-admin-v3-api.comparecycle.com/Cron/deferredTransactionPaymentAuto",
+
     // Liste des codes autorisés pour Pre-check
     ALLOWED_PRECHECK_CODES: [
         "5020", "5010", "5030", "1050", "1060", "1070", "1080", "1090", 

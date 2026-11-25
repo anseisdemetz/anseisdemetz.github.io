@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const dispatchBtn = document.getElementById("dispatchBtn");
     const dispatchDatePreview = document.getElementById("dispatchDatePreview");
 
+    // Éléments UI CRON
+    const cronBlock = document.getElementById("cronBlock");
+    const cronBtn = document.getElementById("cronBtn");
+
     // Éléments globaux UI
     const consoleOutput = document.getElementById("consoleOutput");
     const clearConsoleBtn = document.getElementById("clearConsoleBtn");
@@ -59,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showStatus("Chargement des codes d'homologation...", "info");
         preCheckBlock?.classList.add("hidden");
         checkBlock?.classList.add("hidden");
+        cronBlock?.classList.add("hidden");
         if (consoleOutput) consoleOutput.textContent = "// Requête en cours vers l'API...";
 
         try {
@@ -362,6 +367,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             dispatchBtn.disabled = true;
             dispatchBtn.classList.add("opacity-50", "cursor-not-allowed");
+            cronBlock?.classList.add("hidden");
 
             try {
                 const dispatchDate = getYesterdayDispatchDate();
@@ -369,10 +375,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     dispatchDatePreview.textContent = dispatchDate;
                 }
 
+                const payload = {
+                    date: dispatchDate
+                };
+
                 const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/dispatch?authentification_token=${encodeURIComponent(CONFIG.CHECK_API_TOKEN)}`;
                 const proxyUrl = buildProxyUrl(targetEndpoint);
 
-                consoleOutput.textContent = `// Envoi GET dispatch vers :\n// ${targetEndpoint}`;
+                consoleOutput.textContent = `// Envoi dispatch vers :\n// ${targetEndpoint}\n\n// Payload JSON :\n${JSON.stringify(payload, null, 2)}`;
 
                 const response = await fetch(proxyUrl, {
                     method: "POST",
@@ -381,9 +391,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         "X-AUTH-CR": CONFIG.CHECK_API_TOKEN,
                         "X-HTTP-Method-Override": "GET"
                     },
-                    body: JSON.stringify({
-                        date: dispatchDate
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 let responseData;
@@ -406,11 +414,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 consoleOutput.textContent = statusInfo + `// Réponse de l'API Dispatch :\n` + formattedBody;
 
+                // Affichage du bloc CRON si result_code === "OK"
+                if (responseData && responseData.result_code === "OK") {
+                    cronBlock?.classList.remove("hidden");
+                    cronBlock?.scrollIntoView({ behavior: "smooth" });
+                }
+
             } catch (error) {
                 consoleOutput.textContent = `// ERREUR DISPATCH :\n${error.message}`;
             } finally {
                 dispatchBtn.disabled = false;
                 dispatchBtn.classList.remove("opacity-50", "cursor-not-allowed");
+            }
+        });
+    }
+
+    // --- 7. Lancement du CRON Paiement Différé ---
+    if (cronBtn) {
+        cronBtn.addEventListener("click", async () => {
+            cronBtn.disabled = true;
+            cronBtn.classList.add("opacity-50", "cursor-not-allowed");
+
+            try {
+                const targetEndpoint = CONFIG.CRON_DEFERRED_PAYMENT_URL;
+                const proxyUrl = buildProxyUrl(targetEndpoint);
+
+                consoleOutput.textContent = `// Lancement du CRON vers :\n// ${targetEndpoint}`;
+
+                const response = await fetch(proxyUrl, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
+                    }
+                });
+
+                let responseData;
+                const contentType = response.headers.get("content-type");
+
+                if (contentType && contentType.includes("application/json")) {
+                    responseData = await response.json();
+                } else {
+                    responseData = await response.text();
+                }
+
+                if (responseData && typeof responseData.contents === 'string') {
+                    try { responseData = JSON.parse(responseData.contents); } catch (e) {}
+                }
+
+                const statusInfo = `// Statut HTTP CRON : ${response.status} ${response.statusText}\n`;
+                const formattedBody = typeof responseData === 'object' 
+                    ? JSON.stringify(responseData, null, 2) 
+                    : responseData;
+
+                consoleOutput.textContent = statusInfo + `// Réponse du CRON :\n` + formattedBody;
+
+            } catch (error) {
+                consoleOutput.textContent = `// ERREUR CRON :\n${error.message}`;
+            } finally {
+                cronBtn.disabled = false;
+                cronBtn.classList.remove("opacity-50", "cursor-not-allowed");
             }
         });
     }
