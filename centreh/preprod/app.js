@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const sendCheckBtn = document.getElementById("sendCheckBtn");
 
     // Éléments UI Dispatch
-    const dispatchBlock = document.getElementById("dispatchBlock");
     const dispatchBtn = document.getElementById("dispatchBtn");
     const dispatchDatePreview = document.getElementById("dispatchDatePreview");
 
@@ -28,6 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let rawApiCodes = [];
     let filteredPreCheckCodes = [];
     let filteredCheckCodes = [];
+
+    // Initialisation de l'aperçu de la date de dispatch dès le chargement
+    if (dispatchDatePreview) {
+        dispatchDatePreview.textContent = getYesterdayDispatchDate();
+    }
 
     // Lancement automatique
     loadCodes();
@@ -55,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
         showStatus("Chargement des codes d'homologation...", "info");
         preCheckBlock?.classList.add("hidden");
         checkBlock?.classList.add("hidden");
-        dispatchBlock?.classList.add("hidden");
         if (consoleOutput) consoleOutput.textContent = "// Requête en cours vers l'API...";
 
         try {
@@ -199,7 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             checkBlock?.classList.add("hidden");
-            dispatchBlock?.classList.add("hidden");
 
             try {
                 // Étape 1 : Récupération de l'IMEI
@@ -288,8 +290,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 sendCheckBtn.classList.add("opacity-50", "cursor-not-allowed");
             }
 
-            dispatchBlock?.classList.add("hidden");
-
             try {
                 const formData = new FormData(checkForm);
                 const productCheckObject = {};
@@ -340,15 +340,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 consoleOutput.textContent = statusInfo + `// Réponse de l'API Check :\n` + formattedBody;
 
-                // Affichage du bouton de dispatch une fois l'homologation terminée
-                if (response.ok) {
-                    if (dispatchDatePreview) {
-                        dispatchDatePreview.textContent = getYesterdayDispatchDate();
-                    }
-                    dispatchBlock?.classList.remove("hidden");
-                    dispatchBlock?.scrollIntoView({ behavior: "smooth" });
-                }
-
             } catch (error) {
                 consoleOutput.textContent = `// ERREUR CHECK :\n${error.message}`;
             } finally {
@@ -365,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dispatchBtn.addEventListener("click", async () => {
             const txNum = transactionInput.value.trim();
             if (!txNum) {
-                alert("Numéro de transaction manquant.");
+                alert("Veuillez renseigner un numéro de transaction.");
                 return;
             }
 
@@ -374,39 +365,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
                 const dispatchDate = getYesterdayDispatchDate();
-                const payload = {
-                    date: dispatchDate
-                };
+                if (dispatchDatePreview) {
+                    dispatchDatePreview.textContent = dispatchDate;
+                }
 
-                const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/dispatch?authentification_token=${encodeURIComponent(CONFIG.CHECK_API_TOKEN)}`;
+                const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/dispatch?authentification_token=${encodeURIComponent(CONFIG.CHECK_API_TOKEN)}&date=${encodeURIComponent(dispatchDate)}`;
                 const proxyUrl = buildProxyUrl(targetEndpoint);
 
-                consoleOutput.textContent = `// Envoi GET dispatch vers :\n// ${targetEndpoint}\n\n// Payload JSON :\n${JSON.stringify(payload, null, 2)}`;
+                consoleOutput.textContent = `// Envoi GET dispatch vers :\n// ${targetEndpoint}`;
 
-                let response;
-                try {
-                    response = await fetch(proxyUrl, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
-                        },
-                        body: JSON.stringify(payload)
-                    });
-                } catch (fetchErr) {
-                    // Fallback si le navigateur interdit un body sur une requête GET (spécification Fetch)
-                    if (fetchErr instanceof TypeError) {
-                        response = await fetch(proxyUrl, {
-                            method: "GET",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
-                            }
-                        });
-                    } else {
-                        throw fetchErr;
+                const response = await fetch(proxyUrl, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
                     }
-                }
+                });
 
                 let responseData;
                 const contentType = response.headers.get("content-type");
