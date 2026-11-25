@@ -14,12 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkCounterBadge = document.getElementById("checkCounterBadge");
     const sendCheckBtn = document.getElementById("sendCheckBtn");
 
-    // Éléments UI Preuves Photo
-    const proofBlock = document.getElementById("proofBlock");
-    const proofForm = document.getElementById("proofForm");
-    const proofFileInput = document.getElementById("proofFileInput");
-    const proofFileList = document.getElementById("proofFileList");
-    const sendProofBtn = document.getElementById("sendProofBtn");
+    // Éléments UI Dispatch
+    const dispatchBlock = document.getElementById("dispatchBlock");
+    const dispatchBtn = document.getElementById("dispatchBtn");
+    const dispatchDatePreview = document.getElementById("dispatchDatePreview");
 
     // Éléments globaux UI
     const consoleOutput = document.getElementById("consoleOutput");
@@ -31,72 +29,33 @@ document.addEventListener("DOMContentLoaded", () => {
     let filteredPreCheckCodes = [];
     let filteredCheckCodes = [];
 
-    // Helper unique pour construire les requêtes proxy avec la clé API
-    function buildProxyUrl(targetUrl) {
-        const corsKey = CONFIG.CORS_KEY || "c46f8301";
-        return `https://corsproxy.io/?key=${corsKey}&url=` + encodeURIComponent(targetUrl);
-    }
-
-    // Utilitaires : Conversion de fichier en Base64
-    function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                const base64Content = reader.result.split(',')[1];
-                resolve(base64Content);
-            };
-            reader.onerror = error => reject(error);
-        });
-    }
-
-    // Fonction d'envoi d'une preuve photo unique
-    async function sendProofDocument(txNum, file) {
-        const base64Content = await fileToBase64(file);
-        const filename = `${txNum}_${file.name}`;
-
-        const payload = {
-            document_type: "proof",
-            filename: filename,
-            content: base64Content
-        };
-
-        const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/addDocument`;
-        const proxyUrl = buildProxyUrl(targetEndpoint);
-
-        const response = await fetch(proxyUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Échec de l'envoi pour ${file.name} (Statut ${response.status})`);
-        }
-
-        let responseData = await response.json();
-        if (responseData && typeof responseData.contents === 'string') {
-            try { responseData = JSON.parse(responseData.contents); } catch (e) {}
-        }
-
-        return responseData;
-    }
-
     // Lancement automatique
     loadCodes();
 
     if (reloadBtn) reloadBtn.addEventListener("click", () => loadCodes());
     if (clearConsoleBtn) clearConsoleBtn.addEventListener("click", () => consoleOutput.textContent = "// Console vidée.");
 
+    // Fonction utilitaire pour encapsuler les URLs avec la clé CorsProxy
+    function buildProxyUrl(targetUrl) {
+        return `https://corsproxy.io/?key=${CONFIG.CORS_KEY}&url=` + encodeURIComponent(targetUrl);
+    }
+
+    // Calcul de la date de la veille à 17:00:00 (format YYYY-MM-DD 17:00:00)
+    function getYesterdayDispatchDate() {
+        const date = new Date();
+        date.setDate(date.getDate() - 1);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day} 17:00:00`;
+    }
+
     // --- 1. Chargement de l'ensemble des codes API ---
     async function loadCodes() {
         showStatus("Chargement des codes d'homologation...", "info");
         preCheckBlock?.classList.add("hidden");
         checkBlock?.classList.add("hidden");
-        proofBlock?.classList.add("hidden");
+        dispatchBlock?.classList.add("hidden");
         if (consoleOutput) consoleOutput.textContent = "// Requête en cours vers l'API...";
 
         try {
@@ -112,12 +71,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let responseData = await response.json();
 
+            // Désencapsulation du proxy CORS si nécessaire
             if (responseData && typeof responseData.contents === 'string') {
                 try { responseData = JSON.parse(responseData.contents); } catch (e) {}
             } else if (responseData && responseData.contents) {
                 responseData = responseData.contents;
             }
 
+            // Extraction du tableau
             if (Array.isArray(responseData)) {
                 rawApiCodes = responseData;
             } else if (responseData && typeof responseData === 'object') {
@@ -129,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
+            // Indexation rapide des codes API
             const codesMap = new Map();
             rawApiCodes.forEach(item => {
                 if (item && item.code) {
@@ -136,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
+            // Filtrage des deux listes
             filteredPreCheckCodes = (CONFIG.ALLOWED_PRECHECK_CODES || [])
                 .filter(code => codesMap.has(code))
                 .map(code => codesMap.get(code));
@@ -191,7 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 3. Génération dynamique de l'IHM ---
     function renderCodes(codes, containerElement, badgeElement, prefix) {
-        if (!containerElement || !badgeElement) return;
         containerElement.innerHTML = "";
         badgeElement.textContent = `${codes.length} code(s)`;
 
@@ -237,12 +199,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             checkBlock?.classList.add("hidden");
-            proofBlock?.classList.add("hidden");
+            dispatchBlock?.classList.add("hidden");
 
             try {
+                // Étape 1 : Récupération de l'IMEI
                 consoleOutput.textContent = `// Récupération de l'IMEI pour la transaction ${txNum}...`;
                 const imeiValue = await fetchImei(txNum);
 
+                // Étape 2 : Construction du payload Pre-Check
                 const formData = new FormData(preCheckForm);
                 const productCheckObject = {};
 
@@ -256,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     imei: imeiValue
                 };
 
+                // Étape 3 : Envoi POST vers productPreCheck
                 const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/productPreCheck`;
                 const proxyUrl = buildProxyUrl(targetEndpoint);
 
@@ -323,6 +288,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 sendCheckBtn.classList.add("opacity-50", "cursor-not-allowed");
             }
 
+            dispatchBlock?.classList.add("hidden");
+
             try {
                 const formData = new FormData(checkForm);
                 const productCheckObject = {};
@@ -373,11 +340,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 consoleOutput.textContent = statusInfo + `// Réponse de l'API Check :\n` + formattedBody;
 
-                // Affichage conditionnel du bloc de preuves photos si proof_is_required est à true
-                const proofRequired = responseData?.results?.proof_is_required;
-                if (proofRequired === true) {
-                    proofBlock?.classList.remove("hidden");
-                    proofBlock?.scrollIntoView({ behavior: "smooth" });
+                // Affichage du bouton de dispatch une fois l'homologation terminée
+                if (response.ok) {
+                    if (dispatchDatePreview) {
+                        dispatchDatePreview.textContent = getYesterdayDispatchDate();
+                    }
+                    dispatchBlock?.classList.remove("hidden");
+                    dispatchBlock?.scrollIntoView({ behavior: "smooth" });
                 }
 
             } catch (error) {
@@ -391,49 +360,79 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 6. Traitement du formulaire d'upload de Preuves ---
-    if (proofForm) {
-        proofForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
+    // --- 6. Modification de la date de dispatch ---
+    if (dispatchBtn) {
+        dispatchBtn.addEventListener("click", async () => {
             const txNum = transactionInput.value.trim();
-            const files = proofFileInput.files;
-
             if (!txNum) {
                 alert("Numéro de transaction manquant.");
                 return;
             }
 
-            if (files.length === 0) {
-                alert("Veuillez sélectionner au moins un fichier photo.");
-                return;
-            }
-
-            if (sendProofBtn) {
-                sendProofBtn.disabled = true;
-                sendProofBtn.classList.add("opacity-50", "cursor-not-allowed");
-            }
-
-            consoleOutput.textContent = `// Transmission de ${files.length} preuve(s) photo pour la transaction ${txNum}...`;
+            dispatchBtn.disabled = true;
+            dispatchBtn.classList.add("opacity-50", "cursor-not-allowed");
 
             try {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    consoleOutput.textContent += `\n// Envoi du fichier ${i + 1}/${files.length} : ${file.name}...`;
-                    
-                    const result = await sendProofDocument(txNum, file);
-                    consoleOutput.textContent += `\n// Résultat (${file.name}) :\n` + JSON.stringify(result, null, 2);
+                const dispatchDate = getYesterdayDispatchDate();
+                const payload = {
+                    date: dispatchDate
+                };
+
+                const targetEndpoint = `${CONFIG.CHECK_API_DOMAIN}/Transaction/${encodeURIComponent(txNum)}/dispatch?authentification_token=${encodeURIComponent(CONFIG.CHECK_API_TOKEN)}`;
+                const proxyUrl = buildProxyUrl(targetEndpoint);
+
+                consoleOutput.textContent = `// Envoi GET dispatch vers :\n// ${targetEndpoint}\n\n// Payload JSON :\n${JSON.stringify(payload, null, 2)}`;
+
+                let response;
+                try {
+                    response = await fetch(proxyUrl, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } catch (fetchErr) {
+                    // Fallback si le navigateur interdit un body sur une requête GET (spécification Fetch)
+                    if (fetchErr instanceof TypeError) {
+                        response = await fetch(proxyUrl, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-AUTH-CR": CONFIG.CHECK_API_TOKEN
+                            }
+                        });
+                    } else {
+                        throw fetchErr;
+                    }
                 }
-                
-                consoleOutput.textContent += `\n// Toutes les preuves photos ont été transmises avec succès.`;
-                proofForm.reset();
+
+                let responseData;
+                const contentType = response.headers.get("content-type");
+
+                if (contentType && contentType.includes("application/json")) {
+                    responseData = await response.json();
+                } else {
+                    responseData = await response.text();
+                }
+
+                if (responseData && typeof responseData.contents === 'string') {
+                    try { responseData = JSON.parse(responseData.contents); } catch (e) {}
+                }
+
+                const statusInfo = `// Statut HTTP Dispatch : ${response.status} ${response.statusText}\n`;
+                const formattedBody = typeof responseData === 'object' 
+                    ? JSON.stringify(responseData, null, 2) 
+                    : responseData;
+
+                consoleOutput.textContent = statusInfo + `// Réponse de l'API Dispatch :\n` + formattedBody;
+
             } catch (error) {
-                consoleOutput.textContent += `\n// ERREUR TRANSMISSION PREUVE :\n${error.message}`;
+                consoleOutput.textContent = `// ERREUR DISPATCH :\n${error.message}`;
             } finally {
-                if (sendProofBtn) {
-                    sendProofBtn.disabled = false;
-                    sendProofBtn.classList.remove("opacity-50", "cursor-not-allowed");
-                }
+                dispatchBtn.disabled = false;
+                dispatchBtn.classList.remove("opacity-50", "cursor-not-allowed");
             }
         });
     }

@@ -1,11 +1,13 @@
 // Configuration globale de l'application
 const CONFIG = {
-    // API pour récupérer la liste des codes d'homologation
-    // CODES_API_URL: "https://preprod-cdiscount-api.comparecycle.com/Diagnostic/codes",
-    CODES_API_URL: "https://corsproxy.io/?" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com/Diagnostic/codes"),
+    // Clé CORSPROXY
+    CORS_KEY: "c46f8301",
+
+    // URL de l'API pour récupérer la liste des codes
+    CODES_API_URL: "https://corsproxy.io/?key=c46f8301&url=" + encodeURIComponent("https://preprod-cdiscount-api.comparecycle.com/Diagnostic/codes"),
     CODES_API_TOKEN: "xPOU6kuI1Gv4NZS1a6l05bM66p5yQ5dr",
 
-    // Domaine et Token pour l'envoi du productPreCheck
+    // Domaine de base et Token pour Moby API (sans CorsProxy ici, l'assemblage se fait dans app.js)
     CHECK_API_DOMAIN: "https://preprod-moby-api.comparecycle.com",
     CHECK_API_TOKEN: "eYqShpHvgt9nkuNrgqtPhGvggvCHM9TY",
 
@@ -30,5 +32,4 @@ const CONFIG = {
         "3092", "3323", "3324", "3325", "3326", "3327", "3328", "3329", 
         "3347", "3351", "3408", "3090", "3100", "3340", "3411"
     ]
-
 };
