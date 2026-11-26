@@ -1,0 +1,35 @@
+<!doctype html><html xmlns="http://www.w3.org/1999/xhtml " xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Carrefour seconde vie</title><style type="text/css">li::marker{color:#16B389}li{margin-bottom:8px}.sub-title{font-weight:bold;text-decoration:underline} .carte_cadeau{border:1px solid #16B389} .carte_cadeau_titre{margin:0px; padding:8px; background-color:#16B389; color:#fff; font-weight:bold} .carte_cadeau_container{text-align: center;} .carte_cadeau_code{padding-top:8px; border-top: 1px solid #16B389;} .carte_cadeau_code img{padding: 0px 25px;} .evidence_gras{color:#16B389;font-weight:bold} .evidence_gras_italique{color:#16B389;font-style:italic;font-weight:bold;} .alerte{color:#E35765} table {border-collapse:collapse; border-spacing: 0;} a, a:link, a:visited {text-decoration: underline; color: #335FAC;font-weight:bold;} h2,h2 a,h2 a:visited,h3,h3 a,h3 a:visited,h4,h5,h6,.t_cht {color:#000 !important;} .ExternalClass, .ExternalClass div, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td {line-height: 100%;} .ExternalClass {width: 100%;}</style></head><body style="font-family:'Arial'; font-size:13px;"><div style="width: 550px;"><center><img src="{{ url_img_light }}" height="100px" /></center>
+
+<p>Bonjour {{ firstname }},</p><p>Bravo, vous venez de finaliser votre Reprise. </p><p class="sub-title"> Vous trouverez ci-joint :</p><ol>{% if buyback_payout_method != 'gift_card_deferred' %}<li>Votre carte cadeau Carrefour utilisable immédiatement.</li>{% endif %}<li>Votre bon de cession et les Conditions Générales d'achat de votre appareil.</li><li>Votre étiquette de transport.</li></ol><p class="evidence_gras_italique">N'oubliez pas de nous envoyer votre appareil dans les 7 jours.{% if buyback_payout_method != 'gift_card_deferred' %} Si vous avez bénéficié d'une carte cadeau immédiate, en l'absence de réception dans ce délai, la valeur sera prélevée sur votre carte bancaire.{% endif %}</p>
+
+{% if buyback_payout_method != 'gift_card_deferred' %}
+<div class="carte_cadeau">
+    <p class="carte_cadeau_titre">Le code barre de votre/vos cartes cadeaux</p>
+    {% for card in cards %}
+    <table style="width:100%; border-collapse:collapse; border-top:1px solid #16B389;">
+        <tr>
+            <!-- Colonne gauche : les informations -->
+            <td style="width:55%; vertical-align:middle; padding:10px; font-family:Arial; font-size:13px;">
+                <p style="margin:0;">
+                    <strong>Date de fin de validité</strong> : {{ card.expiration_at|date("d/m/Y") }}<br>
+                    <strong>Code PIN</strong> : {{ card.pin }}<br>
+                    <strong>Code PAN</strong> : {{ card.pan }}<br>
+                    <strong>Montant</strong> : {{ card.amount }}€
+                </p>
+            </td>
+            <!-- Colonne droite : le code-barres -->
+            <td style="width:45%; vertical-align:middle; text-align:center; padding:10px;">
+                <img src="{{ card.barcode }}" alt="code barre carte cadeau" style="max-width:100%; height:auto;" />
+            </td>
+        </tr>
+    </table>
+    {% endfor %}
+</div>
+{% endif %}
+
+<p class="sub-title">Avant d'envoyer votre colis :</p><ol><li>Vérifiez que vous avez bien déconnecté votre compte iCloud / Google et qu'aucun code de verrouillage n'est encore actif.</li><li>La localisation doit impérativement être désactivée.</li><li>Réinitialiser votre appareil en prenant soin d'effacer vos données personnelles.</li></ol><p>Si vous avez besoin d'aide consultez <a href="{{ url_faq }}">le guide</a>.</p><p class="evidence_gras_italique">Tout appareil bloqué, géolocalisé, endommagé, non fonctionnel, contrefait, blacklisté ou présentant une batterie gonflée sera valorisé 0€, ne sera pas retourné et pourra être détruit. <br>Si vous avez bénéficié d'une carte cadeau immédiate, cela entraînera le prélèvement de la valeur correspondante sur votre carte bancaire.<br>👉 Merci de ne pas envoyer de produit présentant l’un de ces défauts.</p><p class="sub-title">Préparez votre colis :</p><ol><li>Prenez soin de <span class="evidence_gras">protéger votre appareil</span> sans accessoire en l'emballant avec du papier bulle pour le protéger des chocs et calez le dans un colis adapté pour éviter tout dommage lors du transport.</li><li>Pensez à imprimer et à ajouter le <span class="evidence_gras">bon de cession dans le colis</span>.</li><li>Prenez des <span class="evidence_gras">photos du colis ouvert et fermé</span> puis une autre qui mette bien en visibilité <span class="evidence_gras">les 3 éléments suivants ensemble</span> :<ul><li>L'appareil que vous allez envoyer, allumé avec l'IMEI affiché sur l'écran (composer *#06# sur votre clavier pour l'afficher).</li><li>L'étiquette de transport.</li><li>Votre pièce d'identité.</li></ul>Et conservez les jusqu'à la confirmation de conformité de la réception de votre appareil. Ces photos vous seront demandées obligatoirement en cas de litige (perte ou dégradation de l'état de votre appareil).</li><li><span class="evidence_gras">Collez l'étiquette de transport</span> (avec les codes-barres) à l'extérieur du colis et gardez précieusement l'autre moitié qui sera tamponnée au point de dépôt.</li><li><span class="evidence_gras">Déposez votre colis</span> dans le point de dépôt de votre choix, gardez la preuve de dépôt.</li></ol><p class="sub-title">Suivez votre Reprise :</p><p>Vous serez informé par e-mail à chaque étape et vous pouvez également vous rendre sur <a href="{{ url_summary_detail }}">votre page de suivi</a>.</p><br>
+
+
+<p><a href="{{ url_contact }}">Notre service clients</a> reste à votre disposition pour toute information complémentaire<br>Merci de votre confiance,<br>L'équipe Carrefour seconde vie</p></div></body></html>
+
+
