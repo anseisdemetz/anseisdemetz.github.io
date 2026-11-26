@@ -156,13 +156,13 @@ function renderList(highlightId = null) {
   const head = document.getElementById('tableHead');
   const body = document.getElementById('tableBody');
   const filter = normalized(document.getElementById('listFilter').value);
-  head.innerHTML = `<tr>${listColumns(activeList).map(col => `<th>${escapeHtml(col)}</th>`).join('')}<th>Actions</th></tr>`;
+  head.innerHTML = `<tr class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider">${listColumns(activeList).map(col => `<th class="py-2.5 px-3.5">${escapeHtml(col)}</th>`).join('')}<th class="py-2.5 px-3.5">Actions</th></tr>`;
   const rows = currentRows().filter(item => normalized(rowValues(item).join(' ')).includes(filter));
   body.innerHTML = rows.map(item => {
     const cells = rowValues(item);
     const state = cells[cells.length - 1];
-    const dataCells = cells.map((value, i) => i === cells.length - 1 ? `<td><span class="status-badge ${state === 'Inactif' ? 'inactive' : ''}">${escapeHtml(value)}</span></td>` : `<td>${escapeHtml(value)}</td>`).join('');
-    return `<tr data-item-id="${item.id}" class="${item.id === highlightId ? 'new-row' : ''}">${dataCells}<td class="row-actions"><button data-action="edit" data-id="${item.id}">Modifier</button><button class="delete" data-action="delete" data-id="${item.id}">Supprimer</button></td></tr>`;
+    const dataCells = cells.map((value, i) => i === cells.length - 1 ? `<td class="py-2.5 px-3.5"><span class="status-badge ${state === 'Inactif' ? 'inactive' : ''} px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800">${escapeHtml(value)}</span></td>` : `<td class="py-2.5 px-3.5">${escapeHtml(value)}</td>`).join('');
+    return `<tr data-item-id="${item.id}" class="${item.id === highlightId ? 'new-row' : ''} hover:bg-slate-50/80 transition">${dataCells}<td class="row-actions"><button class="text-emerald-700 font-bold" data-action="edit" data-id="${item.id}">Modifier</button><button class="delete text-rose-600 font-bold" data-action="delete" data-id="${item.id}">Supprimer</button></td></tr>`;
   }).join('');
   document.getElementById('emptyState').classList.toggle('is-hidden', rows.length !== 0);
   updateCounts();
