@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document pro forma — Émission de carte cadeau</title>
+
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f1f3f5;
+      color: #202124;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+
+    .document {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 20px auto;
+      padding: 18mm;
+      background: #fff;
+      box-shadow: 0 3px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .topline {
+      height: 7px;
+      margin: -18mm -18mm 22px;
+      background: #087a3b;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .brand {
+      color: #087a3b;
+      font-size: 18pt;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .document-type {
+      margin-top: 5px;
+      color: #656b73;
+      font-size: 9pt;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 420px;
+      margin: 0;
+      font-size: 20pt;
+      line-height: 1.2;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .metadata {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 24px;
+      margin: 22px 0;
+      padding: 15px 17px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background: #f8f9fa;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 3px;
+      color: #6b7280;
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .field-value {
+      font-weight: 600;
+    }
+
+    .parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 24px 0;
+    }
+
+    .party {
+      padding: 15px 16px;
+      border-left: 3px solid #087a3b;
+      background: #f8f9fa;
+    }
+
+    .party h2,
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 10pt;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .party p {
+      margin: 3px 0;
+    }
+
+    .object {
+      margin: 24px 0;
+      padding: 14px 16px;
+      border: 1px solid #dce9df;
+      border-radius: 6px;
+      background: #f4faf5;
+    }
+
+    .object p {
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+      margin: 14px 0 0;
+      border-collapse: collapse;
+      font-size: 10pt;
+    }
+
+    thead {
+      display: table-header-group;
+      background: #087a3b;
+      color: #fff;
+    }
+
+    th,
+    td {
+      padding: 11px 10px;
+      border: 1px solid #dfe3e8;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 8.5pt;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    td.amount,
+    th.amount {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      page-break-inside: avoid;
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 14px;
+      padding: 15px 17px;
+      border-radius: 6px;
+      background: #eef6f0;
+      color: #075d2f;
+      font-size: 12pt;
+      font-weight: 700;
+    }
+
+    .total small {
+      display: block;
+      margin-top: 3px;
+      color: #53645a;
+      font-size: 8.5pt;
+      font-weight: 400;
+    }
+
+    .guarantee {
+      margin-top: 25px;
+      padding: 15px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+    }
+
+    .guarantee p {
+      margin: 0;
+    }
+
+    .legal {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-left: 3px solid #8b929a;
+      background: #f5f6f7;
+      color: #42474d;
+      font-size: 9.5pt;
+    }
+
+    .legal strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #202124;
+    }
+
+    footer {
+      margin-top: 32px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+      color: #747b83;
+      font-size: 8pt;
+      text-align: center;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .document {
+        width: auto;
+        min-height: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      .topline {
+        margin: 0 0 22px;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="document">
+    <div class="topline"></div>
+
+    <header>
+      <div>
+        <div class="brand">Carrefour</div>
+        <div class="document-type">Document provisoire</div>
+      </div>
+      <h1>Émission de carte cadeau</h1>
+    </header>
+
+    <section class="metadata" aria-label="Références du document">
+      <div>
+        <span class="field-label">Référence du document</span>
+        <span class="field-value">YYY</span>
+      </div>
+      <div>
+        <span class="field-label">Date</span>
+        <span class="field-value">25/11/2026</span>
+      </div>
+      <div>
+        <span class="field-label">Dossier de reprise</span>
+        <span class="field-value">GREXXX</span>
+      </div>
+    </section>
+
+    <section class="parties" aria-label="Parties concernées">
+      <div class="party">
+        <h2>Émetteur</h2>
+        <p><strong>Carrefour</strong></p>
+        <p>[Raison sociale]</p>
+        <p>[Adresse]</p>
+        <p>SIRET : [à compléter]</p>
+        <p>N° TVA : [à compléter]</p>
+      </div>
+
+      <div class="party">
+        <h2>Bénéficiaire</h2>
+        <p><strong>Comparecycle</strong></p>
+      </div>
+    </section>
+
+    <section class="object">
+      <span class="field-label">Objet</span>
+      <p>
+        Émission anticipée de carte cadeau dans le cadre d’une reprise
+        avec paiement immédiat.
+      </p>
+    </section>
+
+    <section aria-label="Détail de la carte cadeau">
+      <h2 class="section-title">Détail de l’émission</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Réf. carte cadeau</th>
+            <th>Produit</th>
+            <th class="amount">Valeur estimée</th>
+            <th class="amount">Montant crédité</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>XXX</td>
+            <td>Apple iPhone 15 Pro 128 Go</td>
+            <td class="amount">200,00&nbsp;€</td>
+            <td class="amount">200,00&nbsp;€</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="total">
+        <div>
+          Total net mis à disposition
+          <small>Exonéré de TVA — titre prépayé</small>
+        </div>
+        <div>200,00&nbsp;€</div>
+      </div>
+    </section>
+
+    <section class="guarantee">
+      <h2 class="section-title">Garantie associée</h2>
+      <p>
+        Empreinte bancaire (pré-autorisation) n° <strong>XXXX</strong>,
+        d’un montant de <strong>200,00&nbsp;€</strong>, en attente de réception
+        et de conformité du matériel.
+      </p>
+    </section>
+
+    <section class="legal">
+      <strong>Mention légale</strong>
+      Document provisoire sans valeur de facture définitive. La cession
+      définitive sera constatée après contrôle qualité du matériel en atelier.
+    </section>
+
+    <footer>
+      Document pro forma — Émission de carte cadeau
+    </footer>
+  </main>
+</body>
+</html>
