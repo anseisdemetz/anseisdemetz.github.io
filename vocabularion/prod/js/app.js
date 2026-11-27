@@ -41,7 +41,10 @@ function changePage(direction) {
 }
 
 async function loadInitialDatabase() {
-    const { data, error } = await supabaseClient.from('vocabulary').select('*');
+    const { data, error } = await supabaseClient
+        .from('vocabulary')
+        .select('*')
+        .range(0, 10000);
     
     if (error) {
         console.error("Erreur de chargement Supabase:", error);
